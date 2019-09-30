@@ -1,6 +1,6 @@
 # Bento Privacy Policy
 
-Bento collects usage data to help us understand how to improve the product. This document describes:
+Bento collects usage data to help inform how to improve the product. This document describes:
 
 * principles that guide the collection and usage of usage data
 * the data collected
@@ -9,10 +9,10 @@ Bento collects usage data to help us understand how to improve the product. This
 
 # Principles
 
-These are guidelines that inform our decisions about what data to collect:
+These guidelines inform decisions about data collection:
 
 * Transparency:
-    * Use and share information in a way that is transparent and benefits the user.
+    * Collect and use information in a way that is transparent and benefits the user
 * User control
     * Develop products and advocate for best practices that put users in control of their data
 * Limited data
@@ -30,13 +30,13 @@ Personal data includes:
 
 ## Collected data
 
-Bento collects data to help us understand and improve the Bento user experience for users everywhere. The following information is collected:
+Bento collects data to help improve the Bento user experience for users everywhere. The following information is collected and sent to r2c:
 
 * Anonymized version of repository name, current commit, paths of files, names of checks that fire
 * Aggregate count of checks that fire
 * Names of checks that are disabled for the tools running in Bento
 * The user’s OS, shell information, user agent, and anonymized IP
-* Bento asks users to share the error dump on crashes 
+* Bento asks users to share error dump data on crashes 
 
 ## Sample data and definition of fields
 
