@@ -38,6 +38,14 @@ Bento collects data to help improve the Bento user experience for users everywhe
 * The user’s OS, shell information, user agent, and anonymized IP
 * Bento asks users to share error dump data on crashes 
 
+### Data not collected
+
+Bento minimizes the amount of personal data collected or shared, and limits that only to the amount necessary to support product operation. The following data is not collected and not sent to r2c. It does not leave your computer and is not sent or shared with anyone.
+
+* Client’s raw IP address
+* User’s source code
+* .git related information, such as: repository name, commit, git user name, git user email
+
 ## Sample data and definition of fields
 
 This is a sample blob of data collected by Bento and sent to r2c:
