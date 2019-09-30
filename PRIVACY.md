@@ -69,7 +69,7 @@ This is a sample blob of data collected by Bento and sent to r2c:
     "event_name": "DUMMY_EVENT_NAME"
   }
   ```
-## Definition and description of fields
+## Description of fields
 
 | Field        | Description           | Use case  |
 | ------------- |:-------------:| -----:|
