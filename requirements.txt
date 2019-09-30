@@ -1,0 +1,20 @@
+################################################################################
+# This requirements file has been automatically generated from `Pipfile` with
+# `pipenv-to-requirements`
+#
+#
+# This has been done to maintain backward compatibility with tools and services
+# that do not support `Pipfile` yet.
+#
+# Do NOT edit it directly, use `pipenv install [-d]` to modify `Pipfile` and
+# `Pipfile.lock` and then regenerate `requirements*.txt`.
+################################################################################
+
+attrs~=19.1.0
+click~=7.0
+docker~=3.7
+gitpython~=2.1
+murmurhash3~=2.3.4
+psutil~=5.6.3
+pyyaml>=5.1.2
+semantic-version~=2.6
