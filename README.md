@@ -33,7 +33,7 @@ Enable a specific check by running:
 `bento enable [OPTIONS] TOOL CHECK`, where:
 
 * `TOOL` refers to the tool that includes the check, for example, `eslint`
-*  `CHECK` refers to the label for the check you want to enable, for example `E211`
+*  `CHECK` refers to the label for the check you want to enable, for example `no-console`
 
 Disable a specific check by running:
 
