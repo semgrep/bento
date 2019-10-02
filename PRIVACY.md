@@ -44,7 +44,6 @@ Bento minimizes the amount of personal data collected or shared, and limits that
 
 * Client’s raw IP address
 * User’s source code
-* .git related information, such as: repository name, commit, git user name, git user email
 
 ## Sample data and definition of fields
 
