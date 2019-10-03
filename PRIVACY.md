@@ -24,9 +24,10 @@ These guidelines inform decisions about data collection:
 
 Personal data includes: 
 
-* .git related information, such as: repository name, commit, git user name, git user email
+* .git related information, such as repository name, commit, git user name, and git user email
 * IP address
 * source code and context of findings
+* User email address (if the user provides it)
 
 ## Collected data
 
@@ -36,7 +37,8 @@ Bento collects data to help improve the Bento user experience for users everywhe
 * Aggregate count of checks that fire
 * Names of checks that are disabled for the tools running in Bento
 * The user’s OS, shell information, user agent, and anonymized IP
-* Bento asks users to share error dump data on crashes 
+* Bento asks users to share error dump data on crashes
+* User’s email address (if the user provides it)
 
 ### Data not collected
 
@@ -90,4 +92,15 @@ This is a sample blob of data collected by Bento and sent to r2c:
 | event_name	| Generic Bento label| 	Generic Bento label
 
 
+## Data usage
+We use this information for the following purposes:
+
+- to provide, operate, maintain, support, and improve Bento
+- to communicate with users, if users supply their email address, including by sending product announcements, technical notices, updates, security alerts, and support messages
+- to better understand user needs and interests, and to solicit user feedback about Bento
+
+## Data sharing
+We use some third party companies and services to help administer and provide Bento, for example for hosting, customer support, product usage analytics, email delivery, and database management. These third parties are permitted to handle user information only to perform these tasks in a manner consistent with this document and are obligated not to disclose or use it for any other purpose.
+
+We do not share or sell the information that users provide to us with other organizations without explicit consent, except as described in this document.
 
