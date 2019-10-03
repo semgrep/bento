@@ -24,9 +24,10 @@ These guidelines inform decisions about data collection:
 
 Personal data includes: 
 
-* .git related information, such as: repository name, commit, git user name, git user email
+* .git related information, such as repository name, commit, git user name, and git user email
 * IP address
 * source code and context of findings
+* User email address (if the user provides it)
 
 ## Collected data
 
@@ -36,7 +37,8 @@ Bento collects data to help improve the Bento user experience for users everywhe
 * Aggregate count of checks that fire
 * Names of checks that are disabled for the tools running in Bento
 * The user’s OS, shell information, user agent, and anonymized IP
-* Bento asks users to share error dump data on crashes 
+* Bento asks users to share error dump data on crashes
+* User’s email address (if the user provides it)
 
 ### Data not collected
 
@@ -45,7 +47,7 @@ Bento minimizes the amount of personal data collected or shared, and limits that
 * Client’s raw IP address
 * User’s source code
 
-## Sample data and definition of fields
+## Sample data and description of fields
 
 This is a sample blob of data collected by Bento and sent to r2c:
 ```json
@@ -71,23 +73,34 @@ This is a sample blob of data collected by Bento and sent to r2c:
 ## Description of fields
 
 | Field        | Description           | Use case  |
-| ------------- |:-------------:| -----:|
+| :------------- |:-------------| :-----|
 | X-R2C-Bento-User-Platform     | OS description | Reproduce and debug issues with specific platforms |
 | X-R2C-Bento-User-Shell| 	shell description| 	Reproduce and debug issues with specific shells
 | ua	| user agent| 	Reserved for future Bento variants
-| client_ip	| 	| Rough geolocation of clients so we can best support our users
+| client_ip	| IP address	| Rough geolocation of clients so we can best support our users
 | tool	| The tool which triggered the event [r2c.eslint, r2c.flake8]| 	Improve Bento integration with the tool
 | timestamp| 	Time when the event fired	| Reproduce and debug issues
 | repository	| SHA256 hash of the repository name| 	Reserved for future tailoring of checks to the repository
 | commit	| Git commit hash| 	To understand when checks get fixed
 | user	| SHA256 hash of GitHub email	| Know if checks are either specifically or universally disdained or fixed
 | ignored_rules	| Rules that are explicitly ignored using Bento (by using `bento disable`)	| Understand which checks are useful and which are not
-| path_hash	| SHA256 hash of the relative file path which is relevant to the event| 	Measure check adoption and fixes; in conjuction with rule_id_hash and count, infer if checks get addressed
-| rule_id_hash	| SHA256 hash of the rule_id which caused the event	| Measure check adoption and fixes; in conjuction with path_hash and count, infer if checks get addressed
-| count| 	Number of times a check fires for this path| 	Number of times a check fires for a path; in conjuction with rule_id_hash and rule_id_hash, infer if checks get addressed
+| path_hash	| SHA256 hash of the relative file path which is relevant to the event| 	Measure check adoption and fixes; in conjuction with rule\_id\_hash and count, infer if checks get addressed
+| rule\_id\_hash	| SHA256 hash of the rule_id which caused the event	| Measure check adoption and fixes; in conjuction with path_hash and count, infer if checks get addressed
+| count| 	Number of times a check fires for this path| 	Number of times a check fires for a path; in conjuction with path_hash and rule\_id\_hash, infer if checks get addressed
 | filtered_count| 	Number of times a check fires, not including archived checks.| 	Measure check adoption and fixes
 | error| 	Boolean reperesenting if this was an error event| 	Reproduce and debug issues
 | event_name	| Generic Bento label| 	Generic Bento label
 
 
+## Data usage
+We use this information for the following purposes:
+
+- to provide, operate, maintain, support, and improve Bento
+- to communicate with users, if users supply their email address, including by sending product announcements, technical notices, updates, security alerts, and support messages
+- to better understand user needs and interests, and to solicit user feedback about Bento
+
+## Data sharing
+We use some third party companies and services to help administer and provide Bento, for example for hosting, customer support, product usage analytics, email delivery, and database management. These third parties are permitted to handle user information only to perform these tasks in a manner consistent with this document and are obligated not to disclose or use it for any other purpose.
+
+We do not share or sell the information that users provide to us with other organizations without explicit consent, except as described in this document.
 
