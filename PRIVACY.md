@@ -71,7 +71,7 @@ This is a sample blob of data collected by Bento and sent to r2c:
 ## Description of fields
 
 | Field        | Description           | Use case  |
-| ------------- |:-------------:| -----:|
+| :------------- |:-------------| :-----|
 | X-R2C-Bento-User-Platform     | OS description | Reproduce and debug issues with specific platforms |
 | X-R2C-Bento-User-Shell| 	shell description| 	Reproduce and debug issues with specific shells
 | ua	| user agent| 	Reserved for future Bento variants
