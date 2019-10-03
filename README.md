@@ -42,6 +42,11 @@ Disable a specific check by running:
 * `TOOL` refers to the tool that includes the check, for example, `r2c.eslint`
 *  `CHECK` refers to the name of the check you want to enable, for example `no-console`
 
+## Demo
+Here’s a short preview of Bento in action:
+
+![Bento demo](bento-demo.gif)
+
 ## Help
 Run `bento --help` to see available commands and options.
 
