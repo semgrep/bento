@@ -3,7 +3,7 @@ Bento finds meaningful, novel bugs by automatically tailoring linters and static
 
 ## Installation
 
-Bento is supported on macOS Mojave 10.14.6 and Ubuntu 18.04.3 (LTS) x64.
+Bento is supported on macOS Mojave (10.14) and Ubuntu 18.04+.
 Bento requires Python version 3.6 or later and pip3.
 
 
