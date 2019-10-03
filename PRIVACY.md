@@ -45,7 +45,7 @@ Bento minimizes the amount of personal data collected or shared, and limits that
 * Client’s raw IP address
 * User’s source code
 
-## Sample data and definition of fields
+## Sample data and description of fields
 
 This is a sample blob of data collected by Bento and sent to r2c:
 ```json
