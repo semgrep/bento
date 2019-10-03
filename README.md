@@ -2,15 +2,10 @@
 Bento finds meaningful, novel bugs by automatically tailoring linters and static analysis on a per-project basis, letting you focus on writing code rather than configuring tools.
 
 ## Installation
+
+Bento is supported on macOS Mojave (10.14) and Ubuntu 18.04+.
 Bento requires Python version 3.6 or later and pip3.
 
-### macOS Mojave 10.14.6
-You can install Python 3 using [Brew](https://brew.sh) and pip3 will be automatically installed.
-
-### Ubuntu 18.04.3 (LTS) x64
-Python 3 is included by default in Ubuntu. You can install pip3 using:
-
-`sudo apt-get install python3-pip`
 
 ### Installing Bento
 Install Bento using:
