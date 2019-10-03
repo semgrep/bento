@@ -82,9 +82,9 @@ This is a sample blob of data collected by Bento and sent to r2c:
 | commit	| Git commit hash| 	To understand when checks get fixed
 | user	| SHA256 hash of GitHub email	| Know if checks are either specifically or universally disdained or fixed
 | ignored_rules	| Rules that are explicitly ignored using Bento (by using `bento disable`)	| Understand which checks are useful and which are not
-| path_hash	| SHA256 hash of the relative file path which is relevant to the event| 	Measure check adoption and fixes; in conjuction with rule_id_hash and count, infer if checks get addressed
-| rule_id_hash	| SHA256 hash of the rule_id which caused the event	| Measure check adoption and fixes; in conjuction with path_hash and count, infer if checks get addressed
-| count| 	Number of times a check fires for this path| 	Number of times a check fires for a path; in conjuction with rule_id_hash and rule_id_hash, infer if checks get addressed
+| path_hash	| SHA256 hash of the relative file path which is relevant to the event| 	Measure check adoption and fixes; in conjuction with rule\_id\_hash and count, infer if checks get addressed
+| rule\_id\_hash	| SHA256 hash of the rule_id which caused the event	| Measure check adoption and fixes; in conjuction with path_hash and count, infer if checks get addressed
+| count| 	Number of times a check fires for this path| 	Number of times a check fires for a path; in conjuction with rule_id_hash and rule\_id\_hash, infer if checks get addressed
 | filtered_count| 	Number of times a check fires, not including archived checks.| 	Measure check adoption and fixes
 | error| 	Boolean reperesenting if this was an error event| 	Reproduce and debug issues
 | event_name	| Generic Bento label| 	Generic Bento label
