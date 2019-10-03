@@ -75,7 +75,7 @@ This is a sample blob of data collected by Bento and sent to r2c:
 | X-R2C-Bento-User-Platform     | OS description | Reproduce and debug issues with specific platforms |
 | X-R2C-Bento-User-Shell| 	shell description| 	Reproduce and debug issues with specific shells
 | ua	| user agent| 	Reserved for future Bento variants
-| client_ip	| 	| Rough geolocation of clients so we can best support our users
+| client_ip	| IP address	| Rough geolocation of clients so we can best support our users
 | tool	| The tool which triggered the event [r2c.eslint, r2c.flake8]| 	Improve Bento integration with the tool
 | timestamp| 	Time when the event fired	| Reproduce and debug issues
 | repository	| SHA256 hash of the repository name| 	Reserved for future tailoring of checks to the repository
