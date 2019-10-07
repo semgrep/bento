@@ -57,13 +57,12 @@ def fetch_latest_version() -> Tuple[Optional[str], Optional[str]]:
         return None, None
 
 
-async def post_metrics(data: List[Dict[str, Any]]) -> bool:
+def post_metrics(data: List[Dict[str, Any]]) -> bool:
     try:
         url = f"{_get_base_url()}/bento/api/v1/metrics/u/{get_user_uuid()}/"
         r = no_auth_post(url, json=data)
         r.raise_for_status()
         return True
-    except Exception as e:
-        # TODO log user exception to some local file
-        print(e)
+    except Exception:
+        # TODO log this to debug file
         return False

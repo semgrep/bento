@@ -1,6 +1,31 @@
 formatter:
   bento.formatter.Stylish: {}
 tools:
+  r2c.bandit:
+    ignore:
+      - assert_used
+      - hardcoded_bind_all_interfaces
+      - hardcoded_password_string
+      - hardcoded_password_funcarg
+      - hardcoded_password_default
+      - hardcoded_tmp_directory
+      - try_except_continue
+      - md5
+      - urllib_urlopen
+      - random
+      - import_pickle
+      - import_subprocess
+      - import_xml_etree
+      - import_xml_sax
+      - import_xml_expat
+      - import_xml_minidom
+      - import_xml_pulldom
+      - import_lxml
+      - subprocess_without_shell_equals_true
+      - any_other_function_with_shell_equals_true
+      - start_process_with_no_shell
+      - start_process_with_partial_path
+      - hardcoded_sql_expressions
   r2c.eslint:
     ignore:
       - array-bracket-newline
@@ -298,6 +323,8 @@ tools:
       - E242
       # Unexpected spaces around keyword / parameter equals
       - E251
+      # Missing whitespace around parameter equals
+      - E252
       # At least two spaces before inline comment
       - E261
       # Inline comment should start with '# '

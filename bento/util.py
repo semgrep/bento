@@ -1,10 +1,14 @@
+from __future__ import unicode_literals
+
 import os
+import os.path
 import pkgutil
 import shutil
+import signal
 import subprocess
 import sys
 from importlib import import_module
-from typing import List, Pattern, Type
+from typing import Collection, List, Pattern, Type
 
 import click
 import psutil
@@ -57,35 +61,57 @@ def package_subclasses(type: Type, pkg_path: str) -> List[Type]:
     return type.__subclasses__()
 
 
-def less(text: List[str], only_if_overrun: bool = False) -> None:
+def less(
+    text: Collection[str], pager: bool = True, only_if_overrun: bool = False
+) -> None:
     """
-    Prints a string through less
-    """
-    joined = "\n".join(text)
-    use_echo = False
+    Possibly prints a string through less.
 
-    if not sys.stdout.isatty():
+    Parameters:
+        pager: If false, the string is always echoed directly to stdout
+        only_if_overrun: If true, the strings are only printed through less if their length exceeds the terminal height
+    """
+    use_echo = False
+    text_len = len(text)
+
+    # In order to prevent an early pager exit from killing the CLI,
+    # we must both ignore the resulting SIGPIPE and BrokenPipeError
+    def drop_sig(signal, frame):
+        pass
+
+    if not pager or not sys.stdout.isatty():
         use_echo = True
     if only_if_overrun:
         _, height = shutil.get_terminal_size()
-        if len(text) < height:
+        if text_len < height:
             use_echo = True
 
     if use_echo:
-        click.echo(joined)
+        for t in text:
+            click.echo(t)
     else:
-        process = subprocess.Popen(["less", "-r"], stdin=subprocess.PIPE)
-        process.stdin.write(bytearray(joined, "utf8"))
-        process.communicate()
+        # NOTE: Using signal.SIG_IGN here DOES NOT IGNORE the resulting SIGPIPE
+        signal.signal(signal.SIGPIPE, drop_sig)
+        try:
+            process = subprocess.Popen(["less", "-r"], stdin=subprocess.PIPE)
+            for ix, t in enumerate(text):
+                process.stdin.write(bytearray(t, "utf8"))
+                if ix != text_len - 1:
+                    process.stdin.write(bytearray("\n", "utf8"))
+            process.communicate()
+        except BrokenPipeError:
+            pass
+        finally:
+            signal.signal(signal.SIGPIPE, signal.SIG_DFL)
 
 
 def echo_error(text: str, indent: str = "") -> None:
-    click.secho(f"{indent}✘ {text}", fg="red")
+    click.secho(f"{indent}✘ {text}", fg="red", err=True)
 
 
 def echo_warning(text: str, indent: str = "") -> None:
-    click.secho(f"{indent}⚠ {text}", fg="yellow")
+    click.secho(f"{indent}⚠ {text}", fg="yellow", err=True)
 
 
 def echo_success(text: str, indent: str = "") -> None:
-    click.secho(f"{indent}✔ {text}", fg="green")
+    click.secho(f"{indent}✔ {text}", fg="green", err=True)
