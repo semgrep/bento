@@ -43,6 +43,9 @@ class ToolFixture(Tool):
     def file_name_filter(self) -> Pattern:
         return re.compile(r"\btest_tool\.py\b")
 
+    def matches_project(self) -> bool:
+        return True
+
     def setup(self, config: Dict[str, Any]) -> None:
         pass
 

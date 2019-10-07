@@ -1,3 +1,5 @@
+import json
+
 import click
 
 import bento.formatter
@@ -32,12 +34,38 @@ VIOLATIONS = [
 def test_stylish_formatter():
     stylish = bento.formatter.Stylish()
     stylish.config = {}
-    output = stylish.to_lines(VIOLATIONS)
+    output = stylish.dump(VIOLATIONS)
     expectation = [
         "bento/test/integration/init.js",
-        f"  0:0  {click.style('warning', fg='yellow')} Unexpected console statement.                      r2c.eslint     https://eslint.org/docs/rules/no-console",
-        f"  0:0  {click.style('error  ', fg='red')} Missing semicolon.                                 r2c.eslint     https://eslint.org/docs/rules/semi",
+        f"  0:0  {click.style('warning', fg='yellow')} Unexpected console statement. r2c.eslint     https://eslint.org/docs/rules/no-console",
+        f"  0:0  {click.style('error  ', fg='red')} Missing semicolon.            r2c.eslint     https://eslint.org/docs/rules/semi",
         "",
     ]
 
     assert output == expectation
+
+
+def test_json_formatter():
+    json_formatter = bento.formatter.Json()
+    json_formatter.config = {}
+    output = json.loads(next(iter(json_formatter.dump(VIOLATIONS))))
+    assert output == [
+        {
+            "tool_id": "r2c.eslint",
+            "check_id": "no-console",
+            "line": 0,
+            "column": 0,
+            "severity": 1,
+            "message": "Unexpected console statement.",
+            "path": "bento/test/integration/init.js",
+        },
+        {
+            "tool_id": "r2c.eslint",
+            "check_id": "semi",
+            "path": "bento/test/integration/init.js",
+            "line": 0,
+            "column": 0,
+            "severity": 2,
+            "message": "Missing semicolon.",
+        },
+    ]

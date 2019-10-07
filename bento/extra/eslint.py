@@ -7,6 +7,7 @@ from typing import Any, Dict, Iterable, List, Pattern, Type
 
 from semantic_version import Version
 
+from bento.extra.js_tool import JsTool
 from bento.parser import Parser
 from bento.result import Violation
 from bento.tool import Tool
@@ -60,24 +61,26 @@ class EslintParser(Parser):
     def parse(self, input: str) -> List[Violation]:
         violations: List[Violation] = []
         for r in json.loads(input):
-            r["source"] = r["source"].split("\n")
+            r["source"] = r.get("source", "").split("\n")
             violations += [self.to_violation(r, m) for m in r["messages"]]
         return violations
 
 
-class EslintTool(Tool):
+class EslintTool(JsTool, Tool):
     ESLINT_TOOL_ID = "r2c.eslint"  # to-do: versioning?
     CONFIG_FILE_NAME = ".eslintrc.yml"
-    MIN_ESLINT_VERSION = Version("6.1.0")
     PROJECT_NAME = "node-js"
 
-    # TODO: semantic versioning compatibility
-    MIN_ESLINT_VERSION = Version("6.1.0")
-    MIN_AIRBNB_VERSION = Version("18.0.1")
-    MIN_PEERDEPS_VERSION = Version("1.10.2")
-    MIN_REACT_VERSION = Version("7.14.3")
-
-    installed_versions: Dict[str, Version] = {}
+    # Packages we always need no matter what.
+    ALWAYS_NEEDED = {
+        "eslint": Version("6.1.0"),
+        "eslint-config-airbnb": Version("18.0.1"),
+        "eslint-plugin-import": Version("2.18.2"),
+        "eslint-plugin-jsx-a11y": Version("6.2.3"),
+        "eslint-plugin-react": Version("7.14.3"),
+        "eslint-plugin-react-hooks": Version("1.7.0"),
+    }
+    MIN_ESLINT_PLUGIN_REACT_VERSION = Version("7.14.3")
 
     @property
     def parser_type(self) -> Type[Parser]:
@@ -95,16 +98,8 @@ class EslintTool(Tool):
     def file_name_filter(self) -> Pattern:
         return re.compile(r".*\.(?:js|jsx|ts|tsx)\b")
 
-    def __list_installed_versions(self) -> None:
-        npm_query = self.exec(
-            ["npm", "list", "--depth=0"], capture_output=True
-        ).stdout.split("\n")[1:]
-        regex = re.compile(r"([^\s]+)@([\d\.]+)")
-        for pkg_info in npm_query:
-            results = regex.search(pkg_info)
-            if results:
-                pkg, ver = results.groups()
-                self.installed_versions[pkg] = Version(ver)
+    def matches_project(self) -> bool:
+        return os.path.exists(os.path.join(self.base_path, "package.json"))
 
     def __copy_eslintrc(self, identifier: str) -> None:
         print(f"Using {identifier} .eslintrc configuration")
@@ -115,42 +110,14 @@ class EslintTool(Tool):
             os.path.join(self.base_path, EslintTool.CONFIG_FILE_NAME),
         )
 
-    def __npm_install(self, package: str, min_version: Version) -> bool:
-        package_version = self.installed_versions.get(package, None)
-        needs_update = True
-        if package_version is not None:
-            # TODO: Move to debug logging
-            # print(f"Current {package} version is {package_version}")
-            if package_version >= min_version:  # TODO: Use semver
-                needs_update = False
-
-        if needs_update:
-            print(f"Updating {package}...")
-            subprocess.run(["npm", "install", package, "--save-dev"], check=True)
-            return True
-
-        return False
-
     def setup(self, config: Dict[str, Any]) -> None:
-        self.__list_installed_versions()
-
-        # eslint
-        self.__npm_install("eslint", EslintTool.MIN_ESLINT_VERSION)
-
-        # On some systems it is necessary to update the install-peerdeps package
-        # for npx install-peerdeps to operate
-        self.__npm_install("install-peerdeps", EslintTool.MIN_PEERDEPS_VERSION)
-
-        # eslint-config-airbnb
-        if self.__npm_install("eslint-config-airbnb", EslintTool.MIN_AIRBNB_VERSION):
-            self.exec(
-                ["npx", "install-peerdeps", "--dev", "eslint-config-airbnb"], check=True
-            )
-
-        # install react plugin if necessary
-        project_react_version = self.installed_versions.get("react", None)
-        if project_react_version is not None:
-            self.__npm_install("eslint-plugin-react", EslintTool.MIN_REACT_VERSION)
+        needed_packages = self.ALWAYS_NEEDED.copy()
+        project_has_react = self._installed_version("react") is not None
+        if project_has_react:
+            needed_packages[
+                "eslint-plugin-react"
+            ] = EslintTool.MIN_ESLINT_PLUGIN_REACT_VERSION
+        self._ensure_packages(needed_packages)
 
         # install .eslintrc.yml
         if not os.path.exists(
@@ -158,7 +125,7 @@ class EslintTool(Tool):
         ):
             print(f"Installing {EslintTool.CONFIG_FILE_NAME}...")
 
-            if project_react_version is not None:
+            if project_has_react is not None:
                 self.__copy_eslintrc("react")
             else:
                 self.__copy_eslintrc("default")
@@ -171,11 +138,10 @@ class EslintTool(Tool):
             EslintTool.CONFIG_FILE_NAME,
             "-f",
             "json",
-            ".",
         ]
         for f in files:
             cmd.append(f)
-        result = self.exec(cmd, capture_output=True)
+        result = self.exec(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         # Return codes:
         # 0 = no violations, 1 = violations, 2+ = tool failure
         if result.returncode > 1:

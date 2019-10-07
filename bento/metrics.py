@@ -10,19 +10,17 @@ import git
 from bento.violation import Violation
 
 
-def __get_git_repo(dirPath: str = os.getcwd()) -> Optional[git.Repo]:
-    try:
-        r = git.Repo(dirPath, search_parent_directories=True)
-        return r
-    except git.exc.InvalidGitRepositoryError:
-        return None
+def __get_git_repo(dirPath: str = os.getcwd()) -> git.Repo:
+    r = git.Repo(dirPath, search_parent_directories=True)
+    return r
 
 
+# N.B. See https://stackoverflow.com/a/42613047
 def __get_git_user_email(dirPath: str = os.getcwd()) -> Optional[str]:
-    r = __get_git_repo(dirPath)
-    if r:
+    try:
+        r = __get_git_repo(dirPath)
         return r.config_reader().get_value("user", "email")
-    else:
+    except Exception:
         return None
 
 
@@ -35,7 +33,7 @@ def __hash_sha256(data: str) -> str:
 def __get_git_url(dirPath: str = os.getcwd()) -> Optional[str]:
     """Get remote.origin.url for git dir at dirPath"""
     r = __get_git_repo(dirPath)
-    if r:
+    if r and r.remotes and r.remotes.origin:
         return __hash_sha256(r.remotes.origin.url)
     else:
         return None
@@ -67,6 +65,7 @@ def __get_aggregate_violations(violations: List[Violation]) -> List[Dict[str, An
             {
                 "path_hash": __hash_sha256(p),
                 "check_id_hash": __hash_sha256(rid),
+                "check_id": rid,
                 "count": sum(1 for _ in v),
                 "filtered_count": __get_filtered_violation_count(v),
             }

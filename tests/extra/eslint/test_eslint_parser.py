@@ -103,3 +103,27 @@ def test_file_match():
     assert f.match("foo.ts") is not None
     assert f.match("foo.tsx") is not None
     assert f.match("foo.jsa") is None
+
+
+def test_missing_source():
+    with open(
+        os.path.join(THIS_PATH, "eslint_violation_missing_source.json")
+    ) as json_file:
+        json = json_file.read()
+
+    result = EslintParser(BASE_PATH).parse(json)
+
+    expectation = [
+        Violation(
+            tool_id="r2c.eslint",
+            check_id="no-console",
+            path="tests/integration/simple/init.js",
+            line=0,
+            column=0,
+            message="Unexpected console statement.",
+            severity=1,
+            syntactic_context="",
+        )
+    ]
+
+    assert result == expectation

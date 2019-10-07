@@ -1,28 +1,34 @@
-import asyncio
 import os
 import shutil
+import stat
 import subprocess
 import sys
+import threading
 import time
 import traceback
 from functools import partial
 from multiprocessing import Lock, Pool
 from pathlib import Path
-from typing import Any, Callable, Dict, List, Set, Tuple, Union
+from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Tuple, Union
 
 import click
+import git
+import requests
 import yaml
+from semantic_version import Version
 from tqdm import tqdm
 
 import bento.constants as constants
+import bento.extra
 import bento.formatter as formatter
-import bento.metrics
 import bento.network as network
 import bento.result as result
 import bento.tool as tool
 import bento.util
+from bento.git_util import get_staged_files
 from bento.result import Baseline
-from bento.util import echo_error, echo_success, echo_warning
+from bento.staged_files_only import staged_files_only
+from bento.util import echo_error, echo_success, echo_warning, noop_context
 from bento.violation import Violation
 
 UPGRADE_WARNING_OUTPUT = f"""
@@ -35,31 +41,34 @@ UPGRADE_WARNING_OUTPUT = f"""
 ╰─────────────────────────────────────────────╯
 """
 
-TELEMETRY_PROMPT = f"""
-│  Bento does not collect any source code or
-│  send any source code outside of your
-│  computer. Bento collects usage data to
-│  help us understand how to improve the
-│  product by aggregating anonymized
-│  information about errors, slow operations,
-│  feature utilization, and user preferences.
-│  We do not and will not sell or share this
-│  data to any third party.
-│  For more inforamtion, see:
-│  https://github.com/returntocorp/bento/blob/master/PRIVACY.md
+TERMS_OF_SERVICE_MESSAGE = f"""│ Bento does not collect any source code or send any source code outside of your
+│ computer. Bento collects usage data to help us understand how to improve the
+│ product by aggregating anonymized information about errors, slow operations,
+│ feature utilization, and user preferences. We do not and will not sell or share
+│ this data to any third party. For more information, see:
+│ https://github.com/returntocorp/bento/blob/master/PRIVACY.md
 """
+
+TERMS_OF_SERVICE_ERROR = f"""
+Bento did NOT install. Bento beta users must agree to the terms of service to continue. Please reach out to us at support@r2c.dev with questions or concerns.
+"""
+
+MAX_BAR_VALUE = 30
+BAR_UPDATE_INTERVAL = 0.1
 
 lock = Lock()
 bars: List[tqdm]
 
 
 def __tool_inventory() -> Dict[str, tool.Tool]:
-    types = bento.util.package_subclasses(tool.Tool, "bento.extra")
     all_tools = {}
+    types = bento.util.package_subclasses(tool.Tool, "bento.extra")
     for tt in types:
-        ti = tt()
-        ti.base_path = "."
-        all_tools[ti.tool_id] = ti
+        if not tt.__abstractmethods__:
+            # Skip abstract tool classes
+            ti = tt()
+            ti.base_path = "."
+            all_tools[ti.tool_id] = ti
     return all_tools
 
 
@@ -74,12 +83,17 @@ def __write_config(config: Dict[str, Any]) -> None:
 
 
 def __install_config_if_not_exists() -> None:
-    print(f"Creating default configuration at {constants.CONFIG_PATH}\n")
     if not os.path.exists(constants.CONFIG_PATH):
-        shutil.copy(
-            os.path.join(os.path.dirname(__file__), "configs/default.yml"),
-            constants.CONFIG_PATH,
-        )
+        click.echo(f"Creating default configuration at {constants.CONFIG_PATH}\n")
+        with (
+            open(os.path.join(os.path.dirname(__file__), "configs/default.yml"))
+        ) as template:
+            yml = yaml.safe_load(template)
+        for tid, t in __tool_inventory().items():
+            if not t.matches_project():
+                del yml["tools"][tid]
+        with (open(constants.CONFIG_PATH, "w")) as config_file:
+            yaml.safe_dump(yml, stream=config_file)
 
 
 def __tools(config: Dict[str, Any]) -> List[tool.Tool]:
@@ -88,7 +102,7 @@ def __tools(config: Dict[str, Any]) -> List[tool.Tool]:
     for tn in config["tools"].keys():
         ti = inventory.get(tn, None)
         if not ti:
-            print(f"No tool named '{tn}' could be found")
+            echo_error(f"No tool named '{tn}' could be found")
             continue
         tools.append(ti)
 
@@ -103,27 +117,61 @@ def __formatter(config: Dict[str, Any]) -> formatter.Formatter:
         return formatter.for_name(f_class, cfg)
 
 
-def __tool_findings(tool: tool.Tool, config: Dict[str, Any]) -> List[result.Violation]:
+def __tool_findings(
+    tool: tool.Tool, config: Dict[str, Any], paths: Optional[Iterable[str]] = None
+) -> List[result.Violation]:
     tool_config = config["tools"].get(tool.tool_id, {})
-    return tool.results(tool_config)
+    return tool.results(tool_config, paths)
 
 
 def __tool_filter(
-    config: Dict[str, Any], baseline: Baseline, tool_and_index: Tuple[tool.Tool, int]
+    config: Dict[str, Any],
+    baseline: Baseline,
+    paths: Optional[Iterable[str]],
+    tool_and_index: Tuple[tool.Tool, int],
 ) -> Union[List[Violation], Exception]:
     """Runs a tool and filters out existing findings using baseline"""
+
+    min_bar_value = int(MAX_BAR_VALUE / 5)
+    run = True
+
+    def update_bars() -> None:
+        bar_value = min_bar_value
+        keep_going = True
+        while keep_going:
+            with lock:
+                keep_going = run
+                if bar_value < MAX_BAR_VALUE - 1:
+                    bar_value += 1
+                    bars[ix].update(1)
+                else:
+                    bar_value = min_bar_value
+                    bars[ix].update(min_bar_value - MAX_BAR_VALUE + 1)
+            time.sleep(BAR_UPDATE_INTERVAL)
+        with lock:
+            bars[ix].update(MAX_BAR_VALUE - bar_value)
 
     try:
         # print(f"{tool.tool_id} start")  # TODO: Move to debug
         # before = time.time_ns()
         tool, ix = tool_and_index
+        with lock:
+            bars[ix].set_postfix_str("🍜")
         tool.setup(config)
         with lock:
-            bars[ix].update(1)
+            bars[ix].update(min_bar_value)
+            bars[ix].set_postfix_str("🍤")
         # after_setup = time.time_ns()
-        results = result.filter(tool.tool_id, __tool_findings(tool, config), baseline)
+        th = threading.Thread(name=f"update_{ix}", target=update_bars)
+        th.start()
+        results = result.filter(
+            tool.tool_id, __tool_findings(tool, config, paths), baseline
+        )
         with lock:
-            bars[ix].update(2)
+            run = False
+        th.join()
+        with lock:
+            bars[ix].set_postfix_str("🍱")
         # after = time.time_ns()
         # print(f"{tool.tool_id} completed in {((after - before) / 1e9):2f} s (setup in {((after_setup - before) / 1e9):2f} s)")  # TODO: Move to debug
         return results
@@ -171,14 +219,106 @@ def _print_version(ctx, param, value):
     """Print the current r2c-cli version based on setuptools runtime"""
     if not value or ctx.resilient_parsing:
         return
-    print(f"bento/{get_version()}")
+    click.echo(f"bento/{get_version()}")
     ctx.exit()
+
+
+def __post_email_to_mailchimp(email: str) -> bool:
+    r = requests.post(
+        "http://waitlist.r2c.dev/subscribe/cli-user", json={"email": email}, timeout=5
+    )
+
+    status = r.status_code == requests.codes.ok
+    network.post_metrics(
+        [
+            {
+                "message": "Tried adding user to Bento waitlist",
+                "user-email": email,
+                "mailchimp_response": r.status_code,
+                "success": status,
+            }
+        ]
+    )
+    return status
 
 
 def is_running_supported_python3() -> bool:
     python_major_v = sys.version_info.major
     python_minor_v = sys.version_info.minor
     return python_major_v >= 3 and python_minor_v >= 6
+
+
+def has_completed_registration() -> bool:
+    if not os.path.exists(constants.GLOBAL_CONFIG_PATH):
+        return False
+
+    with open(constants.GLOBAL_CONFIG_PATH) as yaml_file:
+        global_config = yaml.safe_load(yaml_file)
+
+    if constants.TERMS_OF_SERVICE_KEY not in global_config:
+        return False
+
+    # We care that there is a version of the terms of service a user has agreed to,
+    # taking a "good enough" approach with no validation that it's a version that
+    # actually exists.
+
+    tos_version = global_config[constants.TERMS_OF_SERVICE_KEY]
+    # If Version throws an exception, then string is not a valid semver
+    try:
+        Version(version_string=tos_version)
+    except Exception:
+        raise ValueError(
+            f"Invalid semver for `{constants.TERMS_OF_SERVICE_KEY}` in {constants.GLOBAL_CONFIG_PATH}: {tos_version}. Deleting the key/value and re-running Bento should resolve the issue."
+        )
+
+    return True
+
+
+def register_user() -> bool:
+    global_config = {}
+
+    bolded_welcome = click.style(f"Welcome to Bento!", bold=True)
+    click.echo(
+        f"{bolded_welcome} You're about to get a powerful suite of tailored tools.\n"
+    )
+    click.echo(
+        f"To get started for the first time, please review our terms of service:\n\n{TERMS_OF_SERVICE_MESSAGE}"
+    )
+
+    agreed_terms_of_service = click.confirm(
+        "Do you agree to Bento's terms of service and privacy policy?", default=True
+    )
+    if agreed_terms_of_service:
+        global_config[
+            constants.TERMS_OF_SERVICE_KEY
+        ] = constants.TERMS_OF_SERVICE_VERSION
+    else:
+        bento.util.echo_error(TERMS_OF_SERVICE_ERROR)
+        return False
+
+    subscribe_to_email = click.confirm(
+        "For the Bento beta, may we contact you infrequently via email to ask for your feedback and let you know about updates? You can unsubscribe at any time.",
+        default=True,
+    )
+
+    if subscribe_to_email:
+        email = click.prompt(
+            "Email", type=str, default=bento.metrics.__get_git_user_email()
+        )
+        global_config["email"] = email
+        r = __post_email_to_mailchimp(email)
+        if not r:
+            echo_warning(
+                "\nWe were unable to subscribe you to the Bento mailing list, but will continue with installation. Please shoot us a note via support@r2c.dev to debug."
+            )
+
+    os.makedirs(constants.GLOBAL_CONFIG_DIR, exist_ok=True)
+    with open(constants.GLOBAL_CONFIG_PATH, "w+") as yaml_file:
+        yaml.safe_dump(global_config, yaml_file)
+
+    click.echo(f"\nCreated user configs at {constants.GLOBAL_CONFIG_PATH}.")
+
+    return True
 
 
 @click.group()
@@ -205,9 +345,23 @@ def is_running_supported_python3() -> bool:
     expose_value=False,
     is_eager=True,
 )
-def cli(debug, verbose):
+@click.option(
+    "--agree",
+    is_flag=True,
+    help="Automatically agree to terms of service.",
+    default=False,
+)
+def cli(debug, verbose, agree):
     if not is_running_supported_python3():
-        print("Please upgrade to python3.6 to run bento.")
+        echo_error(
+            "Bento requires Python 3.6+. Please ensure you have Python 3.6+ and installed Bento via `pip3 install r2c-bento`."
+        )
+        sys.exit(3)
+    if not agree and not has_completed_registration():
+        registered = register_user()
+        if not registered:
+            # Terminate with non-zero error
+            sys.exit(3)
     if not is_running_latest():
         click.echo(UPGRADE_WARNING_OUTPUT)
 
@@ -229,7 +383,7 @@ def archive():
         try:
             findings = __tool_findings(t, config)
         except Exception as e:
-            print(click.style(f"Exception while running {t.tool_id}: {e}", fg="red"))
+            bento.util.echo_error(f"Exception while running {t.tool_id}: {e}")
             findings = []
         total_findings += len(findings)
         yml = result.tool_results_to_yml(t.tool_id, findings)
@@ -243,13 +397,13 @@ def archive():
         f"Rewrote the whitelist with {total_findings} findings from {len(tools)} tools."
     )
 
-    asyncio.run(network.post_metrics(bento.metrics.command_metric("reset")))
+    network.post_metrics(bento.metrics.command_metric("reset"))
 
 
 @cli.command()
 def init():
     """
-    Installs all configured tools.
+    Autodetects and installs tools.
 
     Run again after changing tool list in .bento.yml
     """
@@ -264,18 +418,17 @@ def init():
     elif project_names:
         projects = " and ".join(project_names)
     else:
-        print(click.style("bento can't identify this project", fg="red"))
+        echo_error("Bento can't identify this project.")
         sys.exit(3)
 
-    print(click.style(f"{TELEMETRY_PROMPT}\n", fg="yellow"))
-    print(click.style(f"Detected project with {projects}\n", fg="blue"))
+    click.secho(f"Detected project with {projects}\n", fg="blue")
 
     for t in __tools(config):
         t.setup(config)
 
     Path(constants.BASELINE_FILE_PATH).touch()
 
-    asyncio.run(network.post_metrics(bento.metrics.command_metric("setup")))
+    network.post_metrics(bento.metrics.command_metric("setup"))
 
 
 @cli.command()
@@ -310,7 +463,21 @@ def enable(tool: str, check: str) -> None:
 
 
 @cli.command()
-def check():
+@click.option(
+    "--formatter",
+    type=str,
+    help="Which output format to use. Falls back to the config.",
+    default=None,
+)
+@click.option(
+    "--pager/--no-pager",
+    help="Send long output through a pager. This should be disabled when used as an integration (e.g. with an editor).",
+    default=True,
+)
+@click.option("--staged-only", is_flag=True, help="Only runs over files staged in git")
+def check(
+    formatter: Optional[str] = None, pager: bool = True, staged_only: bool = False
+) -> None:
     """
     Checks for new findings.
 
@@ -328,6 +495,8 @@ def check():
         baseline = {}
 
     config = __config()
+    if formatter:
+        config["formatter"] = {formatter: {}}
     tools = __tools(config)
     fmt = __formatter(config)
     findings_to_log: List[Any] = []
@@ -342,44 +511,58 @@ def check():
         global bars
         bars = b
 
-    click.echo("Running Bento checks...")
+    click.echo("Running Bento checks...", err=True)
     bars = [
         tqdm(
-            total=3,
+            total=MAX_BAR_VALUE,
             position=ix,
+            mininterval=BAR_UPDATE_INTERVAL,
             desc=tool.tool_id,
-            ncols=30,
-            bar_format=click.style("  {desc}: |{bar}| {elapsed}", fg="blue"),
-            leave=True,
+            ncols=40,
+            bar_format=click.style("  {desc}: |{bar}| {elapsed}{postfix}", fg="blue"),
+            leave=False,
         )
         for tool, ix in tools_and_indices
     ]
 
-    before = time.time()
-    with Pool(len(tools), initializer=set_progress_bars, initargs=(bars,)) as pool:
-        # using partial to pass in multiple arguments to __tool_filter
-        func = partial(__tool_filter, config, baseline)
-        all_findings = enumerate(pool.map_async(func, tools_and_indices).get())
-    elapsed = time.time() - before
+    files = None
+    if staged_only:
+        ctx = staged_files_only(".")
+        files = get_staged_files()
+    else:
+        ctx = noop_context()
+    with ctx:
+        before = time.time()
+        with Pool(len(tools), initializer=set_progress_bars, initargs=(bars,)) as pool:
+            # using partial to pass in multiple arguments to __tool_filter
+            func = partial(__tool_filter, config, baseline, files)
+            all_findings = enumerate(pool.map_async(func, tools_and_indices).get())
+        elapsed = time.time() - before
 
+    # click.echo("\x1b[1F")  # Resets line position afters bars close
+    for b in bars:
+        click.echo("", err=True)
     for b in bars:
         b.close()
 
-    # click.echo("\x1b[1F")  # Resets line position afters bars close
-    click.echo("")
+    click.echo("", err=True)
 
     is_error = False
 
-    notice = []
+    def post_metrics():
+        network.post_metrics(findings_to_log)
+
+    stats_thread = threading.Thread(name="stats", daemon=True, target=post_metrics)
+    stats_thread.start()
+
     collapsed_findings: List[Violation] = []
     for index, findings in all_findings:
         tool_id = tools[index].tool_id
         if isinstance(findings, Exception):
-            notice.append(click.style(f"✘ Error while running {tool_id}:", fg="red"))
-            notice.append(f"{findings}")
+            echo_error(f"Error while running {tool_id}: {findings}")
             if isinstance(findings, subprocess.CalledProcessError):
-                notice.append(findings.stderr)
-            notice.append("")
+                click.secho(findings.stderr, err=True)
+            click.echo("", err=True)
             is_error = True
         elif isinstance(findings, list) and findings:
             findings_to_log += bento.metrics.violations_to_metrics(
@@ -389,24 +572,50 @@ def check():
 
     if collapsed_findings:
         findings_by_path = sorted(collapsed_findings, key=by_path)
-        notice += fmt.to_lines(findings_by_path)
-
-    bento.util.less(notice, only_if_overrun=True)
-
+        bento.util.less(fmt.dump(findings_by_path), pager=pager, only_if_overrun=True)
     if collapsed_findings:
-        echo_warning(f"{len(collapsed_findings)} findings in {elapsed:.2f} s")
-        click.echo("")
+        echo_warning(f"{len(collapsed_findings)} findings in {elapsed:.2f} s\n")
         suppress_str = click.style("bento archive", fg="blue")
-        click.echo(f"To suppress all findings run `{suppress_str}`.")
-
-        asyncio.run(network.post_metrics(findings_to_log))
-
+        click.echo(f"To suppress all findings run `{suppress_str}`.", err=True)
     else:
         echo_success(f"0 findings in {elapsed:.2f} s")
-
-    asyncio.run(network.post_metrics(bento.metrics.command_metric("check")))
 
     if is_error:
         sys.exit(3)
     elif collapsed_findings:
         sys.exit(2)
+
+
+@cli.command()
+def install_hook():
+    """
+        Installs bento as a git pre-commit hook
+        Saves any existing pre-commit hook to .git/hooks/pre-commit.pre-bento and
+        runs said hook after bento hook is run
+    """
+    # Get hook path
+    try:
+        repo = git.Repo(os.getcwd(), search_parent_directories=True)
+        hook_path = git.index.fun.hook_path("pre-commit", repo.git_dir)
+    except Exception:
+        raise
+
+    legacy_hook_path = f"{hook_path}.pre-bento"
+    if os.path.exists(hook_path):
+        # If pre-commit hook already exists move it over
+        if os.path.exists(legacy_hook_path):
+            raise Exception(
+                "There is already a legacy hook. Not sure what to do so just exiting for now."
+            )
+        else:
+            shutil.move(hook_path, legacy_hook_path)
+
+    # Copy pre-commit script template to hook_path
+    template_location = os.path.join(
+        os.path.dirname(__file__), "resources/pre-commit.template"
+    )
+    shutil.copyfile(template_location, hook_path)
+
+    # Make file executable
+    original_mode = os.stat(hook_path).st_mode
+    os.chmod(hook_path, original_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)

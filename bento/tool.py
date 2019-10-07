@@ -8,6 +8,9 @@ from bento.parser import Parser
 from bento.result import Violation
 
 
+# Note: for now, every tool *HAS* to directly inherit from this, even if it
+# also inherits from JsTool or PythonTool. This is so we can list all tools by
+# looking at subclasses of Tool.
 class Tool(ABC):
     _base_path: Union[None, str] = None
 
@@ -81,6 +84,13 @@ class Tool(ABC):
         """
         pass
 
+    @abstractmethod
+    def matches_project(self) -> bool:
+        """
+        Returns true if and only if this project should use this tool
+        """
+        pass
+
     def filter_paths(self, config: Dict[str, Any], paths: Iterable[str]) -> Set[str]:
         """
         Filters a list of paths to those that should be analyzed by this tool
@@ -140,13 +150,16 @@ class Tool(ABC):
         Raises:
             CalledProcessError: If execution fails
         """
-        if not paths:
-            paths = [os.path.abspath(self.base_path)]
+        if paths is None:
+            paths = [self.base_path]
         paths = self.filter_paths(config, paths)
 
         if paths:
             raw = self.run(config, paths)
-            violations = self.parser().parse(raw)
+            try:
+                violations = self.parser().parse(raw)
+            except Exception:
+                raise Exception(f"Could not parse output of '{self.tool_id}':\n{raw}")
             ignore_set = set(config.get("ignore", []))
             filtered = [v for v in violations if v.check_id not in ignore_set]
             return filtered

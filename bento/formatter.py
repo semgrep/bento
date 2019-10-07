@@ -1,8 +1,10 @@
 import itertools
+import json
 import re
+import shutil
 import sys
 from abc import ABC, abstractmethod
-from typing import Any, Dict, List, Optional
+from typing import Any, Collection, Dict, List, Optional
 
 import click
 
@@ -18,10 +20,8 @@ class Formatter(ABC):
     _config: Optional[Dict[str, Any]] = None
 
     @abstractmethod
-    def to_lines(self, violations: List[Violation]) -> List[str]:
-        """
-        Converts a list of Violation objects to a list of screen-printable strings
-        """
+    def dump(self, violations: List[Violation]) -> Collection[str]:
+        """Formats the list of violations for the end user."""
         pass
 
     @property
@@ -44,6 +44,7 @@ class Stylish(Formatter):
     """
 
     SEVERITY_STR = {
+        0: click.style("advice ", fg="green"),
         1: click.style("warning", fg="yellow"),
         2: click.style("error  ", fg="red"),
     }
@@ -63,12 +64,23 @@ class Stylish(Formatter):
     def __print_path(path: str) -> str:
         return path
 
-    def __print_violation(self, violation: Violation) -> str:
+    @staticmethod
+    def ellipsis_trim(str: str, max_length: int) -> str:
+        if len(str) > max_length:
+            return str[0 : max_length - 3] + "..."
+        return str
+
+    def __print_violation(self, violation: Violation, max_message_len: int) -> str:
+
         line = f"{violation.line:>3d}"
         col = f"{violation.column:<2d}"
         tool_id = f"{violation.tool_id:<14s}"
         rule = f"{violation.check_id:s}"
-        message = f"{violation.message[:50]:<50s}"
+
+        message = Stylish.ellipsis_trim(violation.message, max_message_len)
+
+        # save some space for what comes next
+        message = f"{message:<{max_message_len}s}"
 
         if violation.link is None:
             link = rule
@@ -93,17 +105,41 @@ class Stylish(Formatter):
         else:
             return href or text
 
-    def to_lines(self, violations: List[Violation]) -> List[str]:
-        lines: List[str] = []
-        ordered: List[Violation] = sorted(violations, key=Stylish.__path_of)
+    def dump(self, violations: List[Violation]) -> Collection[str]:
+        lines = []
+        max_message_len = min(max((len(v.message) for v in violations), default=0), 100)
 
+        if sys.stdout.isatty():
+            terminal_width, _ = shutil.get_terminal_size((50, 20))
+            max_message_len = max(min(max_message_len, terminal_width - 50), 20)
+
+        ordered: List[Violation] = sorted(violations, key=Stylish.__path_of)
         for path, vv in itertools.groupby(ordered, Stylish.__path_of):
             lines.append(Stylish.__print_path(path))
-            for v in vv:
-                lines.append(self.__print_violation(v))
+            for v in sorted(vv, key=lambda v: (v.line, v.column)):
+                lines.append(self.__print_violation(v, max_message_len))
             lines.append("")
 
         return lines
+
+
+class Json(Formatter):
+    """Formats output as a single JSON blob."""
+
+    def dump(self, violations: List[Violation]) -> Collection[str]:
+        json_obj = [
+            {
+                "tool_id": violation.tool_id,
+                "check_id": violation.check_id,
+                "line": violation.line,
+                "column": violation.column,
+                "message": violation.message,
+                "severity": violation.severity,
+                "path": violation.path,
+            }
+            for violation in violations
+        ]
+        return [json.dumps(json_obj)]
 
 
 def for_name(name: str, config: Dict[str, Any]) -> Formatter:
