@@ -1,16 +1,19 @@
 # Bento
-Bento finds meaningful, novel bugs by automatically tailoring linters and static analysis on a per-project basis, letting you focus on writing code rather than configuring tools.
+Bento automatically tailors linters and static analysis with sane defaults on a per-project basis, letting you focus on writing code rather than configuring tools.
+
+Bento supports JavaScript and Python, and is ideal for monorepos.
 
 ## Installation
 
 Bento is supported on macOS Mojave (10.14) and Ubuntu 18.04+.
 Bento requires Python version 3.6 or later and pip3.
 
-
 ### Installing Bento
 Bento is a command-line tool that is simple to install:
 
-`pip3 install r2c-bento`
+```bash
+pip3 install r2c-bento
+```
 
 ## Usage
 The workflow for Bento is:
@@ -26,45 +29,68 @@ The workflow for Bento is:
 
 In your project directory, run:
 
-`bento init`
+```bash
+bento init
+```
 
 ### Analyze your source code
 To trigger Bento to analyze your project, run:
 
-`bento check`
+```bash
+bento check
+```
 
-### Archive and baseline
+### Archive your 
 
-The `archive` command whitelists all outstanding issues and saves them to the `.bento-whitelist.yml` file. This lets you continue coding with a clean slate. New issues introduced from this point forward will be reported by Bento until the next time you run the `archive` command.
+The `archive` command whitelists outstanding issues to fix later. This lets you continue coding with a clean slate without having to address all your tech debt as soon as you adopt a new tool. New issues introduced from this point forward will be reported by Bento until the next time you run the `archive` command.
 
-Archive issues and get a clean slate by running:
+Archive issues by running:
 
-`bento archive`
+```bash
+bento archive
+```
 
 ### Disable and enable individual checks
-Enable a specific check by running:
+Enable/disable a specific check by running:
 
-`bento enable [OPTIONS] TOOL CHECK`, where:
+```bash
+bento enable [OPTIONS] TOOL CHECK
+```
+or
+```
+bento disable [OPTIONS] TOOL CHECK
+```
+where:
 
 * `TOOL` refers to the tool that includes the check, for example, `r2c.eslint`
 *  `CHECK` refers to the label for the check you want to enable, for example `no-console`
 
-Example: `bento enable r2c.eslint no-console`  
+Example: 
 
-Disable a specific check by running:
+```bash
+bento enable r2c.eslint no-console
+```
+You can find the tool and check names in the output of `bento check`. Bento currently supports the following tools:
 
-`bento disable [OPTIONS] TOOL CHECK`, where:
+| Language   | Supported Tools |
+|------------|-----------------|
+| Python     | bandit, flake8  |
+| Javascript | eslint          |
 
-* `TOOL` refers to the tool that includes the check, for example, `r2c.eslint`
-*  `CHECK` refers to the name of the check you want to enable, for example `no-console`
+If there are tools you'd like us to add, please let us know by creating an issue.
+
+### Install Bento as a pre-commit hook
+Bento can install itself as a pre-commit hook, so it runs before each commit and blocks on failures.
+
+To install bento as a pre-commit hook, simply run:
+```bash
+bento install-hook
+```
 
 ## Demo
 Here’s a short preview of Bento in action:
 
 ![Bento demo](bento-demo.gif)
-
-## Help
-Run `bento --help` to see available commands and options.
 
 ## Terms of service and privacy
 Please refer to the [terms and privacy document](https://github.com/returntocorp/bento/blob/master/PRIVACY.md).
