@@ -87,7 +87,7 @@ class Flake8Tool(PythonTool, Tool):
         self.venv_create()
         if self._packages_installed({"flake8": "3.7.0", "flake8-json": "19.8.0"}):
             return
-        cmd = f"{PythonTool.PIP_CMD} install flake8 flake8-json"
+        cmd = f"{PythonTool.PIP_CMD} install -q flake8 flake8-json"
         result = self.venv_exec(cmd, check_output=True).strip()
         if result:
             print(result)

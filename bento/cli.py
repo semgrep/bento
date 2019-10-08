@@ -15,6 +15,9 @@ import click
 import git
 import requests
 import yaml
+from pre_commit.git import get_staged_files
+from pre_commit.staged_files_only import staged_files_only
+from pre_commit.util import noop_context
 from semantic_version import Version
 from tqdm import tqdm
 
@@ -25,10 +28,8 @@ import bento.network as network
 import bento.result as result
 import bento.tool as tool
 import bento.util
-from bento.git_util import get_staged_files
 from bento.result import Baseline
-from bento.staged_files_only import staged_files_only
-from bento.util import echo_error, echo_success, echo_warning, noop_context
+from bento.util import echo_error, echo_success, echo_warning
 from bento.violation import Violation
 
 UPGRADE_WARNING_OUTPUT = f"""
