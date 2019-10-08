@@ -9,7 +9,19 @@ import traceback
 from functools import partial
 from multiprocessing import Lock, Pool
 from pathlib import Path
-from typing import Any, Callable, Dict, Iterable, List, Optional, Set, Tuple, Union
+from typing import (
+    Any,
+    Callable,
+    Collection,
+    Dict,
+    Iterable,
+    List,
+    Optional,
+    Set,
+    Tuple,
+    Union,
+    cast,
+)
 
 import click
 import git
@@ -56,6 +68,9 @@ Bento did NOT install. Bento beta users must agree to the terms of service to co
 
 MAX_BAR_VALUE = 30
 BAR_UPDATE_INTERVAL = 0.1
+
+ToolResults = Union[List[Violation], Exception]
+RunResults = Tuple[str, ToolResults]
 
 lock = Lock()
 bars: List[tqdm]
@@ -130,7 +145,7 @@ def __tool_filter(
     baseline: Baseline,
     paths: Optional[Iterable[str]],
     tool_and_index: Tuple[tool.Tool, int],
-) -> Union[List[Violation], Exception]:
+) -> RunResults:
     """Runs a tool and filters out existing findings using baseline"""
 
     min_bar_value = int(MAX_BAR_VALUE / 5)
@@ -175,10 +190,66 @@ def __tool_filter(
             bars[ix].set_postfix_str("🍱")
         # after = time.time_ns()
         # print(f"{tool.tool_id} completed in {((after - before) / 1e9):2f} s (setup in {((after_setup - before) / 1e9):2f} s)")  # TODO: Move to debug
-        return results
+        return (tool.tool_id, results)
     except Exception as e:
         traceback.print_exc()
-        return e
+        return (tool.tool_id, e)
+
+
+def __tool_parallel_results(
+    config: Dict[str, Any], baseline: Dict[str, Set[str]], files: Optional[List[str]]
+) -> Collection[RunResults]:
+    """Runs all tools in parallel.
+
+    Each tool is optionally run against a list of files. For each tool, it's results are
+    filtered to those results not appearing in the whitelist.
+
+    A progress bar is emitted to stderr for each tool.
+
+    Parameters:
+        config (dict): The tool configuration dictionary
+        baseline (set): The set of whitelisted finding hashes
+        files (list): If present, the list of files to pass to each tool
+
+    Returns:
+        (collection): For each tool, a `RunResult`, which is a tuple of (`tool_id`, `findings`)
+    """
+    tools = __tools(config)
+    tools_and_indices = list(zip(tools, range(len(tools))))
+
+    # Progress bars can not be serialized, and therefore can not be used with
+    # multiprocessing, except as a global variable
+    def set_progress_bars(b: List[tqdm]) -> None:
+        global bars
+        bars = b
+
+    bars = [
+        tqdm(
+            total=MAX_BAR_VALUE,
+            position=ix,
+            mininterval=BAR_UPDATE_INTERVAL,
+            desc=tool.tool_id,
+            ncols=40,
+            bar_format=click.style("  {desc}: |{bar}| {elapsed}{postfix}", fg="blue"),
+            leave=False,
+        )
+        for tool, ix in tools_and_indices
+    ]
+
+    with Pool(len(tools), initializer=set_progress_bars, initargs=(bars,)) as pool:
+        # using partial to pass in multiple arguments to __tool_filter
+        func = partial(__tool_filter, config, baseline, files)
+        all_results = pool.map_async(func, tools_and_indices).get()
+
+    # click.echo("\x1b[1F")  # Resets line position afters bars close
+    for b in bars:
+        click.echo("", err=True)
+    for b in bars:
+        b.close()
+
+    click.echo("", err=True)
+
+    return all_results
 
 
 def __update_ignores(tool: str, update_func: Callable[[Set[str]], None]) -> None:
@@ -377,27 +448,47 @@ def archive():
         sys.exit(3)
         return
 
-    baseline: List[str] = []
+    if os.path.exists(constants.BASELINE_FILE_PATH):
+        with open(constants.BASELINE_FILE_PATH) as json_file:
+            old_baseline = result.yml_to_violation_hashes(json_file)
+            old_hashes = set(h for hh in old_baseline.values() for h in hh)
+    else:
+        old_hashes = set()
+
+    new_baseline: List[str] = []
     config = __config()
-    total_findings = 0
     tools = __tools(config)
-    for t in tools:
-        try:
-            findings = __tool_findings(t, config)
-        except Exception as e:
-            bento.util.echo_error(f"Exception while running {t.tool_id}: {e}")
-            findings = []
-        total_findings += len(findings)
-        yml = result.tool_results_to_yml(t.tool_id, findings)
-        baseline += yml
+
+    all_findings = __tool_parallel_results(config, {}, None)
+
+    all_hashes: Set[str] = set()
+    for _, vv in all_findings:
+        if isinstance(vv, Exception):
+            raise vv
+        else:
+            all_hashes.update(v.syntactic_identifier_str() for v in vv)
+
+    n_new = len(all_hashes - old_hashes)
+    n_existing = len(all_hashes & old_hashes)
+    n_removed = len(old_hashes - all_hashes)
+
+    for tool_id, vv in all_findings:
+        new_baseline += result.tool_results_to_yml(
+            tool_id,
+            cast(List[Violation], vv),  # Cast b/c mypy doesn't understand earlier raise
+        )
 
     os.makedirs(os.path.dirname(constants.BASELINE_FILE_PATH), exist_ok=True)
     with open(constants.BASELINE_FILE_PATH, "w") as json_file:
-        json_file.writelines(baseline)
+        json_file.writelines(new_baseline)
 
-    echo_success(
-        f"Rewrote the whitelist with {total_findings} findings from {len(tools)} tools."
-    )
+    success_str = f"Rewrote the whitelist with {len(all_hashes)} findings from {len(tools)} tools ({n_new} new, {n_existing} previously whitelisted)."
+    if n_removed > 0:
+        success_str += (
+            f"\n  Also removed {n_removed} fixed findings from the whitelist."
+        )
+
+    echo_success(success_str)
 
     network.post_metrics(bento.metrics.command_metric("reset"))
 
@@ -500,33 +591,13 @@ def check(
     config = __config()
     if formatter:
         config["formatter"] = {formatter: {}}
-    tools = __tools(config)
     fmt = __formatter(config)
     findings_to_log: List[Any] = []
-    tools_and_indices = list(zip(tools, range(len(tools))))
 
     def by_path(v: Violation) -> str:
         return v.path
 
-    # Progress bars can not be serialized, and therefore can not be used with
-    # multiprocessing, except as a global variable
-    def set_progress_bars(b: List[tqdm]) -> None:
-        global bars
-        bars = b
-
     click.echo("Running Bento checks...", err=True)
-    bars = [
-        tqdm(
-            total=MAX_BAR_VALUE,
-            position=ix,
-            mininterval=BAR_UPDATE_INTERVAL,
-            desc=tool.tool_id,
-            ncols=40,
-            bar_format=click.style("  {desc}: |{bar}| {elapsed}{postfix}", fg="blue"),
-            leave=False,
-        )
-        for tool, ix in tools_and_indices
-    ]
 
     files = None
     if staged_only:
@@ -534,21 +605,11 @@ def check(
         files = get_staged_files()
     else:
         ctx = noop_context()
+
     with ctx:
         before = time.time()
-        with Pool(len(tools), initializer=set_progress_bars, initargs=(bars,)) as pool:
-            # using partial to pass in multiple arguments to __tool_filter
-            func = partial(__tool_filter, config, baseline, files)
-            all_findings = enumerate(pool.map_async(func, tools_and_indices).get())
+        all_results = __tool_parallel_results(config, baseline, files)
         elapsed = time.time() - before
-
-    # click.echo("\x1b[1F")  # Resets line position afters bars close
-    for b in bars:
-        click.echo("", err=True)
-    for b in bars:
-        b.close()
-
-    click.echo("", err=True)
 
     is_error = False
 
@@ -559,8 +620,7 @@ def check(
     stats_thread.start()
 
     collapsed_findings: List[Violation] = []
-    for index, findings in all_findings:
-        tool_id = tools[index].tool_id
+    for tool_id, findings in all_results:
         if isinstance(findings, Exception):
             echo_error(f"Error while running {tool_id}: {findings}")
             if isinstance(findings, subprocess.CalledProcessError):
