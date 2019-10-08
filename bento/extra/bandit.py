@@ -6,6 +6,7 @@ from typing import Any, Dict, Iterable, List, Pattern, Type
 from bento.extra.python_tool import PythonTool
 from bento.parser import Parser
 from bento.result import Violation
+from bento.tool import Tool
 
 # Input example:
 # {
@@ -117,7 +118,7 @@ class BanditParser(Parser):
         source = "\n".join(nonempty)
 
         return Violation(
-            check_id=result["test_name"],
+            check_id=result["test_id"],
             tool_id=BanditTool.TOOL_ID,
             path=path,
             line=result["line_number"],
@@ -135,7 +136,7 @@ class BanditParser(Parser):
         return errors + violations
 
 
-class BanditTool(PythonTool):
+class BanditTool(PythonTool, Tool):
     TOOL_ID = "r2c.bandit"  # to-do: versioning?
     VENV_DIR = "bandit"
     PROJECT_NAME = "Python"

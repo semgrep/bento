@@ -159,7 +159,7 @@ class Tool(ABC):
             try:
                 violations = self.parser().parse(raw)
             except Exception:
-                raise Exception(f"Could not parse output of '{self.tool_id}':\n{raw}")
+                raise Exception(f"Could not parse output of '{self.tool_id()}':\n{raw}")
             ignore_set = set(config.get("ignore", []))
             filtered = [v for v in violations if v.check_id not in ignore_set]
             return filtered

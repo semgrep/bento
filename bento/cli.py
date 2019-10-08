@@ -63,9 +63,10 @@ bars: List[tqdm]
 
 def __tool_inventory() -> Dict[str, tool.Tool]:
     all_tools = {}
-    for name, tt in bento.extra.TOOLS.items():
-        all_tools[name] = tt()
-        all_tools[name].base_path = "."
+    for tt in bento.extra.TOOLS:
+        tool_id = tt.tool_id()
+        all_tools[tool_id] = tt()
+        all_tools[tool_id].base_path = "."
     return all_tools
 
 
@@ -380,7 +381,7 @@ def archive():
         try:
             findings = __tool_findings(t, config)
         except Exception as e:
-            echo_error(f"Exception while running {t.tool_id}: {e}")
+            echo_error(f"Exception while running {t.tool_id()}: {e}")
             findings = []
         total_findings += len(findings)
         yml = result.tool_results_to_yml(t.tool_id(), findings)

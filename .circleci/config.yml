@@ -1,0 +1,79 @@
+version: 2.1
+
+jobs:
+  pythonTests:
+    executor: python-build
+    steps:
+      - checkout
+      - run:
+          name: "Generate cache seeds"
+          command: find . -name Pipfile.lock | sort | xargs md5sum > /tmp/checksums
+      - restore_cache:
+          key: deps-2-{{ checksum "/tmp/checksums" }}
+      - run:
+          command: pwd && ls
+      - run:
+          name: "Install deps"
+          command: pip3 --no-cache install pipenv && pipenv install --dev --deploy
+      - save_cache:
+          key: deps-2-{{ checksum "/tmp/checksums" }}
+          paths:
+            - "/root/.local/share/virtualenvs"
+      - run:
+          name: "PyTest"
+          command: PYTHONPATH=. pipenv run pytest
+      - store_test_results:
+          path: test-reports
+          prefix: tests
+      - store_artifacts:
+          path: coverage
+          prefix: coverage
+      - store_artifacts:
+          path: test-reports
+
+  runHooks:
+    executor: python-build
+    steps:
+      - checkout
+      - run:
+          name: "Install pre-commit"
+          command: pip install pre-commit --user
+      - run: pre-commit run -a -c .pre-commit-config.ci.yaml
+
+  mypy:
+    executor: python-build
+    steps:
+      - checkout
+      - run:
+          name: "Generate cache seeds"
+          command: find . -name Pipfile.lock | sort | xargs md5sum > /tmp/checksums
+      - restore_cache:
+          key: deps-2-{{ checksum "/tmp/checksums" }}
+      - run:
+          name: "Install deps"
+          command: pip3 --no-cache install pipenv && pipenv install --dev --deploy
+      - save_cache:
+          key: deps-2-{{ checksum "/tmp/checksums" }}
+          paths:
+            - "/root/.local/share/virtualenvs"
+      - run:
+          name: "mypy"
+          command: pipenv run mypy --config .mypy.ini bento
+      - store_test_results:
+          path: test-reports
+          prefix: tests
+      - store_artifacts:
+          path: test-reports
+
+workflows:
+  build-and-deploy:
+    jobs:
+      - pythonTests
+      - runHooks
+      - mypy
+
+executors:
+  python-build:
+    working_directory: ~/circleci
+    docker:
+      - image: circleci/python:3.7.4-stretch-node
