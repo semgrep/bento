@@ -63,13 +63,10 @@ bars: List[tqdm]
 
 def __tool_inventory() -> Dict[str, tool.Tool]:
     all_tools = {}
-    types = bento.util.package_subclasses(tool.Tool, "bento.extra")
-    for tt in types:
-        if not tt.__abstractmethods__:
-            # Skip abstract tool classes
-            ti = tt()
-            ti.base_path = "."
-            all_tools[ti.tool_id] = ti
+    for tt in bento.extra.TOOLS:
+        tool_id = tt.tool_id()
+        all_tools[tool_id] = tt()
+        all_tools[tool_id].base_path = "."
     return all_tools
 
 
@@ -121,7 +118,7 @@ def __formatter(config: Dict[str, Any]) -> formatter.Formatter:
 def __tool_findings(
     tool: tool.Tool, config: Dict[str, Any], paths: Optional[Iterable[str]] = None
 ) -> List[result.Violation]:
-    tool_config = config["tools"].get(tool.tool_id, {})
+    tool_config = config["tools"].get(tool.tool_id(), {})
     return tool.results(tool_config, paths)
 
 
@@ -153,7 +150,7 @@ def __tool_filter(
             bars[ix].update(MAX_BAR_VALUE - bar_value)
 
     try:
-        # print(f"{tool.tool_id} start")  # TODO: Move to debug
+        # print(f"{tool.tool_id()} start")  # TODO: Move to debug
         # before = time.time_ns()
         tool, ix = tool_and_index
         with lock:
@@ -166,7 +163,7 @@ def __tool_filter(
         th = threading.Thread(name=f"update_{ix}", target=update_bars)
         th.start()
         results = result.filter(
-            tool.tool_id, __tool_findings(tool, config, paths), baseline
+            tool.tool_id(), __tool_findings(tool, config, paths), baseline
         )
         with lock:
             run = False
@@ -174,7 +171,7 @@ def __tool_filter(
         with lock:
             bars[ix].set_postfix_str("🍱")
         # after = time.time_ns()
-        # print(f"{tool.tool_id} completed in {((after - before) / 1e9):2f} s (setup in {((after_setup - before) / 1e9):2f} s)")  # TODO: Move to debug
+        # print(f"{tool.tool_id()} completed in {((after - before) / 1e9):2f} s (setup in {((after_setup - before) / 1e9):2f} s)")  # TODO: Move to debug
         return results
     except Exception as e:
         traceback.print_exc()
@@ -384,10 +381,10 @@ def archive():
         try:
             findings = __tool_findings(t, config)
         except Exception as e:
-            bento.util.echo_error(f"Exception while running {t.tool_id}: {e}")
+            echo_error(f"Exception while running {t.tool_id()}: {e}")
             findings = []
         total_findings += len(findings)
-        yml = result.tool_results_to_yml(t.tool_id, findings)
+        yml = result.tool_results_to_yml(t.tool_id(), findings)
         baseline += yml
 
     os.makedirs(os.path.dirname(constants.BASELINE_FILE_PATH), exist_ok=True)
@@ -518,7 +515,7 @@ def check(
             total=MAX_BAR_VALUE,
             position=ix,
             mininterval=BAR_UPDATE_INTERVAL,
-            desc=tool.tool_id,
+            desc=tool.tool_id(),
             ncols=40,
             bar_format=click.style("  {desc}: |{bar}| {elapsed}{postfix}", fg="blue"),
             leave=False,
@@ -558,7 +555,7 @@ def check(
 
     collapsed_findings: List[Violation] = []
     for index, findings in all_findings:
-        tool_id = tools[index].tool_id
+        tool_id = tools[index].tool_id()
         if isinstance(findings, Exception):
             echo_error(f"Error while running {tool_id}: {findings}")
             if isinstance(findings, subprocess.CalledProcessError):

@@ -86,7 +86,7 @@ class EslintTool(JsTool, Tool):
     def parser_type(self) -> Type[Parser]:
         return EslintParser
 
-    @property
+    @classmethod
     def tool_id(self) -> str:
         return EslintTool.ESLINT_TOOL_ID
 

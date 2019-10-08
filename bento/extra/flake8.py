@@ -67,8 +67,8 @@ class Flake8Tool(PythonTool, Tool):
     def parser_type(self) -> Type[Parser]:
         return Flake8Parser
 
-    @property
-    def tool_id(self) -> str:
+    @classmethod
+    def tool_id(cls) -> str:
         return Flake8Tool.TOOL_ID
 
     @property
