@@ -297,9 +297,8 @@ def _print_version(ctx, param, value):
 
 def __post_email_to_mailchimp(email: str) -> bool:
     r = requests.post(
-        "http://waitlist.r2c.dev/subscribe/cli-user", json={"email": email}, timeout=5
+        "https://waitlist.r2c.dev/subscribe", json={"email": email}, timeout=5
     )
-
     status = r.status_code == requests.codes.ok
     network.post_metrics(
         [
