@@ -460,29 +460,32 @@ def archive():
     tools = __tools(config)
 
     all_findings = __tool_parallel_results(config, {}, None)
-
-    all_hashes: Set[str] = set()
-    for _, vv in all_findings:
-        if isinstance(vv, Exception):
-            raise vv
-        else:
-            all_hashes.update(v.syntactic_identifier_str() for v in vv)
-
-    n_new = len(all_hashes - old_hashes)
-    n_existing = len(all_hashes & old_hashes)
-    n_removed = len(old_hashes - all_hashes)
+    n_found = 0
+    n_existing = 0
+    found_hashes: Set[str] = set()
 
     for tool_id, vv in all_findings:
+        if isinstance(vv, Exception):
+            raise vv
+        n_found += len(vv)
         new_baseline += result.tool_results_to_yml(
             tool_id,
             cast(List[Violation], vv),  # Cast b/c mypy doesn't understand earlier raise
         )
+        for v in vv:
+            h = v.syntactic_identifier_str()
+            found_hashes.add(h)
+            if h in old_hashes:
+                n_existing += 1
+
+    n_new = n_found - n_existing
+    n_removed = len(old_hashes - found_hashes)
 
     os.makedirs(os.path.dirname(constants.BASELINE_FILE_PATH), exist_ok=True)
     with open(constants.BASELINE_FILE_PATH, "w") as json_file:
         json_file.writelines(new_baseline)
 
-    success_str = f"Rewrote the whitelist with {len(all_hashes)} findings from {len(tools)} tools ({n_new} new, {n_existing} previously whitelisted)."
+    success_str = f"Rewrote the whitelist with {n_found} findings from {len(tools)} tools ({n_new} new, {n_existing} previously whitelisted)."
     if n_removed > 0:
         success_str += (
             f"\n  Also removed {n_removed} fixed findings from the whitelist."
