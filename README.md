@@ -13,13 +13,14 @@ Bento is a command-line tool that is simple to install:
 `pip3 install r2c-bento`
 
 ## Usage
-The workflow for Bento is:  
-1- Initialize Bento  
-2- Run Bento checks on your source code  
-3- Fix issues / archive unnecessary warning and errors  
-4- Disable undesired checks  
-5- Add Bento to git pre-commit hooks  
-6- Add Bento to CI pipeline (ex: CircleCI)
+The workflow for Bento is:
+
+1. Initialize Bento
+2. Run Bento checks on your source code
+3. Fix issues or archive unnecessary warning and errors
+4. Disable undesired checks
+5. Add Bento to git pre-commit hooks
+6. Add Bento to CI pipeline (ex: CircleCI)
 
 ### Initialize Bento for a project:
 
