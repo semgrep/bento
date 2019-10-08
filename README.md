@@ -60,7 +60,7 @@ bento archive
 ### Disable and enable individual checks
 Enable/disable a specific check by running:
 
-```bash
+```
 bento enable [OPTIONS] TOOL CHECK
 ```
 or
@@ -74,7 +74,7 @@ where:
 
 Example: 
 
-```bash
+```
 bento enable r2c.eslint no-console
 ```
 You can find the tool and check names in the output of `bento check`. Bento currently supports the following tools:
