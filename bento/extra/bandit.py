@@ -146,7 +146,7 @@ class BanditTool(PythonTool, Tool):
     def parser_type(self) -> Type[Parser]:
         return BanditParser
 
-    @property
+    @classmethod
     def tool_id(self) -> str:
         return BanditTool.TOOL_ID
 

@@ -36,7 +36,7 @@ class Tool(ABC):
         """Returns this tool's parser type"""
         pass
 
-    @property
+    @classmethod
     @abstractmethod
     def tool_id(self) -> str:
         """Returns this tool's string ID"""
@@ -159,7 +159,7 @@ class Tool(ABC):
             try:
                 violations = self.parser().parse(raw)
             except Exception:
-                raise Exception(f"Could not parse output of '{self.tool_id}':\n{raw}")
+                raise Exception(f"Could not parse output of '{self.tool_id()}':\n{raw}")
             ignore_set = set(config.get("ignore", []))
             filtered = [v for v in violations if v.check_id not in ignore_set]
             return filtered

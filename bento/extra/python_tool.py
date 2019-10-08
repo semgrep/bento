@@ -53,7 +53,7 @@ class PythonTool(bento.tool.Tool):
         Creates a virtual environment for this tool
         """
         if not os.path.exists(self.__venv_dir):
-            echo_success(f"Creating virtual environment for {self.tool_id}")
+            echo_success(f"Creating virtual environment for {self.tool_id()}")
             # If we are already in a virtual environment, venv.create() will fail to install pip,
             # but we probably have virtualenv in the path, so try that first.
             try:
