@@ -20,7 +20,7 @@ The workflow for Bento is:
 3. Fix issues or archive unnecessary warning and errors
 4. Disable undesired checks
 5. Add Bento to git pre-commit hooks
-6. Add Bento to CI pipeline (ex: CircleCI)
+6. Add Bento to the CI pipeline (e.g., CircleCI)
 
 ### Initialize Bento for a project:
 
