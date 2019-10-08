@@ -1,12 +1,19 @@
 # Bento
 Bento automatically tailors linters and static analysis with sane defaults on a per-project basis, letting you focus on writing code rather than configuring tools.
 
-Bento supports JavaScript and Python, and is ideal for monorepos.
-
 ## Installation
 
-Bento is supported on macOS Mojave (10.14) and Ubuntu 18.04+.
-Bento requires Python version 3.6 or later and pip3.
+### Requirements
+
+Bento is supported on 
+macOS Mojave (10.14) and
+Ubuntu 18.04+
+
+and requires
+Python version 3.6 or later, and
+pip3
+
+Bento supports npm-packaged JavaScript and Python, and is ideal for monorepos.
 
 ### Installing Bento
 Bento is a command-line tool that is simple to install:
