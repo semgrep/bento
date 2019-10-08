@@ -622,3 +622,4 @@ def install_hook():
     # Make file executable
     original_mode = os.stat(hook_path).st_mode
     os.chmod(hook_path, original_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+    network.post_metrics(bento.metrics.command_metric("install-hook"))
