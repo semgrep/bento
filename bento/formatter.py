@@ -82,10 +82,8 @@ class Stylish(Formatter):
         # save some space for what comes next
         message = f"{message:<{max_message_len}s}"
 
-        if violation.link is None:
+        if not violation.link:
             link = rule
-        elif violation.link == "":
-            link = ""
         else:
             link = self.__link(rule, violation.link)
 
@@ -102,8 +100,10 @@ class Stylish(Formatter):
             return (
                 f"{Stylish.OSC_8}{href}{Stylish.BEL}{text}{Stylish.OSC_8}{Stylish.BEL}"
             )
+        elif href:
+            return f"{text} {href}"
         else:
-            return href or text
+            return text
 
     def dump(self, violations: List[Violation]) -> Collection[str]:
         lines = []

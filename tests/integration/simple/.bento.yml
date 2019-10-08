@@ -3,29 +3,29 @@ formatter:
 tools:
   r2c.bandit:
     ignore:
-    - assert_used
-    - hardcoded_bind_all_interfaces
-    - hardcoded_password_string
-    - hardcoded_password_funcarg
-    - hardcoded_password_default
-    - hardcoded_tmp_directory
-    - try_except_continue
-    - md5
-    - urllib_urlopen
-    - random
-    - import_pickle
-    - import_subprocess
-    - import_xml_etree
-    - import_xml_sax
-    - import_xml_expat
-    - import_xml_minidom
-    - import_xml_pulldom
-    - import_lxml
-    - subprocess_without_shell_equals_true
-    - any_other_function_with_shell_equals_true
-    - start_process_with_no_shell
-    - start_process_with_partial_path
-    - hardcoded_sql_expressions
+    - B101
+    - B104
+    - B105
+    - B106
+    - B107
+    - B108
+    - B112
+    - B303
+    - B310
+    - B311
+    - B403
+    - B404
+    - B405
+    - B406
+    - B407
+    - B408
+    - B409
+    - B410
+    - B603
+    - B604
+    - B606
+    - B607
+    - B608
   r2c.eslint:
     ignore:
     - array-bracket-newline

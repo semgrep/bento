@@ -118,7 +118,7 @@ class BanditParser(Parser):
         source = "\n".join(nonempty)
 
         return Violation(
-            check_id=result["test_name"],
+            check_id=result["test_id"],
             tool_id=BanditTool.TOOL_ID,
             path=path,
             line=result["line_number"],
