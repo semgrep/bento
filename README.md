@@ -8,11 +8,18 @@ Bento requires Python version 3.6 or later and pip3.
 
 
 ### Installing Bento
-Install Bento using:
+Bento is a command-line tool that is simple to install:
 
 `pip3 install r2c-bento`
 
 ## Usage
+The workflow for Bento is:  
+1- Initialize Bento  
+2- Run Bento checks on your source code  
+3- Fix issues / archive unnecessary warning and errors  
+4- Disable undesired checks  
+5- Add Bento to git pre-commit hooks  
+6- Add Bento to CI pipeline (ex: CircleCI)
 
 ### Initialize Bento for a project:
 
@@ -38,8 +45,10 @@ Enable a specific check by running:
 
 `bento enable [OPTIONS] TOOL CHECK`, where:
 
-* `TOOL` refers to the tool that includes the check, for example, `eslint`
+* `TOOL` refers to the tool that includes the check, for example, `r2c.eslint`
 *  `CHECK` refers to the label for the check you want to enable, for example `no-console`
+
+Example: `bento enable r2c.eslint no-console`  
 
 Disable a specific check by running:
 
