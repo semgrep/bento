@@ -604,7 +604,9 @@ def check(
 
     files = None
     if staged_only:
-        ctx = staged_files_only(".")
+        ctx = staged_files_only(
+            os.path.join(os.path.expanduser("~"), ".cache", "bento", "patches")
+        )
         files = get_staged_files()
     else:
         ctx = noop_context()
