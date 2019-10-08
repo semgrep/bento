@@ -104,3 +104,5 @@ Please refer to the [terms and privacy document](https://github.com/returntocorp
 
 ## License
 Copyright (c) [r2c](https://r2c.dev ).
+
+![r2c logo](https://r2c.dev/r2c-logo-silhouette.png)
