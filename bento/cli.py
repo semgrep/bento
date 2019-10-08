@@ -613,12 +613,6 @@ def check(
 
     is_error = False
 
-    def post_metrics():
-        network.post_metrics(findings_to_log)
-
-    stats_thread = threading.Thread(name="stats", daemon=True, target=post_metrics)
-    stats_thread.start()
-
     collapsed_findings: List[Violation] = []
     for tool_id, findings in all_results:
         if isinstance(findings, Exception):
@@ -632,6 +626,12 @@ def check(
                 tool_id, findings, get_ignores_for_tool(tool_id, config)
             )
             collapsed_findings += [f for f in findings if not f.filtered]
+
+    def post_metrics():
+        network.post_metrics(findings_to_log)
+
+    stats_thread = threading.Thread(name="stats", target=post_metrics)
+    stats_thread.start()
 
     if collapsed_findings:
         findings_by_path = sorted(collapsed_findings, key=by_path)
