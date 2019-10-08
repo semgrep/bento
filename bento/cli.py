@@ -374,6 +374,7 @@ def archive():
     """
     if not os.path.exists(constants.CONFIG_PATH):
         echo_error("No Bento configuration found. Please run `bento init`.")
+        sys.exit(3)
         return
 
     baseline: List[str] = []
@@ -487,6 +488,7 @@ def check(
 
     if not os.path.exists(constants.CONFIG_PATH):
         echo_error("No Bento configuration found. Please run `bento init`.")
+        sys.exit(3)
         return
 
     if os.path.exists(constants.BASELINE_FILE_PATH):
