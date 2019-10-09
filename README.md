@@ -19,7 +19,7 @@ Bento supports npm-packaged JavaScript and Python, and is ideal for monorepos.
 Bento is a command-line tool that is simple to install:
 
 ```bash
-pip3 install r2c-bento
+pip3 install bento-cli
 ```
 
 ## Usage
@@ -47,7 +47,7 @@ To trigger Bento to analyze your project, run:
 bento check
 ```
 
-### Archive your 
+### Archive outstanding issues
 
 The `archive` command whitelists outstanding issues to fix later. This lets you continue coding with a clean slate without having to address all your tech debt as soon as you adopt a new tool. New issues introduced from this point forward will be reported by Bento until the next time you run the `archive` command.
 
@@ -108,4 +108,4 @@ Please refer to the [terms and privacy document](https://github.com/returntocorp
 ## License
 Copyright (c) [r2c](https://r2c.dev ).
 
-![r2c logo](https://r2c.dev/r2c-logo-silhouette.png)
+![r2c logo](https://r2c.dev/r2c-logo-silhouette.png?gh)
