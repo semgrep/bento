@@ -10,6 +10,9 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 
+BENTO_TEMPLATE_HASH = "3a04e0f0cd9243d20b1e33da7ac13115"
+
+
 class FatalError(RuntimeError):
     pass
 

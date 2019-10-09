@@ -49,7 +49,7 @@ UPGRADE_WARNING_OUTPUT = f"""
 │  🎉 A new version of Bento is available 🎉  │
 │  Try it out by running:                     │
 │                                             │
-│       {click.style("pip3 install --upgrade r2c-bento", fg="blue")}      │
+│       {click.style("pip3 install --upgrade bento-cli", fg="blue")}      │
 │                                             │
 ╰─────────────────────────────────────────────╯
 """
@@ -294,9 +294,8 @@ def _print_version(ctx, param, value):
 
 def __post_email_to_mailchimp(email: str) -> bool:
     r = requests.post(
-        "http://waitlist.r2c.dev/subscribe/cli-user", json={"email": email}, timeout=5
+        "https://waitlist.r2c.dev/subscribe", json={"email": email}, timeout=5
     )
-
     status = r.status_code == requests.codes.ok
     network.post_metrics(
         [
@@ -423,7 +422,7 @@ def register_user() -> bool:
 def cli(debug, verbose, agree):
     if not is_running_supported_python3():
         echo_error(
-            "Bento requires Python 3.6+. Please ensure you have Python 3.6+ and installed Bento via `pip3 install r2c-bento`."
+            "Bento requires Python 3.6+. Please ensure you have Python 3.6+ and installed Bento via `pip3 install bento-cli`."
         )
         sys.exit(3)
     if not agree and not has_completed_registration():
@@ -457,29 +456,32 @@ def archive():
     tools = __tools(config)
 
     all_findings = __tool_parallel_results(config, {}, None)
-
-    all_hashes: Set[str] = set()
-    for _, vv in all_findings:
-        if isinstance(vv, Exception):
-            raise vv
-        else:
-            all_hashes.update(v.syntactic_identifier_str() for v in vv)
-
-    n_new = len(all_hashes - old_hashes)
-    n_existing = len(all_hashes & old_hashes)
-    n_removed = len(old_hashes - all_hashes)
+    n_found = 0
+    n_existing = 0
+    found_hashes: Set[str] = set()
 
     for tool_id, vv in all_findings:
+        if isinstance(vv, Exception):
+            raise vv
+        n_found += len(vv)
         new_baseline += result.tool_results_to_yml(
             tool_id,
             cast(List[Violation], vv),  # Cast b/c mypy doesn't understand earlier raise
         )
+        for v in vv:
+            h = v.syntactic_identifier_str()
+            found_hashes.add(h)
+            if h in old_hashes:
+                n_existing += 1
+
+    n_new = n_found - n_existing
+    n_removed = len(old_hashes - found_hashes)
 
     os.makedirs(os.path.dirname(constants.BASELINE_FILE_PATH), exist_ok=True)
     with open(constants.BASELINE_FILE_PATH, "w") as json_file:
         json_file.writelines(new_baseline)
 
-    success_str = f"Rewrote the whitelist with {len(all_hashes)} findings from {len(tools)} tools ({n_new} new, {n_existing} previously whitelisted)."
+    success_str = f"Rewrote the whitelist with {n_found} findings from {len(tools)} tools ({n_new} new, {n_existing} previously whitelisted)."
     if n_removed > 0:
         success_str += (
             f"\n  Also removed {n_removed} fixed findings from the whitelist."
@@ -598,7 +600,9 @@ def check(
 
     files = None
     if staged_only:
-        ctx = staged_files_only(".")
+        ctx = staged_files_only(
+            os.path.join(os.path.expanduser("~"), ".cache", "bento", "patches")
+        )
         files = get_staged_files()
     else:
         ctx = noop_context()
@@ -646,6 +650,14 @@ def check(
         sys.exit(2)
 
 
+def is_bento_precommit(filename):
+    if not os.path.exists(filename):
+        return False
+    with open(filename) as f:
+        lines = f.read()
+    return constants.BENTO_TEMPLATE_HASH in lines
+
+
 @cli.command()
 def install_hook():
     """
@@ -660,23 +672,29 @@ def install_hook():
     except Exception:
         raise
 
-    legacy_hook_path = f"{hook_path}.pre-bento"
-    if os.path.exists(hook_path):
-        # If pre-commit hook already exists move it over
-        if os.path.exists(legacy_hook_path):
-            raise Exception(
-                "There is already a legacy hook. Not sure what to do so just exiting for now."
-            )
-        else:
-            shutil.move(hook_path, legacy_hook_path)
+    if is_bento_precommit(hook_path):
+        echo_success(f"Bento already installed as a pre-commit hook")
+    else:
+        legacy_hook_path = f"{hook_path}.pre-bento"
+        if os.path.exists(hook_path):
+            # If pre-commit hook already exists move it over
+            if os.path.exists(legacy_hook_path):
+                raise Exception(
+                    "There is already a legacy hook. Not sure what to do so just exiting for now."
+                )
+            else:
+                # Check that
+                shutil.move(hook_path, legacy_hook_path)
 
-    # Copy pre-commit script template to hook_path
-    template_location = os.path.join(
-        os.path.dirname(__file__), "resources/pre-commit.template"
-    )
-    shutil.copyfile(template_location, hook_path)
+        # Copy pre-commit script template to hook_path
+        template_location = os.path.join(
+            os.path.dirname(__file__), "resources/pre-commit.template"
+        )
+        shutil.copyfile(template_location, hook_path)
 
-    # Make file executable
-    original_mode = os.stat(hook_path).st_mode
-    os.chmod(hook_path, original_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
-    network.post_metrics(bento.metrics.command_metric("install-hook"))
+        # Make file executable
+        original_mode = os.stat(hook_path).st_mode
+        os.chmod(hook_path, original_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
+
+        network.post_metrics(bento.metrics.command_metric("install-hook"))
+        echo_success(f"Added Bento to your git pre-commit hooks.")

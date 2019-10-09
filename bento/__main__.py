@@ -13,7 +13,10 @@ def main():
     try:
         cli()
     except subprocess.CalledProcessError as e:
-        echo_warning(f'Could not execute "{" ".join(e.cmd)}":\n{e.stderr}')
+        cmd = e.cmd
+        if isinstance(e.cmd, list):
+            cmd = " ".join(e.cmd)
+        echo_warning(f'Could not execute "{cmd}":\n{e.stderr}')
     except requests.exceptions.HTTPError:
         echo_warning(f"Network issue during metric collection.")
     except Exception as e:

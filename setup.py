@@ -22,7 +22,7 @@ setuptools.setup(
     version=bento.__version__,
     author=bento.__author__,
     author_email=bento.R2C_SUPPORT_EMAIL,
-    description="",
+    description="Bento finds the bugs that matter to you",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://r2c.dev",

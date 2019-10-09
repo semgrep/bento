@@ -10,3 +10,5 @@ BASELINE_FILE_PATH = "./.bento-whitelist.yml"
 
 TERMS_OF_SERVICE_KEY = "terms_of_service"
 TERMS_OF_SERVICE_VERSION = "0.0.1"
+
+BENTO_TEMPLATE_HASH = "3a04e0f0cd9243d20b1e33da7ac13115"
