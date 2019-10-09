@@ -11,7 +11,7 @@ Ubuntu 18.04+
 
 and requires
 Python version 3.6 or later, and
-pip3
+pip3.
 
 Bento supports npm-packaged JavaScript and Python, and is ideal for monorepos.
 
@@ -81,8 +81,8 @@ You can find the tool and check names in the output of `bento check`. Bento curr
 
 | Language   | Supported Tools |
 |------------|-----------------|
-| Python     | bandit, flake8  |
-| Javascript | eslint          |
+| Python     | Bandit, Flake8  |
+| JavaScript | ESLint          |
 
 If there are tools you'd like us to add, please let us know by creating an issue.
 
