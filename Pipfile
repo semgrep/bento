@@ -17,6 +17,7 @@ packaging = "~=19.2"
 pre-commit = "~=1.18.3"
 
 [dev-packages]
+coverage = "~=4.5.4"
 lxml = "~=4.2"
 pytest = "~=3.9"
 mypy = "~=0.670"

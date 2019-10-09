@@ -21,15 +21,15 @@ jobs:
             - "/root/.local/share/virtualenvs"
       - run:
           name: "PyTest"
-          command: PYTHONPATH=. pipenv run pytest
+          command: |
+            PYTHONPATH=. pipenv run coverage run --source . -m pytest
+            PYTHONPATH=. pipenv run coverage report
+            PYTHONPATH=. pipenv run coverage html
       - store_test_results:
           path: test-reports
           prefix: tests
       - store_artifacts:
-          path: coverage
-          prefix: coverage
-      - store_artifacts:
-          path: test-reports
+          path: htmlcov
 
   runHooks:
     executor: python-build
