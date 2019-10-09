@@ -7,29 +7,15 @@ Bento collects usage data to help inform how to improve the product. This docume
 * what data is not collected
 * why specific data is collected and how it’s used
 
-# Principles
+## Principles
 
 These guidelines inform decisions about data collection:
 
-* Transparency:
-    * Collect and use information in a way that is transparent and benefits the user
-* User control
-    * Develop products and advocate for best practices that put users in control of their data
-* Limited data
-    * Collect what is needed, de-identify where possible, and delete when no longer necessary
+1. **Transparency**: collect and use information in a way that is transparent and benefits the user
+2. **User control**: Develop products and advocate for best practices that put users in control of their data
+3. **Limited data**: Collect what is needed, de-identify where possible, and delete when no longer necessary
 
-# Definitions
-
-## Personal data
-
-Personal data includes: 
-
-* .git related information, such as repository name, commit, git user name, and git user email
-* IP address
-* source code and context of findings
-* User email address (if the user provides it)
-
-## Collected data
+## Collected Data
 
 Bento collects data to help improve the Bento user experience for users everywhere. The following information is collected and sent to r2c:
 
@@ -40,14 +26,14 @@ Bento collects data to help improve the Bento user experience for users everywhe
 * Bento asks users to share error dump data on crashes
 * User’s email address (if the user provides it)
 
-### Data not collected
+### Data NOT collected
 
 Bento minimizes the amount of personal data collected or shared, and limits that only to the amount necessary to support product operation. The following data is not collected and not sent to r2c. It does not leave your computer and is not sent or shared with anyone.
 
 * Client’s raw IP address
 * User’s source code
 
-## Sample data and description of fields
+### Examples
 
 This is a sample blob of data collected by Bento and sent to r2c:
 ```json
@@ -70,7 +56,7 @@ This is a sample blob of data collected by Bento and sent to r2c:
     "event_name": "DUMMY_EVENT_NAME"
   }
   ```
-## Description of fields
+### Description of fields
 
 | Field        | Description           | Use case  |
 | :------------- |:-------------| :-----|
@@ -92,15 +78,14 @@ This is a sample blob of data collected by Bento and sent to r2c:
 | event_name	| Generic Bento label| 	Generic Bento label
 
 
-## Data usage
+## Data Usage
 We use this information for the following purposes:
 
 - to provide, operate, maintain, support, and improve Bento
 - to communicate with users, if users supply their email address, including by sending product announcements, technical notices, updates, security alerts, and support messages
 - to better understand user needs and interests, and to solicit user feedback about Bento
 
-## Data sharing
+## Data Sharing
 We use some third party companies and services to help administer and provide Bento, for example for hosting, customer support, product usage analytics, email delivery, and database management. These third parties are permitted to handle user information only to perform these tasks in a manner consistent with this document and are obligated not to disclose or use it for any other purpose.
 
 We do not share or sell the information that users provide to us with other organizations without explicit consent, except as described in this document.
-
