@@ -15,7 +15,7 @@ You must have Python 3.6 or greater installed.
 Run
 
 ```
-pip install r2c-bento
+pip3 install bento-cli
 ```
 
 ### In your project

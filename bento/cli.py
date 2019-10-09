@@ -49,7 +49,7 @@ UPGRADE_WARNING_OUTPUT = f"""
 │  🎉 A new version of Bento is available 🎉  │
 │  Try it out by running:                     │
 │                                             │
-│       {click.style("pip3 install --upgrade r2c-bento", fg="blue")}      │
+│       {click.style("pip3 install --upgrade bento-cli", fg="blue")}      │
 │                                             │
 ╰─────────────────────────────────────────────╯
 """
@@ -425,7 +425,7 @@ def register_user() -> bool:
 def cli(debug, verbose, agree):
     if not is_running_supported_python3():
         echo_error(
-            "Bento requires Python 3.6+. Please ensure you have Python 3.6+ and installed Bento via `pip3 install r2c-bento`."
+            "Bento requires Python 3.6+. Please ensure you have Python 3.6+ and installed Bento via `pip3 install bento-cli`."
         )
         sys.exit(3)
     if not agree and not has_completed_registration():
