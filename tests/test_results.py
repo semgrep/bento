@@ -48,13 +48,13 @@ YML_TEXT = textwrap.dedent(
 )[1:]
 
 
-def test_tool_yml():
+def test_tool_yml() -> None:
     generated = result.tool_results_to_yml("r2c_eslint", VIOLATIONS)
 
     assert generated == YML_TEXT
 
 
-def test_yml_to_violation_hashes():
+def test_yml_to_violation_hashes() -> None:
 
     hashes_by_tool = result.yml_to_violation_hashes(YML_TEXT)
 
@@ -68,7 +68,7 @@ def test_yml_to_violation_hashes():
     assert hashes_by_tool == expectation
 
 
-def test_filter_results():
+def test_filter_results() -> None:
     baseline = {"r2c_eslint": {"ab901b8d5807dcf6074c35f9aa053ec2"}}
 
     filtered = result.filter("r2c_eslint", VIOLATIONS, baseline)

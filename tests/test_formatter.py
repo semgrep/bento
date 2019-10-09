@@ -31,7 +31,7 @@ VIOLATIONS = [
 ]
 
 
-def test_stylish_formatter():
+def test_stylish_formatter() -> None:
     stylish = bento.formatter.Stylish()
     stylish.config = {}
     output = stylish.dump(VIOLATIONS)
@@ -45,7 +45,7 @@ def test_stylish_formatter():
     assert output == expectation
 
 
-def test_json_formatter():
+def test_json_formatter() -> None:
     json_formatter = bento.formatter.Json()
     json_formatter.config = {}
     output = json.loads(next(iter(json_formatter.dump(VIOLATIONS))))

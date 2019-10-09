@@ -20,7 +20,6 @@ from typing import (
     Set,
     Tuple,
     Union,
-    cast,
 )
 
 import click
@@ -277,14 +276,16 @@ def is_running_latest() -> bool:
     return True
 
 
-def get_version():
+def get_version() -> str:
     """Get the current r2c-cli version based on __init__"""
     from bento import __version__
 
     return __version__
 
 
-def _print_version(ctx, param, value):
+def _print_version(
+    ctx: click.Context, param: Union[click.Option, click.Parameter], value: Any
+) -> None:
     """Print the current r2c-cli version based on setuptools runtime"""
     if not value or ctx.resilient_parsing:
         return
@@ -419,7 +420,7 @@ def register_user() -> bool:
     help="Automatically agree to terms of service.",
     default=False,
 )
-def cli(debug, verbose, agree):
+def cli(debug: bool, verbose: bool, agree: bool) -> None:
     if not is_running_supported_python3():
         echo_error(
             "Bento requires Python 3.6+. Please ensure you have Python 3.6+ and installed Bento via `pip3 install bento-cli`."
@@ -435,7 +436,7 @@ def cli(debug, verbose, agree):
 
 
 @cli.command()
-def archive():
+def archive() -> None:
     """
     Adds all current findings to the whitelist.
     """
@@ -464,10 +465,7 @@ def archive():
         if isinstance(vv, Exception):
             raise vv
         n_found += len(vv)
-        new_baseline += result.tool_results_to_yml(
-            tool_id,
-            cast(List[Violation], vv),  # Cast b/c mypy doesn't understand earlier raise
-        )
+        new_baseline += result.tool_results_to_yml(tool_id, vv)
         for v in vv:
             h = v.syntactic_identifier_str()
             found_hashes.add(h)
@@ -493,7 +491,7 @@ def archive():
 
 
 @cli.command()
-def init():
+def init() -> None:
     """
     Autodetects and installs tools.
 
@@ -628,7 +626,7 @@ def check(
             )
             collapsed_findings += [f for f in findings if not f.filtered]
 
-    def post_metrics():
+    def post_metrics() -> None:
         network.post_metrics(findings_to_log)
 
     stats_thread = threading.Thread(name="stats", target=post_metrics)
@@ -650,7 +648,7 @@ def check(
         sys.exit(2)
 
 
-def is_bento_precommit(filename):
+def is_bento_precommit(filename: str) -> bool:
     if not os.path.exists(filename):
         return False
     with open(filename) as f:
@@ -659,7 +657,7 @@ def is_bento_precommit(filename):
 
 
 @cli.command()
-def install_hook():
+def install_hook() -> None:
     """
         Installs bento as a git pre-commit hook
         Saves any existing pre-commit hook to .git/hooks/pre-commit.pre-bento and

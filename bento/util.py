@@ -7,8 +7,9 @@ import shutil
 import signal
 import subprocess
 import sys
+import types
 from importlib import import_module
-from typing import Collection, List, Pattern, Type
+from typing import Collection, List, Optional, Pattern, Type
 
 import click
 import psutil
@@ -76,7 +77,7 @@ def less(
 
     # In order to prevent an early pager exit from killing the CLI,
     # we must both ignore the resulting SIGPIPE and BrokenPipeError
-    def drop_sig(signal, frame):
+    def drop_sig(signal: int, frame: Optional[types.FrameType]) -> None:
         pass
 
     if not pager or not sys.stdout.isatty():

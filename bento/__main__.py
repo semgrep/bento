@@ -9,7 +9,7 @@ from bento.cli import cli
 from bento.util import echo_error, echo_warning
 
 
-def main():
+def main() -> None:
     try:
         cli()
     except subprocess.CalledProcessError as e:

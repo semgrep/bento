@@ -42,7 +42,7 @@ repos:
     hooks:
       - id: mypy
         name: Check mypy static types
-        entry: mypy --config .mypy.ini
+        entry: mypy --show-error-codes --config .mypy.ini
         language: system
         types: [python]
         exclude: tests/integration/

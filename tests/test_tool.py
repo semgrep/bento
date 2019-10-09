@@ -31,7 +31,7 @@ class ToolFixture(Tool):
     def parser_type(self) -> Type[Parser]:
         return ParserFixture
 
-    @property
+    @classmethod
     def tool_id(self) -> str:
         return "test"
 
@@ -53,7 +53,7 @@ class ToolFixture(Tool):
         return ",".join(files)
 
 
-def test_file_path_filter_terminal():
+def test_file_path_filter_terminal() -> None:
     tool = ToolFixture()
     result = tool.filter_paths({}, ["test_tool.py", "foo.py"])
     expectation = set(["test_tool.py"])
@@ -61,7 +61,7 @@ def test_file_path_filter_terminal():
     assert result == expectation
 
 
-def test_file_path_match():
+def test_file_path_match() -> None:
     tool = ToolFixture()
     result = tool.filter_paths({}, [THIS_PATH])
     expectation = set([THIS_PATH])
@@ -69,7 +69,7 @@ def test_file_path_match():
     assert result == expectation
 
 
-def test_file_path_no_match():
+def test_file_path_no_match() -> None:
     tool = ToolFixture()
     search_path = os.path.join(THIS_PATH, "integration", "simple")
     result = tool.filter_paths({}, [search_path])
@@ -77,7 +77,7 @@ def test_file_path_no_match():
     assert not result
 
 
-def test_tool_run_no_paths():
+def test_tool_run_no_paths() -> None:
     tool = ToolFixture()
     tool.base_path = THIS_PATH
     result = tool.results({})
@@ -85,7 +85,7 @@ def test_tool_run_no_paths():
     assert result == [result_for(THIS_PATH)]
 
 
-def test_tool_run_file():
+def test_tool_run_file() -> None:
     tool = ToolFixture()
     tool.base_path = THIS_PATH
     result = tool.results({}, ["test_tool.py"])
@@ -93,7 +93,7 @@ def test_tool_run_file():
     assert result == [result_for("test_tool.py")]
 
 
-def test_tool_run_ignores():
+def test_tool_run_ignores() -> None:
     tool = ToolFixture()
     tool.base_path = THIS_PATH
     result = tool.results({"ignore": ["test"]})

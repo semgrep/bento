@@ -4,5 +4,5 @@ def create(
     clear: bool = False,
     symlinks: bool = False,
     with_pip: bool = False,
-    prompt: bool = None,
+    prompt: bool = False,
 ) -> None: ...
