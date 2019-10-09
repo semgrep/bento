@@ -72,7 +72,7 @@ class PythonTool(bento.tool.Tool):
         """
         Executes tool set-up or check within its virtual environment
         """
-        wrapped = f"source {self.__venv_dir}/bin/activate; {cmd}"
+        wrapped = f". {self.__venv_dir}/bin/activate; {cmd}"
         v = subprocess.Popen(
             wrapped,
             shell=True,
