@@ -653,6 +653,14 @@ def check(
         sys.exit(2)
 
 
+def is_bento_precommit(filename):
+    if not os.path.exists(filename):
+        return False
+    with open(filename) as f:
+        lines = f.read()
+    return constants.BENTO_TEMPLATE_HASH in lines
+
+
 @cli.command()
 def install_hook():
     """
@@ -667,25 +675,29 @@ def install_hook():
     except Exception:
         raise
 
-    legacy_hook_path = f"{hook_path}.pre-bento"
-    if os.path.exists(hook_path):
-        # If pre-commit hook already exists move it over
-        if os.path.exists(legacy_hook_path):
-            raise Exception(
-                "There is already a legacy hook. Not sure what to do so just exiting for now."
-            )
-        else:
-            shutil.move(hook_path, legacy_hook_path)
+    if is_bento_precommit(hook_path):
+        echo_success(f"Bento already installed as a pre-commit hook")
+    else:
+        legacy_hook_path = f"{hook_path}.pre-bento"
+        if os.path.exists(hook_path):
+            # If pre-commit hook already exists move it over
+            if os.path.exists(legacy_hook_path):
+                raise Exception(
+                    "There is already a legacy hook. Not sure what to do so just exiting for now."
+                )
+            else:
+                # Check that
+                shutil.move(hook_path, legacy_hook_path)
 
-    # Copy pre-commit script template to hook_path
-    template_location = os.path.join(
-        os.path.dirname(__file__), "resources/pre-commit.template"
-    )
-    shutil.copyfile(template_location, hook_path)
+        # Copy pre-commit script template to hook_path
+        template_location = os.path.join(
+            os.path.dirname(__file__), "resources/pre-commit.template"
+        )
+        shutil.copyfile(template_location, hook_path)
 
-    # Make file executable
-    original_mode = os.stat(hook_path).st_mode
-    os.chmod(hook_path, original_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
-    network.post_metrics(bento.metrics.command_metric("install-hook"))
+        # Make file executable
+        original_mode = os.stat(hook_path).st_mode
+        os.chmod(hook_path, original_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
-    echo_success(f"Added Bento to your git pre-commit hooks.")
+        network.post_metrics(bento.metrics.command_metric("install-hook"))
+        echo_success(f"Added Bento to your git pre-commit hooks.")
