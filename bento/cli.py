@@ -275,7 +275,7 @@ def get_ignores_for_tool(tool: str, config: Dict[str, Any]) -> List[str]:
 
 def is_running_latest() -> bool:
     latest_version, _ = network.fetch_latest_version()
-    if latest_version and get_version() < latest_version:
+    if latest_version and Version(get_version()) < Version(latest_version):
         return False
     return True
 
