@@ -1,10 +1,14 @@
 import json
 import os
+import subprocess
 from typing import Dict, Optional, Set
 
-from semantic_version import Version
+from semantic_version import NpmSpec, Version
 
+from bento.error import NodeError
 from bento.tool import Tool
+
+NODE_VERSION_RANGE = NpmSpec("^8.10.0 || ^10.13.0 || >=11.10.1")
 
 
 class JsTool(Tool):
@@ -50,3 +54,22 @@ class JsTool(Tool):
 
         self._npm_install(to_install)
         return set(to_install)
+
+    def _ensure_node_version(self) -> None:
+        """Ensures that Node.js version installed on the system is compatible with ESLint v6
+        per https://github.com/eslint/eslint/blob/master/docs/user-guide/migrating-to-6.0.0.md#-nodejs-6-is-no-longer-supported
+        Suppored Node.js version  ^8.10.0 || ^10.13.0 || >=11.10.1
+        """
+        version = self.exec(
+            ["node", "--version"],
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+        )
+        node_version = version.stdout.rstrip().strip("v")
+        if version.returncode > 0 or not NODE_VERSION_RANGE.match(
+            Version(node_version)
+        ):
+            raise NodeError(
+                f"Node.js is not installed, or its version is not >8.10.0, >10.13.0, or >=11.10.1 (found {node_version})."
+            )

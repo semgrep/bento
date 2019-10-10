@@ -38,6 +38,7 @@ import bento.network as network
 import bento.result as result
 import bento.tool as tool
 import bento.util
+from bento.error import NodeError
 from bento.result import Baseline
 from bento.util import echo_error, echo_success, echo_warning
 from bento.violation import Violation
@@ -649,6 +650,11 @@ def check(
             if isinstance(findings, subprocess.CalledProcessError):
                 click.secho(findings.stderr, err=True)
                 click.secho(findings.stdout, err=True)
+            if isinstance(findings, NodeError):
+                echo_warning(
+                    f"Node.js not found or version is not compatible with ESLint v6."
+                )
+
             click.echo("", err=True)
             is_error = True
         elif isinstance(findings, list) and findings:

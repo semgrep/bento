@@ -118,7 +118,7 @@ class EslintTool(JsTool, Tool):
                 "eslint-plugin-react"
             ] = EslintTool.MIN_ESLINT_PLUGIN_REACT_VERSION
         self._ensure_packages(needed_packages)
-
+        self._ensure_node_version()
         # install .eslintrc.yml
         if not os.path.exists(
             os.path.join(self.base_path, EslintTool.CONFIG_FILE_NAME)
@@ -156,4 +156,5 @@ class EslintTool(JsTool, Tool):
             raise subprocess.CalledProcessError(
                 result.returncode, cmd, output=result.stdout, stderr=result.stderr
             )
+
         return result.stdout.rstrip()
