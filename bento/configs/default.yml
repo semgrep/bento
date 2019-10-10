@@ -269,6 +269,8 @@ tools:
       - E115
       # Unexpected indentation (comment)
       - E116
+      # Over-indented
+      - E117
       # Continuation line under-indented for hanging indent
       - E121
       # Continuation line missing indentation or outdented

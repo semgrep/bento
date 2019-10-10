@@ -38,6 +38,8 @@ class Flake8Parser(Parser):
 
         if check_id == "E999":
             link = ""
+        elif check_id in ("E722", "E117"):
+            link = "https://pycodestyle.readthedocs.io/en/latest/intro.html#error-codes"
         else:
             link = f"https://lintlyci.github.io/Flake8Rules/rules/{check_id}.html"
 
