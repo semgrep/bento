@@ -5,7 +5,6 @@ import subprocess
 import sys
 import threading
 import time
-import traceback
 from functools import partial
 from multiprocessing import Lock, Pool
 from typing import (
@@ -194,7 +193,7 @@ def __tool_filter(
         # print(f"{tool.tool_id} completed in {((after - before) / 1e9):2f} s (setup in {((after_setup - before) / 1e9):2f} s)")  # TODO: Move to debug
         return (tool.tool_id, results)
     except Exception as e:
-        traceback.print_exc()
+        # traceback.print_exc()  # TODO: Move to debug
         return (tool.tool_id, e)
 
 
@@ -649,6 +648,7 @@ def check(
             echo_error(f"Error while running {tool_id}: {findings}")
             if isinstance(findings, subprocess.CalledProcessError):
                 click.secho(findings.stderr, err=True)
+                click.secho(findings.stdout, err=True)
             click.echo("", err=True)
             is_error = True
         elif isinstance(findings, list) and findings:

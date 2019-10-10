@@ -142,9 +142,17 @@ class EslintTool(JsTool, Tool):
         for f in files:
             cmd.append(f)
         result = self.exec(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+
         # Return codes:
         # 0 = no violations, 1 = violations, 2+ = tool failure
-        if result.returncode > 1:
+        try:
+            # TODO: this double-parses, which we can avoid in the future by having type-parameterized parsers
+            json.loads(result.stdout.strip())
+            not_valid_json = False
+        except Exception:
+            not_valid_json = True
+        if (result.returncode > 1) or not_valid_json:
+            # Tool returned fialure, or did not return json
             raise subprocess.CalledProcessError(
                 result.returncode, cmd, output=result.stdout, stderr=result.stderr
             )
