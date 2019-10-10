@@ -33,7 +33,7 @@ def __hash_sha256(data: str) -> str:
 def __get_git_url(dirPath: str = os.getcwd()) -> Optional[str]:
     """Get remote.origin.url for git dir at dirPath"""
     r = __get_git_repo(dirPath)
-    if r and r.remotes and r.remotes.origin:
+    if r and r.remotes and "origin" in r.remotes:
         return __hash_sha256(r.remotes.origin.url)
     else:
         return None
