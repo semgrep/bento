@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+import logging
 import os
 import os.path
 import pkgutil
@@ -107,12 +108,15 @@ def less(
 
 
 def echo_error(text: str, indent: str = "") -> None:
+    logging.error(text)
     click.secho(f"{indent}✘ {text}", fg="red", err=True)
 
 
 def echo_warning(text: str, indent: str = "") -> None:
+    logging.warn(text)
     click.secho(f"{indent}⚠ {text}", fg="yellow", err=True)
 
 
 def echo_success(text: str, indent: str = "") -> None:
+    logging.info(text)
     click.secho(f"{indent}✔ {text}", fg="green", err=True)

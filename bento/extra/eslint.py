@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import re
 import shutil
@@ -142,6 +143,8 @@ class EslintTool(JsTool, Tool):
         for f in files:
             cmd.append(f)
         result = self.exec(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        logging.debug(f"{self.tool_id()}: stderr:\n" + result.stderr[0:4000])
+        logging.debug(f"{self.tool_id()}: stdout:\n" + result.stdout[0:4000])
 
         # Return codes:
         # 0 = no violations, 1 = violations, 2+ = tool failure

@@ -1,3 +1,4 @@
+import logging
 import os
 import shutil
 import stat
@@ -273,7 +274,11 @@ def get_ignores_for_tool(tool: str, config: Dict[str, Any]) -> List[str]:
 
 def is_running_latest() -> bool:
     latest_version, _ = network.fetch_latest_version()
-    if latest_version and Version(get_version()) < Version(latest_version):
+    current_version = get_version()
+    logging.info(
+        f"Current bento version is {current_version}, latest is {latest_version}"
+    )
+    if latest_version and Version(current_version) < Version(latest_version):
         return False
     return True
 
@@ -316,6 +321,7 @@ def __post_email_to_mailchimp(email: str) -> bool:
 def is_running_supported_python3() -> bool:
     python_major_v = sys.version_info.major
     python_minor_v = sys.version_info.minor
+    logging.info(f"Python version is ({python_major_v}.{python_minor_v})")
     return python_major_v >= 3 and python_minor_v >= 6
 
 
@@ -394,21 +400,6 @@ def register_user() -> bool:
 
 @click.group()
 @click.option(
-    "--debug",
-    "-d",
-    is_flag=True,
-    help="Show extra output, error messages, and exception stack traces with DEBUG filtering",
-    default=False,
-    hidden=True,
-)
-@click.option(
-    "--verbose",
-    "-v",
-    is_flag=True,
-    help="Show extra output, error messages, and exception stack traces with INFO filtering",
-    default=False,
-)
-@click.option(
     "--version",
     is_flag=True,
     help="Show current version bento.",
@@ -422,7 +413,14 @@ def register_user() -> bool:
     help="Automatically agree to terms of service.",
     default=False,
 )
-def cli(debug: bool, verbose: bool, agree: bool) -> None:
+def cli(agree: bool) -> None:
+    logging.basicConfig(
+        filename=constants.DEFAULT_LOG_PATH,
+        level=logging.DEBUG,
+        filemode="w",
+        format="[%(levelname)s] %(relativeCreated)s %(name)s:%(module)s - %(message)s",
+    )
+
     if not is_running_supported_python3():
         echo_error(
             "Bento requires Python 3.6+. Please ensure you have Python 3.6+ and installed Bento via `pip3 install bento-cli`."
@@ -430,10 +428,12 @@ def cli(debug: bool, verbose: bool, agree: bool) -> None:
         sys.exit(3)
     if not agree and not has_completed_registration():
         registered = register_user()
+        logging.error("User did not complete registration")
         if not registered:
             # Terminate with non-zero error
             sys.exit(3)
     if not is_running_latest():
+        logging.warn("Bento client is outdated")
         click.echo(UPGRADE_WARNING_OUTPUT)
 
 
@@ -511,6 +511,7 @@ def init() -> None:
 
     tools = __tools(config)
     project_names = list(set(t.project_name for t in tools))
+    logging.debug(f"Project names: {project_names}")
     if len(project_names) > 2:
         projects = f'{", ".join(project_names[:-2])}, and {project_names[-1]}'
     elif project_names:
@@ -666,7 +667,10 @@ def check(
 
     if collapsed_findings:
         findings_by_path = sorted(collapsed_findings, key=by_path)
+        for f in findings_by_path:
+            logging.debug(f)
         bento.util.less(fmt.dump(findings_by_path), pager=pager, only_if_overrun=True)
+
     if collapsed_findings:
         echo_warning(f"{len(collapsed_findings)} findings in {elapsed:.2f} s\n")
         suppress_str = click.style("bento archive", fg="blue")

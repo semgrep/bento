@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import subprocess
 import venv
@@ -73,6 +74,7 @@ class PythonTool(bento.tool.Tool):
         Executes tool set-up or check within its virtual environment
         """
         wrapped = f". {self.__venv_dir}/bin/activate; {cmd}"
+        logging.debug(f"{self.tool_id()}: Running '{wrapped}'")
         v = subprocess.Popen(
             wrapped,
             shell=True,
@@ -84,6 +86,8 @@ class PythonTool(bento.tool.Tool):
             stderr=subprocess.PIPE,
         )
         stdout, stderr = v.communicate()
+        logging.debug(f"{self.tool_id()}: stderr:\n" + stderr[0:4000])
+        logging.debug(f"{self.tool_id()}: stdout:\n" + stdout[0:4000])
         if check_output and v.returncode != 0:
             raise subprocess.CalledProcessError(
                 v.returncode, wrapped, output=stdout, stderr=stderr

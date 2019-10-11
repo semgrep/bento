@@ -1,3 +1,4 @@
+import logging
 import os
 import subprocess
 from abc import ABC, abstractmethod
@@ -133,7 +134,9 @@ class Tool(ABC):
         """
         new_args: Dict[str, Any] = {"cwd": self.base_path, "encoding": "utf8"}
         new_args.update(kwargs)
-        return subprocess.run(command, **new_args)
+        logging.debug(f"{self.tool_id()}: Running '{' '.join(command)}'")
+        res = subprocess.run(command, **new_args)
+        return res
 
     def results(
         self, config: Dict[str, Any], paths: Optional[Iterable[str]] = None
