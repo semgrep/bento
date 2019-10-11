@@ -90,13 +90,16 @@ def get_user_uuid() -> str:
 def violations_to_metrics(
     tool_id: str, violations: List[Violation], ignores: List[str]
 ) -> List[Dict[str, Any]]:
+    git_url = __get_git_url()
+    git_commit = __get_git_commit()
+    user = get_user_uuid()
     return [
         {
             "tool": tool_id,
             "timestamp": str(datetime.utcnow().isoformat("T")),
-            "repository": __get_git_url(),
-            "commit": __get_git_commit(),
-            "user": get_user_uuid(),
+            "repository": git_url,
+            "commit": git_commit,
+            "user": user,
             "ignored_rules": ignores,
             **aggregates,
         }
