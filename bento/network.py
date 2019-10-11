@@ -8,6 +8,9 @@ from requests.models import Response
 from bento.metrics import get_user_uuid
 
 BASE_URL = "https://test.massive.ret2.co"
+# Add default timeout so that we do not block the user's main thread from exiting
+# 1 second value is so that user does not get impatient
+TIMEOUT = 1  # sec
 
 
 def _get_default_shell() -> str:
@@ -30,7 +33,7 @@ def no_auth_get(
 ) -> Response:
     """Perform a requests.get and default headers set"""
     headers = {**_get_default_headers(), **headers}
-    r = requests.get(url, headers=headers, params=params, **kwargs)
+    r = requests.get(url, headers=headers, params=params, **kwargs, timeout=TIMEOUT)
     return r
 
 
@@ -39,7 +42,7 @@ def no_auth_post(
 ) -> Response:
     """Perform a requests.post and default headers set"""
     headers = {**_get_default_headers(), **headers}
-    r = requests.post(url, headers=headers, params=params, json=json)
+    r = requests.post(url, headers=headers, params=params, json=json, timeout=TIMEOUT)
     return r
 
 

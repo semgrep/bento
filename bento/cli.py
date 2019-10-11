@@ -5,10 +5,8 @@ import subprocess
 import sys
 import threading
 import time
-import traceback
 from functools import partial
 from multiprocessing import Lock, Pool
-from pathlib import Path
 from typing import (
     Any,
     Callable,
@@ -39,6 +37,7 @@ import bento.network as network
 import bento.result as result
 import bento.tool as tool
 import bento.util
+from bento.error import NodeError
 from bento.result import Baseline
 from bento.util import echo_error, echo_success, echo_warning
 from bento.violation import Violation
@@ -96,7 +95,7 @@ def __write_config(config: Dict[str, Any]) -> None:
 
 def __install_config_if_not_exists() -> None:
     if not os.path.exists(constants.CONFIG_PATH):
-        click.echo(f"Creating default configuration at {constants.CONFIG_PATH}\n")
+        click.echo(f"Creating default configuration at {constants.CONFIG_PATH}")
         with (
             open(os.path.join(os.path.dirname(__file__), "configs/default.yml"))
         ) as template:
@@ -106,6 +105,9 @@ def __install_config_if_not_exists() -> None:
                 del yml["tools"][tid]
         with (open(constants.CONFIG_PATH, "w")) as config_file:
             yaml.safe_dump(yml, stream=config_file)
+        echo_success(
+            f"Created {constants.CONFIG_PATH}. Please check this file in to source control.\n"
+        )
 
 
 def __tools(config: Dict[str, Any]) -> List[tool.Tool]:
@@ -188,7 +190,7 @@ def __tool_filter(
         # print(f"{tool.tool_id} completed in {((after - before) / 1e9):2f} s (setup in {((after_setup - before) / 1e9):2f} s)")  # TODO: Move to debug
         return (tool.tool_id(), results)
     except Exception as e:
-        traceback.print_exc()
+        # traceback.print_exc()  # TODO: Move to debug
         return (tool.tool_id(), e)
 
 
@@ -271,7 +273,7 @@ def get_ignores_for_tool(tool: str, config: Dict[str, Any]) -> List[str]:
 
 def is_running_latest() -> bool:
     latest_version, _ = network.fetch_latest_version()
-    if latest_version and get_version() < latest_version:
+    if latest_version and Version(get_version()) < Version(latest_version):
         return False
     return True
 
@@ -475,7 +477,10 @@ def archive() -> None:
     n_new = n_found - n_existing
     n_removed = len(old_hashes - found_hashes)
 
-    os.makedirs(os.path.dirname(constants.BASELINE_FILE_PATH), exist_ok=True)
+    os.makedirs(
+        os.path.dirname(os.path.join(os.getcwd(), constants.BASELINE_FILE_PATH)),
+        exist_ok=True,
+    )
     with open(constants.BASELINE_FILE_PATH, "w") as json_file:
         json_file.writelines(new_baseline)
 
@@ -484,6 +489,9 @@ def archive() -> None:
         success_str += (
             f"\n  Also removed {n_removed} fixed findings from the whitelist."
         )
+    success_str += (
+        f"\n  Please check '{constants.BASELINE_FILE_PATH}' in to source control."
+    )
 
     echo_success(success_str)
 
@@ -516,7 +524,25 @@ def init() -> None:
     for t in __tools(config):
         t.setup(config)
 
-    Path(constants.BASELINE_FILE_PATH).touch()
+    r = bento.metrics.__get_git_repo()
+    if sys.stdout.isatty() and r:
+        ignore_file = os.path.join(r.working_tree_dir, ".gitignore")
+        with open(ignore_file, "r") as fd:
+            has_ignore = next(filter(lambda l: l.rstrip() == ".bento/", fd), None)
+        if has_ignore is None:
+            click.secho(
+                "It looks like you're managing this project with git. We recommend adding '.bento/' to your '.gitignore'."
+            )
+            if click.confirm("  Do you want Bento to do this for you?", default=True):
+                with open(ignore_file, "a") as fd:
+                    fd.write(
+                        "# Ignore bento tool run paths (this line added by `bento init`)\n.bento/"
+                    )
+                echo_success(
+                    "Added '.bento/' to your .gitignore. Please commit your .gitignore.\n"
+                )
+
+    echo_success("Bento is initialized on your project.")
 
     network.post_metrics(bento.metrics.command_metric("setup"))
 
@@ -618,6 +644,12 @@ def check(
             echo_error(f"Error while running {tool_id}: {findings}")
             if isinstance(findings, subprocess.CalledProcessError):
                 click.secho(findings.stderr, err=True)
+                click.secho(findings.stdout, err=True)
+            if isinstance(findings, NodeError):
+                echo_warning(
+                    f"Node.js not found or version is not compatible with ESLint v6."
+                )
+
             click.echo("", err=True)
             is_error = True
         elif isinstance(findings, list) and findings:
