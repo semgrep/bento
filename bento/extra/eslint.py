@@ -138,6 +138,8 @@ class EslintTool(JsTool, Tool):
             EslintTool.CONFIG_FILE_NAME,
             "-f",
             "json",
+            "--ignore-pattern",
+            "**/node_modules",
         ]
         for f in files:
             cmd.append(f)
