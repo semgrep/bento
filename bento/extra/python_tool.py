@@ -18,21 +18,7 @@ class PythonTool(bento.tool.Tool):
     PIP_CMD = "python -m pip"
 
     def matches_project(self) -> bool:
-        cmdA = ["find", ".", "-name", "*.py"]
-        cmdB = ["head", "-n", "1"]
-        # We want to run "find", but terminate after a single file is returned
-        procA = subprocess.Popen(cmdA, cwd=self.base_path, stdout=subprocess.PIPE)
-        procB = subprocess.Popen(
-            cmdB,
-            cwd=self.base_path,
-            stdin=procA.stdout,
-            stdout=subprocess.PIPE,
-            encoding="utf-8",
-        )
-        procA.stdout.close()
-        procB.wait()
-        res = next(procB.stdout, None)
-        return res is not None
+        return self.project_has_extensions("*.py")
 
     @property
     @abstractmethod

@@ -81,6 +81,10 @@ class EslintTool(JsTool, Tool):
         "eslint-plugin-react-hooks": Version("1.7.0"),
     }
     MIN_ESLINT_PLUGIN_REACT_VERSION = Version("7.14.3")
+    TYPESCRIPT_PACKAGES = {
+        "@typescript-eslint/parser": Version("2.3.3"),
+        "@typescript-eslint/eslint-plugin": Version("2.3.3"),
+    }
 
     @property
     def parser_type(self) -> Type[Parser]:
@@ -112,11 +116,17 @@ class EslintTool(JsTool, Tool):
 
     def setup(self, config: Dict[str, Any]) -> None:
         needed_packages = self.ALWAYS_NEEDED.copy()
+        project_has_typescript = self.project_has_extensions(
+            "*.ts", "*.tsx", extra=["-not", "-path", "**/node_modules/*"]
+        )
         project_has_react = self._installed_version("react") is not None
         if project_has_react:
             needed_packages[
                 "eslint-plugin-react"
             ] = EslintTool.MIN_ESLINT_PLUGIN_REACT_VERSION
+        if project_has_typescript:
+            needed_packages.update(EslintTool.TYPESCRIPT_PACKAGES)
+
         self._ensure_packages(needed_packages)
         self._ensure_node_version()
         # install .eslintrc.yml
@@ -125,8 +135,12 @@ class EslintTool(JsTool, Tool):
         ):
             print(f"Installing {EslintTool.CONFIG_FILE_NAME}...")
 
-            if project_has_react is not None:
+            if project_has_react and project_has_typescript:
+                self.__copy_eslintrc("react-and-typescript")
+            elif project_has_react:
                 self.__copy_eslintrc("react")
+            elif project_has_typescript:
+                self.__copy_eslintrc("typescript")
             else:
                 self.__copy_eslintrc("default")
 
@@ -140,6 +154,8 @@ class EslintTool(JsTool, Tool):
             "json",
             "--ignore-pattern",
             "**/node_modules",
+            "--ext",
+            "js,jsx,ts,tsx",
         ]
         for f in files:
             cmd.append(f)
