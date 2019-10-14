@@ -94,6 +94,48 @@ def test_run():
     assert violations == expectation
 
 
+def test_typescript_run():
+    tool = EslintTool()
+    tool.base_path = os.path.abspath(
+        os.path.join(BASE_PATH, "tests/integration/js-and-ts")
+    )
+    tool.setup({})
+    try:
+        violations = tool.results({}, ["foo.ts"])
+    except subprocess.CalledProcessError as e:
+        print(e.stderr)
+        raise e
+
+    expectation = [
+        Violation(
+            tool_id="r2c.eslint",
+            check_id="@typescript-eslint/no-unused-vars",
+            path="foo.ts",
+            line=1,
+            column=7,
+            message="'user' is assigned a value but never used.",
+            severity=1,
+            syntactic_context="const user: int = 'Mom'",
+            filtered=None,
+            link="https://eslint.org/docs/rules/@typescript-eslint/no-unused-vars",
+        ),
+        Violation(
+            tool_id="r2c.eslint",
+            check_id="semi",
+            path="foo.ts",
+            line=1,
+            column=24,
+            message="Missing semicolon.",
+            severity=2,
+            syntactic_context="const user: int = 'Mom'",
+            filtered=None,
+            link="https://eslint.org/docs/rules/semi",
+        ),
+    ]
+
+    assert violations == expectation
+
+
 def test_file_match():
     f = EslintTool().file_name_filter
 

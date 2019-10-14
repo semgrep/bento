@@ -92,6 +92,26 @@ class Tool(ABC):
         """
         pass
 
+    def project_has_extensions(self, *extensions: str, extra: List[str] = []) -> bool:
+        patterns = [["-name", e] for e in extensions]
+        args = patterns[0] + [a for p in patterns[1:] for a in ["-o"] + p]
+        cmdA = ["find", ".", "("] + args + [")"] + extra
+        cmdB = ["head", "-n", "1"]
+        # We want to run "find", but terminate after a single file is returned
+        logging.debug(f"Running {' '.join(cmdA)} | {' '.join(cmdB)}")
+        procA = subprocess.Popen(cmdA, cwd=self.base_path, stdout=subprocess.PIPE)
+        procB = subprocess.Popen(
+            cmdB,
+            cwd=self.base_path,
+            stdin=procA.stdout,
+            stdout=subprocess.PIPE,
+            encoding="utf-8",
+        )
+        procA.stdout.close()
+        procB.wait()
+        res = next(procB.stdout, None)
+        return res is not None
+
     def filter_paths(self, config: Dict[str, Any], paths: Iterable[str]) -> Set[str]:
         """
         Filters a list of paths to those that should be analyzed by this tool

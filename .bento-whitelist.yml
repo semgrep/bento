@@ -1,0 +1,32 @@
+r2c.eslint:
+  violations: {}
+r2c.flake8:
+  violations:
+    1f30d75ee0b0e66360c9db4ccb58f363:
+      check_id: E999
+      message: 'SyntaxError: invalid syntax'
+      path: tests/integration/py-only/foo.py
+      severity: 2
+      syntactic_context: def broken(x)
+      tool_id: r2c.flake8
+    3fb391aeece0c72ff15fd1fa63ac5d4e:
+      check_id: E999
+      message: 'SyntaxError: invalid syntax'
+      path: tests/integration/simple/foo.py
+      severity: 2
+      syntactic_context: def broken(x)
+      tool_id: r2c.flake8
+    5c4ee71fd2e5c3f3138e8b874ad74a97:
+      check_id: E113
+      message: unexpected indentation
+      path: tests/integration/simple/foo.py
+      severity: 2
+      syntactic_context: '    return x'
+      tool_id: r2c.flake8
+    6bac52a1fc3049527143ebc379a14dd5:
+      check_id: E113
+      message: unexpected indentation
+      path: tests/integration/py-only/foo.py
+      severity: 2
+      syntactic_context: '    return x'
+      tool_id: r2c.flake8

@@ -82,6 +82,10 @@ class EslintTool(JsTool, Tool):
         "eslint-plugin-react-hooks": Version("1.7.0"),
     }
     MIN_ESLINT_PLUGIN_REACT_VERSION = Version("7.14.3")
+    TYPESCRIPT_PACKAGES = {
+        "@typescript-eslint/parser": Version("2.3.3"),
+        "@typescript-eslint/eslint-plugin": Version("2.3.3"),
+    }
 
     @property
     def parser_type(self) -> Type[Parser]:
@@ -93,6 +97,8 @@ class EslintTool(JsTool, Tool):
 
     @property
     def project_name(self) -> str:
+        if self.__uses_typescript():
+            return EslintTool.PROJECT_NAME + " (with TypeScript)"
         return EslintTool.PROJECT_NAME
 
     @property
@@ -101,6 +107,9 @@ class EslintTool(JsTool, Tool):
 
     def matches_project(self) -> bool:
         return os.path.exists(os.path.join(self.base_path, "package.json"))
+
+    def __uses_typescript(self) -> bool:
+        return self._installed_version("typescript") is not None
 
     def __copy_eslintrc(self, identifier: str) -> None:
         print(f"Using {identifier} .eslintrc configuration")
@@ -113,11 +122,15 @@ class EslintTool(JsTool, Tool):
 
     def setup(self, config: Dict[str, Any]) -> None:
         needed_packages = self.ALWAYS_NEEDED.copy()
+        project_has_typescript = self.__uses_typescript()
         project_has_react = self._installed_version("react") is not None
         if project_has_react:
             needed_packages[
                 "eslint-plugin-react"
             ] = EslintTool.MIN_ESLINT_PLUGIN_REACT_VERSION
+        if project_has_typescript:
+            needed_packages.update(EslintTool.TYPESCRIPT_PACKAGES)
+
         self._ensure_packages(needed_packages)
         self._ensure_node_version()
         # install .eslintrc.yml
@@ -126,8 +139,12 @@ class EslintTool(JsTool, Tool):
         ):
             print(f"Installing {EslintTool.CONFIG_FILE_NAME}...")
 
-            if project_has_react is not None:
+            if project_has_react and project_has_typescript:
+                self.__copy_eslintrc("react-and-typescript")
+            elif project_has_react:
                 self.__copy_eslintrc("react")
+            elif project_has_typescript:
+                self.__copy_eslintrc("typescript")
             else:
                 self.__copy_eslintrc("default")
 
@@ -139,6 +156,10 @@ class EslintTool(JsTool, Tool):
             EslintTool.CONFIG_FILE_NAME,
             "-f",
             "json",
+            "--ignore-pattern",
+            "**/node_modules",
+            "--ext",
+            "js,jsx,ts,tsx",
         ]
         for f in files:
             cmd.append(f)
