@@ -32,8 +32,13 @@ class JsTool(Tool):
     def _npm_install(self, packages: Dict[str, Version]) -> None:
         """Runs npm install $package@^$version for each package."""
         print(f"Installing {packages}...")
+        uses_yarn = os.path.exists(os.path.join(self.base_path, "yarn.lock"))
         args = [f"{name}@^{version}" for name, version in packages.items()]
-        self.exec(["npm", "install", "--save-dev"] + args, check=True)
+        if uses_yarn:
+            cmd = ["yarn", "add", "--dev"]
+        else:
+            cmd = ["npm", "install", "--save-dev"]
+        self.exec(cmd + args, check=True)
 
     def _ensure_packages(self, packages: Dict[str, Version]) -> Set[str]:
         """Ensures that the given packages are installed.
