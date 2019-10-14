@@ -96,6 +96,8 @@ class EslintTool(JsTool, Tool):
 
     @property
     def project_name(self) -> str:
+        if self.__uses_typescript():
+            return EslintTool.PROJECT_NAME + " (with TypeScript)"
         return EslintTool.PROJECT_NAME
 
     @property
@@ -104,6 +106,9 @@ class EslintTool(JsTool, Tool):
 
     def matches_project(self) -> bool:
         return os.path.exists(os.path.join(self.base_path, "package.json"))
+
+    def __uses_typescript(self) -> bool:
+        return self._installed_version("typescript") is not None
 
     def __copy_eslintrc(self, identifier: str) -> None:
         print(f"Using {identifier} .eslintrc configuration")
@@ -116,9 +121,7 @@ class EslintTool(JsTool, Tool):
 
     def setup(self, config: Dict[str, Any]) -> None:
         needed_packages = self.ALWAYS_NEEDED.copy()
-        project_has_typescript = self.project_has_extensions(
-            "*.ts", "*.tsx", extra=["-not", "-path", "**/node_modules/*"]
-        )
+        project_has_typescript = self.__uses_typescript()
         project_has_react = self._installed_version("react") is not None
         if project_has_react:
             needed_packages[
