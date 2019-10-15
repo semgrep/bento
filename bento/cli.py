@@ -541,8 +541,10 @@ def init():
     r = bento.metrics.__get_git_repo()
     if sys.stdout.isatty() and r:
         ignore_file = os.path.join(r.working_tree_dir, ".gitignore")
-        with open(ignore_file, "r") as fd:
-            has_ignore = next(filter(lambda l: l.rstrip() == ".bento/", fd), None)
+        has_ignore = None
+        if os.path.exists(ignore_file):
+            with open(ignore_file, "r") as fd:
+                has_ignore = next(filter(lambda l: l.rstrip() == ".bento/", fd), None)
         if has_ignore is None:
             click.secho(
                 "It looks like you're managing this project with git. We recommend adding '.bento/' to your '.gitignore'."
