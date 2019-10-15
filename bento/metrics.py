@@ -6,13 +6,17 @@ from hashlib import sha256
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 import git
+import git.exc
 
 from bento.violation import Violation
 
 
-def __get_git_repo(dirPath: str = os.getcwd()) -> git.Repo:
-    r = git.Repo(dirPath, search_parent_directories=True)
-    return r
+def __get_git_repo(dirPath: str = os.getcwd()) -> Optional[git.Repo]:
+    try:
+        r = git.Repo(dirPath, search_parent_directories=True)
+        return r
+    except git.exc.InvalidGitRepositoryError:
+        return None
 
 
 # N.B. See https://stackoverflow.com/a/42613047
