@@ -8,6 +8,7 @@ import shutil
 import signal
 import subprocess
 import sys
+import threading
 import types
 from importlib import import_module
 from typing import Collection, List, Optional, Pattern, Type
@@ -120,3 +121,21 @@ def echo_warning(text: str, indent: str = "") -> None:
 def echo_success(text: str, indent: str = "") -> None:
     logging.info(text)
     click.secho(f"{indent}✔ {text}", fg="green", err=True)
+
+
+# Taken from http://www.madhur.co.in/blog/2015/11/02/countdownlatch-python.html
+class CountDownLatch(object):
+    def __init__(self, count: int = 1):
+        self.count = count
+        self.lock = threading.Condition()
+
+    def count_down(self) -> None:
+        with self.lock:
+            self.count -= 1
+            if self.count <= 0:
+                self.lock.notifyAll()
+
+    def wait_for(self) -> None:
+        with self.lock:
+            while self.count > 0:
+                self.lock.wait()

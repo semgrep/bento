@@ -7,7 +7,8 @@ import sys
 import threading
 import time
 from functools import partial
-from multiprocessing import Lock, Pool
+from multiprocessing import Lock
+from multiprocessing.pool import ThreadPool
 from typing import (
     Any,
     Callable,
@@ -72,6 +73,7 @@ ToolResults = Union[List[Violation], Exception]
 RunResults = Tuple[str, ToolResults]
 
 lock = Lock()
+setup_latch: Optional[bento.util.CountDownLatch] = None
 bars: List[tqdm]
 
 
@@ -173,12 +175,16 @@ def __tool_filter(
         with lock:
             bars[ix].set_postfix_str("🍜")
         tool.setup(config)
+        if setup_latch:
+            setup_latch.count_down()
         with lock:
             bars[ix].update(min_bar_value)
             bars[ix].set_postfix_str("🍤")
         # after_setup = time.time_ns()
         th = threading.Thread(name=f"update_{ix}", target=update_bars)
         th.start()
+        if setup_latch:
+            setup_latch.wait_for()
         results = result.filter(
             tool.tool_id(), __tool_findings(tool, config, paths), baseline
         )
@@ -234,8 +240,11 @@ def __tool_parallel_results(
         )
         for tool, ix in tools_and_indices
     ]
+    bento.cli.setup_latch = bento.util.CountDownLatch(len(tools))
 
-    with Pool(len(tools), initializer=set_progress_bars, initargs=(bars,)) as pool:
+    with ThreadPool(
+        len(tools), initializer=set_progress_bars, initargs=(bars,)
+    ) as pool:
         # using partial to pass in multiple arguments to __tool_filter
         func = partial(__tool_filter, config, baseline, files)
         all_results = pool.map_async(func, tools_and_indices).get()
@@ -528,8 +537,10 @@ def init() -> None:
     r = bento.metrics.__get_git_repo()
     if sys.stdout.isatty() and r:
         ignore_file = os.path.join(r.working_tree_dir, ".gitignore")
-        with open(ignore_file, "r") as fd:
-            has_ignore = next(filter(lambda l: l.rstrip() == ".bento/", fd), None)
+        has_ignore = None
+        if os.path.exists(ignore_file):
+            with open(ignore_file, "r") as fd:
+                has_ignore = next(filter(lambda l: l.rstrip() == ".bento/", fd), None)
         if has_ignore is None:
             click.secho(
                 "It looks like you're managing this project with git. We recommend adding '.bento/' to your '.gitignore'."
