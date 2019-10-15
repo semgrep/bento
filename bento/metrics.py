@@ -6,22 +6,25 @@ from hashlib import sha256
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 import git
+import git.exc
 
 from bento.violation import Violation
 
 
-def __get_git_repo(dirPath: str = os.getcwd()) -> git.Repo:
-    r = git.Repo(dirPath, search_parent_directories=True)
-    return r
+def __get_git_repo(dirPath: str = os.getcwd()) -> Optional[git.Repo]:
+    try:
+        r = git.Repo(dirPath, search_parent_directories=True)
+        return r
+    except git.exc.InvalidGitRepositoryError:
+        return None
 
 
 # N.B. See https://stackoverflow.com/a/42613047
 def __get_git_user_email(dirPath: str = os.getcwd()) -> Optional[str]:
-    try:
-        r = __get_git_repo(dirPath)
-        return r.config_reader().get_value("user", "email")
-    except Exception:
+    r = __get_git_repo(dirPath)
+    if r is None:
         return None
+    return r.config_reader().get_value("user", "email")
 
 
 def __hash_sha256(data: str) -> str:
@@ -42,10 +45,9 @@ def __get_git_url(dirPath: str = os.getcwd()) -> Optional[str]:
 def __get_git_commit(dirPath: str = os.getcwd()) -> Optional[str]:
     """Get head commit for git dir at dirPath"""
     r = __get_git_repo(dirPath)
-    if r:
-        return str(r.head.commit)
-    else:
+    if r is None:
         return None
+    return str(r.head.commit)
 
 
 def __get_filtered_violation_count(violations: Iterable[Violation]) -> int:

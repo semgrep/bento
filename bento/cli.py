@@ -700,11 +700,12 @@ def install_hook() -> None:
         runs said hook after bento hook is run
     """
     # Get hook path
-    try:
-        repo = git.Repo(os.getcwd(), search_parent_directories=True)
-        hook_path = git.index.fun.hook_path("pre-commit", repo.git_dir)
-    except Exception:
-        raise
+    repo = bento.metrics.__get_git_repo()
+    if repo is None:
+        echo_error("Not a git project")
+        sys.exit(3)
+
+    hook_path = git.index.fun.hook_path("pre-commit", repo.git_dir)
 
     if is_bento_precommit(hook_path):
         echo_success(f"Bento already installed as a pre-commit hook")
