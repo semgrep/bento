@@ -113,7 +113,7 @@ def echo_error(text: str, indent: str = "") -> None:
 
 
 def echo_warning(text: str, indent: str = "") -> None:
-    logging.warn(text)
+    logging.warning(text)
     click.secho(f"{indent}⚠ {text}", fg="yellow", err=True)
 
 

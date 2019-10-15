@@ -24,7 +24,7 @@ repos:
     rev: "51dfa07d8775040a433388c234d54d84c582beb3" # v1.9.2
     hooks:
       - id: seed-isort-config
-        args: ["--exclude=tests/integration"]
+        args: ["--exclude=tests"]
 
   - repo: https://github.com/pre-commit/mirrors-isort
     rev: "fe48703af934101b40ea9059d43355aec45ca3fb"

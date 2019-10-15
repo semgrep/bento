@@ -196,7 +196,7 @@ def __tool_filter(
 
 
 def __tool_parallel_results(
-    config: Dict[str, Any], baseline: Dict[str, Set[str]], files: Optional[List[str]]
+    config: Dict[str, Any], baseline: result.Baseline, files: Optional[List[str]]
 ) -> Collection[RunResults]:
     """Runs all tools in parallel.
 
@@ -510,7 +510,7 @@ def init() -> None:
     config = __config()
 
     tools = __tools(config)
-    project_names = list(set(t.project_name for t in tools))
+    project_names = sorted(list(set(t.project_name for t in tools)))
     logging.debug(f"Project names: {project_names}")
     if len(project_names) > 2:
         projects = f'{", ".join(project_names[:-2])}, and {project_names[-1]}'
@@ -520,7 +520,7 @@ def init() -> None:
         echo_error("Bento can't identify this project.")
         sys.exit(3)
 
-    click.secho(f"Detected project with {projects}\n", fg="blue")
+    click.secho(f"Detected project with {projects}\n", fg="blue", err=True)
 
     for t in __tools(config):
         t.setup(config)
