@@ -35,6 +35,7 @@ from tqdm import tqdm
 import bento.constants as constants
 import bento.extra
 import bento.formatter as formatter
+import bento.git
 import bento.network as network
 import bento.result as result
 import bento.tool as tool
@@ -388,9 +389,7 @@ def register_user() -> bool:
     )
 
     if subscribe_to_email:
-        email = click.prompt(
-            "Email", type=str, default=bento.metrics.__get_git_user_email()
-        )
+        email = click.prompt("Email", type=str, default=bento.git.user_email())
         global_config["email"] = email
         r = __post_email_to_mailchimp(email)
         if not r:
@@ -535,7 +534,7 @@ def init() -> None:
     for t in __tools(config):
         t.setup(config)
 
-    r = bento.metrics.__get_git_repo()
+    r = bento.git.repo()
     if sys.stdout.isatty() and r:
         ignore_file = os.path.join(r.working_tree_dir, ".gitignore")
         has_ignore = None
@@ -712,7 +711,7 @@ def install_hook() -> None:
         runs said hook after bento hook is run
     """
     # Get hook path
-    repo = bento.metrics.__get_git_repo()
+    repo = bento.git.repo()
     if repo is None:
         echo_error("Not a git project")
         sys.exit(3)

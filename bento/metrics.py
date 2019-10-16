@@ -1,59 +1,19 @@
-import configparser
 import getpass
 import itertools
-import os
 from datetime import datetime
 from hashlib import sha256
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
-import git
-import git.exc
-
+import bento.git
 from bento.violation import Violation
 
 
-def __get_git_repo(dirPath: str = os.getcwd()) -> Optional[git.Repo]:
-    try:
-        r = git.Repo(dirPath, search_parent_directories=True)
-        return r
-    except git.exc.InvalidGitRepositoryError:
-        return None
-
-
-# N.B. See https://stackoverflow.com/a/42613047
-def __get_git_user_email(dirPath: str = os.getcwd()) -> Optional[str]:
-    r = __get_git_repo(dirPath)
-    if r is None:
-        return None
-    try:
-        return r.config_reader().get_value("user", "email")
-    except configparser.NoSectionError:
-        return None
-    except configparser.NoOptionError:
-        return None
-
-
-def __hash_sha256(data: str) -> str:
+def __hash_sha256(data: Optional[str]) -> Optional[str]:
     """ Get SHA256 of data
     """
+    if data is None:
+        return None
     return sha256(data.encode()).hexdigest()
-
-
-def __get_git_url(dirPath: str = os.getcwd()) -> Optional[str]:
-    """Get remote.origin.url for git dir at dirPath"""
-    r = __get_git_repo(dirPath)
-    if r and r.remotes and "origin" in r.remotes:
-        return __hash_sha256(r.remotes.origin.url)
-    else:
-        return None
-
-
-def __get_git_commit(dirPath: str = os.getcwd()) -> Optional[str]:
-    """Get head commit for git dir at dirPath"""
-    r = __get_git_repo(dirPath)
-    if r is None:
-        return None
-    return str(r.head.commit)
 
 
 def __get_filtered_violation_count(violations: Iterable[Violation]) -> int:
@@ -81,14 +41,14 @@ def __get_aggregate_violations(violations: List[Violation]) -> List[Dict[str, An
     return out
 
 
-def get_user_uuid() -> str:
+def get_user_uuid() -> Optional[str]:
     """
     Returns the user uuid
 
     If this is a git repo, returns a hash of the git email; otherwise
     returns a hash of the system-specific user login
     """
-    git_email = __get_git_user_email(os.getcwd())
+    git_email = bento.git.user_email()
     if git_email:
         return __hash_sha256(git_email)
     else:
@@ -98,8 +58,8 @@ def get_user_uuid() -> str:
 def violations_to_metrics(
     tool_id: str, violations: List[Violation], ignores: List[str]
 ) -> List[Dict[str, Any]]:
-    git_url = __get_git_url()
-    git_commit = __get_git_commit()
+    git_url = __hash_sha256(bento.git.url())
+    git_commit = bento.git.commit()
     user = get_user_uuid()
     return [
         {
@@ -119,8 +79,8 @@ def command_metric(command: str) -> List[Dict[str, Any]]:
     return [
         {
             "timestamp": str(datetime.utcnow().isoformat("T")),
-            "repository": __get_git_url(),
-            "commit": __get_git_commit(),
+            "repository": __hash_sha256(bento.git.url()),
+            "commit": bento.git.commit(),
             "user": get_user_uuid(),
             "command": command,
         }
