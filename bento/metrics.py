@@ -1,3 +1,4 @@
+import configparser
 import getpass
 import itertools
 import os
@@ -24,7 +25,10 @@ def __get_git_user_email(dirPath: str = os.getcwd()) -> Optional[str]:
     r = __get_git_repo(dirPath)
     if r is None:
         return None
-    return r.config_reader().get_value("user", "email")
+    try:
+        return r.config_reader().get_value("user", "email")
+    except configparser.NoSectionError:
+        return None
 
 
 def __hash_sha256(data: str) -> str:

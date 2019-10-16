@@ -423,6 +423,7 @@ def register_user() -> bool:
     default=False,
 )
 def cli(agree: bool) -> None:
+    os.makedirs(os.path.dirname(constants.DEFAULT_LOG_PATH), exist_ok=True)
     logging.basicConfig(
         filename=constants.DEFAULT_LOG_PATH,
         level=logging.DEBUG,
