@@ -29,6 +29,8 @@ def __get_git_user_email(dirPath: str = os.getcwd()) -> Optional[str]:
         return r.config_reader().get_value("user", "email")
     except configparser.NoSectionError:
         return None
+    except configparser.NoOptionError:
+        return None
 
 
 def __hash_sha256(data: str) -> str:
