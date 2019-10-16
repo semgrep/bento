@@ -7,7 +7,7 @@ from requests.models import Response
 
 from bento.metrics import get_user_uuid
 
-BASE_URL = "https://test.massive.ret2.co"
+BASE_URL = "https://bento.r2c.dev"
 # Add default timeout so that we do not block the user's main thread from exiting
 # 1 second value is so that user does not get impatient
 TIMEOUT = 1  # sec
