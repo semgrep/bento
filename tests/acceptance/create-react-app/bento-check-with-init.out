@@ -1,0 +1,852 @@
+docusaurus/website/src/pages/index.js
+  8:19 error   Unable to resolve path to module 'react'.                                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+  9:18 error   Unable to resolve path to module '@docusaurus/Link'.                                                 r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 10:34 error   Unable to resolve path to module '@docusaurus/useDocusaurusContext'.                                 r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 11:25 error   Unable to resolve path to module '@docusaurus/withBaseUrl'.                                          r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 13:20 error   Unable to resolve path to module '@theme/Layout'.                                                    r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 14:23 error   Unable to resolve path to module '@theme/CodeBlock'.                                                 r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 16:24 error   Unable to resolve path to module 'classnames'.                                                       r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 71:24 error   Do not use Array index in keys                                                                       r2c.eslint     react/no-array-index-key https://eslint.org/docs/rules/react/no-array-index-key
+
+packages/babel-plugin-named-asset-import/index.js
+ 26:34 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/babel-plugin-named-asset-import/index.test.js
+  1:30 error   Unable to resolve path to module 'babel-plugin-tester'.                                              r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+
+packages/babel-preset-react-app/create.js
+ 28:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 29:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 30:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 32:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 37:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 38:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 43:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 44:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 50:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 50:7  error   It's not necessary to initialize 'absoluteRuntimePath' to undefined.                                 r2c.eslint     no-undef-init https://eslint.org/docs/rules/no-undef-init
+ 71:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 71:17 error   Unable to resolve path to module '@babel/preset-env'.                                                r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 80:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 80:17 error   Unable to resolve path to module '@babel/preset-env'.                                                r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 94:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 94:17 error   Unable to resolve path to module '@babel/preset-react'.                                              r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+104:31 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+104:39 error   Unable to resolve path to module '@babel/preset-typescript'.                                         r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+114:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+114:17 error   Unable to resolve path to module '@babel/plugin-transform-flow-strip-types'.                         r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+119:7  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+119:15 error   Unable to resolve path to module 'babel-plugin-macros'.                                              r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+124:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+124:17 error   Unable to resolve path to module '@babel/plugin-transform-destructuring'.                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+145:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+145:17 error   Unable to resolve path to module '@babel/plugin-proposal-decorators'.                                r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+152:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+152:17 error   Unable to resolve path to module '@babel/plugin-proposal-class-properties'.                          r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+161:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+161:17 error   Unable to resolve path to module '@babel/plugin-proposal-object-rest-spread'.                        r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+169:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+169:17 error   Unable to resolve path to module '@babel/plugin-transform-runtime'.                                  r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+176:20 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+190:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+190:17 error   Unable to resolve path to module 'babel-plugin-transform-react-remove-prop-types'.                   r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+196:7  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+196:15 error   Unable to resolve path to module '@babel/plugin-syntax-dynamic-import'.                              r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+199:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+199:17 error   Unable to resolve path to module 'babel-plugin-dynamic-import-node'.                                 r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+204:19 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+204:27 error   Unable to resolve path to module '@babel/plugin-transform-flow-strip-types'.                         r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+210:13 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+210:21 error   Unable to resolve path to module '@babel/plugin-proposal-decorators'.                                r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+
+packages/babel-preset-react-app/dependencies.js
+ 34:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 35:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 36:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 37:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 39:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 40:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 46:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 46:7  error   It's not necessary to initialize 'absoluteRuntimePath' to undefined.                                 r2c.eslint     no-undef-init https://eslint.org/docs/rules/no-undef-init
+ 72:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 72:17 error   Unable to resolve path to module '@babel/preset-env'.                                                r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 85:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 85:17 error   Unable to resolve path to module '@babel/preset-env'.                                                r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+104:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+104:17 error   Unable to resolve path to module '@babel/plugin-transform-destructuring'.                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+126:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+126:17 error   Unable to resolve path to module '@babel/plugin-transform-runtime'.                                  r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+142:7  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+142:15 error   Unable to resolve path to module '@babel/plugin-syntax-dynamic-import'.                              r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+145:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+145:17 error   Unable to resolve path to module 'babel-plugin-dynamic-import-node'.                                 r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+
+packages/create-react-app/createReactApp.js
+129:3  error   Parsing error: 'return' outside of function                                                          r2c.eslint     error
+
+packages/create-react-app/index.js
+ 39:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 40:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 41:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+
+packages/react-app-polyfill/ie11.js
+ 13:3  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 13:11 error   Unable to resolve path to module 'promise/lib/rejection-tracking'.                                   r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 14:3  error   Unexpected use of 'self'.                                                                            r2c.eslint     no-restricted-globals https://eslint.org/docs/rules/no-restricted-globals
+ 14:18 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 14:26 error   Unable to resolve path to module 'promise/lib/es6-extensions.js'.                                    r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 21:3  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 21:11 error   Unable to resolve path to module 'whatwg-fetch'.                                                     r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 29:9  error   Unable to resolve path to module 'core-js/features/symbol'.                                          r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 31:9  error   Unable to resolve path to module 'core-js/features/array/from'.                                      r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+
+packages/react-app-polyfill/ie9.js
+ 12:9  error   Unable to resolve path to module 'core-js/features/map'.                                             r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 13:9  error   Unable to resolve path to module 'core-js/features/set'.                                             r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 15:9  error   Unable to resolve path to module 'raf'.                                                              r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+
+packages/react-app-polyfill/jsdom.js
+ 13:3  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 13:11 error   Unable to resolve path to module 'whatwg-fetch'.                                                     r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+
+packages/react-app-polyfill/stable.js
+ 12:9  error   Unable to resolve path to module 'core-js/stable'.                                                   r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+
+packages/react-dev-utils/FileSizeReporter.js
+ 10:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 11:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 12:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 13:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 13:24 error   Unable to resolve path to module 'filesize'.                                                         r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 14:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 14:25 error   Unable to resolve path to module 'recursive-readdir'.                                                r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 15:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 16:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 16:24 error   Unable to resolve path to module 'gzip-size'.                                                        r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 34:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 35:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 36:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 37:10 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 40:24 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 41:14 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 42:11 error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 43:11 error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 44:11 error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 44:36 error   'removeFileNameHash' was used before it was defined.                                                 r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+ 45:11 error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 45:28 error   'getDifferenceLabel' was used before it was defined.                                                 r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+ 52:13 error   Expected property shorthand.                                                                         r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+ 60:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 62:16 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 64:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 65:18 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 66:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 67:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 69:7  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 72:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 73:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 76:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+119:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+120:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+121:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+134:22 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+136:7  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+139:11 error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+140:11 error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+154:3  error   Expected property shorthand.                                                                         r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+155:3  error   Expected property shorthand.                                                                         r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+
+packages/react-dev-utils/ForkTsCheckerWebpackPlugin.js
+ 10:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 10:42 error   Unable to resolve path to module 'fork-ts-checker-webpack-plugin'.                                   r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+
+packages/react-dev-utils/InlineChunkHtmlPlugin.js
+ 23:26 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 39:61 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 40:27 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 44:62 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/react-dev-utils/InterpolateHtmlPlugin.js
+ 26:61 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 29:50 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 31:50 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/react-dev-utils/ModuleNotFoundPlugin.js
+120:68 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/react-dev-utils/ModuleScopePlugin.js
+ 41:25 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 59:25 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/react-dev-utils/WatchMissingNodeModulesPlugin.js
+ 20:62 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 21:7  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 22:7  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 25:28 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/react-dev-utils/WebpackDevServerUtils.js
+  9:25 error   Unable to resolve path to module 'address'.                                                          r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 14:24 error   Unable to resolve path to module 'detect-port-alt'.                                                  r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 15:24 error   Unable to resolve path to module 'is-root'.                                                          r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 26:21 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 33:26 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+144:39 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+145:30 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+153:24 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+157:34 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+159:21 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+167:41 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+269:5  error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+276:48 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+416:7  error   Expected method shorthand.                                                                           r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+424:19 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+443:5  error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+444:19 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+465:42 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+477:5  error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/react-dev-utils/__tests__/ignoredFiles.test.js
+ 12:1  error   'describe' is not defined.                                                                           r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 13:3  error   'it' is not defined.                                                                                 r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 18:5  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 19:5  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 22:3  error   'it' is not defined.                                                                                 r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 26:5  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 29:3  error   'it' is not defined.                                                                                 r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 36:5  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 37:5  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 40:3  error   'it' is not defined.                                                                                 r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 46:5  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 49:3  error   'it' is not defined.                                                                                 r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 53:5  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+
+packages/react-dev-utils/browsersHelper.js
+  9:30 error   Unable to resolve path to module 'browserslist'.                                                     r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 13:23 error   Unable to resolve path to module 'pkg-up'.                                                           r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 41:41 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 64:48 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 64:48 error   'shouldSetBrowsers' is already declared in the upper scope.                                          r2c.eslint     no-shadow https://eslint.org/docs/rules/no-shadow
+ 71:15 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/react-dev-utils/chalk.js
+ 10:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+
+packages/react-dev-utils/checkRequiredFiles.js
+ 10:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 11:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 12:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 15:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 17:19 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 23:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 24:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+
+packages/react-dev-utils/crossSpawn.js
+ 10:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+
+packages/react-dev-utils/eslintFormatter.js
+ 26:19 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 32:29 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 60:34 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 64:22 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/react-dev-utils/evalSourceMapMiddleware.js
+ 17:57 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 17:67 error   Expected '===' and instead saw '=='.                                                                 r2c.eslint     eqeqeq https://eslint.org/docs/rules/eqeqeq
+
+packages/react-dev-utils/formatWebpackMessages.js
+ 23:24 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 27:21 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/react-dev-utils/getCSSModuleLocalIdent.js
+ 10:29 error   Unable to resolve path to module 'loader-utils'.                                                     r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+
+packages/react-dev-utils/getCacheIdentifier.js
+ 15:26 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+ 15:26 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+
+packages/react-dev-utils/getProcessForPort.js
+ 10:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 11:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 12:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 14:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 34:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 37:12 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+ 37:12 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 44:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 70:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 71:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 72:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+
+packages/react-dev-utils/globby.js
+ 10:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 10:22 error   Unable to resolve path to module 'globby'.                                                           r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+
+packages/react-dev-utils/immer.js
+ 10:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 10:21 error   Unable to resolve path to module 'immer'.                                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+
+packages/react-dev-utils/inquirer.js
+ 10:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+
+packages/react-dev-utils/launchEditor.js
+ 14:28 error   Unable to resolve path to module 'shell-quote'.                                                      r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 17:3  error   Expected a default case.                                                                             r2c.eslint     default-case https://eslint.org/docs/rules/default-case
+127:3  error   Expected a default case.                                                                             r2c.eslint     default-case https://eslint.org/docs/rules/default-case
+
+packages/react-dev-utils/openBrowser.js
+ 10:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 11:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 12:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 13:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 13:20 error   Unable to resolve path to module 'open'.                                                             r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 16:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 51:21 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 61:7  error   Unnecessary return statement.                                                                        r2c.eslint     no-useless-return https://eslint.org/docs/rules/no-useless-return
+107:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+
+packages/react-dev-utils/printHostingInstructions.js
+ 12:31 error   Unable to resolve path to module 'global-modules'.                                                   r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 26:5  error   'printBaseMessage' was used before it was defined.                                                   r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+ 28:5  error   'printDeployInstructions' was used before it was defined.                                            r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+ 31:5  error   'printBaseMessage' was used before it was defined.                                                   r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+ 35:5  error   'printBaseMessage' was used before it was defined.                                                   r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+ 37:5  error   'printStaticServerInstructions' was used before it was defined.                                      r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+
+packages/react-dev-utils/typescriptFormatter.js
+ 39:20 error   Expected property shorthand.                                                                         r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+ 43:14 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/react-dev-utils/webpackHotDevClient.js
+ 19:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 19:22 error   Unable to resolve path to module 'sockjs-client'.                                                    r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 20:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 21:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 22:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 23:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 24:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 24:28 error   Unable to resolve path to module 'react-error-overlay'.                                              r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 45:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 47:3  error   Expected method shorthand.                                                                           r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+ 61:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 83:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 84:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 85:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+100:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+106:5  error   'tryApplyUpdates' was used before it was defined.                                                    r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+109:7  error   'tryDismissErrorOverlay' was used before it was defined.                                             r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+118:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+124:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+125:7  error   Expected property shorthand.                                                                         r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+130:12 error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+147:5  error   'tryApplyUpdates' was used before it was defined.                                                    r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+150:7  error   'tryDismissErrorOverlay' was used before it was defined.                                             r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+163:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+164:5  error   Expected property shorthand.                                                                         r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+173:10 error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+196:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+263:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+
+packages/react-error-overlay/build.js
+  7:25 error   Unable to resolve path to module 'webpack'.                                                          r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+  8:15 error   'chalk' should be listed in the project's dependencies, not devDependencies.                         r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+ 11:16 error   'rimraf' should be listed in the project's dependencies, not devDependencies.                        r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+ 12:26 error   Unable to resolve path to module 'chokidar'.                                                         r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 47:7  error   Expected an assignment or function call and instead saw an expression.                               r2c.eslint     no-unused-expressions https://eslint.org/docs/rules/no-unused-expressions
+ 85:23 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 94:3  error   Expected an assignment or function call and instead saw an expression.                               r2c.eslint     no-unused-expressions https://eslint.org/docs/rules/no-unused-expressions
+
+packages/react-error-overlay/flow/env.js
+  1:9  error   Parsing error: Unexpected token module                                                               r2c.eslint     error
+
+packages/react-error-overlay/src/__tests__/extract-source-map.js
+  8:37 error   Parse errors in imported module '../utils/getSourceMap': Unexpected token : (17:15)                  r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+ 10:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 15:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 18:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 19:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 28:5  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+
+packages/react-error-overlay/src/__tests__/get-source-map.js
+  8:30 error   Parse errors in imported module '../utils/getSourceMap': Unexpected token : (17:15)                  r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+ 12:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 23:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 30:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 41:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 42:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 43:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 49:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 50:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 58:5  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 59:5  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+
+packages/react-error-overlay/src/__tests__/lines-around.js
+  8:32 error   Parse errors in imported module '../utils/getLinesAround': Unexpected token : (18:7)                 r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+ 12:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 13:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 16:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 17:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+
+packages/react-error-overlay/src/__tests__/mapper.js
+  8:21 error   Parse errors in imported module '../utils/mapper': Unexpected token : (20:9)                         r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+  9:23 error   Parse errors in imported module '../utils/parser': Unexpected token : (13:31)                        r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+ 13:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 14:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 29:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 38:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 39:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 54:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 63:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 64:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 68:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 83:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+
+packages/react-error-overlay/src/__tests__/parser/chrome.js
+  8:23 error   Parse errors in imported module '../../utils/parser': Unexpected token : (13:31)                     r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+ 10:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 11:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+
+packages/react-error-overlay/src/__tests__/parser/firefox.js
+  8:23 error   Parse errors in imported module '../../utils/parser': Unexpected token : (13:31)                     r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+ 10:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 11:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 20:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 21:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 29:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 30:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 40:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 41:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 51:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 52:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+
+packages/react-error-overlay/src/__tests__/parser/generic.js
+  8:23 error   Parse errors in imported module '../../utils/parser': Unexpected token : (13:31)                     r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+ 10:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 11:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 15:5  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 16:5  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 20:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 21:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 25:5  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 26:5  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+
+packages/react-error-overlay/src/__tests__/parser/react.js
+  8:23 error   Parse errors in imported module '../../utils/parser': Unexpected token : (13:31)                     r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+ 10:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 11:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+
+packages/react-error-overlay/src/__tests__/parser/safari.js
+  8:23 error   Parse errors in imported module '../../utils/parser': Unexpected token : (13:31)                     r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+ 10:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 11:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+
+packages/react-error-overlay/src/__tests__/script-lines.js
+  8:28 error   Parse errors in imported module '../utils/stack-frame': Unexpected token : (13:13)                   r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+ 10:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 11:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 14:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 15:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+
+packages/react-error-overlay/src/__tests__/setupJest.js
+  8:24 error   Unable to resolve path to module 'jest-fetch-mock'.                                                  r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+
+packages/react-error-overlay/src/__tests__/stack-frame.js
+  8:28 error   Parse errors in imported module '../utils/stack-frame': Unexpected token : (13:13)                   r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+ 10:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 12:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 14:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 15:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 16:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 19:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 31:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 33:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 34:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 35:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+
+packages/react-error-overlay/src/__tests__/unmapper.js
+  8:23 error   Parse errors in imported module '../utils/unmapper': Unexpected token : (14:22)                      r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+  9:23 error   Parse errors in imported module '../utils/parser': Unexpected token : (13:31)                        r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+ 13:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 14:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 39:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 51:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 54:1  error   'test' is not defined.                                                                               r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 55:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+ 71:3  error   'expect' is not defined.                                                                             r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+
+packages/react-error-overlay/src/components/CloseButton.js
+ 23:6  error   Parsing error: Unexpected token CloseCallback                                                        r2c.eslint     error
+
+packages/react-error-overlay/src/components/CodeBlock.js
+ 37:6  error   Parsing error: Unexpected token CodeBlockPropsType                                                   r2c.eslint     error
+
+packages/react-error-overlay/src/components/Collapsible.js
+ 12:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/components/ErrorOverlay.js
+ 12:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/components/Footer.js
+ 19:6  error   Parsing error: Unexpected token FooterPropsType                                                      r2c.eslint     error
+
+packages/react-error-overlay/src/components/Header.js
+ 25:6  error   Parsing error: Unexpected token HeaderPropType                                                       r2c.eslint     error
+
+packages/react-error-overlay/src/components/NavigationBar.js
+ 42:6  error   Parsing error: Unexpected token Callback                                                             r2c.eslint     error
+
+packages/react-error-overlay/src/containers/CompileErrorContainer.js
+ 16:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/containers/RuntimeError.js
+ 13:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/containers/RuntimeErrorContainer.js
+ 16:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/containers/StackFrame.js
+ 14:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/containers/StackFrameCodeBlock.js
+ 13:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/containers/StackTrace.js
+ 15:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/effects/proxyConsole.js
+ 10:6  error   Parsing error: Unexpected token ReactFrame                                                           r2c.eslint     error
+
+packages/react-error-overlay/src/effects/stackTraceLimit.js
+  9:25 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/effects/unhandledError.js
+ 11:6  error   Parsing error: Unexpected token ErrorCallback                                                        r2c.eslint     error
+
+packages/react-error-overlay/src/effects/unhandledRejection.js
+ 11:6  error   Parsing error: Unexpected token ErrorCallback                                                        r2c.eslint     error
+
+packages/react-error-overlay/src/iframeScript.js
+  8:8  error   Unable to resolve path to module 'react-app-polyfill/ie9'.                                           r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+  9:19 error   Unable to resolve path to module 'react'.                                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 10:22 error   Unable to resolve path to module 'react-dom'.                                                        r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 11:35 error   Parse errors in imported module './containers/CompileErrorContainer': Unexpected token { (16:13)     r2c.eslint     import/no-named-as-default https://eslint.org/docs/rules/import/no-named-as-default
+ 11:35 error   Parse errors in imported module './containers/CompileErrorContainer': Unexpected token { (16:13)     r2c.eslint     import/no-named-as-default-member https://eslint.org/docs/rules/import/no-named-as-default-member
+ 12:35 error   Parse errors in imported module './containers/RuntimeErrorContainer': Unexpected token { (16:13)     r2c.eslint     import/no-named-as-default https://eslint.org/docs/rules/import/no-named-as-default
+ 12:35 error   Parse errors in imported module './containers/RuntimeErrorContainer': Unexpected token { (16:13)     r2c.eslint     import/no-named-as-default-member https://eslint.org/docs/rules/import/no-named-as-default-member
+ 14:29 error   Parse errors in imported module './utils/dom/css': Unexpected token : (12:26)                        r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+
+packages/react-error-overlay/src/index.js
+ 20:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/listenToRuntimeErrors.js
+ 28:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/dom/absolutifyCaret.js
+  9:40 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/dom/css.js
+ 12:26 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/generateAnsiHTML.js
+ 64:30 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/getLinesAround.js
+ 18:7  error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/getPrettyURL.js
+ 10:17 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/getSourceMap.js
+ 17:15 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/getStackFrames.js
+  9:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/isBultinErrorName.js
+  9:37 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/isInternalFile.js
+  9:39 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/mapper.js
+ 20:9  error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/parseCompileError.js
+  4:8  error   Parsing error: Unexpected token type                                                                 r2c.eslint     error
+
+packages/react-error-overlay/src/utils/parser.js
+ 13:31 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/stack-frame.js
+ 13:13 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/unmapper.js
+ 14:22 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/warnings.js
+  9:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/webpack.config.iframe.js
+ 10:25 error   Unable to resolve path to module 'webpack'.                                                          r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 11:30 error   Unable to resolve path to module 'terser-webpack-plugin'.                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+
+packages/react-scripts/bin/react-scripts.js
+ 14:34 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 18:23 error   Unable to resolve path to module 'react-dev-utils/crossSpawn'.                                       r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 22:3  error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/react-scripts/config/env.js
+ 41:21 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 43:5  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 43:13 error   Unable to resolve path to module 'dotenv-expand'.                                                    r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 44:7  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 44:15 error   Unable to resolve path to module 'dotenv'.                                                           r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 63:11 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 64:8  error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 73:13 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/react-scripts/config/jest/babelTransform.js
+ 10:27 error   Unable to resolve path to module 'babel-jest'.                                                       r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+
+packages/react-scripts/config/jest/fileTransform.js
+  4:27 error   Unable to resolve path to module 'camelcase'.                                                        r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+
+packages/react-scripts/config/modules.js
+ 14:23 error   Unable to resolve path to module 'react-dev-utils/chalk'.                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+126:16 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+126:16 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+133:14 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+133:14 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+142:5  error   Expected property shorthand.                                                                         r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+
+packages/react-scripts/config/paths.js
+ 18:20 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 33:22 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 34:19 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+ 34:19 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 65:47 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 65:47 error   'extension' is already declared in the upper scope.                                                  r2c.eslint     no-shadow https://eslint.org/docs/rules/no-shadow
+ 97:20 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/react-scripts/config/pnpTs.js
+ 11:39 error   Unable to resolve path to module 'ts-pnp'.                                                           r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 19:6  error   Unexpected block statement surrounding arrow body; move the returned value immediately after the ... r2c.eslint     arrow-body-style https://eslint.org/docs/rules/arrow-body-style
+ 35:6  error   Unexpected block statement surrounding arrow body; move the returned value immediately after the ... r2c.eslint     arrow-body-style https://eslint.org/docs/rules/arrow-body-style
+
+packages/react-scripts/config/webpack.config.js
+ 12:23 error   Unable to resolve path to module 'is-wsl'.                                                           r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 14:25 error   Unable to resolve path to module 'webpack'.                                                          r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 16:34 error   Unable to resolve path to module 'pnp-webpack-plugin'.                                               r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 17:35 error   Unable to resolve path to module 'html-webpack-plugin'.                                              r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 18:42 error   Unable to resolve path to module 'case-sensitive-paths-webpack-plugin'.                              r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 19:39 error   Unable to resolve path to module 'react-dev-utils/InlineChunkHtmlPlugin'.                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 20:30 error   Unable to resolve path to module 'terser-webpack-plugin'.                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 21:38 error   Unable to resolve path to module 'mini-css-extract-plugin'.                                          r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 22:41 error   Unable to resolve path to module 'optimize-css-assets-webpack-plugin'.                               r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 23:35 error   Unable to resolve path to module 'postcss-safe-parser'.                                              r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 24:32 error   Unable to resolve path to module 'webpack-manifest-plugin'.                                          r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 25:39 error   Unable to resolve path to module 'react-dev-utils/InterpolateHtmlPlugin'.                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 26:38 error   Unable to resolve path to module 'workbox-webpack-plugin'.                                           r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 27:47 error   Unable to resolve path to module 'react-dev-utils/WatchMissingNodeModulesPlugin'.                    r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 28:35 error   Unable to resolve path to module 'react-dev-utils/ModuleScopePlugin'.                                r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 29:40 error   Unable to resolve path to module 'react-dev-utils/getCSSModuleLocalIdent'.                           r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 33:38 error   Unable to resolve path to module 'react-dev-utils/ModuleNotFoundPlugin'.                             r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 34:44 error   Unable to resolve path to module 'react-dev-utils/ForkTsCheckerWebpackPlugin'.                       r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 35:37 error   Unable to resolve path to module 'react-dev-utils/typescriptFormatter'.                              r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 38:36 error   Unable to resolve path to module 'react-dev-utils/getCacheIdentifier'.                               r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 40:34 error   Unable to resolve path to module 'postcss-normalize'.                                                r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 42:24 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+ 50:30 error   Missing radix parameter.                                                                             r2c.eslint     radix https://eslint.org/docs/rules/radix
+115:13 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+115:21 error   Unable to resolve path to module 'postcss-flexbugs-fixes'.                                           r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+116:13 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+116:21 error   Unable to resolve path to module 'postcss-preset-env'.                                               r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+198:7  error   Expected property shorthand.                                                                         r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+201:11 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+206:12 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+293:15 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+311:14 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+312:17 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+661:9  error   Expected property shorthand.                                                                         r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+668:13 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/react-scripts/config/webpackDevServer.config.js
+ 11:40 error   Unable to resolve path to module 'react-dev-utils/errorOverlayMiddleware'.                           r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 12:41 error   Unable to resolve path to module 'react-dev-utils/evalSourceMapMiddleware'.                          r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 13:45 error   Unable to resolve path to module 'react-dev-utils/noopServiceWorkerMiddleware'.                      r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 14:30 error   Unable to resolve path to module 'react-dev-utils/ignoredFiles'.                                     r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 96:9  error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+ 96:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+
+packages/react-scripts/lib/react-app.d.ts
+  5:9  error   Parsing error: Unexpected token namespace                                                            r2c.eslint     error
+
+packages/react-scripts/scripts/build.js
+ 18:34 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 35:23 error   Unable to resolve path to module 'react-dev-utils/chalk'.                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 36:20 error   Unable to resolve path to module 'fs-extra'.                                                         r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 37:25 error   Unable to resolve path to module 'webpack'.                                                          r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 40:36 error   Unable to resolve path to module 'react-dev-utils/checkRequiredFiles'.                               r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 41:39 error   Unable to resolve path to module 'react-dev-utils/formatWebpackMessages'.                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 42:42 error   Unable to resolve path to module 'react-dev-utils/printHostingInstructions'.                         r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 43:34 error   Unable to resolve path to module 'react-dev-utils/FileSizeReporter'.                                 r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 44:33 error   Unable to resolve path to module 'react-dev-utils/printBuildError'.                                  r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 67:35 error   Unable to resolve path to module 'react-dev-utils/browsersHelper'.                                   r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 69:15 error   Unexpected block statement surrounding arrow body; move the returned value immediately after the ... r2c.eslint     arrow-body-style https://eslint.org/docs/rules/arrow-body-style
+ 74:9  error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 79:5  error   'copyPublicFolder' was used before it was defined.                                                   r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+ 81:12 error   'build' was used before it was defined.                                                              r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+112:26 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+112:26 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+124:5  error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+140:10 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+215:13 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/react-scripts/scripts/eject.js
+ 13:34 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 17:20 error   Unable to resolve path to module 'fs-extra'.                                                         r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 20:23 error   Unable to resolve path to module 'react-dev-utils/chalk'.                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 23:26 error   Unable to resolve path to module 'react-dev-utils/inquirer'.                                         r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 24:27 error   Unable to resolve path to module 'react-dev-utils/crossSpawn'.                                       r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 72:9  error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 87:18 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+117:35 error   'files' is already declared in the upper scope.                                                      r2c.eslint     no-shadow https://eslint.org/docs/rules/no-shadow
+117:53 error   Unexpected block statement surrounding arrow body; move the returned value immediately after the ... r2c.eslint     arrow-body-style https://eslint.org/docs/rules/arrow-body-style
+122:16 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+124:19 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+134:7  error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+142:21 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+146:19 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+171:24 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+171:24 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+172:24 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+172:24 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+188:50 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+204:16 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+211:45 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+212:43 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+286:45 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/react-scripts/scripts/init.js
+ 13:34 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 17:20 error   Unable to resolve path to module 'fs-extra'.                                                         r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 19:23 error   Unable to resolve path to module 'react-dev-utils/chalk'.                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 21:23 error   Unable to resolve path to module 'react-dev-utils/crossSpawn'.                                       r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 22:37 error   Unable to resolve path to module 'react-dev-utils/browsersHelper'.                                   r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 88:22 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+ 88:22 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+183:65 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+193:34 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+193:34 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+195:45 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+195:52 error   Unexpected block statement surrounding arrow body; move the returned value immediately after the ... r2c.eslint     arrow-body-style https://eslint.org/docs/rules/arrow-body-style
+205:8  error   'isReactInstalled' was used before it was defined.                                                   r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+
+packages/react-scripts/scripts/start.js
+ 18:34 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 35:23 error   Unable to resolve path to module 'react-dev-utils/chalk'.                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 36:25 error   Unable to resolve path to module 'webpack'.                                                          r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 37:34 error   Unable to resolve path to module 'webpack-dev-server'.                                               r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 38:30 error   Unable to resolve path to module 'react-dev-utils/clearConsole'.                                     r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 39:36 error   Unable to resolve path to module 'react-dev-utils/checkRequiredFiles'.                               r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 45:13 error   Unable to resolve path to module 'react-dev-utils/WebpackDevServerUtils'.                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 46:29 error   Unable to resolve path to module 'react-dev-utils/openBrowser'.                                      r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 82:35 error   Unable to resolve path to module 'react-dev-utils/browsersHelper'.                                   r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 84:15 error   Unexpected block statement surrounding arrow body; move the returned value immediately after the ... r2c.eslint     arrow-body-style https://eslint.org/docs/rules/arrow-body-style
+ 89:9  error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 96:21 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+ 96:21 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+101:17 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+102:9  error   'devServer' was used before it was defined.                                                          r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+102:29 error   'devServer' was used before it was defined.                                                          r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+103:15 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+104:9  error   'devServer' was used before it was defined.                                                          r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+104:29 error   'devServer' was used before it was defined.                                                          r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+118:26 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+118:26 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+127:34 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+158:10 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/react-scripts/scripts/test.js
+ 19:34 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 35:22 error   Unable to resolve path to module 'jest'.                                                             r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 77:7  error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/react-scripts/scripts/utils/createJestConfig.js
+ 11:23 error   Unable to resolve path to module 'react-dev-utils/chalk'.                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 62:7  error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 72:39 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+ 72:39 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 92:27 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+127:22 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+133:22 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/react-scripts/scripts/utils/verifyPackageTree.js
+ 11:23 error   Unable to resolve path to module 'react-dev-utils/chalk'.                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 36:26 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 39:23 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 65:25 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/react-scripts/scripts/utils/verifyTypeScriptSetup.js
+ 11:23 error   Unable to resolve path to module 'react-dev-utils/chalk'.                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 17:23 error   Unable to resolve path to module 'react-dev-utils/immer'.                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 18:24 error   Unable to resolve path to module 'react-dev-utils/globby'.                                           r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 62:10 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+ 62:10 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+135:27 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+160:42 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+247:24 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+packages/react-scripts/template-typescript/src/App.test.tsx
+  1:19 error   Unable to resolve path to module 'react'.                                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+  2:22 error   Unable to resolve path to module 'react-dom'.                                                        r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+  3:17 error   Unable to resolve path to module './App'.                                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+  5:1  error   'it' is not defined.                                                                                 r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+
+packages/react-scripts/template-typescript/src/App.tsx
+  5:10 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-scripts/template-typescript/src/index.tsx
+  1:19 error   Unable to resolve path to module 'react'.                                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+  2:22 error   Unable to resolve path to module 'react-dom'.                                                        r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+  4:17 error   Unable to resolve path to module './App'.                                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+  5:32 error   Unable to resolve path to module './serviceWorker'.                                                  r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+
+packages/react-scripts/template-typescript/src/serviceWorker.ts
+ 23:6  error   Parsing error: Unexpected token Config                                                               r2c.eslint     error
+
+tasks/compile-lockfile.js
+ 12:21 error   Unable to resolve path to module 'fs-extra'.                                                         r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 27:24 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 27:32 error   Unable to resolve path to module 'react-scripts/package.json'.                                       r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 29:5  error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+tasks/cra.js
+ 29:21 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 64:37 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 71:41 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 74:43 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+tasks/screencast-start.js
+ 12:23 error   Unable to resolve path to module 'execa'.                                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 13:22 error   Unable to resolve path to module 'meow'.                                                             r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 14:28 error   Unable to resolve path to module 'multimatch'.                                                       r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 16:1  error   'main' was used before it was defined.                                                               r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+ 27:24 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 47:17 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+
+tasks/screencast.js
+ 14:23 error   Unable to resolve path to module 'execa'.                                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 15:23 error   Unable to resolve path to module 'tempy'.                                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+ 17:1  error   'main' was used before it was defined.                                                               r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+ 27:23 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 28:21 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 29:21 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 30:20 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 41:18 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+ 41:18 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 43:5  error   'cut' was used before it was defined.                                                                r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+ 44:5  error   'cut' was used before it was defined.                                                                r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+ 45:5  error   'replace' was used before it was defined.                                                            r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+ 54:5  error   Unnecessary catch clause.                                                                            r2c.eslint     no-useless-catch https://eslint.org/docs/rules/no-useless-catch
+ 73:18 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
+ 74:26 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens

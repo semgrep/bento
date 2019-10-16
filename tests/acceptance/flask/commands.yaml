@@ -1,0 +1,161 @@
+target_repo: https://github.com/pallets/flask
+target_hash: 941bc9ff6019117c9aa341f809bef7e0e54d0ebf
+steps:
+  - name: noconfig
+    description: bento check fails when no configuration file is found
+    command:
+      - bento
+      - --agree
+      - check
+    expected_err: "✘ No Bento configuration found. Please run `bento init`."
+    expected_out: ""
+    returncode: 3
+  - name: bento-init
+    description: bento init detects python and install bandit and flake8
+    command:
+      - bento
+      - --agree
+      - init
+    expected_err: |
+      ✔ Created .bento.yml. Please check this file in to source control.
+
+      ✔ Creating virtual environment for r2c.bandit
+      ✔ Python package bandit will be installed
+      ✔ Creating virtual environment for r2c.flake8
+      ✔ Python package flake8 will be installed
+      ✔ Python package flake8-json will be installed
+      ✔ Bento is initialized on your project.
+    expected_out: |
+      Creating default configuration at .bento.yml
+      Detected project with Python
+    returncode: 0
+  - name: bento-check-with-init
+    description: bento check after init has findings
+    command:
+      - bento
+      - --agree
+      - check
+    expected_err:
+      - "⚠ 11 findings in"
+      - To suppress all findings run `bento archive`.
+    expected_out:
+      file: bento-check-with-init.out
+    returncode: 2
+  - name: disable-finding
+    description: try disabling a finding
+    command:
+      - bento
+      - --agree
+      - disable
+      - r2c.bandit
+      - B102
+    expected_err: "✔ 'B102' disabled for 'r2c.bandit'"
+    expected_out: ""
+    returncode: 0
+  - name: bento-check-with-disable
+    description: bento check should hide disabled finding
+    command:
+      - bento
+      - --agree
+      - check
+    expected_err:
+      - "⚠ 9 findings in"
+      - To suppress all findings run `bento archive`.
+    expected_out:
+      file: bento-check-with-disable.out
+    returncode: 2
+  - name: reenable-check
+    description: enable a finding that was previously disabled
+    command:
+      - bento
+      - --agree
+      - enable
+      - r2c.bandit
+      - B102
+    expected_err: "✔ 'B102' enabled for 'r2c.bandit'"
+    expected_out: ""
+    returncode: 0
+  - name: bento-check-reenable
+    description: bento check should show finding that was reenabled
+    command:
+      - bento
+      - --agree
+      - check
+    expected_err:
+      - "⚠ 11 findings in"
+      - To suppress all findings run `bento archive`.
+    expected_out:
+      file: bento-check-with-init.out
+    returncode: 2
+  - name: bento-archive
+    description: should archive all existing findings
+    command:
+      - bento
+      - --agree
+      - archive
+    expected_err:
+      - ✔ Rewrote the whitelist with 11 findings from 2 tools (11 new, 0 previously whitelisted).
+      - Please check '.bento-whitelist.yml' in to source control.
+    expected_out: ""
+    returncode: 0
+  - name: bento-check-with-archive
+    description: should have no findings after archiving
+    command:
+      - bento
+      - --agree
+      - check
+    expected_err:
+      - "✔ 0 findings in"
+    expected_out: ""
+    returncode: 0
+  - name: install-hook
+    description: should successfully install as a commit hook
+    command:
+      - bento
+      - --agree
+      - install-hook
+    expected_err: "✔ Added Bento to your git pre-commit hooks."
+    expected_out: ""
+    returncode: 0
+  - name: twice-install-hook
+    description: should detect pre-commit hook already installed
+    command:
+      - bento
+      - --agree
+      - install-hook
+    expected_err: "✔ Bento already installed as a pre-commit hook"
+    expected_out: ""
+    returncode: 0
+  - name: add-findings
+    descripton: add file with known findings
+    command:
+      - cp
+      - ../tests/integration/simple/foo.py
+      - failure.py
+    expected_err: ""
+    expected_out: ""
+    returncode: 0
+  - name: git-add-findings
+    description: add file with findings to staging
+    command:
+      - git
+      - add
+      - failure.py
+    expected_err: ""
+    expected_out: ""
+    returncode: 0
+  - name: git-commit
+    description: should run bento as pre-commit hook
+    command:
+      - git
+      - commit
+    expected_err:
+      - Running Bento checks...
+      - "⚠ 3 findings in"
+      - |
+        failure.py
+          0:0  error   syntax error while parsing AST from file r2c.bandit     error
+          5:13 error   SyntaxError: invalid syntax              r2c.flake8     E999
+          6:5  error   unexpected indentation                   r2c.flake8     E113 https://lintlyci.github.io/Flake8Rules/rules/E113.html
+    expected_out: ""
+    returncode: 1

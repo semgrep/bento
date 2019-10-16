@@ -1,11 +1,15 @@
 .PHONY: build
 build:
-	@echo 'Building bento via `build.sh`'
-	@/bin/bash build.sh
+	PIPENV_IGNORE_VIRTUALENVS=1 pipenv run pipenv_to_requirements
+	pip3 install -e .
 
 .PHONY: test
 test:
 	pipenv run pytest
+
+.PHONY: qa-test
+qa-test: build
+	pipenv run pytest tests/acceptance/qa.py
 
 .PHONY: clean
 clean:

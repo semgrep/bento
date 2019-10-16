@@ -1,0 +1,9 @@
+examples/multi_script_CLI.py
+ 42:0  advice  Starting a process with a shell: Seems safe, but may be changed in the future, consider rewriting... r2c.bandit     B605 https://bandit.readthedocs.io/en/latest/plugins/b605_start_process_with_a_shell.html
+
+instabot/api/api.py
+538:0  advice  Try, Except, Pass detected.                                                                          r2c.bandit     B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+
+instabot/bot/bot_checkpoint.py
+ 66:0  warning Pickle and modules that wrap it can be unsafe when used to deserialize untrusted data, possible s... r2c.bandit     B301 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b301-pickle
+ 71:0  advice  Try, Except, Pass detected.                                                                          r2c.bandit     B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html

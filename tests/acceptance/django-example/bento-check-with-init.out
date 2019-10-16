@@ -1,0 +1,5 @@
+app/models.py
+  5:1  error   'django.db.models' imported but unused               r2c.flake8     F401 https://lintlyci.github.io/Flake8Rules/rules/F401.html
+
+app/views.py
+  7:1  error   'django.template.RequestContext' imported but unused r2c.flake8     F401 https://lintlyci.github.io/Flake8Rules/rules/F401.html

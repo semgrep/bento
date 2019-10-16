@@ -1,0 +1,153 @@
+target_repo: https://github.com/facebook/create-react-app
+target_hash: 053f9774d3f592c17741d2a86de66a7ca58f90c0
+steps:
+  - name: noconfig
+    description: bento check fails when no configuration file is found
+    command:
+      - bento
+      - --agree
+      - check
+    expected_err: "✘ No Bento configuration found. Please run `bento init`."
+    expected_out: ""
+    returncode: 3
+  - name: bento-init
+    description: bento init detects python and install bandit and flake8
+    command:
+      - bento
+      - --agree
+      - init
+    expected_err:
+      - ✔ Created .bento.yml. Please check this file in to source control.
+      - ✔ Bento is initialized on your project.
+    expected_out:
+      - Creating default configuration at .bento.yml
+      - Detected project with node-js
+    returncode: 0
+  - name: bento-check-with-init
+    description: bento check after init has findings
+    command:
+      - bento
+      - --agree
+      - check
+    expected_err:
+      - "⚠ 623 findings in"
+      - To suppress all findings run `bento archive`.
+    expected_out:
+      file: bento-check-with-init.out
+    returncode: 2
+  - name: disable-finding
+    description: try disabling a finding
+    command:
+      - bento
+      - --agree
+      - disable
+      - r2c.eslint
+      - no-var
+    expected_err: "✔ 'no-var' disabled for 'r2c.eslint'"
+    expected_out: ""
+    returncode: 0
+  - name: bento-check-with-disable
+    description: bento check should hide disabled finding
+    command:
+      - bento
+      - --agree
+      - check
+    expected_err:
+      - "⚠ 528 findings in"
+      - To suppress all findings run `bento archive`.
+    expected_out:
+      file: bento-check-with-disable.out
+    returncode: 2
+  - name: reenable-check
+    description: enable a finding that was previously disabled
+    command:
+      - bento
+      - --agree
+      - enable
+      - r2c.eslint
+      - no-var
+    expected_err: "✔ 'no-var' enabled for 'r2c.eslint'"
+    expected_out: ""
+    returncode: 0
+  - name: bento-check-reenable
+    description: bento check should show finding that was reenabled
+    command:
+      - bento
+      - --agree
+      - check
+    expected_err:
+      - "⚠ 623 findings in"
+      - To suppress all findings run `bento archive`.
+    expected_out:
+      file: bento-check-with-init.out
+    returncode: 2
+  - name: bento-archive
+    description: should archive all existing findings
+    command:
+      - bento
+      - --agree
+      - archive
+    expected_err:
+      - ✔ Rewrote the whitelist with 623 findings from 1 tools (623 new, 0 previously whitelisted).
+      - Please check '.bento-whitelist.yml' in to source control.
+    expected_out: ""
+    returncode: 0
+  - name: bento-check-with-archive
+    description: should have no findings after archiving
+    command:
+      - bento
+      - --agree
+      - check
+    expected_err:
+      - "✔ 0 findings in"
+    expected_out: ""
+    returncode: 0
+  - name: install-hook
+    description: should successfully install as a commit hook
+    command:
+      - bento
+      - --agree
+      - install-hook
+    expected_err: "✔ Added Bento to your git pre-commit hooks."
+    expected_out: ""
+    returncode: 0
+  - name: twice-install-hook
+    description: should detect pre-commit hook already installed
+    command:
+      - bento
+      - --agree
+      - install-hook
+    expected_err: "✔ Bento already installed as a pre-commit hook"
+    expected_out: ""
+    returncode: 0
+  - name: add-findings
+    descripton: add file with known findings
+    command:
+      - cp
+      - ../tests/acceptance/bad.js
+      - bad.js
+    expected_err: ""
+    expected_out: ""
+    returncode: 0
+  - name: git-add-findings
+    description: add file with findings to staging
+    command:
+      - git
+      - add
+      - bad.js
+    expected_err: ""
+    expected_out: ""
+    returncode: 0
+  - name: git-commit
+    description: should run bento as pre-commit hook
+    command:
+      - git
+      - commit
+    expected_err:
+      - Running Bento checks...
+      - "⚠ 1 findings in"
+      - |
+        bad.js
+          1:1  error   'x' is not defined. r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+    expected_out: ""
+    returncode: 1
