@@ -35,7 +35,8 @@ class JsTool(Tool):
         uses_yarn = os.path.exists(os.path.join(self.base_path, "yarn.lock"))
         args = [f"{name}@^{version}" for name, version in packages.items()]
         if uses_yarn:
-            cmd = ["yarn", "add", "--dev"]
+            # If yarn is using nested project, we still want to install in workspace root
+            cmd = ["yarn", "add", "--dev", "--ignore-workspace-root-check"]
         else:
             cmd = ["npm", "install", "--save-dev"]
         self.exec(cmd + args, check=True)
