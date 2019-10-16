@@ -10,7 +10,7 @@
 # `Pipfile.lock` and then regenerate `requirements*.txt`.
 ################################################################################
 
-attrs~=19.1.0
+attrs>=18.2.0,<=19.3.0
 click~=7.0
 docker~=3.7
 gitpython~=2.1
