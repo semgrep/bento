@@ -19,13 +19,12 @@ from semantic_version import Version
 
 import bento.constants as constants
 import bento.extra
-import bento.formatter as formatter
 import bento.git
 import bento.network as network
 import bento.result as result
-import bento.tool as tool
 import bento.tool_runner
 import bento.util
+from bento.context import Context
 from bento.error import NodeError
 from bento.util import echo_error, echo_success, echo_warning
 from bento.violation import Violation
@@ -53,34 +52,25 @@ Bento did NOT install. Bento beta users must agree to the terms of service to co
 """
 
 
-def __tool_inventory() -> Dict[str, tool.Tool]:
-    all_tools = {}
-    for tt in bento.extra.TOOLS:
-        tool_id = tt.tool_id()
-        all_tools[tool_id] = tt()
-        all_tools[tool_id].base_path = "."
-    return all_tools
+def __setup_logging() -> None:
+    os.makedirs(os.path.dirname(constants.DEFAULT_LOG_PATH), exist_ok=True)
+    logging.basicConfig(
+        filename=constants.DEFAULT_LOG_PATH,
+        level=logging.DEBUG,
+        filemode="w",
+        format="[%(levelname)s] %(relativeCreated)s %(name)s:%(module)s - %(message)s",
+    )
 
 
-def __config() -> Dict[str, Any]:
-    with open(constants.CONFIG_PATH) as yaml_file:
-        return yaml.safe_load(yaml_file)
-
-
-def __write_config(config: Dict[str, Any]) -> None:
-    with open(constants.CONFIG_PATH, "w") as yaml_file:
-        yaml.safe_dump(config, yaml_file)
-
-
-def __install_config_if_not_exists() -> None:
+def __install_config_if_not_exists(context: Context) -> None:
     if not os.path.exists(constants.CONFIG_PATH):
         click.echo(f"Creating default configuration at {constants.CONFIG_PATH}")
         with (
             open(os.path.join(os.path.dirname(__file__), "configs/default.yml"))
         ) as template:
             yml = yaml.safe_load(template)
-        for tid, t in __tool_inventory().items():
-            if not t.matches_project():
+        for tid, t in context.tool_inventory.items():
+            if not t().matches_project():
                 del yml["tools"][tid]
         with (open(constants.CONFIG_PATH, "w")) as config_file:
             yaml.safe_dump(yml, stream=config_file)
@@ -89,29 +79,10 @@ def __install_config_if_not_exists() -> None:
         )
 
 
-def __tools(config: Dict[str, Any]) -> List[tool.Tool]:
-    tools: List[tool.Tool] = []
-    inventory = __tool_inventory()
-    for tn in config["tools"].keys():
-        ti = inventory.get(tn, None)
-        if not ti:
-            echo_error(f"No tool named '{tn}' could be found")
-            continue
-        tools.append(ti)
-
-    return tools
-
-
-def __formatter(config: Dict[str, Any]) -> formatter.Formatter:
-    if "formatter" not in config:
-        return formatter.Stylish()
-    else:
-        f_class, cfg = next(iter(config["formatter"].items()))
-        return formatter.for_name(f_class, cfg)
-
-
-def __update_ignores(tool: str, update_func: Callable[[Set[str]], None]) -> None:
-    config = __config()
+def __update_ignores(
+    context: Context, tool: str, update_func: Callable[[Set[str]], None]
+) -> None:
+    config = context.config
     tool_config = config["tools"]
     if tool not in tool_config:
         all_tools = ", ".join(f"'{k}'" for k in tool_config.keys())
@@ -123,7 +94,7 @@ def __update_ignores(tool: str, update_func: Callable[[Set[str]], None]) -> None
 
     tool_config[tool]["ignore"] = list(ignores)
 
-    __write_config(config)
+    context.config = config
 
 
 def get_ignores_for_tool(tool: str, config: Dict[str, Any]) -> List[str]:
@@ -270,15 +241,10 @@ def register_user() -> bool:
     help="Automatically agree to terms of service.",
     default=False,
 )
-def cli(agree: bool) -> None:
-    os.makedirs(os.path.dirname(constants.DEFAULT_LOG_PATH), exist_ok=True)
-    logging.basicConfig(
-        filename=constants.DEFAULT_LOG_PATH,
-        level=logging.DEBUG,
-        filemode="w",
-        format="[%(levelname)s] %(relativeCreated)s %(name)s:%(module)s - %(message)s",
-    )
-
+@click.pass_context
+def cli(ctx: click.Context, agree: bool) -> None:
+    __setup_logging()
+    ctx.obj = Context()
     if not is_running_supported_python3():
         echo_error(
             "Bento requires Python 3.6+. Please ensure you have Python 3.6+ and installed Bento via `pip3 install bento-cli`."
@@ -296,7 +262,8 @@ def cli(agree: bool) -> None:
 
 
 @cli.command()
-def archive() -> None:
+@click.pass_obj
+def archive(context: Context) -> None:
     """
     Adds all current findings to the whitelist.
     """
@@ -313,8 +280,8 @@ def archive() -> None:
         old_hashes = set()
 
     new_baseline: List[str] = []
-    config = __config()
-    tools = __tools(config)
+    config = context.config
+    tools = context.tools.values()
 
     all_findings = bento.tool_runner.Runner().parallel_results(tools, config, {}, None)
     n_found = 0
@@ -357,17 +324,16 @@ def archive() -> None:
 
 
 @cli.command()
-def init() -> None:
+@click.pass_obj
+def init(context: Context) -> None:
     """
     Autodetects and installs tools.
 
     Run again after changing tool list in .bento.yml
     """
-    __install_config_if_not_exists()
+    __install_config_if_not_exists(context)
 
-    config = __config()
-
-    tools = __tools(config)
+    tools = context.tools.values()
     project_names = sorted(list(set(t.project_name for t in tools)))
     logging.debug(f"Project names: {project_names}")
     if len(project_names) > 2:
@@ -380,8 +346,8 @@ def init() -> None:
 
     click.secho(f"Detected project with {projects}\n", fg="blue", err=True)
 
-    for t in __tools(config):
-        t.setup(config)
+    for t in tools:
+        t.setup()
 
     r = bento.git.repo()
     if sys.stdout.isatty() and r:
@@ -411,7 +377,8 @@ def init() -> None:
 @cli.command()
 @click.argument("tool", type=str, nargs=1)
 @click.argument("check", type=str, nargs=1)
-def disable(tool: str, check: str) -> None:
+@click.pass_obj
+def disable(context: Context, tool: str, check: str) -> None:
     """
     Disables a check.
     """
@@ -419,14 +386,15 @@ def disable(tool: str, check: str) -> None:
     def add(ignores: Set[str]) -> None:
         ignores.add(check)
 
-    __update_ignores(tool, add)
+    __update_ignores(context, tool, add)
     echo_success(f"'{check}' disabled for '{tool}'")
 
 
 @cli.command()
 @click.argument("tool", type=str, nargs=1)
 @click.argument("check", type=str, nargs=1)
-def enable(tool: str, check: str) -> None:
+@click.pass_obj
+def enable(context: Context, tool: str, check: str) -> None:
     """
     Enables a check.
     """
@@ -435,7 +403,7 @@ def enable(tool: str, check: str) -> None:
         if check in ignores:
             ignores.remove(check)
 
-    __update_ignores(tool, remove)
+    __update_ignores(context, tool, remove)
     echo_success(f"'{check}' enabled for '{tool}'")
 
 
@@ -452,8 +420,12 @@ def enable(tool: str, check: str) -> None:
     default=True,
 )
 @click.option("--staged-only", is_flag=True, help="Only runs over files staged in git")
+@click.pass_obj
 def check(
-    formatter: Optional[str] = None, pager: bool = True, staged_only: bool = False
+    context: Context,
+    formatter: Optional[str] = None,
+    pager: bool = True,
+    staged_only: bool = False,
 ) -> None:
     """
     Checks for new findings.
@@ -472,10 +444,10 @@ def check(
     else:
         baseline = {}
 
-    config = __config()
+    config = context.config
     if formatter:
         config["formatter"] = {formatter: {}}
-    fmt = __formatter(config)
+    fmt = context.formatter
     findings_to_log: List[Any] = []
 
     def by_path(v: Violation) -> str:
@@ -495,7 +467,7 @@ def check(
     with ctx:
         before = time.time()
         runner = bento.tool_runner.Runner()
-        tools = __tools(config)
+        tools = context.tools.values()
         all_results = runner.parallel_results(tools, config, baseline, files)
         elapsed = time.time() - before
 

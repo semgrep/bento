@@ -120,7 +120,7 @@ class EslintTool(JsTool, Tool):
             os.path.join(self.base_path, EslintTool.CONFIG_FILE_NAME),
         )
 
-    def setup(self, config: Dict[str, Any]) -> None:
+    def setup(self) -> None:
         needed_packages = self.ALWAYS_NEEDED.copy()
         project_has_typescript = self.__uses_typescript()
         project_has_react = self._installed_version("react") is not None
@@ -148,7 +148,7 @@ class EslintTool(JsTool, Tool):
             else:
                 self.__copy_eslintrc("default")
 
-    def run(self, config: Dict[str, Any], files: Iterable[str]) -> str:
+    def run(self, files: Iterable[str]) -> str:
         cmd = [
             "./node_modules/eslint/bin/eslint.js",
             "--no-eslintrc",

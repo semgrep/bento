@@ -85,7 +85,7 @@ class Flake8Tool(PythonTool, Tool):
     def venv_subdir(self) -> str:
         return Flake8Tool.VENV_DIR
 
-    def setup(self, config: Dict[str, Any]) -> None:
+    def setup(self) -> None:
         self.venv_create()
         if self._packages_installed({"flake8": "3.7.0", "flake8-json": "19.8.0"}):
             return
@@ -94,7 +94,7 @@ class Flake8Tool(PythonTool, Tool):
         if result:
             print(result)
 
-    def run(self, config: Dict[str, Any], paths: Iterable[str]) -> str:
+    def run(self, paths: Iterable[str]) -> str:
         cmd = "python $(which flake8) --format=json --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,.bento "
 
         env, args = PythonTool.sanitize_arguments(paths)

@@ -67,7 +67,7 @@ class Runner:
             with self._lock:
                 bar.set_postfix_str("🍜")
 
-            tool.setup(config)
+            tool.setup()
             if self._setup_latch:
                 self._setup_latch.count_down()
             with self._lock:
@@ -81,9 +81,7 @@ class Runner:
             th.start()
             if self._setup_latch:
                 self._setup_latch.wait_for()
-            results = bento.result.filter(
-                tool.tool_id(), self.__tool_findings(tool, config, paths), baseline
-            )
+            results = bento.result.filter(tool.tool_id(), tool.results(paths), baseline)
             with self._lock:
                 self._run = False
             th.join()
@@ -101,7 +99,7 @@ class Runner:
 
     def parallel_results(
         self,
-        tools: Collection[Tool],
+        tools: Iterable[Tool],
         config: Dict[str, Any],
         baseline: Baseline,
         files: Optional[List[str]],
@@ -122,6 +120,7 @@ class Runner:
             (collection): For each tool, a `RunResult`, which is a tuple of (`tool_id`, `findings`)
         """
         indices_and_tools = list(enumerate(tools))
+        n_tools = len(indices_and_tools)
 
         self._bars = [
             tqdm(
@@ -137,9 +136,9 @@ class Runner:
             )
             for ix, tool in indices_and_tools
         ]
-        self._setup_latch = bento.util.CountDownLatch(len(tools))
+        self._setup_latch = bento.util.CountDownLatch(n_tools)
 
-        with ThreadPool(len(tools)) as pool:
+        with ThreadPool(n_tools) as pool:
             # using partial to pass in multiple arguments to __tool_filter
             func = partial(Runner._run_single_tool, self, config, baseline, files)
             all_results = pool.map(func, indices_and_tools)

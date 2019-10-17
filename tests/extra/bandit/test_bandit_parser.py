@@ -1,19 +1,18 @@
 import os
 
 from bento.extra.bandit import BanditTool
+from bento.tool import ToolContext
 from bento.violation import Violation
 
 THIS_PATH = os.path.dirname(__file__)
 BASE_PATH = os.path.abspath(os.path.join(THIS_PATH, "../../.."))
 
 
-def test_run():
-    tool = BanditTool()
-    tool.base_path = os.path.abspath(
-        os.path.join(BASE_PATH, "tests/integration/simple")
-    )
-    tool.setup({})
-    violations = tool.results({})
+def test_run() -> None:
+    base_path = os.path.abspath(os.path.join(BASE_PATH, "tests/integration/simple"))
+    tool = BanditTool(ToolContext(base_path, {}))
+    tool.setup()
+    violations = tool.results()
 
     expectation = [
         Violation(

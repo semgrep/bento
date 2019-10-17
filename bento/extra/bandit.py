@@ -168,7 +168,7 @@ class BanditTool(PythonTool, Tool):
     def file_name_filter(self) -> Pattern:
         return BanditTool.FILE_NAME_FILTER
 
-    def setup(self, config: Dict[str, Any]) -> None:
+    def setup(self) -> None:
         self.venv_create()
         if self._packages_installed({"bandit": "1.6.0"}):
             return
@@ -177,7 +177,7 @@ class BanditTool(PythonTool, Tool):
         if result:
             print(result)
 
-    def run(self, config: Dict[str, Any], paths: Iterable[str]) -> str:
+    def run(self, paths: Iterable[str]) -> str:
         # bandit glob expansion is limited, so we need to crawl path to find all directories to ignore
         # .bento and site-packages will be ignored wherever they appear
         ignore_find_cmd = [

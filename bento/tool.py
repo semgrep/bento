@@ -2,30 +2,37 @@ import logging
 import os
 import subprocess
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Iterable, List, Optional, Pattern, Set, Type, Union
+from typing import Any, Dict, Iterable, List, Optional, Pattern, Set, Type
+
+import attr
 
 import bento.util
 from bento.parser import Parser
 from bento.result import Violation
 
 
+@attr.s
+class ToolContext:
+    base_path = attr.ib(type=str)
+    config = attr.ib(type=Dict[str, Any])
+
+
 # Note: for now, every tool *HAS* to directly inherit from this, even if it
 # also inherits from JsTool or PythonTool. This is so we can list all tools by
 # looking at subclasses of Tool.
 class Tool(ABC):
-    _base_path: Union[None, str] = None
+    def __init__(self, tool_context: ToolContext = ToolContext(".", {})):
+        self._context = tool_context
 
     @property
     def base_path(self) -> str:
         """Returns the base path from which this tool should run"""
-        if self._base_path is None:
-            raise AttributeError("base_path is unset")
-        return self._base_path
+        return self._context.base_path
 
-    @base_path.setter
-    def base_path(self, bp: str) -> None:
-        """Configures this tool's base path"""
-        self._base_path = bp
+    @property
+    def config(self) -> Dict[str, Any]:
+        """Returns this tool's configuration"""
+        return self._context.config
 
     def parser(self) -> Parser:
         """Returns this tool's parser"""
@@ -56,7 +63,7 @@ class Tool(ABC):
         pass
 
     @abstractmethod
-    def setup(self, config: Dict[str, Any]) -> None:
+    def setup(self) -> None:
         """
         Runs all code necessary to install this tool
 
@@ -71,7 +78,7 @@ class Tool(ABC):
         pass
 
     @abstractmethod
-    def run(self, config: Dict[str, Any], files: Iterable[str]) -> str:
+    def run(self, files: Iterable[str]) -> str:
         """
         Runs this tool, returning its standard output
 
@@ -112,7 +119,7 @@ class Tool(ABC):
         res = next(procB.stdout, None)
         return res is not None
 
-    def filter_paths(self, config: Dict[str, Any], paths: Iterable[str]) -> Set[str]:
+    def filter_paths(self, paths: Iterable[str]) -> Set[str]:
         """
         Filters a list of paths to those that should be analyzed by this tool
 
@@ -121,7 +128,6 @@ class Tool(ABC):
           - Filters non-terminal paths (directories) that include at least one matching path.
 
         Parameters:
-            config (dict): The tool configuration
             paths (list): List of candidate paths
 
         Returns:
@@ -158,16 +164,13 @@ class Tool(ABC):
         res = subprocess.run(command, **new_args)
         return res
 
-    def results(
-        self, config: Dict[str, Any], paths: Optional[Iterable[str]] = None
-    ) -> List[Violation]:
+    def results(self, paths: Optional[Iterable[str]] = None) -> List[Violation]:
         """
         Runs this tool, returning all identified violations
 
         Code runs inside virtual environment.
 
         Parameters:
-            config (dict): The tool configuration
             paths (list or None): If defined, an explicit list of paths to run on
 
         Raises:
@@ -175,22 +178,22 @@ class Tool(ABC):
         """
         if paths is None:
             paths = [self.base_path]
-        paths = self.filter_paths(config, paths)
+        paths = self.filter_paths(paths)
 
         if paths:
-            raw = self.run(config, paths)
+            raw = self.run(paths)
             try:
                 violations = self.parser().parse(raw)
             except Exception:
                 raise Exception(f"Could not parse output of '{self.tool_id()}':\n{raw}")
-            ignore_set = set(config.get("ignore", []))
+            ignore_set = set(self.config.get("ignore", []))
             filtered = [v for v in violations if v.check_id not in ignore_set]
             return filtered
         else:
             return []
 
 
-def for_name(name: str, base_path: str) -> Tool:
+def for_name(name: str, context: ToolContext) -> Tool:
     """
     Reflectively instantiates a tool from a python identifier
 
@@ -201,6 +204,4 @@ def for_name(name: str, base_path: str) -> Tool:
     Parameters:
         name (str): The tool name, as a python fully qualified identifier
     """
-    tool = bento.util.for_name(name)()
-    tool.base_path = base_path
-    return tool
+    return bento.util.for_name(name)(context)

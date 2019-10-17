@@ -10,24 +10,11 @@ import bento.result
 import bento.tool_runner
 import util
 from _pytest.monkeypatch import MonkeyPatch
+from bento.context import Context
 from bento.tool import Tool
 
 THIS_PATH = os.path.dirname(__file__)
 BASE_PATH = os.path.abspath(os.path.join(THIS_PATH, ".."))
-
-
-def test_tool_from_config_found() -> None:
-    """Validates that existing tools are parsed from the config file"""
-    config: Dict[str, Any] = {"tools": {"r2c.eslint": {"ignore": []}}}
-    tools = bento.cli.__tools(config)
-    assert len(tools) == 1
-    assert tools[0].tool_id() == "r2c.eslint"
-
-
-def test_tool_from_config_missing() -> None:
-    """Validates that non-existant tools are silently ignored in the config file"""
-    config: Dict[str, Any] = {"tools": {"r2c.not_a_thing": {"ignore": []}}}
-    assert len(bento.cli.__tools(config)) == 0
 
 
 def test_install_config(monkeypatch: MonkeyPatch) -> None:
@@ -35,8 +22,9 @@ def test_install_config(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.chdir(os.path.join(BASE_PATH, "tests/integration/simple"))
     with util.mod_file(".bento.yml"):
         os.remove(".bento.yml")
-        bento.cli.__install_config_if_not_exists()
-        cfg = bento.cli.__config()
+        context = Context()
+        bento.cli.__install_config_if_not_exists(context)
+        cfg = context.config
         assert "r2c.eslint" in cfg["tools"]
         assert "r2c.flake8" in cfg["tools"]
         assert "r2c.bandit" in cfg["tools"]
@@ -48,7 +36,7 @@ def test_archive_no_init(monkeypatch: MonkeyPatch) -> None:
     runner = CliRunner()
     monkeypatch.chdir(os.path.join(BASE_PATH, "tests/integration"))
     # No .bento.yml exists in this directory
-    result = runner.invoke(bento.cli.archive, [])
+    result = runner.invoke(bento.cli.archive, obj=Context())
     assert result.exit_code == 3
 
 
@@ -60,7 +48,7 @@ def test_archive_updates_whitelist(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.chdir(os.path.join(BASE_PATH, "tests/integration/simple"))
 
     with util.mod_file(bento.constants.BASELINE_FILE_PATH) as whitelist:
-        runner.invoke(bento.cli.archive, [])
+        runner.invoke(bento.cli.archive, obj=Context())
         yml = bento.result.yml_to_violation_hashes(whitelist)
 
     expectation = {
@@ -86,8 +74,8 @@ def test_disable_tool_found(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.chdir(os.path.join(BASE_PATH, "tests/integration/simple"))
 
     with util.mod_file(bento.constants.CONFIG_PATH):
-        runner.invoke(bento.cli.disable, ["r2c.eslint", "foo"])
-        config = bento.cli.__config()
+        runner.invoke(bento.cli.disable, ["r2c.eslint", "foo"], obj=Context())
+        config = bento.context.Context().config
         assert "foo" in config["tools"]["r2c.eslint"]["ignore"]
 
 
@@ -98,7 +86,7 @@ def test_disable_tool_not_found(monkeypatch: MonkeyPatch) -> None:
 
     monkeypatch.chdir(os.path.join(BASE_PATH, "tests/integration/py-only"))
 
-    result = runner.invoke(bento.cli.disable, ["r2c.eslint", "foo"])
+    result = runner.invoke(bento.cli.disable, ["r2c.eslint", "foo"], obj=Context())
     assert result.exit_code == 3
 
 
@@ -110,8 +98,8 @@ def test_enable_tool_found(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.chdir(os.path.join(BASE_PATH, "tests/integration/simple"))
 
     with util.mod_file(bento.constants.CONFIG_PATH):
-        runner.invoke(bento.cli.enable, ["r2c.eslint", "curly"])
-        config = bento.cli.__config()
+        runner.invoke(bento.cli.enable, ["r2c.eslint", "curly"], obj=Context())
+        config = bento.context.Context().config
         assert "curly" not in config["tools"]["r2c.eslint"]["ignore"]
 
 
@@ -122,7 +110,7 @@ def test_enable_tool_not_found(monkeypatch: MonkeyPatch) -> None:
 
     monkeypatch.chdir(os.path.join(BASE_PATH, "tests/integration/py-only"))
 
-    result = runner.invoke(bento.cli.enable, ["r2c.eslint", "foo"])
+    result = runner.invoke(bento.cli.enable, ["r2c.eslint", "foo"], obj=Context())
     assert result.exit_code == 3
 
 
@@ -133,7 +121,9 @@ def test_check_happy_path(monkeypatch: MonkeyPatch) -> None:
 
     monkeypatch.chdir(os.path.join(BASE_PATH, "tests/integration/simple"))
 
-    result = runner.invoke(bento.cli.check, ["--formatter", "bento.formatter.Json"])
+    result = runner.invoke(
+        bento.cli.check, ["--formatter", "bento.formatter.Json"], obj=Context()
+    )
     parsed = json.loads(result.stdout)
     assert len(parsed) == 4
 
@@ -147,7 +137,9 @@ def test_check_no_archive(monkeypatch: MonkeyPatch) -> None:
 
     with util.mod_file(bento.constants.BASELINE_FILE_PATH):
         os.remove(bento.constants.BASELINE_FILE_PATH)
-        result = runner.invoke(bento.cli.check, ["--formatter", "bento.formatter.Json"])
+        result = runner.invoke(
+            bento.cli.check, ["--formatter", "bento.formatter.Json"], obj=Context()
+        )
         parsed = json.loads(result.stdout)
         assert len(parsed) == 5  # Archive contains a single whitelisted finding
 
@@ -158,7 +150,7 @@ def test_check_no_init(monkeypatch: MonkeyPatch) -> None:
     runner = CliRunner()
     monkeypatch.chdir(os.path.join(BASE_PATH, "tests/integration"))
     # No .bento.yml exists in this directory
-    result = runner.invoke(bento.cli.check, [])
+    result = runner.invoke(bento.cli.check, obj=Context())
     assert result.exit_code == 3
 
 
@@ -179,7 +171,7 @@ def test_check_tool_error(monkeypatch: MonkeyPatch) -> None:
 
     runner = CliRunner(mix_stderr=False)
 
-    result = runner.invoke(bento.cli.check, [])
+    result = runner.invoke(bento.cli.check, obj=Context())
     assert result.exit_code == 3
     assert expectation in result.stderr.splitlines()
 
@@ -187,7 +179,7 @@ def test_check_tool_error(monkeypatch: MonkeyPatch) -> None:
 def test_init_already_setup(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.chdir(os.path.join(BASE_PATH, "tests/integration/simple"))
 
-    result = CliRunner(mix_stderr=False).invoke(bento.cli.init, [])
+    result = CliRunner(mix_stderr=False).invoke(bento.cli.init, obj=Context())
 
     expectation = "Detected project with Python and node-js\n\n✔ Bento is initialized on your project."
     assert result.stderr.strip() == expectation
@@ -198,8 +190,8 @@ def test_init_js_only(monkeypatch: MonkeyPatch) -> None:
 
     with util.mod_file(".bento.yml"):
         os.remove(".bento.yml")
-        CliRunner(mix_stderr=False).invoke(bento.cli.init, [])
-        config = bento.cli.__config()
+        CliRunner(mix_stderr=False).invoke(bento.cli.init, obj=Context())
+        config = Context().config
 
     assert "r2c.eslint" in config["tools"]
     assert "r2c.flake8" not in config["tools"]
@@ -211,8 +203,8 @@ def test_init_py_only(monkeypatch: MonkeyPatch) -> None:
 
     with util.mod_file(".bento.yml"):
         os.remove(".bento.yml")
-        CliRunner(mix_stderr=False).invoke(bento.cli.init, [])
-        config = bento.cli.__config()
+        CliRunner(mix_stderr=False).invoke(bento.cli.init, obj=Context())
+        config = Context().config
 
     assert "r2c.eslint" not in config["tools"]
     assert "r2c.flake8" in config["tools"]

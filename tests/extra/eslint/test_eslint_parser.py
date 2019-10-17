@@ -2,6 +2,7 @@ import os
 import subprocess
 
 from bento.extra.eslint import EslintParser, EslintTool
+from bento.tool import ToolContext
 from bento.violation import Violation
 
 THIS_PATH = os.path.dirname(__file__)
@@ -57,13 +58,11 @@ def test_line_move() -> None:
 
 
 def test_run() -> None:
-    tool = EslintTool()
-    tool.base_path = os.path.abspath(
-        os.path.join(BASE_PATH, "tests/integration/simple")
-    )
-    tool.setup({})
+    base_path = os.path.abspath(os.path.join(BASE_PATH, "tests/integration/simple"))
+    tool = EslintTool(ToolContext(base_path, {}))
+    tool.setup()
     try:
-        violations = tool.results({})
+        violations = tool.results()
     except subprocess.CalledProcessError as e:
         print(e.stderr)
         raise e
@@ -95,13 +94,11 @@ def test_run() -> None:
 
 
 def test_typescript_run() -> None:
-    tool = EslintTool()
-    tool.base_path = os.path.abspath(
-        os.path.join(BASE_PATH, "tests/integration/js-and-ts")
-    )
-    tool.setup({})
+    base_path = os.path.abspath(os.path.join(BASE_PATH, "tests/integration/js-and-ts"))
+    tool = EslintTool(ToolContext(base_path, {}))
+    tool.setup()
     try:
-        violations = tool.results({}, ["foo.ts"])
+        violations = tool.results(["foo.ts"])
     except subprocess.CalledProcessError as e:
         print(e.stderr)
         raise e
@@ -137,11 +134,11 @@ def test_typescript_run() -> None:
 
 
 def test_jsx_run() -> None:
-    tool = EslintTool()
-    tool.base_path = os.path.abspath(os.path.join(BASE_PATH, "tests/integration/react"))
-    tool.setup({})
+    base_path = os.path.abspath(os.path.join(BASE_PATH, "tests/integration/react"))
+    tool = EslintTool(ToolContext(base_path, {}))
+    tool.setup()
     try:
-        violations = tool.results({}, [])
+        violations = tool.results([])
     except subprocess.CalledProcessError as e:
         print(e.stderr)
         raise e
@@ -150,7 +147,7 @@ def test_jsx_run() -> None:
 
 
 def test_file_match() -> None:
-    f = EslintTool().file_name_filter
+    f = EslintTool(ToolContext(BASE_PATH, {})).file_name_filter
 
     assert f.match("js") is None
     assert f.match("foo.js") is not None

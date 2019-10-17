@@ -1,9 +1,8 @@
 import os
 from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 
-import yaml
-
 import bento.cli
+import bento.context
 import bento.tool_runner
 from _pytest.monkeypatch import MonkeyPatch
 from bento.violation import Violation
@@ -32,11 +31,12 @@ def __count_simple_findings(
     Returns:
         (dict): Counts of (unfiltered, filtered) findings for each tool
     """
-    with open(os.path.join(BASE_PATH, "tests/integration/simple/.bento.yml")) as file:
-        config = yaml.safe_load(file)
     monkeypatch.chdir(os.path.join(BASE_PATH, "tests/integration/simple"))
-    tools = bento.cli.__tools(config)
-    results = bento.tool_runner.Runner().parallel_results(tools, config, archive, files)
+    context = bento.context.Context()
+    tools = context.tools.values()
+    results = bento.tool_runner.Runner().parallel_results(
+        tools, context.config, archive, files
+    )
     return dict(
         (tid, __violation_counts(vv)) for tid, vv in results if isinstance(vv, list)
     )

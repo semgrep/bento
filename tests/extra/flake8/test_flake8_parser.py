@@ -1,13 +1,14 @@
 import os
 
 from bento.extra.flake8 import Flake8Parser, Flake8Tool
+from bento.tool import ToolContext
 from bento.violation import Violation
 
 THIS_PATH = os.path.dirname(__file__)
 BASE_PATH = os.path.abspath(os.path.join(THIS_PATH, "../../.."))
 
 
-def test_parse():
+def test_parse() -> None:
     with open(os.path.join(THIS_PATH, "flake8_violation_simple.json")) as json_file:
         json = json_file.read()
 
@@ -30,13 +31,11 @@ def test_parse():
     assert result == expectation
 
 
-def test_run():
-    tool = Flake8Tool()
-    tool.base_path = os.path.abspath(
-        os.path.join(BASE_PATH, "tests/integration/simple")
-    )
-    tool.setup({})
-    violations = tool.results({})
+def test_run() -> None:
+    base_path = os.path.abspath(os.path.join(BASE_PATH, "tests/integration/simple"))
+    tool = Flake8Tool(ToolContext(base_path, {}))
+    tool.setup()
+    violations = tool.results()
 
     expectation = [
         Violation(
@@ -74,7 +73,7 @@ def test_run():
     assert violations == expectation
 
 
-def test_file_match():
+def test_file_match() -> None:
     f = Flake8Tool().file_name_filter
 
     assert f.match("py") is None
