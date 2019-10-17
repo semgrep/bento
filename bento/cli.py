@@ -6,21 +6,7 @@ import subprocess
 import sys
 import threading
 import time
-from functools import partial
-from multiprocessing import Lock
-from multiprocessing.pool import ThreadPool
-from typing import (
-    Any,
-    Callable,
-    Collection,
-    Dict,
-    Iterable,
-    List,
-    Optional,
-    Set,
-    Tuple,
-    Union,
-)
+from typing import Any, Callable, Dict, List, Optional, Set, Union
 
 import click
 import git
@@ -30,7 +16,6 @@ from pre_commit.git import get_staged_files
 from pre_commit.staged_files_only import staged_files_only
 from pre_commit.util import noop_context
 from semantic_version import Version
-from tqdm import tqdm
 
 import bento.constants as constants
 import bento.extra
@@ -39,9 +24,9 @@ import bento.git
 import bento.network as network
 import bento.result as result
 import bento.tool as tool
+import bento.tool_runner
 import bento.util
 from bento.error import NodeError
-from bento.result import Baseline
 from bento.util import echo_error, echo_success, echo_warning
 from bento.violation import Violation
 
@@ -66,16 +51,6 @@ TERMS_OF_SERVICE_MESSAGE = f"""│ Bento does not collect any source code or sen
 TERMS_OF_SERVICE_ERROR = f"""
 Bento did NOT install. Bento beta users must agree to the terms of service to continue. Please reach out to us at support@r2c.dev with questions or concerns.
 """
-
-MAX_BAR_VALUE = 30
-BAR_UPDATE_INTERVAL = 0.1
-
-ToolResults = Union[List[Violation], Exception]
-RunResults = Tuple[str, ToolResults]
-
-lock = Lock()
-setup_latch: Optional[bento.util.CountDownLatch] = None
-bars: List[tqdm]
 
 
 def __tool_inventory() -> Dict[str, tool.Tool]:
@@ -133,132 +108,6 @@ def __formatter(config: Dict[str, Any]) -> formatter.Formatter:
     else:
         f_class, cfg = next(iter(config["formatter"].items()))
         return formatter.for_name(f_class, cfg)
-
-
-def __tool_findings(
-    tool: tool.Tool, config: Dict[str, Any], paths: Optional[Iterable[str]] = None
-) -> List[result.Violation]:
-    tool_config = config["tools"].get(tool.tool_id(), {})
-    return tool.results(tool_config, paths)
-
-
-def __tool_filter(
-    config: Dict[str, Any],
-    baseline: Baseline,
-    paths: Optional[Iterable[str]],
-    tool_and_index: Tuple[tool.Tool, int],
-) -> RunResults:
-    """Runs a tool and filters out existing findings using baseline"""
-
-    min_bar_value = int(MAX_BAR_VALUE / 5)
-    run = True
-
-    def update_bars() -> None:
-        bar_value = min_bar_value
-        keep_going = True
-        while keep_going:
-            with lock:
-                keep_going = run
-                if bar_value < MAX_BAR_VALUE - 1:
-                    bar_value += 1
-                    bars[ix].update(1)
-                else:
-                    bar_value = min_bar_value
-                    bars[ix].update(min_bar_value - MAX_BAR_VALUE + 1)
-            time.sleep(BAR_UPDATE_INTERVAL)
-        with lock:
-            bars[ix].update(MAX_BAR_VALUE - bar_value)
-
-    try:
-        # print(f"{tool.tool_id()} start")  # TODO: Move to debug
-        # before = time.time_ns()
-        tool, ix = tool_and_index
-        with lock:
-            bars[ix].set_postfix_str("🍜")
-        tool.setup(config)
-        if setup_latch:
-            setup_latch.count_down()
-        with lock:
-            bars[ix].update(min_bar_value)
-            bars[ix].set_postfix_str("🍤")
-        # after_setup = time.time_ns()
-        th = threading.Thread(name=f"update_{ix}", target=update_bars)
-        th.start()
-        if setup_latch:
-            setup_latch.wait_for()
-        results = result.filter(
-            tool.tool_id(), __tool_findings(tool, config, paths), baseline
-        )
-        with lock:
-            run = False
-        th.join()
-        with lock:
-            bars[ix].set_postfix_str("🍱")
-        # after = time.time_ns()
-        # print(f"{tool.tool_id} completed in {((after - before) / 1e9):2f} s (setup in {((after_setup - before) / 1e9):2f} s)")  # TODO: Move to debug
-        return (tool.tool_id(), results)
-    except Exception as e:
-        # traceback.print_exc()  # TODO: Move to debug
-        return (tool.tool_id(), e)
-
-
-def __tool_parallel_results(
-    config: Dict[str, Any], baseline: result.Baseline, files: Optional[List[str]]
-) -> Collection[RunResults]:
-    """Runs all tools in parallel.
-
-    Each tool is optionally run against a list of files. For each tool, it's results are
-    filtered to those results not appearing in the whitelist.
-
-    A progress bar is emitted to stderr for each tool.
-
-    Parameters:
-        config (dict): The tool configuration dictionary
-        baseline (set): The set of whitelisted finding hashes
-        files (list): If present, the list of files to pass to each tool
-
-    Returns:
-        (collection): For each tool, a `RunResult`, which is a tuple of (`tool_id`, `findings`)
-    """
-    tools = __tools(config)
-    tools_and_indices = list(zip(tools, range(len(tools))))
-
-    # Progress bars can not be serialized, and therefore can not be used with
-    # multiprocessing, except as a global variable
-    def set_progress_bars(b: List[tqdm]) -> None:
-        global bars
-        bars = b
-
-    bars = [
-        tqdm(
-            total=MAX_BAR_VALUE,
-            position=ix,
-            mininterval=BAR_UPDATE_INTERVAL,
-            desc=tool.tool_id(),
-            ncols=40,
-            bar_format=click.style("  {desc}: |{bar}| {elapsed}{postfix}", fg="blue"),
-            leave=False,
-        )
-        for tool, ix in tools_and_indices
-    ]
-    bento.cli.setup_latch = bento.util.CountDownLatch(len(tools))
-
-    with ThreadPool(
-        len(tools), initializer=set_progress_bars, initargs=(bars,)
-    ) as pool:
-        # using partial to pass in multiple arguments to __tool_filter
-        func = partial(__tool_filter, config, baseline, files)
-        all_results = pool.map_async(func, tools_and_indices).get()
-
-    # click.echo("\x1b[1F")  # Resets line position afters bars close
-    for b in bars:
-        click.echo("", err=True)
-    for b in bars:
-        b.close()
-
-    click.echo("", err=True)
-
-    return all_results
 
 
 def __update_ignores(tool: str, update_func: Callable[[Set[str]], None]) -> None:
@@ -467,7 +316,7 @@ def archive() -> None:
     config = __config()
     tools = __tools(config)
 
-    all_findings = __tool_parallel_results(config, {}, None)
+    all_findings = bento.tool_runner.Runner().parallel_results(tools, config, {}, None)
     n_found = 0
     n_existing = 0
     found_hashes: Set[str] = set()
@@ -645,7 +494,9 @@ def check(
 
     with ctx:
         before = time.time()
-        all_results = __tool_parallel_results(config, baseline, files)
+        runner = bento.tool_runner.Runner()
+        tools = __tools(config)
+        all_results = runner.parallel_results(tools, config, baseline, files)
         elapsed = time.time() - before
 
     is_error = False

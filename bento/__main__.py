@@ -13,8 +13,7 @@ def main() -> None:
     try:
         cli()
     except Exception as e:
-        logging.error(e)
-        logging.error(sys.exc_info())
+        logging.error(e, stack_info=True)
         if isinstance(e, subprocess.CalledProcessError):
             cmd = e.cmd
             if isinstance(e.cmd, list):
