@@ -1,33 +1,22 @@
 import logging
 import os
-import shutil
-import stat
-import subprocess
 import sys
-import threading
-import time
-from typing import Any, Callable, Dict, List, Optional, Set, Union
+from typing import Any, Union
 
 import click
-import git
 import requests
 import yaml
-from pre_commit.git import get_staged_files
-from pre_commit.staged_files_only import staged_files_only
-from pre_commit.util import noop_context
 from semantic_version import Version
 
 import bento.constants as constants
 import bento.extra
 import bento.git
 import bento.network as network
-import bento.result as result
 import bento.tool_runner
 import bento.util
+from bento.commands import archive, check, hook, init, update_ignores
 from bento.context import Context
-from bento.error import NodeError
-from bento.util import echo_error, echo_success, echo_warning
-from bento.violation import Violation
+from bento.util import echo_error, echo_warning
 
 UPGRADE_WARNING_OUTPUT = f"""
 ╭─────────────────────────────────────────────╮
@@ -60,46 +49,6 @@ def __setup_logging() -> None:
         filemode="w",
         format="[%(levelname)s] %(relativeCreated)s %(name)s:%(module)s - %(message)s",
     )
-
-
-def __install_config_if_not_exists(context: Context) -> None:
-    if not os.path.exists(constants.CONFIG_PATH):
-        click.echo(f"Creating default configuration at {constants.CONFIG_PATH}")
-        with (
-            open(os.path.join(os.path.dirname(__file__), "configs/default.yml"))
-        ) as template:
-            yml = yaml.safe_load(template)
-        for tid, t in context.tool_inventory.items():
-            if not t().matches_project():
-                del yml["tools"][tid]
-        with (open(constants.CONFIG_PATH, "w")) as config_file:
-            yaml.safe_dump(yml, stream=config_file)
-        echo_success(
-            f"Created {constants.CONFIG_PATH}. Please check this file in to source control.\n"
-        )
-
-
-def __update_ignores(
-    context: Context, tool: str, update_func: Callable[[Set[str]], None]
-) -> None:
-    config = context.config
-    tool_config = config["tools"]
-    if tool not in tool_config:
-        all_tools = ", ".join(f"'{k}'" for k in tool_config.keys())
-        echo_error(f"No tool named '{tool}'. Configured tools are {all_tools}")
-        sys.exit(3)
-
-    ignores = set(tool_config[tool].get("ignore", []))
-    update_func(ignores)
-
-    tool_config[tool]["ignore"] = list(ignores)
-
-    context.config = config
-
-
-def get_ignores_for_tool(tool: str, config: Dict[str, Any]) -> List[str]:
-    tool_config = config["tools"]
-    return tool_config[tool].get("ignore", [])
 
 
 def is_running_latest() -> bool:
@@ -261,309 +210,9 @@ def cli(ctx: click.Context, agree: bool) -> None:
         click.echo(UPGRADE_WARNING_OUTPUT)
 
 
-@cli.command()
-@click.pass_obj
-def archive(context: Context) -> None:
-    """
-    Adds all current findings to the whitelist.
-    """
-    if not os.path.exists(constants.CONFIG_PATH):
-        echo_error("No Bento configuration found. Please run `bento init`.")
-        sys.exit(3)
-        return
-
-    if os.path.exists(constants.BASELINE_FILE_PATH):
-        with open(constants.BASELINE_FILE_PATH) as json_file:
-            old_baseline = result.yml_to_violation_hashes(json_file)
-            old_hashes = set(h for hh in old_baseline.values() for h in hh)
-    else:
-        old_hashes = set()
-
-    new_baseline: List[str] = []
-    config = context.config
-    tools = context.tools.values()
-
-    all_findings = bento.tool_runner.Runner().parallel_results(tools, config, {}, None)
-    n_found = 0
-    n_existing = 0
-    found_hashes: Set[str] = set()
-
-    for tool_id, vv in all_findings:
-        if isinstance(vv, Exception):
-            raise vv
-        n_found += len(vv)
-        new_baseline += result.tool_results_to_yml(tool_id, vv)
-        for v in vv:
-            h = v.syntactic_identifier_str()
-            found_hashes.add(h)
-            if h in old_hashes:
-                n_existing += 1
-
-    n_new = n_found - n_existing
-    n_removed = len(old_hashes - found_hashes)
-
-    os.makedirs(
-        os.path.dirname(os.path.join(os.getcwd(), constants.BASELINE_FILE_PATH)),
-        exist_ok=True,
-    )
-    with open(constants.BASELINE_FILE_PATH, "w") as json_file:
-        json_file.writelines(new_baseline)
-
-    success_str = f"Rewrote the whitelist with {n_found} findings from {len(tools)} tools ({n_new} new, {n_existing} previously whitelisted)."
-    if n_removed > 0:
-        success_str += (
-            f"\n  Also removed {n_removed} fixed findings from the whitelist."
-        )
-    success_str += (
-        f"\n  Please check '{constants.BASELINE_FILE_PATH}' in to source control."
-    )
-
-    echo_success(success_str)
-
-    network.post_metrics(bento.metrics.command_metric("reset"))
-
-
-@cli.command()
-@click.pass_obj
-def init(context: Context) -> None:
-    """
-    Autodetects and installs tools.
-
-    Run again after changing tool list in .bento.yml
-    """
-    __install_config_if_not_exists(context)
-
-    tools = context.tools.values()
-    project_names = sorted(list(set(t.project_name for t in tools)))
-    logging.debug(f"Project names: {project_names}")
-    if len(project_names) > 2:
-        projects = f'{", ".join(project_names[:-2])}, and {project_names[-1]}'
-    elif project_names:
-        projects = " and ".join(project_names)
-    else:
-        echo_error("Bento can't identify this project.")
-        sys.exit(3)
-
-    click.secho(f"Detected project with {projects}\n", fg="blue", err=True)
-
-    for t in tools:
-        t.setup()
-
-    r = bento.git.repo()
-    if sys.stdout.isatty() and r:
-        ignore_file = os.path.join(r.working_tree_dir, ".gitignore")
-        has_ignore = None
-        if os.path.exists(ignore_file):
-            with open(ignore_file, "r") as fd:
-                has_ignore = next(filter(lambda l: l.rstrip() == ".bento/", fd), None)
-        if has_ignore is None:
-            click.secho(
-                "It looks like you're managing this project with git. We recommend adding '.bento/' to your '.gitignore'."
-            )
-            if click.confirm("  Do you want Bento to do this for you?", default=True):
-                with open(ignore_file, "a") as fd:
-                    fd.write(
-                        "# Ignore bento tool run paths (this line added by `bento init`)\n.bento/"
-                    )
-                echo_success(
-                    "Added '.bento/' to your .gitignore. Please commit your .gitignore.\n"
-                )
-
-    echo_success("Bento is initialized on your project.")
-
-    network.post_metrics(bento.metrics.command_metric("setup"))
-
-
-@cli.command()
-@click.argument("tool", type=str, nargs=1)
-@click.argument("check", type=str, nargs=1)
-@click.pass_obj
-def disable(context: Context, tool: str, check: str) -> None:
-    """
-    Disables a check.
-    """
-
-    def add(ignores: Set[str]) -> None:
-        ignores.add(check)
-
-    __update_ignores(context, tool, add)
-    echo_success(f"'{check}' disabled for '{tool}'")
-
-
-@cli.command()
-@click.argument("tool", type=str, nargs=1)
-@click.argument("check", type=str, nargs=1)
-@click.pass_obj
-def enable(context: Context, tool: str, check: str) -> None:
-    """
-    Enables a check.
-    """
-
-    def remove(ignores: Set[str]) -> None:
-        if check in ignores:
-            ignores.remove(check)
-
-    __update_ignores(context, tool, remove)
-    echo_success(f"'{check}' enabled for '{tool}'")
-
-
-@cli.command()
-@click.option(
-    "--formatter",
-    type=str,
-    help="Which output format to use. Falls back to the config.",
-    default=None,
-)
-@click.option(
-    "--pager/--no-pager",
-    help="Send long output through a pager. This should be disabled when used as an integration (e.g. with an editor).",
-    default=True,
-)
-@click.option("--staged-only", is_flag=True, help="Only runs over files staged in git")
-@click.pass_obj
-def check(
-    context: Context,
-    formatter: Optional[str] = None,
-    pager: bool = True,
-    staged_only: bool = False,
-) -> None:
-    """
-    Checks for new findings.
-
-    Only findings not previously whitelisted will be displayed.
-    """
-
-    if not os.path.exists(constants.CONFIG_PATH):
-        echo_error("No Bento configuration found. Please run `bento init`.")
-        sys.exit(3)
-        return
-
-    if os.path.exists(constants.BASELINE_FILE_PATH):
-        with open(constants.BASELINE_FILE_PATH) as json_file:
-            baseline = result.yml_to_violation_hashes(json_file)
-    else:
-        baseline = {}
-
-    config = context.config
-    if formatter:
-        config["formatter"] = {formatter: {}}
-    fmt = context.formatter
-    findings_to_log: List[Any] = []
-
-    def by_path(v: Violation) -> str:
-        return v.path
-
-    click.echo("Running Bento checks...", err=True)
-
-    files = None
-    if staged_only:
-        ctx = staged_files_only(
-            os.path.join(os.path.expanduser("~"), ".cache", "bento", "patches")
-        )
-        files = get_staged_files()
-    else:
-        ctx = noop_context()
-
-    with ctx:
-        before = time.time()
-        runner = bento.tool_runner.Runner()
-        tools = context.tools.values()
-        all_results = runner.parallel_results(tools, config, baseline, files)
-        elapsed = time.time() - before
-
-    is_error = False
-
-    collapsed_findings: List[Violation] = []
-    for tool_id, findings in all_results:
-        if isinstance(findings, Exception):
-            echo_error(f"Error while running {tool_id}: {findings}")
-            if isinstance(findings, subprocess.CalledProcessError):
-                click.secho(findings.stderr, err=True)
-                click.secho(findings.stdout, err=True)
-            if isinstance(findings, NodeError):
-                echo_warning(
-                    f"Node.js not found or version is not compatible with ESLint v6."
-                )
-
-            click.echo("", err=True)
-            is_error = True
-        elif isinstance(findings, list) and findings:
-            findings_to_log += bento.metrics.violations_to_metrics(
-                tool_id, findings, get_ignores_for_tool(tool_id, config)
-            )
-            collapsed_findings += [f for f in findings if not f.filtered]
-
-    def post_metrics() -> None:
-        network.post_metrics(findings_to_log)
-
-    stats_thread = threading.Thread(name="stats", target=post_metrics)
-    stats_thread.start()
-
-    if collapsed_findings:
-        findings_by_path = sorted(collapsed_findings, key=by_path)
-        for f in findings_by_path:
-            logging.debug(f)
-        bento.util.less(fmt.dump(findings_by_path), pager=pager, only_if_overrun=True)
-
-    if collapsed_findings:
-        echo_warning(f"{len(collapsed_findings)} findings in {elapsed:.2f} s\n")
-        suppress_str = click.style("bento archive", fg="blue")
-        click.echo(f"To suppress all findings run `{suppress_str}`.", err=True)
-    else:
-        echo_success(f"0 findings in {elapsed:.2f} s")
-
-    if is_error:
-        sys.exit(3)
-    elif collapsed_findings:
-        sys.exit(2)
-
-
-def is_bento_precommit(filename: str) -> bool:
-    if not os.path.exists(filename):
-        return False
-    with open(filename) as f:
-        lines = f.read()
-    return constants.BENTO_TEMPLATE_HASH in lines
-
-
-@cli.command()
-def install_hook() -> None:
-    """
-        Installs bento as a git pre-commit hook
-        Saves any existing pre-commit hook to .git/hooks/pre-commit.pre-bento and
-        runs said hook after bento hook is run
-    """
-    # Get hook path
-    repo = bento.git.repo()
-    if repo is None:
-        echo_error("Not a git project")
-        sys.exit(3)
-
-    hook_path = git.index.fun.hook_path("pre-commit", repo.git_dir)
-
-    if is_bento_precommit(hook_path):
-        echo_success(f"Bento already installed as a pre-commit hook")
-    else:
-        legacy_hook_path = f"{hook_path}.pre-bento"
-        if os.path.exists(hook_path):
-            # If pre-commit hook already exists move it over
-            if os.path.exists(legacy_hook_path):
-                raise Exception(
-                    "There is already a legacy hook. Not sure what to do so just exiting for now."
-                )
-            else:
-                # Check that
-                shutil.move(hook_path, legacy_hook_path)
-
-        # Copy pre-commit script template to hook_path
-        template_location = os.path.join(
-            os.path.dirname(__file__), "resources/pre-commit.template"
-        )
-        shutil.copyfile(template_location, hook_path)
-
-        # Make file executable
-        original_mode = os.stat(hook_path).st_mode
-        os.chmod(hook_path, original_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
-
-        network.post_metrics(bento.metrics.command_metric("install-hook"))
-        echo_success(f"Added Bento to your git pre-commit hooks.")
+cli.add_command(archive.archive)
+cli.add_command(check.check)
+cli.add_command(init.init)
+cli.add_command(hook.install_hook)
+cli.add_command(update_ignores.enable)
+cli.add_command(update_ignores.disable)
