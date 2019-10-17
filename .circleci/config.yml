@@ -65,12 +65,33 @@ jobs:
       - store_artifacts:
           path: test-reports
 
+  runAcceptance:
+    executor: python-build
+    steps:
+      - checkout
+      - run:
+          name: "Generate cache seeds"
+          command: find . -name Pipfile.lock | sort | xargs md5sum > /tmp/checksums
+      - restore_cache:
+          key: deps-2-{{ checksum "/tmp/checksums" }}
+      - run:
+          name: "Install deps"
+          command: pip3 --no-cache install pipenv && pipenv install --dev --deploy
+      - save_cache:
+          key: deps-2-{{ checksum "/tmp/checksums" }}
+          paths:
+            - "/root/.local/share/virtualenvs"
+      - run:
+          name: "QA Tests"
+          command: make qa-test
+
 workflows:
   build-and-deploy:
     jobs:
       - pythonTests
       - runHooks
       - mypy
+      - runAcceptance
 
 executors:
   python-build:

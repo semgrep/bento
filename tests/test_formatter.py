@@ -37,8 +37,8 @@ def test_stylish_formatter() -> None:
     output = stylish.dump(VIOLATIONS)
     expectation = [
         "bento/test/integration/init.js",
-        f"  0:0  {click.style('warning', fg='yellow')} Unexpected console statement. r2c.eslint     no-console https://eslint.org/docs/rules/no-console",
         f"  0:0  {click.style('error  ', fg='red')} Missing semicolon.            r2c.eslint     semi https://eslint.org/docs/rules/semi",
+        f"  0:0  {click.style('warning', fg='yellow')} Unexpected console statement. r2c.eslint     no-console https://eslint.org/docs/rules/no-console",
         "",
     ]
 

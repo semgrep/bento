@@ -56,7 +56,7 @@ def _validate_config():
 
 def _exe():
     if distutils.spawn.find_executable("bento"):
-        return ("bento", "check", "--staged-only")
+        return ("bento", "--agree", "check", "--staged-only")
 
     raise FatalError("`bento` not found.")
 

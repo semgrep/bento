@@ -19,9 +19,9 @@ steps:
     expected_err:
       - ✔ Created .bento.yml. Please check this file in to source control.
       - ✔ Bento is initialized on your project.
+      - Detected project with node-js
     expected_out:
       - Creating default configuration at .bento.yml
-      - Detected project with node-js
     returncode: 0
   - name: bento-check-with-init
     description: bento check after init has findings
@@ -142,6 +142,10 @@ steps:
     description: should run bento as pre-commit hook
     command:
       - git
+      - -c
+      - user.name="placeholder"
+      - -c
+      - user.email="place@holder.com"
       - commit
     expected_err:
       - Running Bento checks...

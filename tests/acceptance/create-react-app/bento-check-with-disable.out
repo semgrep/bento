@@ -172,8 +172,8 @@ packages/react-dev-utils/browsersHelper.js
   9:30 error   Unable to resolve path to module 'browserslist'.                                                     r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
  13:23 error   Unable to resolve path to module 'pkg-up'.                                                           r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
  41:41 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
- 64:48 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
  64:48 error   'shouldSetBrowsers' is already declared in the upper scope.                                          r2c.eslint     no-shadow https://eslint.org/docs/rules/no-shadow
+ 64:48 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
  71:15 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
 
 packages/react-dev-utils/checkRequiredFiles.js
@@ -520,8 +520,8 @@ packages/react-scripts/config/paths.js
  33:22 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
  34:19 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
  34:19 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
- 65:47 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
  65:47 error   'extension' is already declared in the upper scope.                                                  r2c.eslint     no-shadow https://eslint.org/docs/rules/no-shadow
+ 65:47 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
  97:20 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
 
 packages/react-scripts/config/pnpTs.js

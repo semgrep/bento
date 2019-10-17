@@ -1,7 +1,7 @@
 .PHONY: build
 build:
 	PIPENV_IGNORE_VIRTUALENVS=1 pipenv run pipenv_to_requirements
-	pip3 install -e .
+	pipenv run pip3 install -e .
 
 .PHONY: test
 test:

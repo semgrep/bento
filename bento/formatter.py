@@ -116,7 +116,7 @@ class Stylish(Formatter):
         ordered: List[Violation] = sorted(violations, key=Stylish.__path_of)
         for path, vv in itertools.groupby(ordered, Stylish.__path_of):
             lines.append(Stylish.__print_path(path))
-            for v in sorted(vv, key=lambda v: (v.line, v.column)):
+            for v in sorted(vv, key=lambda v: (v.line, v.column, v.message)):
                 lines.append(self.__print_violation(v, max_message_len))
             lines.append("")
 
