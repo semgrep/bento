@@ -8,7 +8,7 @@ THIS_PATH = os.path.dirname(__file__)
 BASE_PATH = os.path.abspath(os.path.join(THIS_PATH, "../../.."))
 
 
-def test_parse():
+def test_parse() -> None:
     with open(os.path.join(THIS_PATH, "eslint_violation_simple.json")) as json_file:
         json = json_file.read()
 
@@ -40,7 +40,7 @@ def test_parse():
     assert result == expectation
 
 
-def test_line_move():
+def test_line_move() -> None:
     parser = EslintParser(BASE_PATH)
 
     with open(
@@ -56,7 +56,7 @@ def test_line_move():
     ]
 
 
-def test_run():
+def test_run() -> None:
     tool = EslintTool()
     tool.base_path = os.path.abspath(
         os.path.join(BASE_PATH, "tests/integration/simple")
@@ -94,7 +94,7 @@ def test_run():
     assert violations == expectation
 
 
-def test_typescript_run():
+def test_typescript_run() -> None:
     tool = EslintTool()
     tool.base_path = os.path.abspath(
         os.path.join(BASE_PATH, "tests/integration/js-and-ts")
@@ -136,7 +136,20 @@ def test_typescript_run():
     assert violations == expectation
 
 
-def test_file_match():
+def test_jsx_run() -> None:
+    tool = EslintTool()
+    tool.base_path = os.path.abspath(os.path.join(BASE_PATH, "tests/integration/react"))
+    tool.setup({})
+    try:
+        violations = tool.results({}, [])
+    except subprocess.CalledProcessError as e:
+        print(e.stderr)
+        raise e
+
+    assert violations == []
+
+
+def test_file_match() -> None:
     f = EslintTool().file_name_filter
 
     assert f.match("js") is None
@@ -147,7 +160,7 @@ def test_file_match():
     assert f.match("foo.jsa") is None
 
 
-def test_missing_source():
+def test_missing_source() -> None:
     with open(
         os.path.join(THIS_PATH, "eslint_violation_missing_source.json")
     ) as json_file:
