@@ -58,7 +58,7 @@ class Runner:
         """Runs a tool and filters out existing findings using baseline"""
 
         try:
-            before = time.time_ns()
+            before = time.time()
             ix, tool = index_and_tool
             bar = self._bars[ix]
             self._run[ix] = True
@@ -73,7 +73,7 @@ class Runner:
             with self._lock:
                 bar.update(MIN_BAR_VALUE)
                 bar.set_postfix_str("🍤")
-            after_setup = time.time_ns()
+            after_setup = time.time()
 
             th = threading.Thread(
                 name=f"update_{ix}", target=partial(self._update_bars, ix)
@@ -87,10 +87,10 @@ class Runner:
             th.join()
             with self._lock:
                 bar.set_postfix_str("🍱")
-            after = time.time_ns()
+            after = time.time()
 
             logging.debug(
-                f"{tool.tool_id} completed in {((after - before) / 1e9):2f} s (setup in {((after_setup - before) / 1e9):2f} s)"
+                f"{tool.tool_id} completed in {(after - before):2f} s (setup in {(after_setup - before):2f} s)"
             )  # TODO: Move to debug
             return (tool.tool_id(), results)
         except Exception as e:
