@@ -29,7 +29,7 @@ class Runner:
         self._lock = Lock()
         self._setup_latch: bento.util.CountDownLatch
         self._bars: List[tqdm]
-        self._run: bool
+        self._run: List[bool]
 
     def _update_bars(self, ix: int) -> None:
         bar_value = MIN_BAR_VALUE
@@ -37,7 +37,7 @@ class Runner:
         bar = self._bars[ix]
         while keep_going:
             with self._lock:
-                keep_going = self._run
+                keep_going = self._run[ix]
                 if bar_value < MAX_BAR_VALUE - 1:
                     bar_value += 1
                     bar.update(1)
@@ -56,12 +56,12 @@ class Runner:
         index_and_tool: Tuple[int, Tool],
     ) -> RunResults:
         """Runs a tool and filters out existing findings using baseline"""
-        self._run = True
 
         try:
             before = time.time_ns()
             ix, tool = index_and_tool
             bar = self._bars[ix]
+            self._run[ix] = True
 
             logging.debug(f"{tool.tool_id()} start")
             with self._lock:
@@ -83,7 +83,7 @@ class Runner:
                 self._setup_latch.wait_for()
             results = bento.result.filter(tool.tool_id(), tool.results(paths), baseline)
             with self._lock:
-                self._run = False
+                self._run[ix] = False
             th.join()
             with self._lock:
                 bar.set_postfix_str("🍱")
@@ -136,6 +136,7 @@ class Runner:
             )
             for ix, tool in indices_and_tools
         ]
+        self._run = [True for _, _ in indices_and_tools]
         self._setup_latch = bento.util.CountDownLatch(n_tools)
 
         with ThreadPool(n_tools) as pool:
