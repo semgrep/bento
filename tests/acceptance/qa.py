@@ -41,7 +41,14 @@ def check_command(step: Any, pwd: str, target: str) -> None:
 
     test_identifier = f"Target:{target} Step:{step['name']}"
 
-    runned = subprocess.run(command, cwd=pwd, capture_output=True, encoding="utf-8")
+    runned = subprocess.run(
+        command,
+        cwd=pwd,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        encoding="utf-8",
+    )
+
     assert runned.returncode == expected_returncode
     match_expected(runned.stdout, expected_out, f"{test_identifier}: stdout")
     match_expected(runned.stderr, expected_err, f"{test_identifier}: stderr")
@@ -59,16 +66,24 @@ def run_repo(target: str) -> None:
     # Clone and checkout repo
     shutil.rmtree(target_dir, ignore_errors=True)
     subprocess.run(
-        ["git", "clone", target_repo, target_dir], capture_output=True, check=True
+        ["git", "clone", target_repo, target_dir],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=True,
     )
     subprocess.run(
         ["git", "checkout", target_hash],
         cwd=target_dir,
-        capture_output=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
         check=True,
     )
     subprocess.run(
-        ["git", "clean", "-xdf"], cwd=target_dir, capture_output=True, check=True
+        ["git", "clean", "-xdf"],
+        cwd=target_dir,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+        check=True,
     )
 
     for step in steps:
