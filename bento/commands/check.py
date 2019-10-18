@@ -39,7 +39,12 @@ def __get_ignores_for_tool(tool: str, config: Dict[str, Any]) -> List[str]:
     help="Send long output through a pager. This should be disabled when used as an integration (e.g. with an editor).",
     default=True,
 )
-@click.option("--staged-only", is_flag=True, help="Only runs over files staged in git")
+@click.option(
+    "--staged-only",
+    is_flag=True,
+    help="Only runs over files staged in git. This should not be used with explicit paths",
+)
+@click.argument("paths", nargs=-1, type=str)
 @click.pass_obj
 @with_metrics
 def check(
@@ -47,11 +52,17 @@ def check(
     formatter: Optional[str] = None,
     pager: bool = True,
     staged_only: bool = False,
+    paths: Optional[List[str]] = None,
 ) -> None:
     """
     Checks for new findings.
 
     Only findings not previously whitelisted will be displayed.
+
+    By default, 'bento check' will check the entire project. To run
+    on one or more paths only, run:
+
+      bento check path1 path2 ...
     """
 
     if not os.path.exists(constants.CONFIG_PATH):
@@ -76,20 +87,23 @@ def check(
 
     click.echo("Running Bento checks...", err=True)
 
-    files = None
-    if staged_only:
+    ctx = noop_context()
+    if paths and len(paths) > 0:
+        if staged_only:
+            raise Exception("--staged_only should not be used with explicit paths")
+    elif staged_only:
         ctx = staged_files_only(
             os.path.join(os.path.expanduser("~"), ".cache", "bento", "patches")
         )
-        files = get_staged_files()
+        paths = get_staged_files()
     else:
-        ctx = noop_context()
+        paths = None
 
     with ctx:
         before = time.time()
         runner = bento.tool_runner.Runner()
         tools = context.tools.values()
-        all_results = runner.parallel_results(tools, config, baseline, files)
+        all_results = runner.parallel_results(tools, config, baseline, paths)
         elapsed = time.time() - before
 
     is_error = False

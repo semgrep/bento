@@ -31,6 +31,41 @@ def test_check_happy_path(monkeypatch: MonkeyPatch) -> None:
     assert len(parsed) == 4
 
 
+def test_check_specified_paths(monkeypatch: MonkeyPatch) -> None:
+    """Validates that check discovers issues in specified paths"""
+
+    runner = CliRunner(mix_stderr=False)
+
+    monkeypatch.chdir(os.path.join(BASE_PATH, "tests/integration/simple"))
+
+    result = runner.invoke(
+        check,
+        ["--formatter", "bento.formatter.Json", "init.js", "foo.py"],
+        obj=Context(),
+    )
+    parsed = json.loads(result.stdout)
+    assert len(parsed) == 3
+
+
+def test_check_specified_paths_and_staged(monkeypatch: MonkeyPatch) -> None:
+    """Validates that check errors when --staged-only used with paths"""
+
+    runner = CliRunner(mix_stderr=False)
+
+    monkeypatch.chdir(os.path.join(BASE_PATH, "tests/integration/simple"))
+
+    try:
+        runner.invoke(
+            check,
+            ["--staged-only", "init.js", "foo.py"],
+            obj=Context(),
+            catch_exceptions=False,
+        )
+        assert False
+    except Exception:
+        pass
+
+
 def test_check_no_archive(monkeypatch: MonkeyPatch) -> None:
     """Validates that check operates without an archive file"""
 
