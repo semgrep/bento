@@ -184,8 +184,10 @@ class Tool(ABC):
             raw = self.run(paths)
             try:
                 violations = self.parser().parse(raw)
-            except Exception:
-                raise Exception(f"Could not parse output of '{self.tool_id()}':\n{raw}")
+            except Exception as e:
+                raise Exception(
+                    f"Could not parse output of '{self.tool_id()}':\n{raw}", e
+                )
             ignore_set = set(self.config.get("ignore", []))
             filtered = [v for v in violations if v.check_id not in ignore_set]
             return filtered

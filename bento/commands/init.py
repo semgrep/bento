@@ -20,7 +20,7 @@ def __install_config_if_not_exists(context: Context) -> None:
         ) as template:
             yml = yaml.safe_load(template)
         for tid, t in context.tool_inventory.items():
-            if not t().matches_project():
+            if not t().matches_project() and tid in yml["tools"]:
                 del yml["tools"][tid]
         with (open(constants.CONFIG_PATH, "w")) as config_file:
             yaml.safe_dump(yml, stream=config_file)

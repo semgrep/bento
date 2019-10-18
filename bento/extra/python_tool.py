@@ -72,8 +72,8 @@ class PythonTool(bento.tool.Tool):
             stderr=subprocess.PIPE,
         )
         stdout, stderr = v.communicate()
-        logging.debug(f"{self.tool_id()}: stderr:\n" + stderr[0:4000])
-        logging.debug(f"{self.tool_id()}: stdout:\n" + stdout[0:4000])
+        logging.debug(f"{self.tool_id()}: stderr[:4000]:\n" + stderr[0:4000])
+        logging.debug(f"{self.tool_id()}: stdout[:4000]:\n" + stdout[0:4000])
         if check_output and v.returncode != 0:
             raise subprocess.CalledProcessError(
                 v.returncode, wrapped, output=stdout, stderr=stderr

@@ -1,5 +1,6 @@
 from __future__ import unicode_literals
 
+import itertools
 import logging
 import os
 import os.path
@@ -15,6 +16,14 @@ from typing import Collection, List, Optional, Pattern, Type
 
 import click
 import psutil
+
+
+def fetch_line_in_file(path: str, line_number: int) -> Optional[str]:
+    """
+    `line_number` is one-indexed! Returns the line if it can be found, throws an exception if the path doesn't exist
+    """
+    with open(path, buffering=1) as fin:  # buffering=1 turns on line-level reads
+        return next(itertools.islice(fin, line_number - 1, line_number), None)
 
 
 def for_name(name: str) -> Type:
