@@ -8,7 +8,7 @@ import yaml
 import bento.constants as constants
 import bento.tool_runner
 from bento.context import Context
-from bento.network import post_metrics
+from bento.decorators import with_metrics
 from bento.util import echo_error, echo_success
 
 
@@ -31,6 +31,7 @@ def __install_config_if_not_exists(context: Context) -> None:
 
 @click.command()
 @click.pass_obj
+@with_metrics
 def init(context: Context) -> None:
     """
     Autodetects and installs tools.
@@ -76,5 +77,3 @@ def init(context: Context) -> None:
                 )
 
     echo_success("Bento is initialized on your project.")
-
-    post_metrics(bento.metrics.command_metric("setup"))

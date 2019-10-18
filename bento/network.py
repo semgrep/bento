@@ -1,5 +1,7 @@
+import logging
 import os
 import platform
+import traceback
 from typing import Any, Dict, List, Optional, Tuple
 
 import requests
@@ -11,6 +13,9 @@ BASE_URL = "https://bento.r2c.dev"
 # Add default timeout so that we do not block the user's main thread from exiting
 # 1 second value is so that user does not get impatient
 TIMEOUT = 1  # sec
+
+
+PostData = List[Dict[str, Any]]
 
 
 def _get_default_shell() -> str:
@@ -60,12 +65,12 @@ def fetch_latest_version() -> Tuple[Optional[str], Optional[str]]:
         return None, None
 
 
-def post_metrics(data: List[Dict[str, Any]]) -> bool:
+def post_metrics(data: PostData) -> bool:
     try:
         url = f"{_get_base_url()}/bento/api/v1/metrics/u/{get_user_uuid()}/"
         r = no_auth_post(url, json=data)
         r.raise_for_status()
         return True
-    except Exception:
-        # TODO log this to debug file
+    except Exception as e:
+        logging.warn(f"Exception while posting metrics {e}\n{traceback.format_exc()}")
         return False

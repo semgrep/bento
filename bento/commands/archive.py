@@ -8,12 +8,13 @@ import bento.constants as constants
 import bento.result
 import bento.tool_runner
 from bento.context import Context
-from bento.network import post_metrics
+from bento.decorators import with_metrics
 from bento.util import echo_error, echo_success
 
 
 @click.command()
 @click.pass_obj
+@with_metrics
 def archive(context: Context) -> None:
     """
     Adds all current findings to the whitelist.
@@ -70,5 +71,3 @@ def archive(context: Context) -> None:
     )
 
     echo_success(success_str)
-
-    post_metrics(bento.metrics.command_metric("reset"))

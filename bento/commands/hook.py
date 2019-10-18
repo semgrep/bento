@@ -9,11 +9,12 @@ import git
 import bento.constants as constants
 import bento.git
 import bento.tool_runner
-from bento.network import post_metrics
+from bento.decorators import with_metrics
 from bento.util import echo_error, echo_success
 
 
 @click.command()
+@with_metrics
 def install_hook() -> None:
     """
     Installs bento as a git pre-commit hook.
@@ -61,5 +62,4 @@ def install_hook() -> None:
         original_mode = os.stat(hook_path).st_mode
         os.chmod(hook_path, original_mode | stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH)
 
-        post_metrics(bento.metrics.command_metric("install-hook"))
         echo_success(f"Added Bento to your git pre-commit hooks.")

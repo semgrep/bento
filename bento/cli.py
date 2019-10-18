@@ -9,13 +9,15 @@ import yaml
 from semantic_version import Version
 
 import bento.constants as constants
+import bento.decorators
 import bento.extra
 import bento.git
-import bento.network as network
+import bento.metrics
 import bento.tool_runner
 import bento.util
 from bento.commands import archive, check, hook, init, update_ignores
 from bento.context import Context
+from bento.network import fetch_latest_version, post_metrics
 from bento.util import echo_error, echo_warning
 
 UPGRADE_WARNING_OUTPUT = f"""
@@ -52,7 +54,7 @@ def __setup_logging() -> None:
 
 
 def is_running_latest() -> bool:
-    latest_version, _ = network.fetch_latest_version()
+    latest_version, _ = fetch_latest_version()
     current_version = get_version()
     logging.info(
         f"Current bento version is {current_version}, latest is {latest_version}"
@@ -84,7 +86,7 @@ def __post_email_to_mailchimp(email: str) -> bool:
         "https://waitlist.r2c.dev/subscribe", json={"email": email}, timeout=5
     )
     status = r.status_code == requests.codes.ok
-    network.post_metrics(
+    post_metrics(
         [
             {
                 "message": "Tried adding user to Bento waitlist",

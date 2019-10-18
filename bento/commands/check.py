@@ -16,6 +16,7 @@ import bento.network
 import bento.result
 import bento.tool_runner
 from bento.context import Context
+from bento.decorators import with_metrics
 from bento.error import NodeError
 from bento.util import echo_error, echo_success, echo_warning
 from bento.violation import Violation
@@ -40,6 +41,7 @@ def __get_ignores_for_tool(tool: str, config: Dict[str, Any]) -> List[str]:
 )
 @click.option("--staged-only", is_flag=True, help="Only runs over files staged in git")
 @click.pass_obj
+@with_metrics
 def check(
     context: Context,
     formatter: Optional[str] = None,

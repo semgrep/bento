@@ -1,5 +1,6 @@
 import logging
 import os
+import time
 from typing import Any, Dict, Optional, Type
 
 import yaml
@@ -19,6 +20,7 @@ class Context:
         if config is not None:
             self._config = config
         self._formatter: Optional[Formatter] = None
+        self._start: float = time.time()
         self._tool_inventory: Optional[Dict[str, Type[Tool]]] = None
         self._tools: Optional[Dict[str, Tool]] = None
 
@@ -57,6 +59,9 @@ class Context:
         if self._tool_inventory is None:
             self._tool_inventory = self._load_tool_inventory()
         return self._tool_inventory
+
+    def elapsed(self) -> float:
+        return time.time() - self._start
 
     def tool(self, tool_id: str) -> Tool:
         """
