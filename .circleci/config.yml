@@ -85,6 +85,15 @@ jobs:
           name: "QA Tests"
           command: make qa-test
 
+  envAcceptance:
+    executor: python-build
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: "Python 3.6 Tests"
+          command: make env-test
+
 workflows:
   build-and-deploy:
     jobs:
@@ -92,6 +101,7 @@ workflows:
       - runHooks
       - mypy
       - runAcceptance
+      - envAcceptance
 
 executors:
   python-build:

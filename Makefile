@@ -11,12 +11,20 @@ test:
 qa-test: build
 	pipenv run pytest tests/acceptance/qa.py
 
+.PHONY: env-test
+env-test:
+	docker build -f tests/acceptance/environments/python36.Dockerfile .
+
 .PHONY: clean
 clean:
 	rm -rf *.egg-info dist build
 
-.PHONY: release
-release:
-	@echo 'Releasing bento'
+.PHONY: package
+package:
+	@echo "Building Bento"
 	python3 setup.py sdist bdist_wheel
+
+.PHONY: release
+release: package
+	@echo "Releasing Bento"
 	python3 -m twine upload dist/*
