@@ -43,7 +43,7 @@ In your project directory, run:
 bento init
 ```
 
-and add some of the artifacts bento produces to your .gitignore file:
+and add some of the artifacts Bento produces to your .gitignore file:
 
 ```bash
 printf "# Bento tools:\n.bento/" >> .gitignore
