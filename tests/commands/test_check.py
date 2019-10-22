@@ -24,9 +24,8 @@ def test_check_happy_path(monkeypatch: MonkeyPatch) -> None:
 
     monkeypatch.chdir(os.path.join(BASE_PATH, "tests/integration/simple"))
 
-    result = runner.invoke(
-        check, ["--formatter", "bento.formatter.Json"], obj=Context()
-    )
+    result = runner.invoke(check, ["--formatter", "json"], obj=Context())
+    print(result.stderr)
     parsed = json.loads(result.stdout)
     assert len(parsed) == 4
 
@@ -39,9 +38,7 @@ def test_check_specified_paths(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.chdir(os.path.join(BASE_PATH, "tests/integration/simple"))
 
     result = runner.invoke(
-        check,
-        ["--formatter", "bento.formatter.Json", "init.js", "foo.py"],
-        obj=Context(),
+        check, ["--formatter", "json", "init.js", "foo.py"], obj=Context()
     )
     parsed = json.loads(result.stdout)
     assert len(parsed) == 3
@@ -75,9 +72,7 @@ def test_check_no_archive(monkeypatch: MonkeyPatch) -> None:
 
     with util.mod_file(bento.constants.BASELINE_FILE_PATH):
         os.remove(bento.constants.BASELINE_FILE_PATH)
-        result = runner.invoke(
-            check, ["--formatter", "bento.formatter.Json"], obj=Context()
-        )
+        result = runner.invoke(check, ["--formatter", "json"], obj=Context())
         parsed = json.loads(result.stdout)
         assert len(parsed) == 5  # Archive contains a single whitelisted finding
 

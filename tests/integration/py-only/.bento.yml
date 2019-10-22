@@ -1,5 +1,5 @@
 formatter:
-  bento.formatter.Stylish: {}
+  stylish: {}
 tools:
   r2c.bandit:
     ignore:

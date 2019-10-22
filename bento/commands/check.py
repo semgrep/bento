@@ -12,6 +12,7 @@ from pre_commit.staged_files_only import staged_files_only
 from pre_commit.util import noop_context
 
 import bento.constants as constants
+import bento.formatter
 import bento.network
 import bento.result
 import bento.tool_runner
@@ -30,7 +31,7 @@ def __get_ignores_for_tool(tool: str, config: Dict[str, Any]) -> List[str]:
 @click.command()
 @click.option(
     "--formatter",
-    type=str,
+    type=click.Choice(bento.formatter.FORMATTERS.keys()),
     help="Which output format to use. Falls back to the config.",
     default=None,
 )
