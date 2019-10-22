@@ -1,7 +1,15 @@
 # Bento
 Bento automatically tailors linters and static analysis with sane defaults on a per-project basis, letting you focus on writing code rather than configuring tools. Bento is free, fully-featured, and you can run Bento on as many projects as you like.
 
+
 ## Installation
+
+### Installing Bento
+Bento is a command-line tool that is simple to install:
+
+```bash
+pip3 install bento-cli
+```
 
 ### Requirements
 
@@ -15,12 +23,7 @@ To run Bento on projects that include JavaScript, Node.js is required and the fo
 * Node.js 10 (10.13.0 and above)
 * Anything above Node.js 11.10.1
 
-### Installing Bento
-Bento is a command-line tool that is simple to install:
 
-```bash
-pip3 install bento-cli
-```
 
 ## Usage
 The workflow for Bento is:
