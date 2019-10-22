@@ -1,8 +1,10 @@
 # Bento
 Bento automatically tailors linters and static analysis with sane defaults on a per-project basis, letting you focus on writing code rather than configuring tools. Bento is free, fully-featured, and you can run Bento on as many projects as you like.
 
+![follow r2c](https://img.shields.io/twitter/follow/r2cdev?label=Follow%20r2cdev&style=social)
 
-## Installation
+
+## Installation & Requirements
 
 ### Installing Bento
 Bento is a command-line tool that is simple to install:
@@ -26,7 +28,7 @@ To run Bento on projects that include JavaScript, Node.js is required and the fo
 
 
 ## Usage
-The workflow for Bento is:
+The Bento workflow is:
 
 1. Initialize Bento
 2. Run Bento checks on your source code
@@ -43,14 +45,14 @@ In your project directory, run:
 bento init
 ```
 
-and add some of the artifacts Bento produces to your .gitignore file:
+Add Bento artifacts to your .gitignore file:
 
 ```bash
 printf "# Bento tools:\n.bento/" >> .gitignore
 ```
 
 ### Analyze your source code
-To trigger Bento to analyze your project, run:
+Run Bento with:
 
 ```bash
 bento check
