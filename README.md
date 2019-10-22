@@ -95,7 +95,7 @@ You can find the tool and check names in the output of `bento check`. Bento curr
 | Python     | Bandit, Flake8  |
 | JavaScript | ESLint          |
 
-If there are tools you'd like us to add, please let us know by creating an issue.
+If there are tools you'd like us to add, please let us know by [creating an issue](https://github.com/returntocorp/bento/issues/new?assignees=&labels=feature-request&template=feature_request.md&title=).
 
 ### Install Bento as a pre-commit hook
 To install bento as a pre-commit hook, simply run:
