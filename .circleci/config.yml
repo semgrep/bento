@@ -94,6 +94,24 @@ jobs:
           name: "Python 3.6 Tests"
           command: make env-test
 
+  bentoRun:
+    working_directory: ~/circleci
+    executor: python-build
+    steps:
+      - checkout
+      - run:
+          name: "Configure pipenv"
+          command: pipenv install --dev
+      - run:
+          name: "Make bento"
+          command: pipenv run make -B build && pipenv run bento --version --agree
+      - run:
+          name: "Install react"
+          command: (cd tests/integration/react && npm install)
+      - run:
+          name: "Running bento check"
+          command: pipenv run bento --agree check --no-pager
+
 workflows:
   build-and-deploy:
     jobs:
@@ -102,6 +120,7 @@ workflows:
       - mypy
       - runAcceptance
       - envAcceptance
+      - bentoRun
 
 executors:
   python-build:
