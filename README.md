@@ -96,8 +96,6 @@ You can find the tool and check names in the output of `bento check`. Bento curr
 If there are tools you'd like us to add, please let us know by creating an issue.
 
 ### Install Bento as a pre-commit hook
-Bento can install itself as a pre-commit hook, so it runs before each commit and blocks on failures.
-
 To install bento as a pre-commit hook, simply run:
 ```bash
 bento install-hook
