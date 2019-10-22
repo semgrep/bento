@@ -108,8 +108,10 @@ Here’s a short preview of Bento in action:
 
 ![Bento demo](bento-demo.gif)
 
-## Community
-Join the Bento channel in our [community Slack](https://join.slack.com/t/r2c-community/shared_invite/enQtNjU0NDYzMjAwODY4LWE3NTg1MGNhYTAwMzk5ZGRhMjQ2MzVhNGJiZjI1ZWQ0NjQ2YWI4ZGY3OGViMGJjNzA4ODQ3MjEzOWExNjZlNTA) to receive and give support, talk with other users, and share things about Bento. The r2c team is there and ready to help!
+## Help and Community
+Need help or want to share feedback about Bento? Reach out to us at [support@r2c.dev](mailto:support@r2c.dev). The r2c team wants to hear from you!
+
+You can also join the Bento channel in our [community Slack](https://join.slack.com/t/r2c-community/shared_invite/enQtNjU0NDYzMjAwODY4LWE3NTg1MGNhYTAwMzk5ZGRhMjQ2MzVhNGJiZjI1ZWQ0NjQ2YWI4ZGY3OGViMGJjNzA4ODQ3MjEzOWExNjZlNTA) to receive and give support, talk with other users, and share things about Bento. 
 
 ## Terms of service and privacy
 Please refer to the [terms and privacy document](https://github.com/returntocorp/bento/blob/master/PRIVACY.md).
