@@ -18,6 +18,12 @@ TIMEOUT = 1  # sec
 PostData = List[Dict[str, Any]]
 
 
+def _get_version() -> str:
+    from bento import __version__
+
+    return __version__
+
+
 def _get_default_shell() -> str:
     return os.environ.get("SHELL", "")
 
@@ -29,6 +35,7 @@ def _get_default_headers() -> Dict[str, str]:
     return {
         "X-R2C-BENTO-User-Platform": f"{platform.platform()}",
         "X-R2C-BENTO-User-Shell": f"{_get_default_shell()}",
+        "X-R2C-BENTO-Cli-Version": f"{_get_version()}",
         "Accept": "application/json",
     }
 
