@@ -9,6 +9,7 @@ import attr
 import bento.util
 from bento.parser import Parser
 from bento.result import Violation
+from bento.run_cache import RunCache
 
 
 @attr.s
@@ -170,6 +171,9 @@ class Tool(ABC):
 
         Code runs inside virtual environment.
 
+        Before running tool, checks local RunCache for cached tool output and skips
+        if said output is still usable
+
         Parameters:
             paths (list or None): If defined, an explicit list of paths to run on
 
@@ -181,7 +185,13 @@ class Tool(ABC):
         paths = self.filter_paths(paths)
 
         if paths:
-            raw = self.run(paths)
+            logging.debug(f"Checking for local cache for {self.tool_id}")
+            raw = RunCache.get(self.tool_id(), paths)
+            if raw is None:
+                logging.debug(f"Cache entry invalid for {self.tool_id}. Running Tool.")
+                raw = self.run(paths)
+                RunCache.put(self.tool_id(), paths, raw)
+
             try:
                 violations = self.parser().parse(raw)
             except Exception as e:

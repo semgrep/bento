@@ -2,6 +2,7 @@ import os
 
 RESOURCE_DIR = ".bento"
 CONFIG_PATH = ".bento.yml"
+LOCAL_RUN_CACHE = f"{RESOURCE_DIR}/cache"
 
 GLOBAL_CONFIG_DIR = os.path.expanduser("~/.bento")
 GLOBAL_CONFIG_PATH = os.path.join(GLOBAL_CONFIG_DIR, "config.yml")
