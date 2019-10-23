@@ -3,7 +3,10 @@ import setuptools
 import bento as bento
 
 with open("README.md", "r") as fh:
-    long_description = fh.read()
+    long_description = fh.read() + "\n---\n"
+
+with open("CHANGELOG.md", "r") as fh:
+    long_description += fh.read()
 
 with open("requirements.txt") as req_lines:
     install_requires = [str(r).strip() for r in req_lines]
