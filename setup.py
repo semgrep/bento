@@ -27,6 +27,7 @@ setuptools.setup(
     url="https://r2c.dev",
     install_requires=all_deps,
     packages=setuptools.find_packages(),
+    py_modules="bento",
     python_requires=">=3.6",
     include_package_data=True,
     license="Proprietary",
@@ -35,5 +36,5 @@ setuptools.setup(
         "License :: Other/Proprietary License",
         "Operating System :: OS Independent",
     ],
-    entry_points={"console_scripts": ["bento=bento.__main__:main"]},
+    entry_points={"console_scripts": ["bento=bento.cli:cli"]},
 )
