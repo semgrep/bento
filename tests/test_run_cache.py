@@ -1,3 +1,4 @@
+import os
 import time
 from typing import Any
 
@@ -8,8 +9,8 @@ TOOL_ID = "tool_name_here"
 TOOL_OUTPUT = "this is tool output"
 
 
-def test_modified_since_new_file(tmpdir: Any) -> None:
-    """modified_since should return true if a new file is added"""
+def test_modified_since_new_file_subdir(tmpdir: Any) -> None:
+    """modified_since should return true if a new file in subdir is added"""
     subdir = tmpdir.mkdir("subdir")
 
     start = time.time()
@@ -23,6 +24,15 @@ def test_modified_since_new_file(tmpdir: Any) -> None:
     end = time.time()
 
     assert RunCache._modified_since([tmpdir], [tmpdir], start)
+    assert RunCache._modified_since(
+        [tmpdir], [os.path.join(subdir, "hello.txt")], start
+    )
+    assert RunCache._modified_since(
+        [os.path.join(subdir, "hello.txt")], [os.path.join(subdir, "hello.txt")], start
+    )
+    assert not RunCache._modified_since(
+        [os.path.join(subdir, "hello.txt")], [os.path.join(subdir, "hello.txt")], end
+    )
     assert not RunCache._modified_since([tmpdir], [tmpdir], end)
 
 
