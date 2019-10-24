@@ -158,6 +158,8 @@ class EslintTool(JsTool, Tool):
             "json",
             "--ignore-pattern",
             "**/node_modules",
+            "--ignore-pattern",
+            "**/*.min.js",
             "--ext",
             "js,jsx,ts,tsx",
         ]
