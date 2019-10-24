@@ -43,7 +43,8 @@ class RunCache(object):
         """
         # subdirectories to exclude
         # TODO: unify path ignore logic across bento
-        exclude = [".bento", ".git", "node_modules"]
+        exclude_dirs = [".bento", ".git", "node_modules"]
+        exclude_files = [".bento-whitelist.yml", ".bento-baseline.yml", ".bento.yml"]
 
         if sorted(cache_paths) != sorted(paths):
             return True
@@ -51,10 +52,12 @@ class RunCache(object):
         for path in paths:
             for root, dirs, files in os.walk(path):
                 # Modify dirs in place to prune unwanted subdirs
-                dirs[:] = [d for d in dirs if d not in exclude]
+                dirs[:] = [d for d in dirs if d not in exclude_dirs]
 
                 # Check each file modified time
                 for file in files:
+                    if file in exclude_files:
+                        continue
                     stat = os.stat(os.path.join(root, file))
                     modified_time = stat.st_mtime
                     if modified_time >= timestamp:
