@@ -6,6 +6,7 @@ import click
 import yaml
 
 import bento.constants as constants
+import bento.git
 import bento.tool_runner
 from bento.context import Context
 from bento.decorators import with_metrics
@@ -70,7 +71,7 @@ def init(context: Context) -> None:
             if click.confirm("  Do you want Bento to do this for you?", default=True):
                 with open(ignore_file, "a") as fd:
                     fd.write(
-                        "# Ignore bento tool run paths (this line added by `bento init`)\n.bento/"
+                        "\n# Ignore bento tool run paths (this line added by `bento init`)\n.bento/\n"
                     )
                 echo_success(
                     "Added '.bento/' to your .gitignore. Please commit your .gitignore.\n"
