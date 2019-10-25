@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2019-10-24
+
+### Fixed
+
+- Fix an issue where cached results are not invalidated when a file changes on
+  the root path.
+
 ## [0.2.0] - 2019-10-23
 
 ### Changed
