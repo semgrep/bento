@@ -8,7 +8,7 @@ We ask that you to follow these steps prior to the user interview.
  - Disable unwanted rules: ```bento disable r2c.eslint arrow-parens``` (this will disable the eslint arrow-parens rule)
 
 ## Notes
-Bento doesn't do any style checking (whitespace, etc.) and also doesn't ship any code off of your machine. You can read more about our privacy policy [here](https://github.com/returntocorp/bento/PRICACY.md).
+Bento doesn't do any style checking (whitespace, formatting, etc.) and also doesn't send any code off of your machine. You can read more about our privacy policy [here](https://github.com/returntocorp/bento/PRICACY.md).
 
 
 More detailed instructions can be found [here](https://github.com/returntocorp/bento).  
