@@ -19,7 +19,7 @@ During the initialization, when prompted, please enter the same email address yo
 
 Once you ran ```bento check```, feel free to fix issues, ignore warnings, or disable specific checks (ex: ```bash bento disable r2c.eslint arrow-parens```). Just use Bento as many times as you'd like to use. 🤞
 
-We are curious if you'll like the ```bento archive``` feature as much as we do. This command will add all current findings to the whitelist, by creating a .bento-whitelist.yml file. It provides a clean slate for your project, so you can keep coding. You can work through the imperfections in your project over time. 
+We are curious if you'll like the ```bento archive``` feature as much as we do. This command will add all current findings to the archive (creating a .bento-whitelist.yml file). It provides a clean slate for your project, so you can keep coding. You can work through the imperfections in your project over time. 
 
 ## License
 Copyright (c) [r2c](https://r2c.dev ).
