@@ -1,6 +1,6 @@
 # Bento
 Thanks for trying Bento.  
-We would like you to follow these steps prior to the user interview.
+We ask that you to follow these steps prior to the user interview.
  - Install Bento: ```pip3 install bento-cli``` 
  - Initialize Bento: ```bento init``` (please provide your email when prompted)
  - Run Bento: ```bento check```
