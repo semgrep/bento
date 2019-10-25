@@ -1,6 +1,7 @@
 <h1 align="center" style="margin-top:0;">
   Bento
 </h1>
+<br/>
 <h3 align="center">
     Install, configure, and adopt in seconds.
 </h3>
