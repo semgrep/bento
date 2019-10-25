@@ -13,7 +13,7 @@ Bento doesn't do any style checking (whitespace, etc.) and also doesn't ship any
 
 More detailed instructions can be found [here](https://github.com/returntocorp/bento).  
 
-To initialize Bento, choose a Python or Javascript project that is managed by git (Bento understands git).  
+To initialize Bento, choose a Python, Javascript, or TypeScript project that is managed by Git (Bento requires Git). 
 
 During the initialization, when prompted, please enter the same email address you used for the interview so we can distinguish your session from other users.   
 
