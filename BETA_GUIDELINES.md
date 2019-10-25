@@ -13,11 +13,11 @@ Bento doesn't do any style checking (whitespace, etc.) and also doesn't ship any
 
 More detailed instructions can be found [here](https://github.com/returntocorp/bento).  
 
-To initialize Bento, choose a Python or Javascript project that is managed by git (Bento understands git).  
+To initialize Bento, choose a Python or JavaScript project that is managed by git (Bento understands git).  
 
 During the initialization, when prompted, please enter the same email address you used for the interview so we can distinguish your session from other users.   
 
-Once you ran ```bento check```, feel free to fix issues, ignore warnings, or disable specific checks (ex: ```bash bento disable r2c.eslint arrow-parens```). Just use Bento as many times as you'd like to use. 🤞
+Once you ran ```bento check```, feel free to fix issues, ignore warnings, or disable specific checks (ex: ```bento disable r2c.eslint arrow-parens```). Just use Bento as many times as you'd like to use. 🤞
 
 We are curious if you'll like the ```bento archive``` feature as much as we do. This command will add all current findings to the whitelist, by creating a .bento-whitelist.yml file. It provides a clean slate for your project, so you can keep coding. You can work through the imperfections in your project over time. 
 
