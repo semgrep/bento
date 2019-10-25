@@ -8,65 +8,36 @@
 
 Bento is a free and opinionated toolkit for gradually adopting linters and program analysis into your codebase. You’ll be the bug squashing hero your team needs but (maybe) doesn’t deserve.
 
-* **Find bugs that matter:** Bento automatically enables relevant rules based on your dependencies and frameworks and it will never report style-related issues. Avoid painstakingly configuring your tools.
-* **Get started immediately:** By archiving existing issues and allowing you to adopt incrementally, Bento doesn’t force you to fix all your preexisting issues today. Set them aside to address when it makes sense for your project.
-* **Go fast:** Bento installs in 5 seconds and self-configures in less than 30. Tools check your code in parallel, not sequentially.
+- **Find bugs that matter:** Bento automatically enables relevant rules based on your dependencies and frameworks and it will never report style-related issues. Avoid painstakingly configuring your tools.
+- **Get started immediately:** By archiving existing issues and allowing you to adopt incrementally, Bento doesn’t force you to fix all your preexisting issues today. Set them aside to address when it makes sense for your project.
+- **Go fast:** Bento installs in 5 seconds and self-configures in less than 30. Tools check your code in parallel, not sequentially.
 
 Bento includes checks written by [r2c](https://r2c.dev/) and curated from [Bandit](https://pypi.org/project/bandit/),[ESLint](https://eslint.org/), [Flake8](https://pypi.org/project/flake8/), and their plugins.
 
-## Installation & Requirements
 
-### Installing Bento
-Bento is a command-line tool that is simple to install:
+## Installation
 
-```bash
-pip3 install bento-cli
+```shell
+$ pip3 install bento-cli
 ```
 
-### Requirements
-
-Bento is supported on macOS Mojave (10.14) and Ubuntu 18.04+, and requires Python 3.6 or later, and pip3.
-
-Bento supports npm-packaged JavaScript and Python, and is ideal for monorepos.
-
-To run Bento on projects that include JavaScript, Node.js is required and the following versions are supported:
-
-* Node.js 8 (8.10.0 and above)
-* Node.js 10 (10.13.0 and above)
-* Anything above Node.js 11.10.1
-
-
+Bento is for JavaScript, TypeScript, and Python projects. It requires Python 3.6+ and works on macOS Mojave (10.14) and Ubuntu 18.04+.
 
 ## Usage
-The Bento workflow is:
 
-1. Initialize Bento
-2. Run Bento checks on your source code
-3. Fix issues or archive unnecessary warning and errors
-4. Disable undesired checks
-5. Add Bento to git pre-commit hooks
-6. Add Bento to the CI pipeline (e.g., CircleCI)
+To get started right away with sensible defaults:
 
-### Initialize Bento for a project:
-
-In your project directory, run:
-
-```bash
-bento init
+```shell
+$ bento init && bento check
 ```
 
-Add Bento artifacts to your .gitignore file:
+To set aside preexisting results so you only see issues in new code:
 
-```bash
-printf "# Bento tools:\n.bento/" >> .gitignore
+```shell
+$ bento archive
 ```
 
-### Analyze your source code
-Run Bento with:
-
-```bash
-bento check
-```
+Bento really sings when you run it automatically in your editor, as a commit hook (`bento install-hook`), or in CI. See [Integrating Bento Into Your Workflow]() to get the most out of it and think less.
 
 ### Archive outstanding issues
 
