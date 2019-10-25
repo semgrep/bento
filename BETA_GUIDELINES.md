@@ -4,7 +4,7 @@ We would like you to follow these steps prior to the user interview.
  - Install Bento: ```pip3 install bento-cli``` 
  - Initialize Bento: ```bento init``` (please provide your email when prompted)
  - Run Bento: ```bento check```
- - Whitelist results: ```bento archive```
+ - Archive preexisting results: ```bento archive```
  - Disable unwanted rules: ```bento disable r2c.eslint arrow-parens``` (this will disable the eslint arrow-parens rule)
 
 ## Notes
