@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="bento-logo.png" alt="Bento logo"/>
+    <img src="bento-logo.svg" height="100" alt="Bento logo"/>
 </p>
 <h1 align="center" style="margin-top:0;"></h1>
 <br/>
