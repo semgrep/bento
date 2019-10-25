@@ -2,8 +2,11 @@
   Bento
 </h1>
 <h3 align="center">
-    Bento is a free toolkit that finds bugs that matter. It’s simple to install, configure, and adopt.
+    Install, configure, and adopt in seconds.
 </h3>
+<p align="center">
+Bento is a free program analysis toolkit that finds bugs that matter to you.
+</p>
 <p align="center">
   <a href="https://pypi.org/project/bento-cli/">
     <img alt="PyPI" src="https://img.shields.io/pypi/v/bento-cli?style=flat-square&color=blue">
