@@ -1,7 +1,8 @@
 <p align="center">
-    <img src="bento-logo.svg" height="100" alt="Bento logo"/>
+    <img src="bento-logo.png" height="100" alt="Bento logo"/>
 </p>
 <h1 align="center" style="margin-top:0;"></h1>
+
 <br/>
 <h3 align="center">
     Free program analysis focused on bugs that matter to you.
@@ -9,6 +10,7 @@
 <p align="center">
 Install, configure, and adopt Bento in seconds. Runs 100% locally.
 </p>
+
 <p align="center">
   <a href="https://pypi.org/project/bento-cli/">
     <img alt="PyPI" src="https://img.shields.io/pypi/v/bento-cli?style=flat-square&color=blue">
