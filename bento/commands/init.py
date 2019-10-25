@@ -45,7 +45,7 @@ def init(context: Context) -> None:
     project_names = sorted(list(set(t.project_name for t in tools)))
     logging.debug(f"Project names: {project_names}")
     if len(project_names) > 2:
-        projects = f'{", ".join(project_names[:-2])}, and {project_names[-1]}'
+        projects = f'{", ".join(project_names[:-1])}, and {project_names[-1]}'
     elif project_names:
         projects = " and ".join(project_names)
     else:
