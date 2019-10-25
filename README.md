@@ -15,7 +15,7 @@
   <a href="https://github.com/returntocorp/bento/issues/new/choose">
     <img src="https://img.shields.io/badge/issues-welcome-green?style=flat-square" alt="Issues welcome!" />
   </a>
-  <a href="">
+  <a href="https://join.slack.com/t/r2c-community/shared_invite/enQtNjU0NDYzMjAwODY4LWE3NTg1MGNhYTAwMzk5ZGRhMjQ2MzVhNGJiZjI1ZWQ0NjQ2YWI4ZGY3OGViMGJjNzA4ODQ3MjEzOWExNjZlNTA">
     <img src="https://img.shields.io/badge/chat-on%20slack-blue?style=flat-square">
   </a>
   <a href="https://twitter.com/intent/follow?screen_name=r2cdev">
