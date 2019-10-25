@@ -1,8 +1,18 @@
-# Bento
-Bento automatically tailors linters and static analysis with sane defaults on a per-project basis, letting you focus on writing code rather than configuring tools. Bento is free, fully-featured, and you can run Bento on as many projects as you like.
-
+<h1 align="center">
+  Bento
+</h1>
+<h3 align="center">
+    Bento is a free toolkit that finds bugs that matter. It’s simple to install, configure, and adopt.
+</h3>
 ![follow r2c](https://img.shields.io/twitter/follow/r2cdev?label=Follow%20r2cdev&style=social)
 
+Bento is a free and opinionated toolkit for gradually adopting linters and program analysis into your codebase. You’ll be the bug squashing hero your team needs but (maybe) doesn’t deserve.
+
+* **Find bugs that matter:** Bento automatically enables relevant rules based on your dependencies and frameworks and it will never report style-related issues. Avoid painstakingly configuring your tools.
+* **Get started immediately:** By archiving existing issues and allowing you to adopt incrementally, Bento doesn’t force you to fix all your preexisting issues today. Set them aside to address when it makes sense for your project.
+* **Go fast:** Bento installs in 5 seconds and self-configures in less than 30. Tools check your code in parallel, not sequentially.
+
+Bento includes checks written by [r2c](https://r2c.dev/) and curated from [Bandit](https://pypi.org/project/bandit/),[ESLint](https://eslint.org/), [Flake8](https://pypi.org/project/flake8/), and their plugins.
 
 ## Installation & Requirements
 
