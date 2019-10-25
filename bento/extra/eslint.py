@@ -160,6 +160,8 @@ class EslintTool(JsTool, Tool):
             "**/node_modules",
             "--ignore-pattern",
             "**/*.min.js",
+            "--ignore-pattern",
+            "packages/",
             "--ext",
             "js,jsx,ts,tsx",
         ]
