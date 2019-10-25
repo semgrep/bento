@@ -1,4 +1,7 @@
-<h1 align="center">
+<p align="center" style="font-size:4em; margin-bottom:0;">
+🍱
+</p>
+<h1 align="center" style="margin-top:0;">
   Bento
 </h1>
 <h3 align="center">
