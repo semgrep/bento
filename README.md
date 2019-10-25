@@ -1,6 +1,8 @@
-<h1 align="center" style="margin-top:0;">
-  Bento
-</h1>
+<p align="center">
+    <img src="https://raw.githubusercontent.com/returntocorp/bento/master/bento-logo.png" height="100" alt="Bento logo"/>
+</p>
+<h1 align="center" style="margin-top:0;"></h1>
+
 <br/>
 <h3 align="center">
     Free program analysis focused on bugs that matter to you.
@@ -8,6 +10,7 @@
 <p align="center">
 Install, configure, and adopt Bento in seconds. Runs 100% locally.
 </p>
+
 <p align="center">
   <a href="https://pypi.org/project/bento-cli/">
     <img alt="PyPI" src="https://img.shields.io/pypi/v/bento-cli?style=flat-square&color=blue">
@@ -37,7 +40,7 @@ Bento is a free and opinionated toolkit for gradually adopting linters[¹](https
 Bento includes checks written by [r2c](https://r2c.dev/) and curated from [Bandit](https://pypi.org/project/bandit/), [ESLint](https://eslint.org/), [Flake8](https://pypi.org/project/flake8/), and their plugins. It runs on your local machine and never sends your code anywhere or to anyone.
 
 <p align="center">
-    <img src="bento-demo.gif" width="90%" alt="gif demonstrating Bento running in a terminal"/>
+    <img src="https://raw.githubusercontent.com/returntocorp/bento/master/bento-demo.gif" width="90%" alt="gif demonstrating Bento running in a terminal"/>
 </p>
 
 ## Installation
