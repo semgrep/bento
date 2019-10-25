@@ -12,7 +12,7 @@ Bento is a free and opinionated toolkit for gradually adopting linters and progr
 - **Get started immediately:** By archiving existing issues and allowing you to adopt incrementally, Bento doesn’t force you to fix all your preexisting issues today. Set them aside to address when it makes sense for your project.
 - **Go fast:** Bento installs in 5 seconds and self-configures in less than 30. Tools check your code in parallel, not sequentially.
 
-Bento includes checks written by [r2c](https://r2c.dev/) and curated from [Bandit](https://pypi.org/project/bandit/),[ESLint](https://eslint.org/), [Flake8](https://pypi.org/project/flake8/), and their plugins.
+Bento includes checks written by [r2c](https://r2c.dev/) and curated from [Bandit](https://pypi.org/project/bandit/), [ESLint](https://eslint.org/), [Flake8](https://pypi.org/project/flake8/), and their plugins.
 
 ![Bento demo](bento-demo.gif)
 
@@ -64,7 +64,7 @@ Need help or want to share feedback? Reach out to us at [support@r2c.dev](mailto
 
 Join #bento in our [community Slack](https://join.slack.com/t/r2c-community/shared_invite/enQtNjU0NDYzMjAwODY4LWE3NTg1MGNhYTAwMzk5ZGRhMjQ2MzVhNGJiZjI1ZWQ0NjQ2YWI4ZGY3OGViMGJjNzA4ODQ3MjEzOWExNjZlNTA) for support, to talk with other users, and share feedback. 🤝
 
-We’re fortunate to benefit from the contributions and work of the open source community and great projects such as [Bandit](https://pypi.org/project/bandit/),[ESLint](https://eslint.org/), [Flake8](https://pypi.org/project/flake8/), and their plugins. 🙏
+We’re fortunate to benefit from the contributions and work of the open source community and great projects such as [Bandit](https://pypi.org/project/bandit/), [ESLint](https://eslint.org/), [Flake8](https://pypi.org/project/flake8/), and their plugins. 🙏
 
 ## License and Legal
 Please refer to the [terms and privacy document](https://github.com/returntocorp/bento/blob/master/PRIVACY.md).
