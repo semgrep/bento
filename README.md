@@ -23,6 +23,8 @@
   </a>
 </p>
 
+---
+
 Bento is a free and opinionated toolkit for gradually adopting linters and program analysis into your codebase. You’ll be the bug squashing hero your team needs but (maybe) doesn’t deserve.
 
 - **Find bugs that matter:** Bento automatically enables relevant rules based on your dependencies and frameworks and it will never report style-related issues. Avoid painstakingly configuring your tools.
