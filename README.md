@@ -1,6 +1,7 @@
-<h1 align="center" style="margin-top:0;">
-  Bento
-</h1>
+<p align="center">
+    <img src="bento-logo.png" alt="Bento logo"/>
+</p>
+<h1 align="center" style="margin-top:0;"></h1>
 <br/>
 <h3 align="center">
     Free program analysis focused on bugs that matter to you.
