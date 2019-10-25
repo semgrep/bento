@@ -24,4 +24,4 @@ We are curious if you'll like the ```bento archive``` feature as much as we do. 
 ## License
 Copyright (c) [r2c](https://r2c.dev ).
 
-![r2c logo](https://r2c.dev/r2c-logo-silhouette.png?gh)
+![r2c logo](https://r2c.dev/r2c-logo-silhouette.png?beta)
