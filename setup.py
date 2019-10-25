@@ -1,9 +1,18 @@
+import requests
 import setuptools
 
 import bento as bento
 
-with open("README.md", "r") as fh:
-    long_description = fh.read() + "\n---\n"
+readme_response = requests.get(
+    "https://raw.githubusercontent.com/returntocorp/bento/master/README.md"
+)
+readme_response.raise_for_status()
+
+# Replace the query parameter in our unique visitor analytics image to distinguish GitHub views from PyPI views.
+long_description = readme_response.text.replace(
+    "r2c-logo-silhouette.png?gh", "r2c-logo-silhouette.png?pp"
+)
+long_description += "\n---\n"
 
 with open("CHANGELOG.md", "r") as fh:
     long_description += fh.read()
@@ -24,7 +33,7 @@ setuptools.setup(
     version=bento.__version__,
     author=bento.__author__,
     author_email=bento.R2C_SUPPORT_EMAIL,
-    description="Bento is a free command-line tool that finds the bugs that matter to you",
+    description="Free program analysis focused on bugs that matter to you.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://r2c.dev",
