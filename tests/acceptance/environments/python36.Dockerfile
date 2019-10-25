@@ -5,6 +5,7 @@ WORKDIR /
 COPY . bento/
 
 WORKDIR /bento
+RUN pip install requests
 RUN make package
 
 #######################################
@@ -15,7 +16,7 @@ USER root
 
 RUN pip install pytest
 
-COPY --from=builder /bento/dist/*.whl .
+COPY --from=builder /bento/dist/*.whl ./
 RUN pip install *.whl
 
 # Verify Installation
