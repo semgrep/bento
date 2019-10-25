@@ -11,7 +11,7 @@ We ask that you to follow these steps prior to the user interview.
 Bento doesn't do any style checking (whitespace, formatting, etc.) and also doesn't send any code off of your machine. You can read more about our privacy policy [here](https://github.com/returntocorp/bento/PRICACY.md).
 
 
-More detailed instructions can be found [here](https://github.com/returntocorp/bento).  
+More detailed installation instructions can be found [here](https://github.com/returntocorp/bento).  
 
 To initialize Bento, choose a Python, Javascript, or TypeScript project that is managed by Git (Bento requires Git). 
 
