@@ -15,7 +15,7 @@ Bento is a free and opinionated toolkit for gradually adopting linters and progr
 Bento includes checks written by [r2c](https://r2c.dev/) and curated from [Bandit](https://pypi.org/project/bandit/), [ESLint](https://eslint.org/), [Flake8](https://pypi.org/project/flake8/), and their plugins.
 
 <p align="center">
-    <img src="bento-demo.gif" width="50%" height="50%"/>
+    <img src="bento-demo.gif" width="70%" alt="gif demonstrating Bento running in a terminal"/>
 </p>
 
 ## Installation
@@ -69,6 +69,11 @@ Commands:
 ## License and Legal
 Please refer to the [terms and privacy document](https://github.com/returntocorp/bento/blob/master/PRIVACY.md).
 
-Copyright (c) [r2c](https://r2c.dev ).
-
-![r2c logo](https://r2c.dev/r2c-logo-silhouette.png?gh)
+</br>
+</br>
+<p align="center">
+    <img src="https://r2c.dev/r2c-logo-silhouette.png?gh" height="24" alt="r2c logo"/>
+</p>
+<p align="center">
+    Copyright (c) <a href="https://r2c.dev">r2c</a>.
+</p>
