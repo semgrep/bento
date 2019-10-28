@@ -82,20 +82,21 @@ def _print_version(
 
 
 def __post_email_to_mailchimp(email: str) -> bool:
+    email = email.strip("\"'")
     r = requests.post(
         "https://waitlist.r2c.dev/subscribe", json={"email": email}, timeout=5
     )
     status = r.status_code == requests.codes.ok
-    post_metrics(
-        [
-            {
-                "message": "Tried adding user to Bento waitlist",
-                "user-email": email,
-                "mailchimp_response": r.status_code,
-                "success": status,
-            }
-        ]
-    )
+    data = [
+        {
+            "message": "Tried adding user to Bento waitlist",
+            "user-email": email,
+            "mailchimp_response": r.status_code,
+            "success": status,
+        }
+    ]
+    logging.info(f"Registering user with data {data}")
+    post_metrics(data)
     return status
 
 
