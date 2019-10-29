@@ -124,8 +124,8 @@ class RunCache(object):
         paths = sorted(paths)
 
         if (
-            cache_paths != paths
-            or cache_bento_version != BENTO_VERSION
+            cache_bento_version != BENTO_VERSION
+            or cache_paths != paths
             or cache_hash != RunCache._modified_hash(paths)
         ):
             logging.warning(f"Invalidating cache for {tool_id}")
