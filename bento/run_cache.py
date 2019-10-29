@@ -1,8 +1,10 @@
 import json
 import logging
 import os
-import time
-from typing import Iterable, Optional
+from fnmatch import fnmatch
+from typing import Iterable, List, Optional
+
+import mmh3
 
 from bento import __version__ as BENTO_VERSION
 from bento.constants import LOCAL_RUN_CACHE
@@ -31,43 +33,43 @@ class RunCache(object):
         return f"{LOCAL_RUN_CACHE}/{tool_id}.data"
 
     @staticmethod
-    def _modified_since(
-        cache_paths: Iterable[str], paths: Iterable[str], timestamp: float
-    ) -> bool:
+    def _modified_hash(paths: List[str]) -> str:
         """
-            Checks if any file in PATHS has been modified since TIMESTAMP
-            Also checks that the paths ran on when we cached results are the same
-            as the paths that are being run now.
+        Returns a hash of the recursive mtime of a path.
 
-            Ignores certain subdirectories. See exclude below.
+        Any modification of a file within this tree (that does not match an ignore pattern)
+        will change the hash.
         """
         # subdirectories to exclude
         # TODO: unify path ignore logic across bento
-        exclude_dirs = [".bento", ".git", "node_modules"]
-        exclude_files = [".bento-whitelist.yml", ".bento-baseline.yml", ".bento.yml"]
-        if sorted(cache_paths) != sorted(paths):
-            return True
+        exclude_dirs = [
+            "**/.bento/*",
+            "**/.git/*",
+            "**/node_modules/*",
+            "**/site-packages/*",
+        ]
+        exclude_files = {".bento-whitelist.yml", ".bento-baseline.yml", ".bento.yml"}
 
-        for path in paths:
-            if os.path.isdir(path):
-                for root, dirs, files in os.walk(path):
-                    # Modify dirs in place to prune unwanted subdirs
-                    dirs[:] = [d for d in dirs if d not in exclude_dirs]
-
-                    # Check each file modified time
-                    for file in files:
-                        if file in exclude_files:
-                            continue
-                        modified_time = os.path.getmtime(os.path.join(root, file))
-                        if modified_time >= timestamp:
-                            return True
-            elif os.path.isfile(path):
-                if os.path.basename(path) in exclude_files:
-                    continue
-                modified_time = os.path.getmtime(path)
-                if modified_time >= timestamp:
+        def glob_match(root: str, exclude_dirs: Iterable[str]) -> bool:
+            for ex in exclude_dirs:
+                if fnmatch(f"{root}/", ex):
                     return True
-        return False
+            return False
+
+        all_items = (
+            os.path.join(root, f)
+            for p in paths
+            for root, dirs, files in os.walk(p)
+            if not glob_match(root, exclude_dirs)
+            for f in files
+            if f not in exclude_files
+        )
+        h = 0
+        for f in all_items:
+            m = os.path.getmtime(f)
+            h ^= mmh3.hash128(f"{f}:{m}")
+
+        return format(h, "x")
 
     @staticmethod
     def __cleanup(tool_id: str) -> None:
@@ -116,16 +118,17 @@ class RunCache(object):
                 RunCache.__cleanup(tool_id)
                 return None
 
-        cache_entry_time = metadata.get("timestamp")
-        cache_paths = metadata.get("paths")
+        cache_hash = metadata.get("hash")
+        cache_paths = sorted(metadata.get("paths"))
         cache_bento_version = metadata.get("version")
+        paths = sorted(paths)
 
         if (
-            cache_entry_time is None
-            or cache_paths is None
+            cache_paths != paths
             or cache_bento_version != BENTO_VERSION
-            or RunCache._modified_since(cache_paths, paths, cache_entry_time)
+            or cache_hash != RunCache._modified_hash(paths)
         ):
+            logging.warning(f"Invalidating cache for {tool_id}")
             RunCache.__cleanup(tool_id)
             return None
 
@@ -154,9 +157,10 @@ class RunCache(object):
             file.write(raw_results)
 
         # Convert paths to list so it is json serializable
-        paths = list(paths)
+        paths = sorted(paths)
+        hash = RunCache._modified_hash(paths)
 
-        metadata = {"paths": paths, "timestamp": time.time(), "version": BENTO_VERSION}
+        metadata = {"paths": paths, "hash": hash, "version": BENTO_VERSION}
 
         with open(cache_metadata_path, "w") as file:
             json.dump(metadata, file)

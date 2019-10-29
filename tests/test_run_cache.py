@@ -1,6 +1,6 @@
-import os
 import time
-from typing import Any
+from pathlib import Path
+from typing import List, Tuple
 
 from _pytest.monkeypatch import MonkeyPatch
 from bento.run_cache import RunCache
@@ -9,100 +9,92 @@ TOOL_ID = "tool_name_here"
 TOOL_OUTPUT = "this is tool output"
 
 
-def test_modified_since_new_file_subdir(tmpdir: Any) -> None:
-    """modified_since should return true if a new file in subdir is added"""
-    subdir = tmpdir.mkdir("subdir")
+def __ensure_ubuntu_mtime_change() -> None:
+    """
+    On Ubuntu, file mtimes are not updated if a small enough time has passed.
 
-    start = time.time()
-
-    # For some reason on circleci time returned by time.time()
-    # is slightly delayed from system mtime of file written below
-    # adding some artificial delay
-    time.sleep(0.01)
-
-    subdir.join("hello.txt").write("potato")
-    end = time.time()
-
-    assert RunCache._modified_since([tmpdir], [tmpdir], start)
-    assert RunCache._modified_since(
-        [tmpdir], [os.path.join(subdir, "hello.txt")], start
-    )
-    assert RunCache._modified_since(
-        [os.path.join(subdir, "hello.txt")], [os.path.join(subdir, "hello.txt")], start
-    )
-    assert not RunCache._modified_since(
-        [os.path.join(subdir, "hello.txt")], [os.path.join(subdir, "hello.txt")], end
-    )
-    assert not RunCache._modified_since([tmpdir], [tmpdir], end)
+    To ensure mtime change, sleep at least 10 ms.
+    """
+    time.sleep(1e-2)
 
 
-def test_modified_since_touch(tmpdir: Any) -> None:
-    """modified_since should return true if a file is touched"""
-    subdir = tmpdir.mkdir("subdir")
-
-    start = time.time()
-
-    # For some reason on circleci time returned by time.time()
-    # is slightly delayed from system mtime of file written below
-    # adding some artificial delay
-    time.sleep(0.01)
-
-    subdir.join("hello.txt").write("potato")
-    end = time.time()
-
-    # For some reason on circleci time returned by time.time()
-    # is slightly delayed from system mtime of file written below
-    # adding some artificial delay
-    time.sleep(0.01)
-
-    subdir.join("hello.txt").write("new")
-
-    assert RunCache._modified_since([tmpdir], [tmpdir], start)
-    assert RunCache._modified_since([tmpdir], [tmpdir], end)
+def __setup_test_dir(tmp_path: Path) -> Tuple[str, List[str], Path]:
+    paths = [str(tmp_path)]
+    subdir = tmp_path / "subdir"
+    subdir.mkdir()
+    file = subdir / "hello.txt"
+    file.touch()
+    return RunCache._modified_hash(paths), paths, file
 
 
-def test_modified_since_ignore(tmpdir: Any) -> None:
-    """modifed_since should ignore changes in exclude dirs"""
-    subdir = tmpdir.mkdir("node_modules")
+def test_modified_hash_no_changes(tmp_path: Path) -> None:
+    """modified_hash should not change if no files change"""
 
-    start = time.time()
+    hsh, paths, _ = __setup_test_dir(tmp_path)
+    __ensure_ubuntu_mtime_change()
 
-    # For some reason on circleci time returned by time.time()
-    # is slightly delayed from system mtime of file written below
-    # adding some artificial delay
-    time.sleep(0.01)
-    subdir.join("hello.txt").write("potato")
-
-    end = time.time()
-
-    # For some reason on circleci time returned by time.time()
-    # is slightly delayed from system mtime of file written below
-    # adding some artificial delay
-    time.sleep(0.01)
-
-    subdir.join("hello.txt").write("new")
-
-    assert not RunCache._modified_since([tmpdir], [tmpdir], start)
-    assert not RunCache._modified_since([tmpdir], [tmpdir], end)
+    assert hsh == RunCache._modified_hash(paths)
 
 
-def test_get(tmpdir: Any, monkeypatch: MonkeyPatch) -> None:
-    subdir = tmpdir.mkdir("subdir")
-    subdir.join("hello.py").write("potato")
+def test_modified_hash_new_file_subdir(tmp_path: Path) -> None:
+    """modified_hash should change if a new file in subdir is added"""
+    paths = [str(tmp_path)]
+    subdir = tmp_path / "subdir"
+    subdir.mkdir()
 
-    monkeypatch.chdir(tmpdir)
+    hsh = RunCache._modified_hash(paths)
+    sub_hash = RunCache._modified_hash([str(subdir)])
 
-    # Check cache is retrivable
+    (subdir / "hello.txt").touch()
+
+    assert hsh != RunCache._modified_hash(paths)
+    assert sub_hash != RunCache._modified_hash([str(subdir)])
+
+
+def test_modified_hash_touch(tmp_path: Path) -> None:
+    """modified_hash should change if a file is modified"""
+
+    hsh, paths, file = __setup_test_dir(tmp_path)
+    __ensure_ubuntu_mtime_change()
+    file.touch()
+
+    assert hsh != RunCache._modified_hash(paths)
+
+
+def test_modified_hash_remove(tmp_path: Path) -> None:
+    """modified_hash should change if a file is removed"""
+
+    hsh, paths, file = __setup_test_dir(tmp_path)
+    file.unlink()
+
+    assert hsh != RunCache._modified_hash(paths)
+
+
+def test_modified_hash_ignore(tmp_path: Path) -> None:
+    """modifed_hash should ignore changes in exclude dirs"""
+    paths = [str(tmp_path)]
+    subdir = tmp_path / "node_modules"
+    subdir.mkdir()
+
+    hsh = RunCache._modified_hash(paths)
+
+    (subdir / "hello.txt").touch()
+
+    assert hsh == RunCache._modified_hash(paths)
+
+
+def test_get(tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
+    _, paths, file = __setup_test_dir(tmp_path)
+
+    monkeypatch.chdir(paths[0])
+
+    # Check cache is retrievable
     assert RunCache.get(TOOL_ID, ["."]) is None
     RunCache.put(TOOL_ID, ["."], TOOL_OUTPUT)
     assert RunCache.get(TOOL_ID, ["."]) == TOOL_OUTPUT
 
     # Check that modifying file invalidates cache
+    __ensure_ubuntu_mtime_change()
+    file.touch()
 
-    # For some reason on circleci time returned by time.time()
-    # is slightly delayed from system mtime of file written below
-    # adding some artificial delay
-    time.sleep(0.01)
-
-    subdir.join("hello.py").write("potato")
     assert RunCache.get(TOOL_ID, ["."]) is None
