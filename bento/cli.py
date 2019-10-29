@@ -30,12 +30,10 @@ UPGRADE_WARNING_OUTPUT = f"""
 ╰─────────────────────────────────────────────╯
 """
 
-TERMS_OF_SERVICE_MESSAGE = f"""│ Bento does not collect any source code or send any source code outside of your
-│ computer. Bento collects usage data to help us understand how to improve the
-│ product by aggregating anonymized information about errors, slow operations,
-│ feature utilization, and user preferences. We do not and will not sell or share
-│ this data to any third party. For more information, see:
-│ https://github.com/returntocorp/bento/blob/master/PRIVACY.md
+TERMS_OF_SERVICE_MESSAGE = f"""│ We’re constantly looking for ways to make Bento better! To that end, we
+│ anonymously report usage statistics to improve the tool over time. Bento runs
+│ on your local machine and never sends your code anywhere or to anyone. Learn
+│ more at https://github.com/returntocorp/bento/blob/master/PRIVACY.md.
 """
 
 TERMS_OF_SERVICE_ERROR = f"""

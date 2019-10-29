@@ -1,6 +1,11 @@
 target_repo: https://github.com/facebook/create-react-app
 target_hash: 053f9774d3f592c17741d2a86de66a7ca58f90c0
 steps:
+  - name: install-project
+    description: Project should be installed before bento run
+    command:
+      - yarn
+      - install
   - name: noconfig
     description: bento check fails when no configuration file is found
     command:
@@ -30,7 +35,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 623 findings in"
+      - "⚠ 36 findings in"
       - To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-init.out
@@ -42,8 +47,8 @@ steps:
       - --agree
       - disable
       - r2c.eslint
-      - no-var
-    expected_err: "✔ 'no-var' disabled for 'r2c.eslint'"
+      - arrow-parens
+    expected_err: "✔ 'arrow-parens' disabled for 'r2c.eslint'"
     expected_out: ""
     returncode: 0
   - name: bento-check-with-disable
@@ -53,7 +58,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 528 findings in"
+      - "⚠ 23 findings in"
       - To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-disable.out
@@ -65,8 +70,8 @@ steps:
       - --agree
       - enable
       - r2c.eslint
-      - no-var
-    expected_err: "✔ 'no-var' enabled for 'r2c.eslint'"
+      - arrow-parens
+    expected_err: "✔ 'arrow-parens' enabled for 'r2c.eslint'"
     expected_out: ""
     returncode: 0
   - name: bento-check-reenable
@@ -76,7 +81,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 623 findings in"
+      - "⚠ 36 findings in"
       - To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-init.out
@@ -88,7 +93,7 @@ steps:
       - --agree
       - archive
     expected_err:
-      - ✔ Rewrote the whitelist with 623 findings from 1 tools (623 new, 0 previously whitelisted).
+      - ✔ Rewrote the whitelist with 36 findings from 1 tools (36 new, 0 previously whitelisted).
       - Please check '.bento-whitelist.yml' in to source control.
     expected_out: ""
     returncode: 0

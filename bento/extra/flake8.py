@@ -95,7 +95,7 @@ class Flake8Tool(PythonTool, Tool):
             print(result)
 
     def run(self, paths: Iterable[str]) -> str:
-        cmd = "python $(which flake8) --format=json --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,.bento "
+        cmd = "python $(which flake8) --format=json --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,.bento,node_modules "
 
         env, args = PythonTool.sanitize_arguments(paths)
         cmd += " ".join(args)
