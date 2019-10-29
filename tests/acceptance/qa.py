@@ -27,9 +27,9 @@ def check_command(step: Any, pwd: str, target: str) -> None:
     match their respective expected values.
     """
     command = step["command"]
-    expected_returncode = step["returncode"]
-    expected_out = step["expected_out"]
-    expected_err = step["expected_err"]
+    expected_returncode = step.get("returncode")
+    expected_out = step.get("expected_out")
+    expected_err = step.get("expected_err")
 
     # Read files if any
     if isinstance(expected_out, dict):
@@ -49,9 +49,12 @@ def check_command(step: Any, pwd: str, target: str) -> None:
         encoding="utf-8",
     )
 
-    assert runned.returncode == expected_returncode
-    match_expected(runned.stdout, expected_out, f"{test_identifier}: stdout")
-    match_expected(runned.stderr, expected_err, f"{test_identifier}: stderr")
+    if expected_returncode is not None:
+        assert runned.returncode == expected_returncode
+    if expected_out is not None:
+        match_expected(runned.stdout, expected_out, f"{test_identifier}: stdout")
+    if expected_err is not None:
+        match_expected(runned.stderr, expected_err, f"{test_identifier}: stderr")
 
 
 def run_repo(target: str) -> None:

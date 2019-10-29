@@ -83,7 +83,15 @@ from bento.tool import Tool
 
 DEFAULT_IGNORE_DIRS = [
     os.path.join(".", d)
-    for d in [".git", "__pycache__", "docs/source/conf.py", "old", "build", "dist"]
+    for d in [
+        ".git",
+        "__pycache__",
+        "docs/source/conf.py",
+        "old",
+        "build",
+        "dist",
+        "node_modules",
+    ]
 ]
 
 

@@ -19,7 +19,10 @@ class PythonTool(bento.tool.Tool):
     PIP_CMD = "python -m pip"
 
     def matches_project(self) -> bool:
-        return self.project_has_extensions("*.py")
+        return self.project_has_extensions(
+            "*.py",
+            extra=["-not", "-path", "./node_modules/*", "-not", "-path", "./.bento/*"],
+        )
 
     @property
     @abstractmethod
