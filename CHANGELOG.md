@@ -9,6 +9,14 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Fix an issue where cached results are not invalidated when a file changes on
   the root path.
 
+## [0.2.1] - 2019-10-29
+
+### Fixed
+
+- Quoted emails in git configuration do not break user registration.
+- Removed files properly invalidate results cache.
+- Python tools do not crawl `node_modules`.
+
 ## [0.2.0] - 2019-10-23
 
 ### Changed
