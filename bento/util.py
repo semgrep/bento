@@ -12,10 +12,12 @@ import sys
 import threading
 import types
 from importlib import import_module
-from typing import Collection, List, Optional, Pattern, Type
+from typing import Collection, List, Optional, Pattern, Tuple, Type, Union
 
 import click
 import psutil
+
+AutocompleteSuggestions = List[Union[str, Tuple[str, str]]]
 
 
 def fetch_line_in_file(path: str, line_number: int) -> Optional[str]:

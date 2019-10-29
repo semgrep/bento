@@ -131,6 +131,34 @@ def has_completed_registration() -> bool:
     return True
 
 
+def _suggest_autocomplete() -> None:
+    if "SHELL" not in os.environ:
+        return
+    shell = os.environ["SHELL"]
+    if shell.endswith("/zsh"):
+        click.echo(
+            """
+╭────────────────────────────────────────────────────────────────────╮
+│           🍱 To enable zsh autocompletion please run 🍱            │
+│                                                                    │
+│ echo -e '\\neval "$(_BENTO_COMPLETE=source_zsh bento)"' >> ~/.zshrc │
+│                                                                    │
+╰────────────────────────────────────────────────────────────────────╯
+"""
+        )
+    elif shell.endswith("/bash"):
+        click.echo(
+            """
+╭─────────────────────────────────────────────────────────────────╮
+│         🍱 To enable bash autocompletion please run 🍱          │
+│                                                                 │
+│ echo -e '\\neval "$(_BENTO_COMPLETE=source bento)"' >> ~/.bashrc │
+│                                                                 │
+╰─────────────────────────────────────────────────────────────────╯
+"""
+        )
+
+
 def register_user() -> bool:
     global_config = {}
 
@@ -166,6 +194,8 @@ def register_user() -> bool:
             echo_warning(
                 "\nWe were unable to subscribe you to the Bento mailing list, but will continue with installation. Please shoot us a note via support@r2c.dev to debug."
             )
+
+    _suggest_autocomplete()
 
     os.makedirs(constants.GLOBAL_CONFIG_DIR, exist_ok=True)
     with open(constants.GLOBAL_CONFIG_PATH, "w+") as yaml_file:

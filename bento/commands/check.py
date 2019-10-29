@@ -19,13 +19,34 @@ import bento.tool_runner
 from bento.context import Context
 from bento.decorators import with_metrics
 from bento.error import NodeError
-from bento.util import echo_error, echo_success, echo_warning
+from bento.util import AutocompleteSuggestions, echo_error, echo_success, echo_warning
 from bento.violation import Violation
 
 
 def __get_ignores_for_tool(tool: str, config: Dict[str, Any]) -> List[str]:
     tool_config = config["tools"]
     return tool_config[tool].get("ignore", [])
+
+
+def __list_paths(ctx: Any, args: List[str], incomplete: str) -> AutocompleteSuggestions:
+    # Cases for "incomplete" variable:
+    #   - '': Search '.', no filtering
+    #   - 'part_of_file': Search '.', filter
+    #   - 'path/to/dir/': Search 'path/to/dir', no filter
+    #   - 'path/to/dir/part_of_file': Search 'path/to/dir', filter
+    dir_root = os.path.dirname(incomplete)
+    path_stub = incomplete[len(dir_root) :]
+    if path_stub.startswith("/"):
+        path_stub = path_stub[1:]
+    if dir_root == "":
+        dir = "."
+    else:
+        dir = dir_root
+    return [
+        os.path.join(dir_root, p)
+        for p in os.listdir(dir)
+        if not path_stub or p.startswith(path_stub)
+    ]
 
 
 @click.command()
@@ -45,7 +66,7 @@ def __get_ignores_for_tool(tool: str, config: Dict[str, Any]) -> List[str]:
     is_flag=True,
     help="Only runs over files staged in git. This should not be used with explicit paths",
 )
-@click.argument("paths", nargs=-1, type=str)
+@click.argument("paths", nargs=-1, type=str, autocompletion=__list_paths)
 @click.pass_obj
 @with_metrics
 def check(
@@ -69,7 +90,6 @@ def check(
     if not os.path.exists(constants.CONFIG_PATH):
         echo_error("No Bento configuration found. Please run `bento init`.")
         sys.exit(3)
-        return
 
     if os.path.exists(constants.BASELINE_FILE_PATH):
         with open(constants.BASELINE_FILE_PATH) as json_file:
