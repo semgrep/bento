@@ -40,7 +40,7 @@ Bento is a free and opinionated toolkit for gradually adopting linters[¹](https
 Bento includes checks written by [r2c](https://r2c.dev/) and curated from [Bandit](https://pypi.org/project/bandit/), [ESLint](https://eslint.org/), [Flake8](https://pypi.org/project/flake8/), and their plugins. It runs on your local machine and never sends your code anywhere or to anyone.
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/returntocorp/bento/master/bento-demo.gif" width="90%" alt="gif demonstrating Bento running in a terminal"/>
+    <img src="https://raw.githubusercontent.com/returntocorp/bento/master/bento-demo.svg" width="90%" alt="Demonstrating Bento running in a terminal"/>
 </p>
 
 ## Installation
