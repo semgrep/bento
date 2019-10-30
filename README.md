@@ -44,7 +44,7 @@ Bento includes checks written by [r2c](https://r2c.dev/) and curated from [Bandi
 </p>
 
 ## Installation
-```shell
+```
 $ pip3 install bento-cli
 ```
 
@@ -53,20 +53,20 @@ Bento is for JavaScript, TypeScript, and Python projects. It requires Python 3.6
 ## Usage
 To get started right away with sensible defaults:
 
-```shell
+```
 $ bento init && bento check
 ```
 
 To set aside preexisting results so you only see issues in new code:
 
-```shell
+```
 $ bento archive
 ```
 
 Bento really sings when you run it automatically in your editor, as a commit hook (`bento install-hook`), or in CI.
 
 ## Command Line Options
-```shell
+```
 $ bento --help
 
 Usage: bento [OPTIONS] COMMAND [ARGS]...
