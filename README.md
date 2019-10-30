@@ -40,11 +40,11 @@ Bento is a free and opinionated toolkit for gradually adopting linters[¹](https
 Bento includes checks written by [r2c](https://r2c.dev/) and curated from [Bandit](https://pypi.org/project/bandit/), [ESLint](https://eslint.org/), [Flake8](https://pypi.org/project/flake8/), and their plugins. It runs on your local machine and never sends your code anywhere or to anyone.
 
 <p align="center">
-    <img src="https://raw.githubusercontent.com/returntocorp/bento/master/bento-demo.gif" width="90%" alt="gif demonstrating Bento running in a terminal"/>
+    <img src="https://raw.githubusercontent.com/returntocorp/bento/master/bento-demo.svg" width="90%" alt="Demonstrating Bento running in a terminal"/>
 </p>
 
 ## Installation
-```shell
+```
 $ pip3 install bento-cli
 ```
 
@@ -53,20 +53,20 @@ Bento is for JavaScript, TypeScript, and Python projects. It requires Python 3.6
 ## Usage
 To get started right away with sensible defaults:
 
-```shell
+```
 $ bento init && bento check
 ```
 
 To set aside preexisting results so you only see issues in new code:
 
-```shell
+```
 $ bento archive
 ```
 
 Bento really sings when you run it automatically in your editor, as a commit hook (`bento install-hook`), or in CI.
 
 ## Command Line Options
-```shell
+```
 $ bento --help
 
 Usage: bento [OPTIONS] COMMAND [ARGS]...
@@ -90,6 +90,7 @@ Commands:
 - Need help or want to share feedback? Reach out to us at [support@r2c.dev](mailto:support@r2c.dev). We’d love to hear from you! 💌
 - Join #bento in our [community Slack](https://join.slack.com/t/r2c-community/shared_invite/enQtNjU0NDYzMjAwODY4LWE3NTg1MGNhYTAwMzk5ZGRhMjQ2MzVhNGJiZjI1ZWQ0NjQ2YWI4ZGY3OGViMGJjNzA4ODQ3MjEzOWExNjZlNTA) for support, to talk with other users, and share feedback. 🤝
 - We’re fortunate to benefit from the contributions of the open source community and great projects such as [Bandit](https://pypi.org/project/bandit/), [ESLint](https://eslint.org/), [Flake8](https://pypi.org/project/flake8/), and their plugins. 🙏
+- You’re also welcome to [file an issue](https://github.com/returntocorp/bento/issues/new?assignees=&labels=bug&template=bug_report.md&title=) directly on GitHub. Or [submit a feature request](https://github.com/returntocorp/bento/issues/new?assignees=&labels=feature-request&template=feature_request.md&title=) &mdash; we welcome those, too!
 
 ## License and Legal
 Please refer to the [terms and privacy document](https://github.com/returntocorp/bento/blob/master/PRIVACY.md).
@@ -97,7 +98,7 @@ Please refer to the [terms and privacy document](https://github.com/returntocorp
 </br>
 </br>
 <p align="center">
-    <img src="https://r2c.dev/r2c-logo-silhouette.png?gh" height="24" alt="r2c logo"/>
+    <img src="https://web-assets.r2c.dev/r2c-logo-silhouette.png?gh" height="24" alt="r2c logo"/>
 </p>
 <p align="center">
     Copyright (c) <a href="https://r2c.dev">r2c</a>.
