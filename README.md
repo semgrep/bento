@@ -97,7 +97,7 @@ Please refer to the [terms and privacy document](https://github.com/returntocorp
 </br>
 </br>
 <p align="center">
-    <img src="https://r2c.dev/r2c-logo-silhouette.png?gh" height="24" alt="r2c logo"/>
+    <img src="https://web-assets.r2c.dev/r2c-logo-silhouette.png?gh" height="24" alt="r2c logo"/>
 </p>
 <p align="center">
     Copyright (c) <a href="https://r2c.dev">r2c</a>.
