@@ -48,5 +48,5 @@ setuptools.setup(
         "License :: Other/Proprietary License",
         "Operating System :: OS Independent",
     ],
-    entry_points={"console_scripts": ["bento=bento.cli:cli"]},
+    entry_points={"console_scripts": ["bento=bento.__main__:main"]},
 )

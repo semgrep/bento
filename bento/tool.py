@@ -2,38 +2,44 @@ import logging
 import os
 import subprocess
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Iterable, List, Optional, Pattern, Set, Type
+from typing import Any, Dict, Iterable, List, Optional, Pattern, Set, Type, TypeVar
 
 import attr
 
-import bento.util
 from bento.parser import Parser
 from bento.result import Violation
 from bento.run_cache import RunCache
 
+ToolT = TypeVar("ToolT", bound="Tool")
 
-@attr.s
+
+@attr.s(auto_attribs=True)
 class ToolContext:
-    base_path = attr.ib(type=str)
-    config = attr.ib(type=Dict[str, Any])
+    # Path that the tool will run from.
+    base_path: str
+    # Directory to store caches in.
+    cache_dir: str
+    # A *shared* resource directory.
+    resource_dir: str
 
 
 # Note: for now, every tool *HAS* to directly inherit from this, even if it
 # also inherits from JsTool or PythonTool. This is so we can list all tools by
 # looking at subclasses of Tool.
+@attr.s(auto_attribs=True, init=False)
 class Tool(ABC):
-    def __init__(self, tool_context: ToolContext = ToolContext(".", {})):
-        self._context = tool_context
+    base_path: str
+    _run_cache: RunCache
+    config: Dict[str, Any]
 
-    @property
-    def base_path(self) -> str:
-        """Returns the base path from which this tool should run"""
-        return self._context.base_path
-
-    @property
-    def config(self) -> Dict[str, Any]:
-        """Returns this tool's configuration"""
-        return self._context.config
+    def __init__(
+        self, tool_context: ToolContext, config: Optional[Dict[str, Any]] = None
+    ) -> None:
+        if config is None:
+            config = {}
+        self.base_path = tool_context.base_path
+        self._run_cache = RunCache(tool_context.cache_dir)
+        self.config = config
 
     def parser(self) -> Parser:
         """Returns this tool's parser"""
@@ -93,24 +99,28 @@ class Tool(ABC):
         """
         pass
 
+    @classmethod
     @abstractmethod
-    def matches_project(self) -> bool:
+    def matches_project(cls, base_path: str) -> bool:
         """
         Returns true if and only if this project should use this tool
         """
         pass
 
-    def project_has_extensions(self, *extensions: str, extra: List[str] = []) -> bool:
+    @staticmethod
+    def project_has_extensions(
+        base_path: str, *extensions: str, extra: List[str] = []
+    ) -> bool:
         patterns = [["-name", e] for e in extensions]
         args = patterns[0] + [a for p in patterns[1:] for a in ["-o"] + p]
         cmdA = ["find", ".", "("] + args + [")"] + extra
         cmdB = ["head", "-n", "1"]
         # We want to run "find", but terminate after a single file is returned
         logging.debug(f"Running {' '.join(cmdA)} | {' '.join(cmdB)}")
-        procA = subprocess.Popen(cmdA, cwd=self.base_path, stdout=subprocess.PIPE)
+        procA = subprocess.Popen(cmdA, cwd=base_path, stdout=subprocess.PIPE)
         procB = subprocess.Popen(
             cmdB,
-            cwd=self.base_path,
+            cwd=base_path,
             stdin=procA.stdout,
             stdout=subprocess.PIPE,
             encoding="utf-8",
@@ -186,11 +196,11 @@ class Tool(ABC):
 
         if paths:
             logging.debug(f"Checking for local cache for {self.tool_id}")
-            raw = RunCache.get(self.tool_id(), paths)
+            raw = self._run_cache.get(self.tool_id(), paths)
             if raw is None:
                 logging.debug(f"Cache entry invalid for {self.tool_id}. Running Tool.")
                 raw = self.run(paths)
-                RunCache.put(self.tool_id(), paths, raw)
+                self._run_cache.put(self.tool_id(), paths, raw)
 
             try:
                 violations = self.parser().parse(raw)
@@ -203,17 +213,3 @@ class Tool(ABC):
             return filtered
         else:
             return []
-
-
-def for_name(name: str, context: ToolContext) -> Tool:
-    """
-    Reflectively instantiates a tool from a python identifier
-
-    E.g.
-      for_name("bento.extra.eslint.EslintTool", "path/to/repo")
-    returns a new instance of EslintTool
-
-    Parameters:
-        name (str): The tool name, as a python fully qualified identifier
-    """
-    return bento.util.for_name(name)(context)

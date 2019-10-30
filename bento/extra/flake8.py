@@ -81,8 +81,8 @@ class Flake8Tool(PythonTool, Tool):
     def file_name_filter(self) -> Pattern:
         return re.compile(r".*\.py\b")
 
-    @property
-    def venv_subdir(self) -> str:
+    @classmethod
+    def venv_subdir_name(self) -> str:
         return Flake8Tool.VENV_DIR
 
     def setup(self) -> None:

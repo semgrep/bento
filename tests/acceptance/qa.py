@@ -1,10 +1,13 @@
-import shutil
 import subprocess
+import tempfile
+from pathlib import Path
 from typing import Any, List, Union
 
 import yaml
 
 Expectation = Union[str, List[str]]
+
+BENTO_REPO_ROOT = str(Path(__file__).parent.parent.parent)
 
 
 def match_expected(output: str, expected: Expectation, test_identifier: str) -> None:
@@ -40,9 +43,14 @@ def check_command(step: Any, pwd: str, target: str) -> None:
             expected_err = file.read()
 
     test_identifier = f"Target:{target} Step:{step['name']}"
+    substituted = [
+        part.replace("__BENTO_REPO_ROOT__", BENTO_REPO_ROOT) for part in command
+    ]
 
     runned = subprocess.run(
-        command,
+        substituted,
+        # Note that we can't use BENTO_BASE_PATH since the acceptance tests
+        # depend on hook installation, which uses the working directory.
         cwd=pwd,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
@@ -50,7 +58,7 @@ def check_command(step: Any, pwd: str, target: str) -> None:
     )
 
     if expected_returncode is not None:
-        assert runned.returncode == expected_returncode
+        assert runned.returncode == expected_returncode, test_identifier
     if expected_out is not None:
         match_expected(runned.stdout, expected_out, f"{test_identifier}: stdout")
     if expected_err is not None:
@@ -63,37 +71,32 @@ def run_repo(target: str) -> None:
 
     target_repo = info["target_repo"]
     target_hash = info["target_hash"]
-    target_dir = "target_dir"
     steps = info["steps"]
+    with tempfile.TemporaryDirectory() as target_dir:
 
-    # Clone and checkout repo
-    shutil.rmtree(target_dir, ignore_errors=True)
-    subprocess.run(
-        ["git", "clone", target_repo, target_dir],
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        check=True,
-    )
-    subprocess.run(
-        ["git", "checkout", target_hash],
-        cwd=target_dir,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        check=True,
-    )
-    subprocess.run(
-        ["git", "clean", "-xdf"],
-        cwd=target_dir,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-        check=True,
-    )
+        subprocess.run(
+            ["git", "clone", target_repo, target_dir],
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=True,
+        )
+        subprocess.run(
+            ["git", "checkout", target_hash],
+            cwd=target_dir,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=True,
+        )
+        subprocess.run(
+            ["git", "clean", "-xdf"],
+            cwd=target_dir,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            check=True,
+        )
 
-    for step in steps:
-        check_command(step, target_dir, target)
-
-    # Cleanup repo
-    shutil.rmtree(target_dir)
+        for step in steps:
+            check_command(step, target_dir, target)
 
 
 # Actual Tests broken up into separate functions so progress is visible

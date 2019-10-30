@@ -129,7 +129,7 @@ steps:
     descripton: add file with known findings
     command:
       - cp
-      - ../tests/integration/simple/foo.py
+      - __BENTO_REPO_ROOT__/tests/integration/simple/foo.py
       - failure.py
     expected_err: ""
     expected_out: ""

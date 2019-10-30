@@ -74,7 +74,8 @@ class PyreTool(Tool):
     def file_name_filter(self) -> Pattern:
         return re.compile(r".*\.py\b")
 
-    def matches_project(self) -> bool:
+    @classmethod
+    def matches_project(cls, base_path: str) -> bool:
         # disabled by default for now
         return False
 

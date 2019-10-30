@@ -1,5 +1,6 @@
 import os
 import subprocess
+from typing import Callable
 
 from bento.extra.eslint import EslintParser, EslintTool
 from bento.tool import ToolContext
@@ -57,9 +58,9 @@ def test_line_move() -> None:
     ]
 
 
-def test_run() -> None:
+def test_run(make_tool_context: Callable[[str], ToolContext]) -> None:
     base_path = os.path.abspath(os.path.join(BASE_PATH, "tests/integration/simple"))
-    tool = EslintTool(ToolContext(base_path, {}))
+    tool = EslintTool(make_tool_context(base_path))
     tool.setup()
     try:
         violations = tool.results()
@@ -93,9 +94,9 @@ def test_run() -> None:
     assert violations == expectation
 
 
-def test_typescript_run() -> None:
+def test_typescript_run(make_tool_context: Callable[[str], ToolContext]) -> None:
     base_path = os.path.abspath(os.path.join(BASE_PATH, "tests/integration/js-and-ts"))
-    tool = EslintTool(ToolContext(base_path, {}))
+    tool = EslintTool(make_tool_context(base_path))
     tool.setup()
     try:
         violations = tool.results(["foo.ts"])
@@ -133,9 +134,9 @@ def test_typescript_run() -> None:
     assert violations == expectation
 
 
-def test_jsx_run() -> None:
+def test_jsx_run(make_tool_context: Callable[[str], ToolContext]) -> None:
     base_path = os.path.abspath(os.path.join(BASE_PATH, "tests/integration/react"))
-    tool = EslintTool(ToolContext(base_path, {}))
+    tool = EslintTool(make_tool_context(base_path))
     tool.setup()
     try:
         violations = tool.results([])
@@ -146,8 +147,8 @@ def test_jsx_run() -> None:
     assert violations == []
 
 
-def test_file_match() -> None:
-    f = EslintTool(ToolContext(BASE_PATH, {})).file_name_filter
+def test_file_match(make_tool_context: Callable[[str], ToolContext]) -> None:
+    f = EslintTool(make_tool_context(BASE_PATH)).file_name_filter
 
     assert f.match("js") is None
     assert f.match("foo.js") is not None

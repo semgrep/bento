@@ -4,38 +4,43 @@ import os
 import subprocess
 import venv
 from abc import abstractmethod
-from typing import Dict, Iterable, List, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
+import attr
 from packaging.version import InvalidVersion, Version
 
 import bento.constants
 import bento.tool
+from bento.tool import ToolContext
 from bento.util import echo_success
 
 
+@attr.s(auto_attribs=True, init=False)
 class PythonTool(bento.tool.Tool):
     # On most environments, just "pip" will point to the wrong Python installation
     # Fix by using the virtual environment's python
     PIP_CMD = "python -m pip"
+    __venv_dir: str
 
-    def matches_project(self) -> bool:
-        return self.project_has_extensions(
+    @classmethod
+    def matches_project(cls, base_path: str) -> bool:
+        return cls.project_has_extensions(
+            base_path,
             "*.py",
             extra=["-not", "-path", "./node_modules/*", "-not", "-path", "./.bento/*"],
         )
 
-    @property
+    @classmethod
     @abstractmethod
-    def venv_subdir(self) -> str:
-        """
-        Subdirectory inside resource directory where virtual env is located.
-        """
+    def venv_subdir_name(cls) -> str:
         pass
 
-    @property
-    def __venv_dir(self) -> str:
-        return os.path.join(
-            self.base_path, bento.constants.RESOURCE_DIR, self.venv_subdir
+    def __init__(
+        self, tool_context: ToolContext, config: Optional[Dict[str, Any]] = None
+    ) -> None:
+        super().__init__(tool_context, config)
+        self.__venv_dir = os.path.join(
+            tool_context.resource_dir, self.venv_subdir_name()
         )
 
     def venv_create(self) -> None:

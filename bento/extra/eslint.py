@@ -105,8 +105,9 @@ class EslintTool(JsTool, Tool):
     def file_name_filter(self) -> Pattern:
         return re.compile(r".*\.(?:js|jsx|ts|tsx)\b")
 
-    def matches_project(self) -> bool:
-        return os.path.exists(os.path.join(self.base_path, "package.json"))
+    @classmethod
+    def matches_project(cls, base_path: str) -> bool:
+        return os.path.exists(os.path.join(base_path, "package.json"))
 
     def __uses_typescript(self) -> bool:
         return self._installed_version("typescript") is not None

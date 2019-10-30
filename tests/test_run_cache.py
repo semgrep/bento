@@ -1,8 +1,8 @@
+import tempfile
 import time
 from pathlib import Path
 from typing import List, Tuple
 
-from _pytest.monkeypatch import MonkeyPatch
 from bento.run_cache import RunCache
 
 TOOL_ID = "tool_name_here"
@@ -83,18 +83,20 @@ def test_modified_hash_ignore(tmp_path: Path) -> None:
     assert hsh == RunCache._modified_hash(paths)
 
 
-def test_get(tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
+def test_get(tmp_path: Path) -> None:
     _, paths, file = __setup_test_dir(tmp_path)
+    path = paths[0]
 
-    monkeypatch.chdir(paths[0])
+    with tempfile.TemporaryDirectory() as tmpdir:
+        cache = RunCache(cache_dir=Path(tmpdir))
 
-    # Check cache is retrievable
-    assert RunCache.get(TOOL_ID, ["."]) is None
-    RunCache.put(TOOL_ID, ["."], TOOL_OUTPUT)
-    assert RunCache.get(TOOL_ID, ["."]) == TOOL_OUTPUT
+        # Check cache is retrievable
+        assert cache.get(TOOL_ID, [path]) is None
+        cache.put(TOOL_ID, [path], TOOL_OUTPUT)
+        assert cache.get(TOOL_ID, [path]) == TOOL_OUTPUT
 
-    # Check that modifying file invalidates cache
-    __ensure_ubuntu_mtime_change()
-    file.touch()
+        # Check that modifying file invalidates cache
+        __ensure_ubuntu_mtime_change()
+        file.touch()
 
-    assert RunCache.get(TOOL_ID, ["."]) is None
+        assert cache.get(TOOL_ID, [path]) is None

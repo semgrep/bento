@@ -1,4 +1,5 @@
 import os
+from typing import Callable
 
 from bento.extra.bandit import BanditTool
 from bento.tool import ToolContext
@@ -8,9 +9,9 @@ THIS_PATH = os.path.dirname(__file__)
 BASE_PATH = os.path.abspath(os.path.join(THIS_PATH, "../../.."))
 
 
-def test_run() -> None:
+def test_run(make_tool_context: Callable[[str], ToolContext]) -> None:
     base_path = os.path.abspath(os.path.join(BASE_PATH, "tests/integration/simple"))
-    tool = BanditTool(ToolContext(base_path, {}))
+    tool = BanditTool(tool_context=make_tool_context(base_path), config={})
     tool.setup()
     violations = tool.results()
 

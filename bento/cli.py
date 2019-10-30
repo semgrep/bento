@@ -1,7 +1,7 @@
 import logging
 import os
 import sys
-from typing import Any, Union
+from typing import Any, Optional, Union
 
 import click
 import requests
@@ -216,15 +216,24 @@ def register_user() -> bool:
     is_eager=True,
 )
 @click.option(
+    "--base-path",
+    help="Path to the directory containing the code, as well as the .bento.yml file.",
+    type=click.Path(exists=True, file_okay=False),
+    default=None,
+)
+@click.option(
     "--agree",
     is_flag=True,
     help="Automatically agree to terms of service.",
     default=False,
 )
 @click.pass_context
-def cli(ctx: click.Context, agree: bool) -> None:
+def cli(ctx: click.Context, base_path: Optional[str], agree: bool) -> None:
     __setup_logging()
-    ctx.obj = Context()
+    if base_path is None:
+        ctx.obj = Context()
+    else:
+        ctx.obj = Context(base_path=base_path)
     if not is_running_supported_python3():
         echo_error(
             "Bento requires Python 3.6+. Please ensure you have Python 3.6+ and installed Bento via `pip3 install bento-cli`."

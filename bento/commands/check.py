@@ -11,7 +11,6 @@ from pre_commit.git import get_staged_files
 from pre_commit.staged_files_only import staged_files_only
 from pre_commit.util import noop_context
 
-import bento.constants as constants
 import bento.formatter
 import bento.network
 import bento.result
@@ -87,12 +86,12 @@ def check(
       bento check path1 path2 ...
     """
 
-    if not os.path.exists(constants.CONFIG_PATH):
+    if not context.config_path.exists():
         echo_error("No Bento configuration found. Please run `bento init`.")
         sys.exit(3)
 
-    if os.path.exists(constants.BASELINE_FILE_PATH):
-        with open(constants.BASELINE_FILE_PATH) as json_file:
+    if context.baseline_file_path.exists():
+        with context.baseline_file_path.open() as json_file:
             baseline = bento.result.yml_to_violation_hashes(json_file)
     else:
         baseline = {}

@@ -129,7 +129,7 @@ steps:
     descripton: add file with known findings
     command:
       - cp
-      - ../tests/acceptance/bad.js
+      - __BENTO_REPO_ROOT__/tests/acceptance/bad.js
       - bad.js
     expected_err: ""
     expected_out: ""

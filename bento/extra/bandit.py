@@ -164,8 +164,8 @@ class BanditTool(PythonTool, Tool):
     def tool_id(self) -> str:
         return BanditTool.TOOL_ID
 
-    @property
-    def venv_subdir(self) -> str:
+    @classmethod
+    def venv_subdir_name(cls) -> str:
         return BanditTool.VENV_DIR
 
     @property
