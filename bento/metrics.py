@@ -5,6 +5,7 @@ from hashlib import sha256
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 import bento.git
+from bento.util import get_node_version, get_python_version
 from bento.violation import Violation
 
 
@@ -81,6 +82,7 @@ def command_metric(
     exit_code: int,
     duration: float,
     exception: Optional[Exception],
+    extra: Dict[str, Any] = {},
 ) -> List[Dict[str, Any]]:
     d = {
         "timestamp": str(datetime.utcnow().isoformat("T")),
@@ -91,6 +93,9 @@ def command_metric(
         "user": get_user_uuid(),
         "command": command,
         "command_kwargs": command_kwargs,
+        "python_version": str(get_python_version()),
+        "node_version": str(get_node_version()),
+        **extra,
     }
     if exception is not None:
         d["exception"] = str(exception)

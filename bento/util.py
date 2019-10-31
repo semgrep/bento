@@ -16,6 +16,35 @@ from typing import Collection, List, Optional, Pattern, Type
 
 import click
 import psutil
+from semantic_version import Version
+
+
+def get_python_version() -> Optional[Version]:
+    """ Get python version as specified in sys.info
+        Returns None if python not found in sys.info
+    """
+    vinfo = sys.version_info
+
+    if vinfo:
+        return Version(f"{vinfo.major}.{vinfo.minor}.{vinfo.micro}")
+    return None
+
+
+def get_node_version() -> Optional[Version]:
+    """ Get Node.js version by invoking `node` binary in the system
+        Returns None if `node` call is unsuccessful (exit code < 0)
+    """
+    version = subprocess.run(
+        ["node", "--version"],
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    node_version = version.stdout.decode("utf-8").rstrip().strip("v")
+    if version.returncode >= 0:
+        return Version(node_version)
+
+    return None
 
 
 def fetch_line_in_file(path: str, line_number: int) -> Optional[str]:

@@ -37,6 +37,7 @@ def with_metrics(f: _AnyCallable) -> _AnyCallable:
         command = context.command.name
         logging.info(f"Executing {command}")
 
+        res = None
         try:
             res = f(*args, **kwargs)
         except SystemExit as e:
@@ -49,7 +50,9 @@ def with_metrics(f: _AnyCallable) -> _AnyCallable:
         elapsed = time.time() - before
         logging.info(f"{command} completed in {elapsed} with exit code {exit_code}")
         bento.network.post_metrics(
-            bento.metrics.command_metric(command, kwargs, exit_code, elapsed, exception)
+            bento.metrics.command_metric(
+                command, kwargs, exit_code, elapsed, exception, extra=res if res else {}
+            )
         )
         if exit_code != 0:
             sys.exit(exit_code)

@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+from typing import Dict, List
 
 import click
 import yaml
@@ -33,7 +34,7 @@ def __install_config_if_not_exists(context: Context) -> None:
 @click.command()
 @click.pass_obj
 @with_metrics
-def init(context: Context) -> None:
+def init(context: Context) -> Dict[str, List[str]]:
     """
     Autodetects and installs tools.
 
@@ -78,3 +79,4 @@ def init(context: Context) -> None:
                 )
 
     echo_success("Bento is initialized on your project.")
+    return {"project_names": project_names}
