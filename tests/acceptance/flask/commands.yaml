@@ -29,10 +29,9 @@ steps:
       Detected project with Python
 
       ✔ Creating virtual environment for r2c.bandit
-      ✔ Python package bandit will be installed
+      Installing Python packages: {'bandit': '1.6.0'}
       ✔ Creating virtual environment for r2c.flake8
-      ✔ Python package flake8 will be installed
-      ✔ Python package flake8-json will be installed
+      Installing Python packages: {'flake8': '3.7.0', 'flake8-json': '19.8.0', 'flake8-bugbear': '19.8.0', 'flake8-builtins': '1.4.1', 'flake8-debugger': '3.2.0', 'flake8-executable': '2.0.3'}
       ✔ Bento is initialized on your project.
     expected_out: ""
     returncode: 0

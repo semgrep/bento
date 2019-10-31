@@ -6,6 +6,7 @@ name = "pypi"
 [packages]
 click = "~=7.0"
 docker = "~=3.7"
+frozendict = "~=1.2"
 murmurhash3 = "~=2.3.4"
 semantic-version = "~=2.8.0"
 PyYAML = ">=5.1.2"

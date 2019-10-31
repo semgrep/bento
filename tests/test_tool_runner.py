@@ -38,9 +38,7 @@ def __count_simple_findings(
     results = bento.tool_runner.Runner().parallel_results(
         tools, context.config, archive, files
     )
-    return dict(
-        (tid, __violation_counts(vv)) for tid, vv in results if isinstance(vv, list)
-    )
+    return {tid: __violation_counts(vv) for tid, vv in results if isinstance(vv, list)}
 
 
 def test_tool_parallel_results_no_archive_no_files(monkeypatch: MonkeyPatch) -> None:

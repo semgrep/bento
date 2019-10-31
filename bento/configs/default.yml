@@ -259,6 +259,10 @@ tools:
       - yoda
   r2c.flake8:
     ignore:
+      # Do not call getattr with a constant attribute value
+      - B009
+      # Do not call setattr with a constant attribute value
+      - B010
       # Indentation contains mixed spaces and tabs
       - E101
       # Indentation is not a multiple of four

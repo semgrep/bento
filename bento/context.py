@@ -72,7 +72,7 @@ class Context(BaseContext):
         """
         tools: Dict[str, Tool] = {}
         inventory = self.tool_inventory
-        for tn, tool_config in self.config["tools"].items():
+        for tn in self.config["tools"].keys():
             ti = inventory.get(tn, None)
             if not ti:
                 # TODO: Move to display layer

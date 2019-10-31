@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "60e95e124782c071cba5ab7c9c74cd5fc87496ae58534f0dbef6963b4701d0c9"
+            "sha256": "f1479c94b564604b47a116ae789ba53c7038c6a6f0feb9286a17522f9b224fb5"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -74,6 +74,13 @@
                 "sha256:7266112468627868005106ec19cd0d722702d2b7d5912a28e19b826c3d37af49"
             ],
             "version": "==0.4.0"
+        },
+        "frozendict": {
+            "hashes": [
+                "sha256:774179f22db2ef8a106e9c38d4d1f8503864603db08de2e33be5b778230f6e45"
+            ],
+            "index": "pypi",
+            "version": "==1.2"
         },
         "gitdb2": {
             "hashes": [

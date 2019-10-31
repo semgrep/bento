@@ -17,6 +17,9 @@ from typing import Collection, List, Optional, Pattern, Tuple, Type, Union
 
 import click
 import psutil
+from frozendict import frozendict
+
+EMPTY_DICT = frozendict({})
 
 AutocompleteSuggestions = List[Union[str, Tuple[str, str]]]
 
@@ -57,12 +60,12 @@ def is_child_process_of(pattern: Pattern) -> bool:
     return next(matches, None) is not None
 
 
-def package_subclasses(type: Type, pkg_path: str) -> List[Type]:
+def package_subclasses(tpe: Type, pkg_path: str) -> List[Type]:
     """
     Finds all subtypes of a type within a module path, relative to this module
 
     Parameters:
-        type: The parent type
+        tpe: The parent type
         pkg_path: The path to search, written as a python identifier (e.g. bento.extra)
 
     Returns:
@@ -75,7 +78,7 @@ def package_subclasses(type: Type, pkg_path: str) -> List[Type]:
         if name != "setup" and not ispkg:
             import_module(f"{pkg_path}.{name}", __package__)
 
-    return type.__subclasses__()
+    return tpe.__subclasses__()
 
 
 def less(

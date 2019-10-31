@@ -98,6 +98,20 @@ r2c.bandit:
       tool_id: r2c.bandit
 r2c.eslint:
   violations:
+    a09a2a6f315e5e77f51b5e69f1b9d886:
+      check_id: import/no-unresolved
+      message: Unable to resolve path to module 'react-dom'.
+      path: tests/integration/react/index.jsx
+      severity: 2
+      syntactic_context: import ReactDOM from 'react-dom';
+      tool_id: r2c.eslint
+    b79fc121a7a638a36e9ab0c656c8dfa2:
+      check_id: import/no-unresolved
+      message: Unable to resolve path to module 'react'.
+      path: tests/integration/react/index.jsx
+      severity: 2
+      syntactic_context: import React from 'react';
+      tool_id: r2c.eslint
     c6e0f687a580ef5e681dc3b4a7ed7fce:
       check_id: no-undef
       message: '''x'' is not defined.'

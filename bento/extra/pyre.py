@@ -45,8 +45,8 @@ class PyreParser(Parser):
             link="https://pyre-check.org/docs/error-types.html",
         )
 
-    def parse(self, input: str) -> List[Violation]:
-        results: List[Dict[str, Any]] = json.loads(input)
+    def parse(self, tool_output: str) -> List[Violation]:
+        results: List[Dict[str, Any]] = json.loads(tool_output)
         return [self.to_violation(r) for r in results]
 
 
@@ -77,7 +77,7 @@ class PyreTool(Tool):
 
     def setup(self) -> None:
         cmd = ["pip3", "install", "-q", f"pyre-check=={PINNED_PYRE_VERSION}"]
-        self.exec(cmd)
+        self.execute(cmd)
 
     def run(self, files: Iterable[str]) -> str:
         # for pyre, we also want to make sure that we are running in the same venv environment that the
@@ -103,4 +103,4 @@ class PyreTool(Tool):
             + ALL_SOURCE_DIRS
             + ["check"]
         )
-        return self.exec(cmd, capture_output=True).stdout
+        return self.execute(cmd, capture_output=True).stdout

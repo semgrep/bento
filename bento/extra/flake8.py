@@ -25,7 +25,7 @@ from bento.tool import Tool
 
 class Flake8Parser(Parser):
     def to_violation(self, result: Dict[str, Any]) -> Violation:
-        source = result["physical_line"].rstrip()  # Remove trailing whitespace
+        source = (result["physical_line"] or "").rstrip()  # Remove trailing whitespace
         path = self.trim_base(result["filename"])
 
         check_id = result["code"]
@@ -49,8 +49,8 @@ class Flake8Parser(Parser):
             link=link,
         )
 
-    def parse(self, input: str) -> List[Violation]:
-        results: Dict[str, List[Dict[str, Any]]] = json.loads(input)
+    def parse(self, tool_output: str) -> List[Violation]:
+        results: Dict[str, List[Dict[str, Any]]] = json.loads(tool_output)
         return [self.to_violation(v) for r in results.values() for v in r]
 
 
@@ -58,6 +58,14 @@ class Flake8Tool(PythonTool, Tool):
     TOOL_ID = "r2c.flake8"  # to-do: versioning?
     VENV_DIR = "flake8"
     PROJECT_NAME = "Python"
+    PACKAGES = {
+        "flake8": "3.7.0",
+        "flake8-json": "19.8.0",
+        "flake8-bugbear": "19.8.0",
+        "flake8-builtins": "1.4.1",
+        "flake8-debugger": "3.2.0",
+        "flake8-executable": "2.0.3",
+    }
 
     @property
     def parser_type(self) -> Type[Parser]:
@@ -81,9 +89,9 @@ class Flake8Tool(PythonTool, Tool):
 
     def setup(self) -> None:
         self.venv_create()
-        if self._packages_installed({"flake8": "3.7.0", "flake8-json": "19.8.0"}):
+        if self._packages_installed(self.PACKAGES):
             return
-        cmd = f"{PythonTool.PIP_CMD} install -q flake8 flake8-json"
+        cmd = f"{PythonTool.PIP_CMD} install -q {' '.join(self.PACKAGES.keys())}"
         result = self.venv_exec(cmd, check_output=True).strip()
         if result:
             print(result)

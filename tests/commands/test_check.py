@@ -4,9 +4,11 @@ from unittest.mock import patch
 
 from click.testing import CliRunner
 
+import bento.constants
 import bento.extra.eslint
 import bento.result
 import bento.tool_runner
+import pytest
 import util
 from bento.commands.check import check
 from bento.context import Context
@@ -49,16 +51,15 @@ def test_check_specified_paths_and_staged() -> None:
     runner = CliRunner(mix_stderr=False)
     Context(SIMPLE).cache.wipe()
 
-    try:
+    pytest.raises(
+        Exception,
         runner.invoke(
             check,
             ["--staged-only", "init.js", "foo.py"],
             obj=Context(base_path=SIMPLE),
             catch_exceptions=False,
-        )
-        assert False
-    except Exception:
-        pass
+        ),
+    )
 
 
 def test_check_no_archive() -> None:

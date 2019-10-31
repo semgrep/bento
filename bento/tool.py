@@ -129,7 +129,7 @@ class Tool(ABC):
         def add_path(out: Set[str], p: str) -> None:
             if os.path.isdir(p):
                 # Adds path if any file matches filter
-                for r, _, files in os.walk(p):
+                for _, _, files in os.walk(p):
                     for f in files:
                         if self.file_name_filter.match(f):
                             out.add(p)
@@ -143,7 +143,7 @@ class Tool(ABC):
 
         return out
 
-    def exec(self, command: List[str], **kwargs: Any) -> subprocess.CompletedProcess:
+    def execute(self, command: List[str], **kwargs: Any) -> subprocess.CompletedProcess:
         """
         Delegates to subprocess.run() on this tool's base path
 

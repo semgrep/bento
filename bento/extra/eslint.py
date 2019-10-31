@@ -60,9 +60,9 @@ class EslintParser(Parser):
             link=link,
         )
 
-    def parse(self, input: str) -> List[Violation]:
+    def parse(self, tool_output: str) -> List[Violation]:
         violations: List[Violation] = []
-        for r in json.loads(input):
+        for r in json.loads(tool_output):
             r["source"] = r.get("source", "").split("\n")
             violations += [self.to_violation(r, m) for m in r["messages"]]
         return violations
@@ -168,7 +168,7 @@ class EslintTool(JsTool, Tool):
         ] + ignores
         for f in files:
             cmd.append(f)
-        result = self.exec(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result = self.execute(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         logging.debug(f"{self.tool_id()}: stderr:\n" + result.stderr[0:4000])
         logging.debug(f"{self.tool_id()}: stdout:\n" + result.stdout[0:4000])
 

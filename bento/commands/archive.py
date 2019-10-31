@@ -25,7 +25,7 @@ def archive(context: Context) -> None:
     if context.baseline_file_path.exists():
         with context.baseline_file_path.open() as json_file:
             old_baseline = bento.result.yml_to_violation_hashes(json_file)
-            old_hashes = set(h for hh in old_baseline.values() for h in hh)
+            old_hashes = {h for hh in old_baseline.values() for h in hh}
     else:
         old_hashes = set()
 

@@ -1,0 +1,3 @@
+manage.py
+  1:1  error   Shebang is present but the file is not executable. r2c.flake8     EXE001 https://lintlyci.github.io/Flake8Rules/rules/EXE001.html
+

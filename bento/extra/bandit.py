@@ -122,8 +122,8 @@ class BanditParser(Parser):
             link=link,
         )
 
-    def parse(self, input: str) -> List[Violation]:
-        results: Dict[str, List[Dict[str, Any]]] = json.loads(input)
+    def parse(self, tool_output: str) -> List[Violation]:
+        results: Dict[str, List[Dict[str, Any]]] = json.loads(tool_output)
         errors = [self.__error_to_violation(e) for e in results.get("errors", [])]
         violations = [self.__result_to_violation(r) for r in results.get("results", [])]
         return errors + violations

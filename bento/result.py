@@ -11,7 +11,7 @@ Hash = str
 Baseline = Dict[str, Set[Hash]]
 
 
-def filter(
+def filtered(
     tool_id: str, output: List[Violation], baseline: Baseline
 ) -> List[Violation]:
     rejects: Set[Hash] = set(baseline.get(tool_id, {}))
@@ -21,9 +21,9 @@ def filter(
 
 
 def tool_results_to_yml(tool_id: str, results: List[Violation]) -> str:
-    with_hashes: Dict[str, Dict[str, Any]] = dict(
-        [(v.syntactic_identifier_str(), v.to_dict()) for v in results]
-    )
+    with_hashes: Dict[str, Dict[str, Any]] = {
+        v.syntactic_identifier_str(): v.to_dict() for v in results
+    }
     results_dict = {tool_id: {VIOLATIONS_KEY: with_hashes}}
     return yaml.safe_dump(results_dict, default_flow_style=False)
 

@@ -39,8 +39,8 @@ def context_for(
 
 
 class ParserFixture(Parser):
-    def parse(self, input: str) -> List[Violation]:
-        return [result_for(f) for f in input.split(",")]
+    def parse(self, tool_output: str) -> List[Violation]:
+        return [result_for(f) for f in tool_output.split(",")]
 
 
 class ToolFixture(Tool):
@@ -82,7 +82,7 @@ class ToolFixture(Tool):
 def test_file_path_filter_terminal(tmp_path_factory: tmp_path_factory) -> None:
     tool = ToolFixture(tmp_path_factory)
     result = tool.filter_paths(["test_tool.py", "foo.py"])
-    expectation = set(["test_tool.py"])
+    expectation = {"test_tool.py"}
 
     assert result == expectation
 

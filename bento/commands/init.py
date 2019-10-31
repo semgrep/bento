@@ -55,7 +55,7 @@ def init(context: Context) -> None:
     __install_config_if_not_exists(context)
 
     tools = context.tools.values()
-    project_names = sorted(list(set(t.project_name for t in tools)))
+    project_names = sorted(list({t.project_name for t in tools}))
     logging.debug(f"Project names: {project_names}")
     if len(project_names) > 2:
         projects = f'{", ".join(project_names[:-1])}, and {project_names[-1]}'

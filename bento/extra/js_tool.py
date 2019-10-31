@@ -39,7 +39,7 @@ class JsTool(Tool):
             cmd = ["yarn", "add", "--dev", "--ignore-workspace-root-check"]
         else:
             cmd = ["npm", "install", "--save-dev"]
-        self.exec(cmd + args, check=True)
+        self.execute(cmd + args, check=True)
 
     def _ensure_packages(self, packages: Dict[str, Version]) -> Set[str]:
         """Ensures that the given packages are installed.
@@ -66,7 +66,7 @@ class JsTool(Tool):
         per https://github.com/eslint/eslint/blob/master/docs/user-guide/migrating-to-6.0.0.md#-nodejs-6-is-no-longer-supported
         Suppored Node.js version  ^8.10.0 || ^10.13.0 || >=11.10.1
         """
-        version = self.exec(
+        version = self.execute(
             ["node", "--version"],
             check=True,
             stdout=subprocess.PIPE,

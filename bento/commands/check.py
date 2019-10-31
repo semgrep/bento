@@ -38,12 +38,12 @@ def __list_paths(ctx: Any, args: List[str], incomplete: str) -> AutocompleteSugg
     if path_stub.startswith("/"):
         path_stub = path_stub[1:]
     if dir_root == "":
-        dir = "."
+        dir_to_list = "."
     else:
-        dir = dir_root
+        dir_to_list = dir_root
     return [
         os.path.join(dir_root, p)
-        for p in os.listdir(dir)
+        for p in os.listdir(dir_to_list)
         if not path_stub or p.startswith(path_stub)
     ]
 

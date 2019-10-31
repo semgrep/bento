@@ -32,10 +32,10 @@ class Violation(object):
         return mmh3.hash128(str_id)
 
     def syntactic_identifier_str(self) -> str:
-        bytes = int.to_bytes(
+        id_bytes = int.to_bytes(
             self.syntactic_identifier_int(), byteorder="big", length=16, signed=False
         )
-        return str(binascii.hexlify(bytes), "ascii")
+        return str(binascii.hexlify(id_bytes), "ascii")
 
     def __hash__(self) -> int:
         # attr.s equality uses all elements of syntactic_identifier, so

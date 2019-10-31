@@ -29,10 +29,9 @@ steps:
       Detected project with Python
 
       ✔ Creating virtual environment for r2c.bandit
-      ✔ Python package bandit will be installed
+      Installing Python packages: {'bandit': '1.6.0'}
       ✔ Creating virtual environment for r2c.flake8
-      ✔ Python package flake8 will be installed
-      ✔ Python package flake8-json will be installed
+      Installing Python packages: {'flake8': '3.7.0', 'flake8-json': '19.8.0', 'flake8-bugbear': '19.8.0', 'flake8-builtins': '1.4.1', 'flake8-debugger': '3.2.0', 'flake8-executable': '2.0.3'}
       ✔ Bento is initialized on your project.
     expected_out: ""
     returncode: 0
@@ -43,7 +42,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 2 findings in"
+      - "⚠ 3 findings in"
       - To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-init.out
@@ -66,10 +65,10 @@ steps:
       - --agree
       - check
     expected_err:
-      - "✔ 0 findings in"
+      - "⚠ 1 findings in"
     expected_out:
       file: bento-check-with-disable.out
-    returncode: 0
+    returncode: 2
   - name: reenable-check
     description: enable a finding that was previously disabled
     command:
@@ -88,7 +87,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 2 findings in"
+      - "⚠ 3 findings in"
       - To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-init.out
@@ -100,7 +99,7 @@ steps:
       - --agree
       - archive
     expected_err:
-      - ✔ Rewrote the whitelist with 2 findings from 2 tools (2 new, 0 previously whitelisted).
+      - ✔ Rewrote the whitelist with 3 findings from 2 tools (3 new, 0 previously whitelisted).
       - Please check '.bento-whitelist.yml' in to source control.
     expected_out: ""
     returncode: 0

@@ -7,6 +7,7 @@ from abc import abstractmethod
 from pathlib import Path
 from typing import Dict, Iterable, List, Tuple
 
+import click
 from packaging.version import InvalidVersion, Version
 
 import bento.tool
@@ -51,7 +52,10 @@ class PythonTool(bento.tool.Tool):
                 venv.create(str(self.__venv_dir), with_pip=True)
 
     def venv_exec(
-        self, cmd: str, env: Dict[str, str] = {}, check_output: bool = True
+        self,
+        cmd: str,
+        env: Dict[str, str] = bento.util.EMPTY_DICT,
+        check_output: bool = True,
     ) -> str:
         """
         Executes tool set-up or check within its virtual environment
@@ -127,18 +131,17 @@ class PythonTool(bento.tool.Tool):
                 # skip it
                 pass
 
-        all_installed = True
+        to_install: Dict[str, str] = {}
         for name in packages:
             minimum_version = Version(packages[name])
-            if name not in installed:
-                echo_success(f"Python package {name} will be installed")
-                all_installed = False
-            elif installed[name] < minimum_version:
-                echo_success(
-                    f"Python package {name} will be upgraded (current {installed[name]}, want {minimum_version})"
-                )
-                all_installed = False
-        return all_installed
+            if name not in installed or installed[name] < minimum_version:
+                to_install[name] = str(minimum_version)
+
+        if to_install:
+            click.echo(f"Installing Python packages: {to_install}", err=True)
+            return False
+        else:
+            return True
 
     def _ignore_param(self) -> str:
         """

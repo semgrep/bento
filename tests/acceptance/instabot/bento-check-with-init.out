@@ -1,4 +1,5 @@
 examples/comment_medias_by_location.py
+ 24:5  error   "input" is a python builtin and is being shadowed, consider renaming the variable                    r2c.flake8     A001 https://lintlyci.github.io/Flake8Rules/rules/A001.html
  78:0  error   The input method in Python 2 will read from standard input, evaluate and run the resulting string... r2c.bandit     B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
  81:0  error   The input method in Python 2 will read from standard input, evaluate and run the resulting string... r2c.bandit     B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
  86:0  error   The input method in Python 2 will read from standard input, evaluate and run the resulting string... r2c.bandit     B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
@@ -11,10 +12,12 @@ examples/filter_private_profiles.py
  18:0  error   The input method in Python 2 will read from standard input, evaluate and run the resulting string... r2c.bandit     B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
 
 examples/interact_DM.py
+ 17:5  error   "input" is a python builtin and is being shadowed, consider renaming the variable                    r2c.flake8     A001 https://lintlyci.github.io/Flake8Rules/rules/A001.html
  29:0  error   The input method in Python 2 will read from standard input, evaluate and run the resulting string... r2c.bandit     B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
  52:0  error   The input method in Python 2 will read from standard input, evaluate and run the resulting string... r2c.bandit     B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
 
 examples/like_medias_by_location.py
+ 24:5  error   "input" is a python builtin and is being shadowed, consider renaming the variable                    r2c.flake8     A001 https://lintlyci.github.io/Flake8Rules/rules/A001.html
  76:0  error   The input method in Python 2 will read from standard input, evaluate and run the resulting string... r2c.bandit     B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
  81:0  error   The input method in Python 2 will read from standard input, evaluate and run the resulting string... r2c.bandit     B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
  87:0  error   The input method in Python 2 will read from standard input, evaluate and run the resulting string... r2c.bandit     B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
@@ -43,6 +46,7 @@ examples/multi_script_CLI.py
 547:0  error   The input method in Python 2 will read from standard input, evaluate and run the resulting string... r2c.bandit     B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
 576:0  error   The input method in Python 2 will read from standard input, evaluate and run the resulting string... r2c.bandit     B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
 580:0  error   The input method in Python 2 will read from standard input, evaluate and run the resulting string... r2c.bandit     B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+618:5  error   "input" is a python builtin and is being shadowed, consider renaming the variable                    r2c.flake8     A001 https://lintlyci.github.io/Flake8Rules/rules/A001.html
 
 examples/photos/upload_photos.py
  75:0  error   The input method in Python 2 will read from standard input, evaluate and run the resulting string... r2c.bandit     B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
@@ -58,7 +62,50 @@ instabot/api/api.py
 328:0  error   The input method in Python 2 will read from standard input, evaluate and run the resulting string... r2c.bandit     B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
 476:0  error   The input method in Python 2 will read from standard input, evaluate and run the resulting string... r2c.bandit     B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
 538:0  advice  Try, Except, Pass detected.                                                                          r2c.bandit     B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+673:41 error   Do not use mutable data structures for argument defaults.  They are created during function defin... r2c.flake8     B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+736:17 error   Do not use mutable data structures for argument defaults.  They are created during function defin... r2c.flake8     B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+777:76 error   Do not use mutable data structures for argument defaults.  They are created during function defin... r2c.flake8     B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+817:17 error   Do not use mutable data structures for argument defaults.  They are created during function defin... r2c.flake8     B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+
+instabot/api/api_photo.py
+107:13 error   Do not use mutable data structures for argument defaults.  They are created during function defin... r2c.flake8     B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+179:13 error   Loop control variable 'attempt' not used within the loop body. If this is intended, start the nam... r2c.flake8     B007 https://lintlyci.github.io/Flake8Rules/rules/B007.html
+
+instabot/api/api_video.py
+102:13 error   Do not use mutable data structures for argument defaults.  They are created during function defin... r2c.flake8     B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+202:17 error   Loop control variable 'attempt' not used within the loop body. If this is intended, start the nam... r2c.flake8     B007 https://lintlyci.github.io/Flake8Rules/rules/B007.html
+234:13 error   Do not use mutable data structures for argument defaults.  They are created during function defin... r2c.flake8     B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+
+instabot/api/prepare.py
+  1:1  error   Shebang is present but the file is not executable.                                                   r2c.flake8     EXE001 https://lintlyci.github.io/Flake8Rules/rules/EXE001.html
+ 37:26 error   Loop control variable 'password' not used within the loop body. If this is intended, start the na... r2c.flake8     B007 https://lintlyci.github.io/Flake8Rules/rules/B007.html
+
+instabot/bot/bot.py
+  0:1  error   The file is executable but no shebang is present.                                                    r2c.flake8     EXE002 https://lintlyci.github.io/Flake8Rules/rules/EXE002.html
+170:28 error   Do not use mutable data structures for argument defaults.  They are created during function defin... r2c.flake8     B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+752:17 error   Do not use mutable data structures for argument defaults.  They are created during function defin... r2c.flake8     B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+780:71 error   Do not use mutable data structures for argument defaults.  They are created during function defin... r2c.flake8     B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
 
 instabot/bot/bot_checkpoint.py
  66:0  warning Pickle and modules that wrap it can be unsafe when used to deserialize untrusted data, possible s... r2c.bandit     B301 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b301-pickle
  71:0  advice  Try, Except, Pass detected.                                                                          r2c.bandit     B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+
+instabot/bot/bot_filter.py
+  0:1  error   The file is executable but no shebang is present.                                                    r2c.flake8     EXE002 https://lintlyci.github.io/Flake8Rules/rules/EXE002.html
+
+instabot/bot/bot_follow.py
+  0:1  error   The file is executable but no shebang is present.                                                    r2c.flake8     EXE002 https://lintlyci.github.io/Flake8Rules/rules/EXE002.html
+
+instabot/bot/bot_like.py
+  0:1  error   The file is executable but no shebang is present.                                                    r2c.flake8     EXE002 https://lintlyci.github.io/Flake8Rules/rules/EXE002.html
+
+instabot/bot/bot_photo.py
+ 13:13 error   Do not use mutable data structures for argument defaults.  They are created during function defin... r2c.flake8     B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+
+instabot/bot/bot_video.py
+  4:67 error   Do not use mutable data structures for argument defaults.  They are created during function defin... r2c.flake8     B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+
+instabot/utils.py
+ 13:5  error   "list" is a python builtin, consider renaming the class attribute                                    r2c.flake8     A003 https://lintlyci.github.io/Flake8Rules/rules/A003.html
+ 19:5  error   "set" is a python builtin, consider renaming the class attribute                                     r2c.flake8     A003 https://lintlyci.github.io/Flake8Rules/rules/A003.html
+

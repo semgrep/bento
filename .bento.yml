@@ -259,6 +259,7 @@ tools:
     - yoda
   r2c.flake8:
     ignore:
+    - B006
     - E101
     - E111
     - E114
