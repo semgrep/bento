@@ -16,6 +16,7 @@ class Violation(object):
     tool_id = attr.ib(type=str)
     check_id = attr.ib(type=str)
     path = attr.ib(type=str)
+    # cmp is deprecated, but we need to use it for compatibility with 18.x.
     line = attr.ib(type=int, hash=None, cmp=False)
     column = attr.ib(type=int, hash=None, cmp=False)
     message = attr.ib(type=str, hash=None, cmp=False)

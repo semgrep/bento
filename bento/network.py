@@ -79,5 +79,7 @@ def post_metrics(data: PostData) -> bool:
         r.raise_for_status()
         return True
     except Exception as e:
-        logging.warn(f"Exception while posting metrics {e}\n{traceback.format_exc()}")
+        logging.warning(
+            f"Exception while posting metrics {e}\n{traceback.format_exc()}"
+        )
         return False

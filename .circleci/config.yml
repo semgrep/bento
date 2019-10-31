@@ -58,7 +58,7 @@ jobs:
             - "/root/.local/share/virtualenvs"
       - run:
           name: "mypy"
-          command: pipenv run mypy --config .mypy.ini bento
+          command: pipenv run mypy bento
       - store_test_results:
           path: test-reports
           prefix: tests
