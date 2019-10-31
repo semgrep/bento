@@ -76,7 +76,11 @@ def violations_to_metrics(
 
 
 def command_metric(
-    command: str, exit_code: int, duration: float, exception: Optional[Exception]
+    command: str,
+    command_kwargs: Dict[str, Any],
+    exit_code: int,
+    duration: float,
+    exception: Optional[Exception],
 ) -> List[Dict[str, Any]]:
     d = {
         "timestamp": str(datetime.utcnow().isoformat("T")),
@@ -86,6 +90,7 @@ def command_metric(
         "commit": bento.git.commit(),
         "user": get_user_uuid(),
         "command": command,
+        "command_kwargs": command_kwargs,
     }
     if exception is not None:
         d["exception"] = str(exception)
