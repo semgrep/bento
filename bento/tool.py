@@ -2,44 +2,35 @@ import logging
 import os
 import subprocess
 from abc import ABC, abstractmethod
+from fnmatch import fnmatch
+from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Pattern, Set, Type, TypeVar
 
 import attr
 
+from bento.base_context import BaseContext
 from bento.parser import Parser
 from bento.result import Violation
-from bento.run_cache import RunCache
 
 ToolT = TypeVar("ToolT", bound="Tool")
-
-
-@attr.s(auto_attribs=True)
-class ToolContext:
-    # Path that the tool will run from.
-    base_path: str
-    # Directory to store caches in.
-    cache_dir: str
-    # A *shared* resource directory.
-    resource_dir: str
 
 
 # Note: for now, every tool *HAS* to directly inherit from this, even if it
 # also inherits from JsTool or PythonTool. This is so we can list all tools by
 # looking at subclasses of Tool.
-@attr.s(auto_attribs=True, init=False)
+@attr.s
 class Tool(ABC):
-    base_path: str
-    _run_cache: RunCache
-    config: Dict[str, Any]
+    context = attr.ib(type=BaseContext)
 
-    def __init__(
-        self, tool_context: ToolContext, config: Optional[Dict[str, Any]] = None
-    ) -> None:
-        if config is None:
-            config = {}
-        self.base_path = tool_context.base_path
-        self._run_cache = RunCache(tool_context.cache_dir)
-        self.config = config
+    @property
+    def base_path(self) -> Path:
+        """Returns the base path from which this tool should run"""
+        return self.context.base_path
+
+    @property
+    def config(self) -> Dict[str, Any]:
+        """Returns this tool's configuration"""
+        return self.context.config["tools"][self.tool_id()]
 
     def parser(self) -> Parser:
         """Returns this tool's parser"""
@@ -101,34 +92,24 @@ class Tool(ABC):
 
     @classmethod
     @abstractmethod
-    def matches_project(cls, base_path: str) -> bool:
+    def matches_project(cls, context: BaseContext) -> bool:
         """
         Returns true if and only if this project should use this tool
         """
         pass
 
-    @staticmethod
-    def project_has_extensions(
-        base_path: str, *extensions: str, extra: List[str] = []
-    ) -> bool:
-        patterns = [["-name", e] for e in extensions]
-        args = patterns[0] + [a for p in patterns[1:] for a in ["-o"] + p]
-        cmdA = ["find", ".", "("] + args + [")"] + extra
-        cmdB = ["head", "-n", "1"]
-        # We want to run "find", but terminate after a single file is returned
-        logging.debug(f"Running {' '.join(cmdA)} | {' '.join(cmdB)}")
-        procA = subprocess.Popen(cmdA, cwd=base_path, stdout=subprocess.PIPE)
-        procB = subprocess.Popen(
-            cmdB,
-            cwd=base_path,
-            stdin=procA.stdout,
-            stdout=subprocess.PIPE,
-            encoding="utf-8",
+    @classmethod
+    def project_has_extensions(cls, context: BaseContext, *extensions: str) -> bool:
+        """
+        Returns true iff any unignored files matches at least one extension
+        """
+        file_matches = (
+            fnmatch(e.path, ext)
+            for e in context.file_ignores.entries()
+            if e.survives
+            for ext in extensions
         )
-        procA.stdout.close()
-        procB.wait()
-        res = next(procB.stdout, None)
-        return res is not None
+        return any(file_matches)
 
     def filter_paths(self, paths: Iterable[str]) -> Set[str]:
         """
@@ -191,16 +172,16 @@ class Tool(ABC):
             CalledProcessError: If execution fails
         """
         if paths is None:
-            paths = [self.base_path]
+            paths = [str(self.base_path)]
         paths = self.filter_paths(paths)
 
         if paths:
             logging.debug(f"Checking for local cache for {self.tool_id}")
-            raw = self._run_cache.get(self.tool_id(), paths)
+            raw = self.context.cache.get(self.tool_id(), paths)
             if raw is None:
                 logging.debug(f"Cache entry invalid for {self.tool_id}. Running Tool.")
                 raw = self.run(paths)
-                self._run_cache.put(self.tool_id(), paths, raw)
+                self.context.cache.put(self.tool_id(), paths, raw)
 
             try:
                 violations = self.parser().parse(raw)

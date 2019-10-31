@@ -3,6 +3,7 @@ from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 
 import bento.cli
 import bento.context
+import bento.result
 import bento.tool_runner
 from _pytest.monkeypatch import MonkeyPatch
 from bento.violation import Violation

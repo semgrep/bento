@@ -1,5 +1,4 @@
 import json
-import os
 import re
 from typing import Any, Dict, Iterable, List, Pattern, Type
 
@@ -27,12 +26,7 @@ from bento.tool import Tool
 class Flake8Parser(Parser):
     def to_violation(self, result: Dict[str, Any]) -> Violation:
         source = result["physical_line"].rstrip()  # Remove trailing whitespace
-        path = result["filename"]
-
-        if not os.path.isabs(path) and path.startswith("./"):
-            path = path[2:]
-        else:
-            path = self.trim_base(path)
+        path = self.trim_base(result["filename"])
 
         check_id = result["code"]
 
@@ -95,7 +89,7 @@ class Flake8Tool(PythonTool, Tool):
             print(result)
 
     def run(self, paths: Iterable[str]) -> str:
-        cmd = "python $(which flake8) --format=json --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,.bento,node_modules "
+        cmd = f"python $(which flake8) --format=json --exclude={self._ignore_param()} "
 
         env, args = PythonTool.sanitize_arguments(paths)
         cmd += " ".join(args)

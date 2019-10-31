@@ -12,6 +12,7 @@ import sys
 import threading
 import types
 from importlib import import_module
+from pathlib import Path
 from typing import Collection, List, Optional, Pattern, Tuple, Type, Union
 
 import click
@@ -20,11 +21,13 @@ import psutil
 AutocompleteSuggestions = List[Union[str, Tuple[str, str]]]
 
 
-def fetch_line_in_file(path: str, line_number: int) -> Optional[str]:
+def fetch_line_in_file(path: Path, line_number: int) -> Optional[str]:
     """
-    `line_number` is one-indexed! Returns the line if it can be found, throws an exception if the path doesn't exist
+    `line_number` is one-indexed! Returns the line if it can be found, returns None if the path doesn't exist
     """
-    with open(path, buffering=1) as fin:  # buffering=1 turns on line-level reads
+    if not path.exists():
+        return None
+    with path.open(buffering=1) as fin:  # buffering=1 turns on line-level reads
         return next(itertools.islice(fin, line_number - 1, line_number), None)
 
 

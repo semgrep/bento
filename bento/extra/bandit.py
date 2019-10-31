@@ -1,7 +1,5 @@
 import json
-import os
 import re
-import subprocess
 from typing import Any, Dict, Iterable, List, Pattern, Type
 
 from bento.extra.python_tool import PythonTool
@@ -81,35 +79,16 @@ from bento.tool import Tool
 #   ]
 # }
 
-DEFAULT_IGNORE_DIRS = [
-    os.path.join(".", d)
-    for d in [
-        ".git",
-        "__pycache__",
-        "docs/source/conf.py",
-        "old",
-        "build",
-        "dist",
-        "node_modules",
-    ]
-]
-
 
 class BanditParser(Parser):
     SEVERITY = {"LOW": 0, "MEDIUM": 1, "HIGH": 2}
     LINE_NO_CHARS = "0123456789"
 
-    def __trim_path(self, path: str) -> str:
-        if not os.path.isabs(path) and path.startswith("./"):
-            return path[2:]
-        else:
-            return self.trim_base(path)
-
     def __error_to_violation(self, error: Dict[str, Any]) -> Violation:
         return Violation(
             check_id="error",
             tool_id=BanditTool.TOOL_ID,
-            path=self.__trim_path(error["filename"]),
+            path=self.trim_base(error["filename"]),
             severity=2,
             line=0,
             column=0,
@@ -119,7 +98,7 @@ class BanditParser(Parser):
         )
 
     def __result_to_violation(self, result: Dict[str, Any]) -> Violation:
-        path = self.__trim_path(result["filename"])
+        path = self.trim_base(result["filename"])
         link = result.get("more_info", None)
 
         # Remove bandit line numbers, empty lines, and leading / trailing whitespace
@@ -186,27 +165,7 @@ class BanditTool(PythonTool, Tool):
             print(result)
 
     def run(self, paths: Iterable[str]) -> str:
-        # bandit glob expansion is limited, so we need to crawl path to find all directories to ignore
-        # .bento and site-packages will be ignored wherever they appear
-        ignore_find_cmd = [
-            "find",
-            self.base_path,
-            "-name",
-            ".bento",
-            "-o",
-            "-name",
-            "site-packages",
-        ]
-        ignore_find_results = (
-            subprocess.run(
-                ignore_find_cmd, stdout=subprocess.PIPE, check=True, encoding="utf-8"
-            )
-            .stdout.rstrip()
-            .split("\n")
-        )
-        ignores = ",".join(ignore_find_results + DEFAULT_IGNORE_DIRS)
-
-        cmd = f"python $(which bandit) --f json -x {ignores} -r "
+        cmd = f"python $(which bandit) --f json -x {self._ignore_param()} -r "
 
         env, args = PythonTool.sanitize_arguments(paths)
         cmd += " ".join(args)

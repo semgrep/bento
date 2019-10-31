@@ -1,5 +1,6 @@
 import logging
 import os
+import shutil
 import sys
 
 import click
@@ -16,16 +17,27 @@ def __install_config_if_not_exists(context: Context) -> None:
     config_path = context.config_path
     if not config_path.exists():
         pretty_path = context.pretty_path(config_path)
-        click.echo(f"Creating default configuration at {pretty_path}")
+        click.echo(f"Creating default configuration at {pretty_path}", err=True)
         with (
             open(os.path.join(os.path.dirname(__file__), "../configs/default.yml"))
         ) as template:
             yml = yaml.safe_load(template)
         for tid, tool in context.tool_inventory.items():
-            if not tool.matches_project(str(context.base_path)) and tid in yml["tools"]:
+            if not tool.matches_project(context) and tid in yml["tools"]:
                 del yml["tools"][tid]
         with config_path.open("w") as config_file:
             yaml.safe_dump(yml, stream=config_file)
+        echo_success(
+            f"Created {pretty_path}. Please check this file in to source control.\n"
+        )
+
+    if not context.ignore_file_path.exists():
+        pretty_path = context.pretty_path(context.ignore_file_path)
+        click.echo(f"Creating default ignore file at {pretty_path}", err=True)
+        shutil.copy(
+            os.path.join(os.path.dirname(__file__), "..", "configs", ".bentoignore"),
+            str(context.ignore_file_path),
+        )
         echo_success(
             f"Created {pretty_path}. Please check this file in to source control.\n"
         )

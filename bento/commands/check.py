@@ -131,6 +131,7 @@ def check(
     collapsed_findings: List[Violation] = []
     for tool_id, findings in all_results:
         if isinstance(findings, Exception):
+            logging.error(findings)
             echo_error(f"Error while running {tool_id}: {findings}")
             if isinstance(findings, subprocess.CalledProcessError):
                 click.secho(findings.stderr, err=True)

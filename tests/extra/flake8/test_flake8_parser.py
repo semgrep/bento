@@ -1,16 +1,17 @@
 import os
-from typing import Callable
+from pathlib import Path
 
+from _pytest.tmpdir import tmp_path_factory
 from bento.extra.flake8 import Flake8Parser, Flake8Tool
-from bento.tool import ToolContext
 from bento.violation import Violation
+from tests.test_tool import context_for
 
-THIS_PATH = os.path.dirname(__file__)
-BASE_PATH = os.path.abspath(os.path.join(THIS_PATH, "../../.."))
+THIS_PATH = Path(os.path.dirname(__file__))
+BASE_PATH = THIS_PATH / ".." / ".." / ".."
 
 
-def test_parse(make_tool_context: Callable[[str], ToolContext]) -> None:
-    with open(os.path.join(THIS_PATH, "flake8_violation_simple.json")) as json_file:
+def test_parse() -> None:
+    with (THIS_PATH / "flake8_violation_simple.json").open() as json_file:
         json = json_file.read()
 
     result = Flake8Parser(BASE_PATH).parse(json)
@@ -31,9 +32,9 @@ def test_parse(make_tool_context: Callable[[str], ToolContext]) -> None:
     assert result == expectation
 
 
-def test_run(make_tool_context: Callable[[str], ToolContext]) -> None:
-    base_path = os.path.abspath(os.path.join(BASE_PATH, "tests/integration/simple"))
-    tool = Flake8Tool(make_tool_context(base_path))
+def test_run(tmp_path_factory: tmp_path_factory) -> None:
+    base_path = BASE_PATH / "tests/integration/simple"
+    tool = Flake8Tool(context_for(tmp_path_factory, Flake8Tool.TOOL_ID, base_path))
     tool.setup()
     violations = tool.results()
 
@@ -73,8 +74,8 @@ def test_run(make_tool_context: Callable[[str], ToolContext]) -> None:
     assert violations == expectation
 
 
-def test_file_match(make_tool_context: Callable[[str], ToolContext]) -> None:
-    f = Flake8Tool(make_tool_context(BASE_PATH)).file_name_filter
+def test_file_match(tmp_path_factory: tmp_path_factory) -> None:
+    f = Flake8Tool(context_for(tmp_path_factory, Flake8Tool.TOOL_ID)).file_name_filter
 
     assert f.match("py") is None
     assert f.match("foo.py") is not None

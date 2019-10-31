@@ -1,17 +1,18 @@
 import os
 import subprocess
-from typing import Callable
+from pathlib import Path
 
+from _pytest.tmpdir import tmp_path_factory
 from bento.extra.eslint import EslintParser, EslintTool
-from bento.tool import ToolContext
 from bento.violation import Violation
+from tests.test_tool import context_for
 
-THIS_PATH = os.path.dirname(__file__)
-BASE_PATH = os.path.abspath(os.path.join(THIS_PATH, "../../.."))
+THIS_PATH = Path(os.path.dirname(__file__))
+BASE_PATH = THIS_PATH / ".." / ".." / ".."
 
 
 def test_parse() -> None:
-    with open(os.path.join(THIS_PATH, "eslint_violation_simple.json")) as json_file:
+    with (THIS_PATH / "eslint_violation_simple.json").open() as json_file:
         json = json_file.read()
 
     result = EslintParser(BASE_PATH).parse(json)
@@ -45,11 +46,9 @@ def test_parse() -> None:
 def test_line_move() -> None:
     parser = EslintParser(BASE_PATH)
 
-    with open(
-        os.path.join(THIS_PATH, "eslint_violation_move_before.json")
-    ) as json_file:
+    with (THIS_PATH / "eslint_violation_move_before.json").open() as json_file:
         before = parser.parse(json_file.read())
-    with open(os.path.join(THIS_PATH, "eslint_violation_move_after.json")) as json_file:
+    with (THIS_PATH / "eslint_violation_move_after.json").open() as json_file:
         after = parser.parse(json_file.read())
 
     assert before == after
@@ -58,9 +57,11 @@ def test_line_move() -> None:
     ]
 
 
-def test_run(make_tool_context: Callable[[str], ToolContext]) -> None:
-    base_path = os.path.abspath(os.path.join(BASE_PATH, "tests/integration/simple"))
-    tool = EslintTool(make_tool_context(base_path))
+def test_run(tmp_path_factory: tmp_path_factory) -> None:
+    base_path = BASE_PATH / "tests/integration/simple"
+    tool = EslintTool(
+        context_for(tmp_path_factory, EslintTool.ESLINT_TOOL_ID, base_path)
+    )
     tool.setup()
     try:
         violations = tool.results()
@@ -94,9 +95,11 @@ def test_run(make_tool_context: Callable[[str], ToolContext]) -> None:
     assert violations == expectation
 
 
-def test_typescript_run(make_tool_context: Callable[[str], ToolContext]) -> None:
-    base_path = os.path.abspath(os.path.join(BASE_PATH, "tests/integration/js-and-ts"))
-    tool = EslintTool(make_tool_context(base_path))
+def test_typescript_run(tmp_path_factory: tmp_path_factory) -> None:
+    base_path = BASE_PATH / "tests/integration/js-and-ts"
+    tool = EslintTool(
+        context_for(tmp_path_factory, EslintTool.ESLINT_TOOL_ID, base_path)
+    )
     tool.setup()
     try:
         violations = tool.results(["foo.ts"])
@@ -134,9 +137,11 @@ def test_typescript_run(make_tool_context: Callable[[str], ToolContext]) -> None
     assert violations == expectation
 
 
-def test_jsx_run(make_tool_context: Callable[[str], ToolContext]) -> None:
-    base_path = os.path.abspath(os.path.join(BASE_PATH, "tests/integration/react"))
-    tool = EslintTool(make_tool_context(base_path))
+def test_jsx_run(tmp_path_factory: tmp_path_factory) -> None:
+    base_path = BASE_PATH / "tests/integration/react"
+    tool = EslintTool(
+        context_for(tmp_path_factory, EslintTool.ESLINT_TOOL_ID, base_path)
+    )
     tool.setup()
     try:
         violations = tool.results([])
@@ -147,8 +152,10 @@ def test_jsx_run(make_tool_context: Callable[[str], ToolContext]) -> None:
     assert violations == []
 
 
-def test_file_match(make_tool_context: Callable[[str], ToolContext]) -> None:
-    f = EslintTool(make_tool_context(BASE_PATH)).file_name_filter
+def test_file_match(tmp_path_factory: tmp_path_factory) -> None:
+    f = EslintTool(
+        context_for(tmp_path_factory, EslintTool.ESLINT_TOOL_ID)
+    ).file_name_filter
 
     assert f.match("js") is None
     assert f.match("foo.js") is not None
@@ -159,9 +166,7 @@ def test_file_match(make_tool_context: Callable[[str], ToolContext]) -> None:
 
 
 def test_missing_source() -> None:
-    with open(
-        os.path.join(THIS_PATH, "eslint_violation_missing_source.json")
-    ) as json_file:
+    with (THIS_PATH / "eslint_violation_missing_source.json").open() as json_file:
         json = json_file.read()
 
     result = EslintParser(BASE_PATH).parse(json)

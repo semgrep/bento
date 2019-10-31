@@ -1,17 +1,18 @@
 import os
-from typing import Callable
+from pathlib import Path
 
+from _pytest.tmpdir import tmp_path_factory
 from bento.extra.pyre import PyreTool
-from bento.tool import ToolContext
 from bento.violation import Violation
+from tests.test_tool import context_for
 
-THIS_PATH = os.path.dirname(__file__)
-BASE_PATH = os.path.abspath(os.path.join(THIS_PATH, "../../.."))
+THIS_PATH = Path(os.path.dirname(__file__))
+BASE_PATH = THIS_PATH / ".." / ".." / ".."
 
 
-def test_run(make_tool_context: Callable[[str], ToolContext]) -> None:
-    base_path = os.path.abspath(os.path.join(BASE_PATH, "tests/integration/py-only"))
-    tool = PyreTool(tool_context=make_tool_context(base_path))
+def test_run(tmp_path_factory: tmp_path_factory) -> None:
+    base_path = BASE_PATH / "tests/integration/py-only"
+    tool = PyreTool(context_for(tmp_path_factory, PyreTool.TOOL_ID, base_path))
     tool.setup()
     violations = tool.results()
 
@@ -54,8 +55,8 @@ def test_run(make_tool_context: Callable[[str], ToolContext]) -> None:
     assert set(violations) == set(expectation)
 
 
-def test_file_match(make_tool_context: Callable[[str], ToolContext]) -> None:
-    f = PyreTool(tool_context=make_tool_context(BASE_PATH)).file_name_filter
+def test_file_match(tmp_path_factory: tmp_path_factory) -> None:
+    f = PyreTool(context_for(tmp_path_factory, PyreTool.TOOL_ID)).file_name_filter
 
     assert f.match("py") is None
     assert f.match("foo.py") is not None

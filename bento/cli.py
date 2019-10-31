@@ -230,10 +230,11 @@ def register_user() -> bool:
 @click.pass_context
 def cli(ctx: click.Context, base_path: Optional[str], agree: bool) -> None:
     __setup_logging()
+    is_init = ctx.invoked_subcommand == "init"
     if base_path is None:
-        ctx.obj = Context()
+        ctx.obj = Context(is_init=is_init)
     else:
-        ctx.obj = Context(base_path=base_path)
+        ctx.obj = Context(base_path=base_path, is_init=is_init)
     if not is_running_supported_python3():
         echo_error(
             "Bento requires Python 3.6+. Please ensure you have Python 3.6+ and installed Bento via `pip3 install bento-cli`."
@@ -246,7 +247,7 @@ def cli(ctx: click.Context, base_path: Optional[str], agree: bool) -> None:
             # Terminate with non-zero error
             sys.exit(3)
     if not is_running_latest():
-        logging.warn("Bento client is outdated")
+        logging.warning("Bento client is outdated")
         click.echo(UPGRADE_WARNING_OUTPUT)
 
 

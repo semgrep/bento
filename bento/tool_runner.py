@@ -67,9 +67,11 @@ class Runner:
             with self._lock:
                 bar.set_postfix_str("🍜")
 
-            tool.setup()
-            if self._setup_latch:
-                self._setup_latch.count_down()
+            try:
+                tool.setup()
+            finally:
+                if self._setup_latch:
+                    self._setup_latch.count_down()
             with self._lock:
                 bar.update(MIN_BAR_VALUE)
                 bar.set_postfix_str("🍤")

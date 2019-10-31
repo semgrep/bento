@@ -8,6 +8,7 @@ from typing import Any, Dict, Iterable, List, Pattern, Type
 
 from semantic_version import Version
 
+from bento.base_context import BaseContext
 from bento.extra.js_tool import JsTool
 from bento.parser import Parser
 from bento.result import Violation
@@ -106,8 +107,8 @@ class EslintTool(JsTool, Tool):
         return re.compile(r".*\.(?:js|jsx|ts|tsx)\b")
 
     @classmethod
-    def matches_project(cls, base_path: str) -> bool:
-        return os.path.exists(os.path.join(base_path, "package.json"))
+    def matches_project(cls, context: BaseContext) -> bool:
+        return (context.base_path / "package.json").exists()
 
     def __uses_typescript(self) -> bool:
         return self._installed_version("typescript") is not None
@@ -150,6 +151,11 @@ class EslintTool(JsTool, Tool):
                 self.__copy_eslintrc("default")
 
     def run(self, files: Iterable[str]) -> str:
+        ignores = [
+            arg
+            for p in self.context.file_ignores.patterns
+            for arg in ["--ignore-pattern", p]
+        ]
         cmd = [
             "./node_modules/eslint/bin/eslint.js",
             "--no-eslintrc",
@@ -157,15 +163,9 @@ class EslintTool(JsTool, Tool):
             EslintTool.CONFIG_FILE_NAME,
             "-f",
             "json",
-            "--ignore-pattern",
-            "**/node_modules",
-            "--ignore-pattern",
-            "**/*.min.js",
-            "--ignore-pattern",
-            "packages/",
             "--ext",
             "js,jsx,ts,tsx",
-        ]
+        ] + ignores
         for f in files:
             cmd.append(f)
         result = self.exec(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
