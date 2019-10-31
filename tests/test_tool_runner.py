@@ -34,9 +34,7 @@ def __count_simple_findings(
     monkeypatch.chdir(os.path.join(BASE_PATH, "tests/integration/simple"))
     context = bento.context.Context()
     tools = context.tools.values()
-    results = bento.tool_runner.Runner().parallel_results(
-        tools, context.config, archive, files
-    )
+    results = bento.tool_runner.Runner().parallel_results(tools, archive, files)
     return dict(
         (tid, __violation_counts(vv)) for tid, vv in results if isinstance(vv, list)
     )

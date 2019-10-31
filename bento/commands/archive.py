@@ -32,10 +32,9 @@ def archive(context: Context) -> None:
         old_hashes = set()
 
     new_baseline: List[str] = []
-    config = context.config
     tools = context.tools.values()
 
-    all_findings = bento.tool_runner.Runner().parallel_results(tools, config, {}, None)
+    all_findings = bento.tool_runner.Runner().parallel_results(tools, {}, None)
     n_found = 0
     n_existing = 0
     found_hashes: Set[str] = set()

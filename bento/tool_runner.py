@@ -5,7 +5,7 @@ import traceback
 from functools import partial
 from multiprocessing import Lock
 from multiprocessing.pool import ThreadPool
-from typing import Any, Collection, Dict, Iterable, List, Optional, Tuple, Union
+from typing import Collection, Iterable, List, Optional, Tuple, Union
 
 import click
 from tqdm import tqdm
@@ -50,7 +50,6 @@ class Runner:
 
     def _run_single_tool(
         self,
-        config: Dict[str, Any],
         baseline: Baseline,
         paths: Optional[Iterable[str]],
         index_and_tool: Tuple[int, Tool],
@@ -98,11 +97,7 @@ class Runner:
             return (tool.tool_id(), e)
 
     def parallel_results(
-        self,
-        tools: Iterable[Tool],
-        config: Dict[str, Any],
-        baseline: Baseline,
-        files: Optional[List[str]],
+        self, tools: Iterable[Tool], baseline: Baseline, files: Optional[List[str]]
     ) -> Collection[RunResults]:
         """Runs all tools in parallel.
 
@@ -112,7 +107,6 @@ class Runner:
         A progress bar is emitted to stderr for each tool.
 
         Parameters:
-            config (dict): The tool configuration dictionary
             baseline (set): The set of whitelisted finding hashes
             files (list): If present, the list of files to pass to each tool
 
@@ -141,7 +135,7 @@ class Runner:
 
         with ThreadPool(n_tools) as pool:
             # using partial to pass in multiple arguments to __tool_filter
-            func = partial(Runner._run_single_tool, self, config, baseline, files)
+            func = partial(Runner._run_single_tool, self, baseline, files)
             all_results = pool.map(func, indices_and_tools)
 
         # click.echo("\x1b[1F")  # Resets line position afters bars close

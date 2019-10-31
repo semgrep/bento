@@ -1,6 +1,6 @@
 import json
 import os
-from typing import Any, Collection, Dict, List, Optional
+from typing import Collection, List, Optional
 
 from click.testing import CliRunner
 
@@ -93,7 +93,6 @@ def test_check_tool_error(monkeypatch: MonkeyPatch) -> None:
     def mock_results(
         self: bento.tool_runner.Runner,
         tools: Collection[Tool],
-        config: Dict[str, Any],
         baseline: bento.result.Baseline,
         files: Optional[List[str]],
     ) -> Collection[bento.tool_runner.RunResults]:

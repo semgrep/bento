@@ -104,7 +104,7 @@ def check(
         before = time.time()
         runner = bento.tool_runner.Runner()
         tools = context.tools.values()
-        all_results = runner.parallel_results(tools, config, baseline, paths)
+        all_results = runner.parallel_results(tools, baseline, paths)
         elapsed = time.time() - before
 
     is_error = False
