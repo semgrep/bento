@@ -123,6 +123,114 @@ class Stylish(Formatter):
         return lines
 
 
+class Clippy(Formatter):
+    """
+    Mimics the eslint "clippy" formatter
+    """
+
+    SEVERITY_STR = {
+        0: click.style("advice", fg="green"),
+        1: click.style("warning", fg="yellow"),
+        2: click.style("error", fg="red"),
+    }
+
+    OSC_8 = "\x1b]8;;"
+    BEL = "\x07"
+    BOLD = "\033[1m"
+    END = "\033[0m"
+
+    LINK_PRINTER_PATTERN = re.compile("(iterm2|gnome-terminal)", re.IGNORECASE)
+
+    _print_links = bento.util.is_child_process_of(LINK_PRINTER_PATTERN)
+
+    @staticmethod
+    def __path_of(violation: Violation) -> str:
+        return violation.path
+
+    @staticmethod
+    def __print_path(path: str, line: int, col: int) -> str:
+        arrow = click.style("-->", fg="blue")
+        return f"   {arrow} {path}:{line}:{col}"
+
+    @staticmethod
+    def ellipsis_trim(str: str, max_length: int) -> str:
+        if len(str) > max_length:
+            return str[0 : max_length - 3] + "..."
+        return str
+
+    def __print_violation(self, violation: Violation, max_message_len: int) -> str:
+        line = click.style(f"{violation.line:>2d}", fg="blue")
+
+        message = Clippy.ellipsis_trim(violation.message, max_message_len)
+
+        # save some space for what comes next
+        message = f"{message:<{max_message_len}s}"
+
+        nl = "\n"
+
+        context = violation.syntactic_context.rstrip("\n\r").strip()
+        context = context.replace("\n", "")
+
+        violation_message = f"    = {Clippy.BOLD}note:{Clippy.END} {message}{nl}"
+        pipe = click.style("|", fg="blue")
+
+        if context:
+            violation_message = (
+                f"    {pipe}{nl}" f" {line} {pipe}   {context}{nl}" f"    {pipe}{nl}"
+            ) + violation_message
+        return violation_message
+
+    def __print_error_message(self, violation: Violation) -> str:
+        tool_id = f"{violation.tool_id}".strip()
+        rule = f"{violation.check_id}".strip()
+
+        full_rule = f"{tool_id}.{rule}"
+
+        if not violation.link:
+            link = full_rule
+        else:
+            link = self.__link(full_rule, violation.link)
+
+        sev_str = Clippy.SEVERITY_STR.get(violation.severity, "unknown")
+        sev = f"{sev_str}".strip()
+
+        return f"{Clippy.BOLD}{sev}: {Clippy.BOLD}{link}{Clippy.END}"
+
+    def __print_summary(self) -> str:
+        return f"{Clippy.BOLD}==> Bento Summary{Clippy.END}"
+
+    def __link(self, text: str, href: str) -> str:
+        """
+        Prints a clickable hyperlink output if in a tty; otherwise just prints a text link
+        """
+        # TODO: Determine if terminal supports links
+        if sys.stdout.isatty() and self._print_links:
+            return f"{Clippy.OSC_8}{href}{Clippy.BEL}{text}{Clippy.OSC_8}{Clippy.BEL}"
+        elif href:
+            return f"{text} {href}"
+        else:
+            return text
+
+    def dump(self, violations: List[Violation]) -> Collection[str]:
+        lines = [self.__print_summary()]
+        max_message_len = min(max((len(v.message) for v in violations), default=0), 200)
+
+        if sys.stdout.isatty():
+            terminal_width, _ = shutil.get_terminal_size((50, 20))
+            max_message_len = max(min(max_message_len, terminal_width - 10), 20)
+
+        ordered: List[Violation] = sorted(violations, key=Clippy.__path_of)
+
+        for path, vv in itertools.groupby(ordered, Clippy.__path_of):
+            for v in sorted(vv, key=lambda v: (v.line, v.column, v.message)):
+                lines.append(self.__print_error_message(v))
+                lines.append(Clippy.__print_path(path, v.line, v.column))
+                lines.append(self.__print_violation(v, max_message_len))
+            lines.append("")
+
+        return lines
+
+
 class Json(Formatter):
     """Formats output as a single JSON blob."""
 
@@ -142,7 +250,7 @@ class Json(Formatter):
         return [json.dumps(json_obj)]
 
 
-FORMATTERS = {"stylish": Stylish, "json": Json}
+FORMATTERS = {"stylish": Stylish, "json": Json, "clippy": Clippy}
 
 
 def for_name(name: str, config: Dict[str, Any]) -> Formatter:
