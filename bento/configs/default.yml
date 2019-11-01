@@ -28,6 +28,7 @@ tools:
       - B608 # hardcoded_sql_expressions
   r2c.eslint:
     ignore:
+      - "@typescript-eslint/camelcase"
       - array-bracket-newline
       - array-bracket-spacing
       - array-element-newline
