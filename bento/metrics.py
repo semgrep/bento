@@ -1,5 +1,6 @@
 import getpass
 import itertools
+import os
 from datetime import datetime
 from hashlib import sha256
 from typing import Any, Dict, Iterable, List, Optional, Tuple
@@ -95,6 +96,7 @@ def command_metric(
         "command_kwargs": command_kwargs,
         "python_version": str(get_python_version()),
         "node_version": str(get_node_version()),
+        "is_ci": bool(os.environ.get("CI", False)),
         **extra,
     }
     if exception is not None:
