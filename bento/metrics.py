@@ -83,7 +83,7 @@ def command_metric(
         "duration": duration,
         "exit_code": exit_code,
         "repository": __hash_sha256(bento.git.url()),
-        "commit": bento.git.commit(),
+        "hash_of_commit": __hash_sha256(bento.git.commit()),
         "user": get_user_uuid(),
         "command": command,
     }
