@@ -19,37 +19,53 @@ class Entry(object):
 class FileIgnore(object):
     base_path = attr.ib(type=Path)
     patterns = attr.ib(type=Set[str])
-    _walk_cache: Collection[Entry] = attr.ib(default=None)
+    _processed_patterns: Collection[str] = attr.ib(default=None, init=False)
+    _walk_cache: Collection[Entry] = attr.ib(default=None, init=False)
 
     def __attrs_post_init__(self) -> None:
+        self._process_patterns()
         self._init_cache()
+
+    def _process_patterns(self) -> None:
+        """
+        Converts patterns in .gitignore syntax to a unified representation suitable
+        for use with fnmatch.
+        """
+
+        def expand(p: str) -> str:
+            """Convert a single pattern"""
+            if p.rstrip("/").find("/") < 0:
+                # Handles:
+                #   file
+                #   path/
+                p = os.path.join("**", p)
+            if p.startswith("./") or p.startswith("/"):
+                # Handles:
+                #   /relative/to/root
+                #   ./relative/to/root
+                p = p.lstrip("./")
+            if not p.startswith("**"):
+                # Handles:
+                #   path/to/absolute
+                #   */to/absolute
+                #   path/**/absolute
+                p = os.path.join(self.base_path, p)
+            return p
+
+        self._processed_patterns = [expand(p) for p in self.patterns]
 
     def _survives(self, base_path: str, entry: os.DirEntry) -> bool:
         """
         Determines if a single file entry survives the ignore filter.
         """
-        for p in self.patterns:
-            pp = p
-
-            if pp.rstrip("/").find("/") < 0:
-                # Handles:
-                #   file
-                #   path/
-                pp = os.path.join("**", pp)
-
-            if not pp.startswith("**"):
-                # Handles:
-                #   path/to/absolute
-                #   */to/absolute
-                #   path/**/absolute
-                pp = os.path.join(base_path, pp)
-
-            if pp.endswith("/") and entry.is_dir():
-                # Handles:
-                #   ...dir/
-                pp = pp[:-1]
-
-            if fnmatch.fnmatch(entry.path, pp):
+        for p in self._processed_patterns:
+            if (
+                entry.is_dir()
+                and p.endswith("/")
+                and fnmatch.fnmatch(entry.path, p[:-1])
+            ):
+                return False
+            if fnmatch.fnmatch(entry.path, p):
                 return False
         return True
 

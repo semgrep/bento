@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from typing import Collection, Set
 
 from _pytest.monkeypatch import MonkeyPatch
 from bento.context import Context
@@ -10,46 +11,64 @@ BASE_PATH = (THIS_PATH / "..").absolute()
 WALK_PATH = (BASE_PATH / "tests/integration/simple").relative_to(Path(os.getcwd()))
 
 
+def __kept(ignores: Set[str]) -> Collection[str]:
+    fi = FileIgnore(WALK_PATH, ignores)
+    return {e.path for e in fi.entries() if e.survives}
+
+
 def test_no_ignore() -> None:
-    fi = FileIgnore(WALK_PATH, set())
-    all_files = {e.path for e in fi.entries() if e.survives}
+    all_files = __kept(set())
     assert str(WALK_PATH / ".bento.yml") in all_files
     assert str(WALK_PATH / ".bento-whitelist.yml") in all_files
 
 
-def test_ignore_root_dir() -> None:
-    fi = FileIgnore(WALK_PATH, {"dist/", "node_modules/", ".bento/"})
-    all_files = {e.path for e in fi.entries() if e.survives}
+def test_ignore_any_dir() -> None:
+    all_files = __kept({"dist/", "node_modules/", ".bento/"})
     assert str(WALK_PATH / "dist/init.min.js") not in all_files
 
 
-def test_ignore_root_file() -> None:
-    fi = FileIgnore(WALK_PATH, {".bento.yml"})
-    all_files = {e.path for e in fi.entries() if e.survives}
+def test_ignore_any_file() -> None:
+    all_files = __kept({".bento.yml"})
     assert str(WALK_PATH / ".bento.yml") not in all_files
 
 
+def test_ignore_root_file_exists() -> None:
+    all_files = __kept({"/init.js"})
+    assert str(WALK_PATH / "init.js") not in all_files
+
+
+def test_ignore_root_file_not_exists() -> None:
+    all_files = __kept({"/bar.js"})
+    assert str(WALK_PATH / "dist" / "foo" / "bar.js") in all_files
+
+
+def test_ignore_relative_file_exists() -> None:
+    all_files = __kept({"./init.js"})
+    assert str(WALK_PATH / "init.js") not in all_files
+
+
+def test_ignore_relative_file_not_exists() -> None:
+    all_files = __kept({"./bar.js"})
+    assert str(WALK_PATH / "dist" / "foo" / "bar.js") in all_files
+
+
 def test_ignore_not_nested() -> None:
-    fi = FileIgnore(WALK_PATH, {"foo/bar.js", ".bento/"})
-    all_files = {e.path for e in fi.entries() if e.survives}
+    all_files = __kept({"foo/bar.js", ".bento/"})
     assert str(WALK_PATH / "dist/foo/bar.js") in all_files
 
 
 def test_ignore_nested_terminal_syntax() -> None:
-    fi = FileIgnore(WALK_PATH, {"foo/", ".bento/", "node_modules/"})
-    all_files = {e.path for e in fi.entries() if e.survives}
+    all_files = __kept({"foo/", ".bento/", "node_modules/"})
     assert str(WALK_PATH / "dist/foo/bar.js") not in all_files
 
 
 def test_ignore_nested_double_start_syntax() -> None:
-    fi = FileIgnore(WALK_PATH, {"**/foo/", ".bento/"})
-    all_files = {e.path for e in fi.entries() if e.survives}
+    all_files = __kept({"**/foo/", ".bento/"})
     assert str(WALK_PATH / "dist/foo/bar.js") not in all_files
 
 
 def test_ignore_full_path() -> None:
-    fi = FileIgnore(WALK_PATH, {"dist/foo/bar.js"})
-    all_files = {e.path for e in fi.entries() if e.survives}
+    all_files = __kept({"dist/foo/bar.js"})
     assert str(WALK_PATH / "dist/foo/bar.js") not in all_files
 
 
