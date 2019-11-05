@@ -2,12 +2,42 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [0.2.1] - 2019-10-24
+## [0.3.0] - 2019-11-01
 
-### Fixed
+### Changed
 
-- Fix an issue where cached results are not invalidated when a file changes on
-  the root path.
+- Bento can now be run from any subdirectory within a project.
+- Updated the privacy and terms-of-service statement.
+
+### Added
+
+- File ignores are configurable via [git-style ignore patterns](https://git-scm.com/docs/gitignore) (include patterns
+  are not supported). Patterns should be added to `.bentoignore`.
+
+- Added additional checks to the `r2c.flake8` tool:
+
+  - All checks from [flake8-bugbear](https://github.com/PyCQA/flake8-bugbear) (except for B009 and B010,
+    which are stylistic in nature).
+  - All checks from [flake8-builtins](https://github.com/gforcada/flake8-builtins).
+  - All checks from [flake8-debugger](https://github.com/jbkahn/flake8-debugger).
+  - All checks from [flake8-executable](https://github.com/xuhdev/flake8-executable).
+
+- Clippy output formatting is now supported.
+  - To enable, run: `bento check --formatter clippy`
+  - Example output:
+
+```
+error: r2c.flake8.E113
+   --> foo.py:6:5
+    |
+  6 |   return x
+    |
+    = note: unexpected indentation
+```
+
+- Autocompletion is now supported from both `bash` and `zsh`. To use:
+  - In `bash`, run `echo -e '\neval "$(_BENTO_COMPLETE=source bento)"' >> ~/.bashrc`.
+  - In `zsh`, run `echo -e '\neval "$(_BENTO_COMPLETE=source_zsh bento)"' >> ~/.zshrc`.
 
 ## [0.2.1] - 2019-10-29
 
