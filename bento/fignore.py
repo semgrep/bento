@@ -43,7 +43,7 @@ class FileIgnore(object):
                 # Handles:
                 #   /relative/to/root
                 #   ./relative/to/root
-                p = p.lstrip("./")
+                p = p.lstrip(".").lstrip("/")
             if not p.startswith("**"):
                 # Handles:
                 #   path/to/absolute

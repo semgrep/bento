@@ -43,7 +43,8 @@ class RunCache(object):
         will change the hash.
         """
 
-        exclude_files = {".bento-whitelist.yml", ".bento.yml"}
+        # No matter settings of .bentoignore, these are always excluded
+        exclude_files = {".bento", ".bento-whitelist.yml", ".bento.yml"}
         files_and_times = (
             (e.path, e.dir_entry.stat(follow_symlinks=False).st_mtime_ns)
             for e in self.file_ignore.entries()

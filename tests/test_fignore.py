@@ -47,6 +47,11 @@ def test_ignore_relative_file_exists() -> None:
     assert str(WALK_PATH / "init.js") not in all_files
 
 
+def test_ignore_relative_dot_file_exists() -> None:
+    all_files = __kept({"./.bento/"})
+    assert str(WALK_PATH / ".bento") not in all_files
+
+
 def test_ignore_relative_file_not_exists() -> None:
     all_files = __kept({"./bar.js"})
     assert str(WALK_PATH / "dist" / "foo" / "bar.js") in all_files
