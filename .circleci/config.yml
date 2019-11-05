@@ -110,7 +110,7 @@ jobs:
           command: (cd tests/integration/react && npm install)
       - run:
           name: "Running bento check"
-          command: pipenv run bento --agree check --no-pager
+          command: pipenv run bento --agree --email test@returntocorp.com check --no-pager
 
 workflows:
   build-and-deploy:

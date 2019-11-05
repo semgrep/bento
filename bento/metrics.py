@@ -1,4 +1,3 @@
-import getpass
 import itertools
 import os
 from datetime import datetime
@@ -6,6 +5,7 @@ from hashlib import sha256
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 import bento.git
+from bento.util import read_global_config
 from bento.violation import Violation
 
 
@@ -49,11 +49,12 @@ def get_user_uuid() -> Optional[str]:
     If this is a git repo, returns a hash of the git email; otherwise
     returns a hash of the system-specific user login
     """
-    git_email = bento.git.user_email()
-    if git_email:
-        return __hash_sha256(git_email)
-    else:
-        return __hash_sha256(getpass.getuser())
+    email = read_user_email()
+
+    if email:
+        return __hash_sha256(email)
+
+    return None
 
 
 def violations_to_metrics(
@@ -76,6 +77,15 @@ def violations_to_metrics(
     ]
 
 
+def read_user_email() -> Optional[str]:
+    # email guaranteed to exist because we check it for every command
+    global_config = read_global_config()
+    if not global_config:
+        return None
+
+    return global_config.get("email")
+
+
 def command_metric(
     command: str,
     command_kwargs: Dict[str, Any],
@@ -89,7 +99,7 @@ def command_metric(
         "exit_code": exit_code,
         "repository": __hash_sha256(bento.git.url()),
         "commit": bento.git.commit(),
-        "user": get_user_uuid(),
+        "email": read_user_email(),
         "command": command,
         "command_kwargs": command_kwargs,
         "is_ci": bool(os.environ.get("CI", False)),

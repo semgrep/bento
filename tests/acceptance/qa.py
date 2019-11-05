@@ -1,8 +1,11 @@
+import os
 import shutil
 import subprocess
 from typing import Any, List, Union
 
 import yaml
+
+from bento.constants import GLOBAL_CONFIG_DIR, GLOBAL_CONFIG_PATH, QA_TEST_EMAIL_ADDRESS
 
 Expectation = Union[str, List[str]]
 
@@ -27,6 +30,7 @@ def check_command(step: Any, pwd: str, target: str) -> None:
     match their respective expected values.
     """
     command = step["command"]
+
     expected_returncode = step.get("returncode")
     expected_out = step.get("expected_out")
     expected_err = step.get("expected_err")
@@ -88,6 +92,11 @@ def run_repo(target: str) -> None:
         stderr=subprocess.PIPE,
         check=True,
     )
+
+    # before running the commands, add email to global bento config
+    os.makedirs(GLOBAL_CONFIG_DIR, exist_ok=True)
+    with open(GLOBAL_CONFIG_PATH, "w+") as f:
+        f.write(f"email: {QA_TEST_EMAIL_ADDRESS}")
 
     for step in steps:
         check_command(step, target_dir, target)

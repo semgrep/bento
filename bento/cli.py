@@ -1,12 +1,12 @@
 import logging
 import os
 import sys
-from typing import Any, Union
+from typing import Any, Dict, Optional, Union
 
 import click
 import requests
-import yaml
 from semantic_version import Version
+from validate_email import validate_email
 
 import bento.constants as constants
 import bento.decorators
@@ -18,27 +18,12 @@ import bento.util
 from bento.commands import archive, check, hook, init, update_ignores
 from bento.context import Context
 from bento.network import fetch_latest_version, post_metrics
-from bento.util import echo_error, echo_warning
-
-UPGRADE_WARNING_OUTPUT = f"""
-╭─────────────────────────────────────────────╮
-│  🎉 A new version of Bento is available 🎉  │
-│  Try it out by running:                     │
-│                                             │
-│       {click.style("pip3 install --upgrade bento-cli", fg="blue")}      │
-│                                             │
-╰─────────────────────────────────────────────╯
-"""
-
-TERMS_OF_SERVICE_MESSAGE = f"""│ We’re constantly looking for ways to make Bento better! To that end, we
-│ anonymously report usage statistics to improve the tool over time. Bento runs
-│ on your local machine and never sends your code anywhere or to anyone. Learn
-│ more at https://github.com/returntocorp/bento/blob/master/PRIVACY.md.
-"""
-
-TERMS_OF_SERVICE_ERROR = f"""
-Bento did NOT install. Bento beta users must agree to the terms of service to continue. Please reach out to us at support@r2c.dev with questions or concerns.
-"""
+from bento.util import (
+    echo_error,
+    echo_warning,
+    persist_global_config,
+    read_global_config,
+)
 
 
 def __setup_logging() -> None:
@@ -105,74 +90,89 @@ def is_running_supported_python3() -> bool:
     return python_major_v >= 3 and python_minor_v >= 6
 
 
-def has_completed_registration() -> bool:
-    if not os.path.exists(constants.GLOBAL_CONFIG_PATH):
-        return False
-
-    with open(constants.GLOBAL_CONFIG_PATH) as yaml_file:
-        global_config = yaml.safe_load(yaml_file)
-
-    if constants.TERMS_OF_SERVICE_KEY not in global_config:
-        return False
-
-    # We care that there is a version of the terms of service a user has agreed to,
-    # taking a "good enough" approach with no validation that it's a version that
-    # actually exists.
-
-    tos_version = global_config[constants.TERMS_OF_SERVICE_KEY]
-    # If Version throws an exception, then string is not a valid semver
-    try:
-        Version(version_string=tos_version)
-    except Exception:
-        raise ValueError(
-            f"Invalid semver for `{constants.TERMS_OF_SERVICE_KEY}` in {constants.GLOBAL_CONFIG_PATH}: {tos_version}. Deleting the key/value and re-running Bento should resolve the issue."
+def confirm_tos_update(global_config: Dict[str, Any]) -> bool:
+    if global_config is None or constants.TERMS_OF_SERVICE_KEY not in global_config:
+        # this message is shown if the user has never agreed to the TOS
+        tos_message = (
+            "To get started for the first time, please review our terms of service"
         )
+    else:
+        # We care that the user has agreed to the current terms of service
+        tos_version = global_config[constants.TERMS_OF_SERVICE_KEY]
+
+        try:
+            agreed_to_version = Version(version_string=tos_version)
+            if agreed_to_version == Version(
+                version_string=constants.TERMS_OF_SERVICE_VERSION
+            ):
+                return True
+        except Exception:
+            bento.util.echo_error(
+                f"Invalid semver for `{constants.TERMS_OF_SERVICE_KEY}` in {constants.GLOBAL_CONFIG_PATH}: {tos_version}. Deleting the key/value and re-running Bento should resolve the issue."
+            )
+            return False
+
+        # we only return from the try block if the user has agreed to an older version of the TOS
+        tos_message = "We've made changes to our terms of service. Please review the new terms. If you have any questions or concerns please reach out via support@r2c.dev."
+
+    # the case where the user never agreed to the TOS or agreed to an earlier version
+    click.echo(f"{tos_message}:\n\n{constants.TERMS_OF_SERVICE_MESSAGE}")
+
+    agreed = click.confirm(
+        "Do you agree to Bento's terms of service and privacy policy?", default=True
+    )
+
+    if agreed:
+        global_config[
+            constants.TERMS_OF_SERVICE_KEY
+        ] = constants.TERMS_OF_SERVICE_VERSION
+
+        persist_global_config(global_config)
+    else:
+        bento.util.echo_error(constants.TERMS_OF_SERVICE_ERROR)
+        return False
 
     return True
 
 
-def register_user() -> bool:
-    global_config = {}
+def update_email(global_config: Dict[str, Any], email: Optional[str] = None) -> bool:
+    if not email and "email" not in global_config:
+        click.echo(
+            "For the Bento beta, we may contact you infrequently via email to ask for your feedback and let you know about updates. You can unsubscribe at any time."
+        )
 
-    bolded_welcome = click.style(f"Welcome to Bento!", bold=True)
-    click.echo(
-        f"{bolded_welcome} You're about to get a powerful suite of tailored tools.\n"
-    )
-    click.echo(
-        f"To get started for the first time, please review our terms of service:\n\n{TERMS_OF_SERVICE_MESSAGE}"
-    )
+        email = None
+        while not (email and validate_email(email)):
+            email = click.prompt("Email", type=str, default=bento.git.user_email())
 
-    agreed_terms_of_service = click.confirm(
-        "Do you agree to Bento's terms of service and privacy policy?", default=True
-    )
-    if agreed_terms_of_service:
-        global_config[
-            constants.TERMS_OF_SERVICE_KEY
-        ] = constants.TERMS_OF_SERVICE_VERSION
-    else:
-        bento.util.echo_error(TERMS_OF_SERVICE_ERROR)
-        return False
-
-    subscribe_to_email = click.confirm(
-        "For the Bento beta, may we contact you infrequently via email to ask for your feedback and let you know about updates? You can unsubscribe at any time.",
-        default=True,
-    )
-
-    if subscribe_to_email:
-        email = click.prompt("Email", type=str, default=bento.git.user_email())
-        global_config["email"] = email
         r = __post_email_to_mailchimp(email)
         if not r:
             echo_warning(
-                "\nWe were unable to subscribe you to the Bento mailing list, but will continue with installation. Please shoot us a note via support@r2c.dev to debug."
+                "\nWe were unable to subscribe you to the Bento mailing list (which means you may miss out on announcements!). Bento will continue running. Please shoot us a note via support@r2c.dev to debug."
             )
 
-    os.makedirs(constants.GLOBAL_CONFIG_DIR, exist_ok=True)
-    with open(constants.GLOBAL_CONFIG_PATH, "w+") as yaml_file:
-        yaml.safe_dump(global_config, yaml_file)
+        global_config["email"] = email
+        persist_global_config(global_config)
 
-    click.echo(f"\nCreated user configs at {constants.GLOBAL_CONFIG_PATH}.")
+    return True
 
+
+def verify_registration(agree: bool, email: Optional[str]) -> bool:
+    global_config = read_global_config()
+    if global_config is None:
+        global_config = {}
+
+        # only show welcome message if running in interactive mode
+        if not agree or email is None:
+            bolded_welcome = click.style(f"Welcome to Bento!", bold=True)
+            click.echo(
+                f"{bolded_welcome} You're about to get a powerful suite of tailored tools.\n"
+            )
+
+    if not agree and not confirm_tos_update(global_config):
+        return False
+
+    update_email(global_config, email=email)
     return True
 
 
@@ -191,8 +191,14 @@ def register_user() -> bool:
     help="Automatically agree to terms of service.",
     default=False,
 )
+@click.option(
+    "--email",
+    type=str,
+    help="Email address to use while running this command without global configs e.g. in CI",
+    default=None,
+)
 @click.pass_context
-def cli(ctx: click.Context, agree: bool) -> None:
+def cli(ctx: click.Context, agree: bool, email: Optional[str]) -> None:
     __setup_logging()
     ctx.obj = Context()
     if not is_running_supported_python3():
@@ -200,15 +206,14 @@ def cli(ctx: click.Context, agree: bool) -> None:
             "Bento requires Python 3.6+. Please ensure you have Python 3.6+ and installed Bento via `pip3 install bento-cli`."
         )
         sys.exit(3)
-    if not agree and not has_completed_registration():
-        registered = register_user()
-        logging.error("User did not complete registration")
-        if not registered:
-            # Terminate with non-zero error
-            sys.exit(3)
+    verified = verify_registration(agree, email)
+    if not verified:
+        logging.error("Could not verify the user's registration.")
+        # Terminate with non-zero error
+        sys.exit(3)
     if not is_running_latest():
         logging.warn("Bento client is outdated")
-        click.echo(UPGRADE_WARNING_OUTPUT)
+        click.echo(constants.UPGRADE_WARNING_OUTPUT)
 
 
 cli.add_command(archive.archive)

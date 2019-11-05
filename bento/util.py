@@ -12,10 +12,62 @@ import sys
 import threading
 import types
 from importlib import import_module
-from typing import Collection, List, Optional, Pattern, Type
+from typing import Any, Collection, Dict, List, Optional, Pattern, Type
 
 import click
 import psutil
+import yaml
+from semantic_version import Version
+
+import bento.constants as constants
+
+
+def get_python_version() -> Optional[Version]:
+    """ Get python version as specified in sys.info
+        Returns None if python not found in sys.info
+    """
+    vinfo = sys.version_info
+
+    if vinfo:
+        return Version(f"{vinfo.major}.{vinfo.minor}.{vinfo.micro}")
+    return None
+
+
+def get_node_version() -> Optional[Version]:
+    """ Get Node.js version by invoking `node` binary in the system
+        Returns None if `node` call is unsuccessful (exit code < 0)
+    """
+    version = subprocess.run(
+        ["node", "--version"],
+        check=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.PIPE,
+    )
+    node_version = version.stdout.decode("utf-8").rstrip().strip("v")
+    if version.returncode >= 0:
+        return Version(node_version)
+
+    return None
+
+
+def read_global_config() -> Optional[Dict[str, Any]]:
+    if not os.path.exists(constants.GLOBAL_CONFIG_PATH):
+        return None
+
+    with open(constants.GLOBAL_CONFIG_PATH, "r") as yaml_file:
+        try:
+            return yaml.safe_load(yaml_file)
+        except Exception:
+            logging.warn("Invalid global config file found")
+            return None
+
+
+def persist_global_config(global_config: Dict[str, Any]) -> None:
+    os.makedirs(constants.GLOBAL_CONFIG_DIR, exist_ok=True)
+    with open(constants.GLOBAL_CONFIG_PATH, "w+") as yaml_file:
+        yaml.safe_dump(global_config, yaml_file)
+
+    click.echo(f"\nUpdated user configs at {constants.GLOBAL_CONFIG_PATH}.")
 
 
 def fetch_line_in_file(path: str, line_number: int) -> Optional[str]:
