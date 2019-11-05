@@ -104,12 +104,12 @@ def is_child_process_of(pattern: Pattern) -> bool:
     return next(matches, None) is not None
 
 
-def package_subclasses(type: Type, pkg_path: str) -> List[Type]:
+def package_subclasses(t: Type, pkg_path: str) -> List[Type]:
     """
-    Finds all subtypes of a type within a module path, relative to this module
+    Finds all subtypes of a type t within a module path, relative to this module
 
     Parameters:
-        type: The parent type
+        t: The parent type
         pkg_path: The path to search, written as a python identifier (e.g. bento.extra)
 
     Returns:
@@ -122,7 +122,7 @@ def package_subclasses(type: Type, pkg_path: str) -> List[Type]:
         if name != "setup" and not ispkg:
             import_module(f"{pkg_path}.{name}", __package__)
 
-    return type.__subclasses__()
+    return t.__subclasses__()
 
 
 def less(

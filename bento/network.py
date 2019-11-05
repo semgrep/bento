@@ -41,8 +41,17 @@ def _get_default_headers() -> Dict[str, str]:
 
 
 def no_auth_get(
-    url: str, params: Dict[str, str] = {}, headers: Dict[str, str] = {}, **kwargs: Any
+    url: str,
+    params: Optional[Dict[str, str]] = None,
+    headers: Optional[Dict[str, str]] = None,
+    **kwargs: Any,
 ) -> Response:
+    if headers is None:
+        headers = {}
+
+    if params is None:
+        params = {}
+
     """Perform a requests.get and default headers set"""
     headers = {**_get_default_headers(), **headers}
     r = requests.get(url, headers=headers, params=params, **kwargs, timeout=TIMEOUT)
@@ -50,8 +59,19 @@ def no_auth_get(
 
 
 def no_auth_post(
-    url: str, json: Any = {}, params: Dict[str, str] = {}, headers: Dict[str, str] = {}
+    url: str,
+    json: Any = None,
+    params: Optional[Dict[str, str]] = None,
+    headers: Optional[Dict[str, str]] = None,
 ) -> Response:
+
+    if json is None:
+        json = {}
+    if params is None:
+        params = {}
+    if headers is None:
+        headers = {}
+
     """Perform a requests.post and default headers set"""
     headers = {**_get_default_headers(), **headers}
     r = requests.post(url, headers=headers, params=params, json=json, timeout=TIMEOUT)
