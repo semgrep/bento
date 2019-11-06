@@ -66,9 +66,11 @@ class Runner:
             with self._lock:
                 bar.set_postfix_str("🍜")
 
-            tool.setup()
-            if self._setup_latch:
-                self._setup_latch.count_down()
+            try:
+                tool.setup()
+            finally:
+                if self._setup_latch:
+                    self._setup_latch.count_down()
             with self._lock:
                 bar.update(MIN_BAR_VALUE)
                 bar.set_postfix_str("🍤")
@@ -80,7 +82,9 @@ class Runner:
             th.start()
             if self._setup_latch:
                 self._setup_latch.wait_for()
-            results = bento.result.filter(tool.tool_id(), tool.results(paths), baseline)
+            results = bento.result.filtered(
+                tool.tool_id(), tool.results(paths), baseline
+            )
             with self._lock:
                 self._run[ix] = False
             th.join()
@@ -139,7 +143,7 @@ class Runner:
             all_results = pool.map(func, indices_and_tools)
 
         # click.echo("\x1b[1F")  # Resets line position afters bars close
-        for b in self._bars:
+        for _ in self._bars:
             click.echo("", err=True)
         for b in self._bars:
             b.close()

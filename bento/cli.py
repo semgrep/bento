@@ -135,6 +135,34 @@ def confirm_tos_update(global_config: Dict[str, Any]) -> bool:
     return True
 
 
+def _suggest_autocomplete() -> None:
+    if "SHELL" not in os.environ:
+        return
+    shell = os.environ["SHELL"]
+    if shell.endswith("/zsh"):
+        click.echo(
+            """
+╭────────────────────────────────────────────────────────────────────╮
+│           🍱 To enable zsh autocompletion please run 🍱            │
+│                                                                    │
+│ echo -e '\\neval "$(_BENTO_COMPLETE=source_zsh bento)"' >> ~/.zshrc │
+│                                                                    │
+╰────────────────────────────────────────────────────────────────────╯
+"""
+        )
+    elif shell.endswith("/bash"):
+        click.echo(
+            """
+╭─────────────────────────────────────────────────────────────────╮
+│         🍱 To enable bash autocompletion please run 🍱          │
+│                                                                 │
+│ echo -e '\\neval "$(_BENTO_COMPLETE=source bento)"' >> ~/.bashrc │
+│                                                                 │
+╰─────────────────────────────────────────────────────────────────╯
+"""
+        )
+
+
 def update_email(global_config: Dict[str, Any], email: Optional[str] = None) -> bool:
     if not email and "email" not in global_config:
         click.echo(
@@ -173,6 +201,10 @@ def verify_registration(agree: bool, email: Optional[str]) -> bool:
         return False
 
     update_email(global_config, email=email)
+
+    if not agree:
+        _suggest_autocomplete()
+
     return True
 
 
@@ -184,6 +216,12 @@ def verify_registration(agree: bool, email: Optional[str]) -> bool:
     callback=_print_version,
     expose_value=False,
     is_eager=True,
+)
+@click.option(
+    "--base-path",
+    help="Path to the directory containing the code, as well as the .bento.yml file.",
+    type=click.Path(exists=True, file_okay=False),
+    default=None,
 )
 @click.option(
     "--agree",
@@ -198,21 +236,25 @@ def verify_registration(agree: bool, email: Optional[str]) -> bool:
     default=None,
 )
 @click.pass_context
-def cli(ctx: click.Context, agree: bool, email: Optional[str]) -> None:
+def cli(
+    ctx: click.Context, base_path: Optional[str], agree: bool, email: Optional[str]
+) -> None:
     __setup_logging()
-    ctx.obj = Context()
+    is_init = ctx.invoked_subcommand == "init"
+    if base_path is None:
+        ctx.obj = Context(is_init=is_init)
+    else:
+        ctx.obj = Context(base_path=base_path, is_init=is_init)
     if not is_running_supported_python3():
         echo_error(
             "Bento requires Python 3.6+. Please ensure you have Python 3.6+ and installed Bento via `pip3 install bento-cli`."
         )
         sys.exit(3)
-    verified = verify_registration(agree, email)
-    if not verified:
+    if not verify_registration(agree, email):
         logging.error("Could not verify the user's registration.")
-        # Terminate with non-zero error
         sys.exit(3)
     if not is_running_latest():
-        logging.warn("Bento client is outdated")
+        logging.warning("Bento client is outdated")
         click.echo(constants.UPGRADE_WARNING_OUTPUT)
 
 

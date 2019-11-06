@@ -1,4 +1,4 @@
-import os
+from pathlib import Path
 
 from click.testing import CliRunner
 
@@ -6,33 +6,30 @@ import bento.extra.eslint
 import bento.result
 import bento.tool_runner
 import util
-from _pytest.monkeypatch import MonkeyPatch
 from bento.commands.archive import archive
 from bento.context import Context
 
-THIS_PATH = os.path.dirname(__file__)
-BASE_PATH = os.path.abspath(os.path.join(THIS_PATH, "../.."))
+INTEGRATION = Path(__file__).parent.parent / "integration"
 
 
-def test_archive_no_init(monkeypatch: MonkeyPatch) -> None:
+def test_archive_no_init() -> None:
     """Validates that archive fails when no configuration file"""
 
     runner = CliRunner()
-    monkeypatch.chdir(os.path.join(BASE_PATH, "tests/integration"))
     # No .bento.yml exists in this directory
-    result = runner.invoke(archive, obj=Context())
+    result = runner.invoke(archive, obj=Context(base_path=INTEGRATION))
     assert result.exit_code == 3
 
 
-def test_archive_updates_whitelist(monkeypatch: MonkeyPatch) -> None:
+def test_archive_updates_whitelist() -> None:
     """Validates that archive updates the whitelist file"""
 
     runner = CliRunner()
 
-    monkeypatch.chdir(os.path.join(BASE_PATH, "tests/integration/simple"))
+    context = Context(INTEGRATION / "simple")
 
-    with util.mod_file(bento.constants.BASELINE_FILE_PATH) as whitelist:
-        runner.invoke(archive, obj=Context())
+    with util.mod_file(context.baseline_file_path) as whitelist:
+        runner.invoke(archive, obj=context)
         yml = bento.result.yml_to_violation_hashes(whitelist)
 
     expectation = {

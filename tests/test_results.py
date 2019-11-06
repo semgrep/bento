@@ -71,6 +71,6 @@ def test_yml_to_violation_hashes() -> None:
 def test_filter_results() -> None:
     baseline = {"r2c_eslint": {"ab901b8d5807dcf6074c35f9aa053ec2"}}
 
-    filtered = result.filter("r2c_eslint", VIOLATIONS, baseline)
+    filtered = result.filtered("r2c_eslint", VIOLATIONS, baseline)
     assert filtered[0].filtered
     assert not filtered[1].filtered

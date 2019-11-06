@@ -1,10 +1,10 @@
 import sys
-from typing import Callable, Set
+from typing import Any, Callable, List, Set, cast
 
 import click
 
 from bento.context import Context
-from bento.util import echo_error, echo_success
+from bento.util import AutocompleteSuggestions, echo_error, echo_success
 
 
 def __update_ignores(
@@ -25,8 +25,38 @@ def __update_ignores(
     context.config = config
 
 
+def __get_valid_tools(
+    ctx: Any, args: List[str], incomplete: str
+) -> AutocompleteSuggestions:
+    # context is not yet initialized, so just do it now
+    try:
+        context = Context()
+        tool_config = context.config["tools"]
+        results = list(filter(lambda s: s.startswith(incomplete), tool_config))
+        return cast(AutocompleteSuggestions, results)
+    except Exception:
+        return []
+
+
+def __get_disabled_checks(
+    ctx: Any, args: List[str], incomplete: str
+) -> AutocompleteSuggestions:
+    # context is not yet initialized, so just do it now
+    try:
+        context = Context()
+        results = list(
+            filter(
+                lambda s: s.startswith(incomplete),
+                context.config["tools"][args[-1]]["ignore"],
+            )
+        )
+        return cast(AutocompleteSuggestions, results)
+    except Exception:
+        return []
+
+
 @click.command()
-@click.argument("tool", type=str, nargs=1)
+@click.argument("tool", type=str, nargs=1, autocompletion=__get_valid_tools)
 @click.argument("check", type=str, nargs=1)
 @click.pass_obj
 def disable(context: Context, tool: str, check: str) -> None:
@@ -42,8 +72,8 @@ def disable(context: Context, tool: str, check: str) -> None:
 
 
 @click.command()
-@click.argument("tool", type=str, nargs=1)
-@click.argument("check", type=str, nargs=1)
+@click.argument("tool", type=str, nargs=1, autocompletion=__get_valid_tools)
+@click.argument("check", type=str, nargs=1, autocompletion=__get_disabled_checks)
 @click.pass_obj
 def enable(context: Context, tool: str, check: str) -> None:
     """

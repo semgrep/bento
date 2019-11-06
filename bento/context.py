@@ -1,43 +1,23 @@
 import logging
-import os
 import time
-from typing import Any, Dict, Optional, Type
+from typing import Dict, Type
 
-import yaml
+import attr
 
-import bento.constants as constants
 import bento.extra
 import bento.formatter
+from bento.base_context import BaseContext
 from bento.formatter import Formatter
-from bento.tool import Tool, ToolContext
+from bento.tool import Tool
 from bento.util import echo_error
 
 
-class Context:
-    def __init__(self, base_path: str = ".", config: Optional[Dict[str, Any]] = None):
-        self._base_path = base_path
-        self._config: Optional[Dict[str, Any]] = None
-        if config is not None:
-            self._config = config
-        self._formatter: Optional[Formatter] = None
-        self._start: float = time.time()
-        self._tool_inventory: Optional[Dict[str, Type[Tool]]] = None
-        self._tools: Optional[Dict[str, Tool]] = None
-
-    @property
-    def base_path(self) -> str:
-        return self._base_path
-
-    @property
-    def config(self) -> Dict[str, Any]:
-        if self._config is None:
-            self._config = Context._open_config()
-        return self._config
-
-    @config.setter
-    def config(self, config: Dict[str, Any]) -> None:
-        Context._write_config(config)
-        self._config = config
+@attr.s
+class Context(BaseContext):
+    _formatter = attr.ib(type=Formatter, default=None, init=False)
+    _start = attr.ib(type=float, default=time.time(), init=False)
+    _tool_inventory = attr.ib(type=Dict[str, Type[Tool]], init=False, default=None)
+    _tools = attr.ib(type=Dict[str, Tool], init=False, default=None)
 
     @property
     def formatter(self) -> Formatter:
@@ -75,40 +55,6 @@ class Context:
             raise AttributeError(f"{tool_id} not one of {', '.join(tt.keys())}")
         return tt[tool_id]
 
-    def tool_context(self, tool_id: str) -> ToolContext:
-        """
-        Returns a configured tool's subcontext
-
-        Raises:
-            AttributeError: If the requested tool is not configured
-        """
-        tt = self.config["tools"]
-        if tool_id not in tt:
-            raise AttributeError(f"{tool_id} not one of {', '.join(tt.keys())}")
-        return ToolContext(base_path=self.base_path, config=tt[tool_id])
-
-    @staticmethod
-    def _open_config() -> Dict[str, Any]:
-        """
-        Opens this project's configuration file
-        """
-        logging.info(
-            f"Loading bento configuration from {os.path.abspath(constants.CONFIG_PATH)}"
-        )
-        with open(constants.CONFIG_PATH) as yaml_file:
-            return yaml.safe_load(yaml_file)
-
-    @staticmethod
-    def _write_config(config: Dict[str, Any]) -> None:
-        """
-        Overwrites this project's configuration file
-        """
-        logging.info(
-            f"Writing bento configuration to {os.path.abspath(constants.CONFIG_PATH)}"
-        )
-        with open(constants.CONFIG_PATH, "w") as yaml_file:
-            yaml.safe_dump(config, yaml_file)
-
     def _load_tool_inventory(self) -> Dict[str, Type[Tool]]:
         """
         Loads all tools in the module into a dictionary indexed by tool_id
@@ -132,7 +78,7 @@ class Context:
                 # TODO: Move to display layer
                 echo_error(f"No tool named '{tn}' could be found")
                 continue
-            tools[tn] = ti(self.tool_context(tn))
+            tools[tn] = ti(self)
 
         return tools
 

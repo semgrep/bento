@@ -1,166 +1,146 @@
 import json
 import logging
 import os
-from fnmatch import fnmatch
-from typing import Iterable, List, Optional
+from pathlib import Path
+from typing import Iterable, Optional
 
+import attr
 import mmh3
 
 from bento import __version__ as BENTO_VERSION
-from bento.constants import LOCAL_RUN_CACHE
+from bento.fignore import FileIgnore
 
 
+@attr.s
 class RunCache(object):
     """
         Acts as a local cache for tool run output
 
         Different tools can be accessed concurrently, but cache access
-        is not threadsafe if multiple threads access the same tool
+        is not threadsafe if multiple threads access the same tool.
     """
 
-    @staticmethod
-    def __cache_metadata_path(tool_id: str) -> str:
+    file_ignore = attr.ib(type=FileIgnore)
+    cache_dir: Path = attr.ib(converter=Path)
+
+    def __cache_metadata_path(self, tool_id: str) -> Path:
         """
             Returns name of file that cache results metadata for a given tool
         """
-        return f"{LOCAL_RUN_CACHE}/{tool_id}-meta.json"
+        return self.cache_dir / f"{tool_id}-meta.json"
 
-    @staticmethod
-    def __cache_data_path(tool_id: str) -> str:
+    def __cache_data_path(self, tool_id: str) -> Path:
         """
             Returns name of file that cache results would be contained in
         """
-        return f"{LOCAL_RUN_CACHE}/{tool_id}.data"
+        return self.cache_dir / f"{tool_id}.data"
 
-    @staticmethod
-    def _modified_hash(paths: List[str]) -> str:
+    def _modified_hash(self) -> str:
         """
         Returns a hash of the recursive mtime of a path.
 
         Any modification of a file within this tree (that does not match an ignore pattern)
         will change the hash.
         """
-        # subdirectories to exclude
-        # TODO: unify path ignore logic across bento
-        exclude_dirs = [
-            "**/.bento/*",
-            "**/.git/*",
-            "**/node_modules/*",
-            "**/site-packages/*",
-        ]
-        exclude_files = {".bento-whitelist.yml", ".bento-baseline.yml", ".bento.yml"}
 
-        def glob_match(root: str, exclude_dirs: Iterable[str]) -> bool:
-            for ex in exclude_dirs:
-                if fnmatch(f"{root}/", ex):
-                    return True
-            return False
-
-        all_items = (
-            os.path.join(root, f)
-            for p in paths
-            for root, dirs, files in os.walk(p)
-            if not glob_match(root, exclude_dirs)
-            for f in files
-            if f not in exclude_files
+        # No matter settings of .bentoignore, these are always excluded
+        exclude_files = {".bento", ".bento-whitelist.yml", ".bento.yml"}
+        files_and_times = (
+            (e.path, e.dir_entry.stat(follow_symlinks=False).st_mtime_ns)
+            for e in self.file_ignore.entries()
+            if e.survives
+            if os.path.basename(e.path) not in exclude_files
         )
+
         h = 0
-        for f in all_items:
-            m = os.path.getmtime(f)
+        for f, m in files_and_times:
             h ^= mmh3.hash128(f"{f}:{m}")
 
         return format(h, "x")
 
-    @staticmethod
-    def __cleanup(tool_id: str) -> None:
+    def __cleanup(self, tool_id: str) -> None:
         """
             Delete all state relevant for cacheing tool_id
         """
-        cache_metadata_path = RunCache.__cache_metadata_path(tool_id)
-        cache_data_path = RunCache.__cache_data_path(tool_id)
+        cache_metadata_path = self.__cache_metadata_path(tool_id)
+        cache_data_path = self.__cache_data_path(tool_id)
 
         # Silently delete file if exists
         # note that checking for file before deletion
         # has a TOCTOU race so will need a try-catch anyway
         try:
-            os.remove(cache_metadata_path)
+            cache_metadata_path.unlink()
         except OSError:
             pass
 
         try:
-            os.remove(cache_data_path)
+            cache_data_path.unlink()
         except OSError:
             pass
 
-    @staticmethod
-    def get(tool_id: str, paths: Iterable[str]) -> Optional[str]:
+    def wipe(self) -> None:
+        try:
+            self.cache_dir.unlink()
+        except OSError:
+            pass
+
+    def get(self, tool_id: str, paths: Iterable[str]) -> Optional[str]:
         """
             Returns stored run output if it exists in local run cache and the
             cache entry is still valid (files have not been modified since caching)
 
             Returns None if no such cache entry is found
         """
-        cache_metadata_path = RunCache.__cache_metadata_path(tool_id)
-        cache_data_path = RunCache.__cache_data_path(tool_id)
+        cache_metadata_path = self.__cache_metadata_path(tool_id)
+        cache_data_path = self.__cache_data_path(tool_id)
 
-        if not (
-            os.path.exists(cache_metadata_path) and os.path.exists(cache_data_path)
-        ):
-            RunCache.__cleanup(tool_id)
+        if not (cache_metadata_path.exists() and cache_data_path.exists()):
+            self.__cleanup(tool_id)
             return None
 
-        with open(cache_metadata_path, "r") as file:
+        with cache_metadata_path.open() as file:
             try:
                 metadata = json.load(file)
             except json.JSONDecodeError as e:
                 logging.error(f"Failed to parse tool {tool_id} cache metadata as json")
                 logging.error(e.msg, e.doc, e.pos)
-                RunCache.__cleanup(tool_id)
+                self.__cleanup(tool_id)
                 return None
 
         cache_hash = metadata.get("hash")
         cache_paths = sorted(metadata.get("paths"))
         cache_bento_version = metadata.get("version")
-        paths = sorted(paths)
+        sorted_paths = sorted(paths)
 
         if (
-            cache_bento_version != BENTO_VERSION
-            or cache_paths != paths
-            or cache_hash != RunCache._modified_hash(paths)
+            cache_paths != sorted_paths
+            or cache_bento_version != BENTO_VERSION
+            or cache_hash != self._modified_hash()
         ):
             logging.warning(f"Invalidating cache for {tool_id}")
-            RunCache.__cleanup(tool_id)
+            self.__cleanup(tool_id)
             return None
 
-        with open(cache_data_path) as file:
-            raw_results = file.read()
+        return cache_data_path.read_text()
 
-        return raw_results
-
-    @staticmethod
-    def put(tool_id: str, paths: Iterable[str], raw_results: str) -> None:
+    def put(self, tool_id: str, paths: Iterable[str], raw_results: str) -> None:
         """
             Caches raw_results as the output of running TOOL_ID on PATHS
 
             Note that RunCache.get assumed paths is not None so should be changed
             if PATHS here is nullable
         """
-        RunCache.__cleanup(tool_id)
+        self.__cleanup(tool_id)
 
-        cache_metadata_path = RunCache.__cache_metadata_path(tool_id)
-        cache_data_path = RunCache.__cache_data_path(tool_id)
-
-        os.makedirs(os.path.dirname(cache_metadata_path), exist_ok=True)
+        self.cache_dir.mkdir(parents=True, exist_ok=True)
+        cache_metadata_path = self.__cache_metadata_path(tool_id)
+        cache_data_path = self.__cache_data_path(tool_id)
 
         # Data should be written before metadata
-        with open(cache_data_path, "w") as file:
-            file.write(raw_results)
+        cache_data_path.write_text(raw_results)
+        hsh = self._modified_hash()
 
-        # Convert paths to list so it is json serializable
-        paths = sorted(paths)
-        hash = RunCache._modified_hash(paths)
+        metadata = {"paths": sorted(paths), "hash": hsh, "version": BENTO_VERSION}
 
-        metadata = {"paths": paths, "hash": hash, "version": BENTO_VERSION}
-
-        with open(cache_metadata_path, "w") as file:
+        with cache_metadata_path.open("w") as file:
             json.dump(metadata, file)

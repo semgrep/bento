@@ -1,15 +1,17 @@
 import json
 import logging
-import os
+import shlex
 import subprocess
 import venv
 from abc import abstractmethod
+from pathlib import Path
 from typing import Dict, Iterable, List, Tuple
 
+import click
 from packaging.version import InvalidVersion, Version
 
-import bento.constants
 import bento.tool
+from bento.base_context import BaseContext
 from bento.util import echo_success
 
 
@@ -18,31 +20,24 @@ class PythonTool(bento.tool.Tool):
     # Fix by using the virtual environment's python
     PIP_CMD = "python -m pip"
 
-    def matches_project(self) -> bool:
-        return self.project_has_extensions(
-            "*.py",
-            extra=["-not", "-path", "./node_modules/*", "-not", "-path", "./.bento/*"],
-        )
+    @classmethod
+    def matches_project(cls, context: BaseContext) -> bool:
+        return cls.project_has_extensions(context, "*.py")
 
-    @property
+    @classmethod
     @abstractmethod
-    def venv_subdir(self) -> str:
-        """
-        Subdirectory inside resource directory where virtual env is located.
-        """
+    def venv_subdir_name(cls) -> str:
         pass
 
     @property
-    def __venv_dir(self) -> str:
-        return os.path.join(
-            self.base_path, bento.constants.RESOURCE_DIR, self.venv_subdir
-        )
+    def __venv_dir(self) -> Path:
+        return self.context.resource_path / self.venv_subdir_name()
 
     def venv_create(self) -> None:
         """
         Creates a virtual environment for this tool
         """
-        if not os.path.exists(self.__venv_dir):
+        if not self.__venv_dir.exists():
             echo_success(f"Creating virtual environment for {self.tool_id()}")
             # If we are already in a virtual environment, venv.create() will fail to install pip,
             # but we probably have virtualenv in the path, so try that first.
@@ -54,10 +49,13 @@ class PythonTool(bento.tool.Tool):
                     check=True,
                 )
             except Exception:
-                venv.create(self.__venv_dir, with_pip=True)
+                venv.create(str(self.__venv_dir), with_pip=True)
 
     def venv_exec(
-        self, cmd: str, env: Dict[str, str] = {}, check_output: bool = True
+        self,
+        cmd: str,
+        env: Dict[str, str] = bento.util.EMPTY_DICT,
+        check_output: bool = True,
     ) -> str:
         """
         Executes tool set-up or check within its virtual environment
@@ -67,7 +65,7 @@ class PythonTool(bento.tool.Tool):
         v = subprocess.Popen(
             wrapped,
             shell=True,
-            cwd=self.base_path,
+            cwd=str(self.base_path),
             encoding="utf8",
             executable="/bin/bash",
             env=env,
@@ -133,15 +131,25 @@ class PythonTool(bento.tool.Tool):
                 # skip it
                 pass
 
-        all_installed = True
+        to_install: Dict[str, str] = {}
         for name in packages:
             minimum_version = Version(packages[name])
-            if name not in installed:
-                echo_success(f"Python package {name} will be installed")
-                all_installed = False
-            elif installed[name] < minimum_version:
-                echo_success(
-                    f"Python package {name} will be upgraded (current {installed[name]}, want {minimum_version})"
-                )
-                all_installed = False
-        return all_installed
+            if name not in installed or installed[name] < minimum_version:
+                to_install[name] = str(minimum_version)
+
+        if to_install:
+            click.echo(f"Installing Python packages: {to_install}", err=True)
+            return False
+        else:
+            return True
+
+    def _ignore_param(self) -> str:
+        """
+        Returns a file exclusion parameter for Python tools
+        """
+        ignores = (
+            shlex.quote(e.path)
+            for e in self.context.file_ignores.entries()
+            if not e.survives
+        )
+        return ",".join(ignores)

@@ -8,6 +8,7 @@ import requests
 from requests.models import Response
 
 from bento.metrics import get_user_uuid
+from bento.util import EMPTY_DICT
 
 BASE_URL = "https://bento.r2c.dev"
 # Add default timeout so that we do not block the user's main thread from exiting
@@ -42,16 +43,10 @@ def _get_default_headers() -> Dict[str, str]:
 
 def no_auth_get(
     url: str,
-    params: Optional[Dict[str, str]] = None,
-    headers: Optional[Dict[str, str]] = None,
+    params: Dict[str, str] = EMPTY_DICT,
+    headers: Dict[str, str] = EMPTY_DICT,
     **kwargs: Any,
 ) -> Response:
-    if headers is None:
-        headers = {}
-
-    if params is None:
-        params = {}
-
     """Perform a requests.get and default headers set"""
     headers = {**_get_default_headers(), **headers}
     r = requests.get(url, headers=headers, params=params, **kwargs, timeout=TIMEOUT)
@@ -60,18 +55,10 @@ def no_auth_get(
 
 def no_auth_post(
     url: str,
-    json: Any = None,
-    params: Optional[Dict[str, str]] = None,
-    headers: Optional[Dict[str, str]] = None,
+    json: Any = EMPTY_DICT,
+    params: Dict[str, str] = EMPTY_DICT,
+    headers: Dict[str, str] = EMPTY_DICT,
 ) -> Response:
-
-    if json is None:
-        json = {}
-    if params is None:
-        params = {}
-    if headers is None:
-        headers = {}
-
     """Perform a requests.post and default headers set"""
     headers = {**_get_default_headers(), **headers}
     r = requests.post(url, headers=headers, params=params, json=json, timeout=TIMEOUT)

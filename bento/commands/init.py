@@ -1,11 +1,11 @@
 import logging
 import os
+import shutil
 import sys
 
 import click
 import yaml
 
-import bento.constants as constants
 import bento.git
 import bento.tool_runner
 from bento.context import Context
@@ -14,19 +14,32 @@ from bento.util import echo_error, echo_success
 
 
 def __install_config_if_not_exists(context: Context) -> None:
-    if not os.path.exists(constants.CONFIG_PATH):
-        click.echo(f"Creating default configuration at {constants.CONFIG_PATH}")
+    config_path = context.config_path
+    if not config_path.exists():
+        pretty_path = context.pretty_path(config_path)
+        click.echo(f"Creating default configuration at {pretty_path}", err=True)
         with (
             open(os.path.join(os.path.dirname(__file__), "../configs/default.yml"))
         ) as template:
             yml = yaml.safe_load(template)
-        for tid, t in context.tool_inventory.items():
-            if not t().matches_project() and tid in yml["tools"]:
+        for tid, tool in context.tool_inventory.items():
+            if not tool.matches_project(context) and tid in yml["tools"]:
                 del yml["tools"][tid]
-        with (open(constants.CONFIG_PATH, "w")) as config_file:
+        with config_path.open("w") as config_file:
             yaml.safe_dump(yml, stream=config_file)
         echo_success(
-            f"Created {constants.CONFIG_PATH}. Please check this file in to source control.\n"
+            f"Created {pretty_path}. Please check this file in to source control.\n"
+        )
+
+    if not context.ignore_file_path.exists():
+        pretty_path = context.pretty_path(context.ignore_file_path)
+        click.echo(f"Creating default ignore file at {pretty_path}", err=True)
+        shutil.copy(
+            os.path.join(os.path.dirname(__file__), "..", "configs", ".bentoignore"),
+            str(context.ignore_file_path),
+        )
+        echo_success(
+            f"Created {pretty_path}. Please check this file in to source control.\n"
         )
 
 
@@ -42,7 +55,7 @@ def init(context: Context) -> None:
     __install_config_if_not_exists(context)
 
     tools = context.tools.values()
-    project_names = sorted(list(set(t.project_name for t in tools)))
+    project_names = sorted(list({t.project_name for t in tools}))
     logging.debug(f"Project names: {project_names}")
     if len(project_names) > 2:
         projects = f'{", ".join(project_names[:-1])}, and {project_names[-1]}'
@@ -57,7 +70,7 @@ def init(context: Context) -> None:
     for t in tools:
         t.setup()
 
-    r = bento.git.repo()
+    r = bento.git.repo(context.base_path)
     if sys.stdout.isatty() and r:
         ignore_file = os.path.join(r.working_tree_dir, ".gitignore")
         has_ignore = None

@@ -9,13 +9,15 @@ import git
 import bento.constants as constants
 import bento.git
 import bento.tool_runner
+from bento.context import Context
 from bento.decorators import with_metrics
 from bento.util import echo_error, echo_success
 
 
 @click.command()
+@click.pass_obj
 @with_metrics
-def install_hook() -> None:
+def install_hook(context: Context) -> None:
     """
     Installs bento as a git pre-commit hook.
 
@@ -31,7 +33,7 @@ def install_hook() -> None:
         return constants.BENTO_TEMPLATE_HASH in lines
 
     # Get hook path
-    repo = bento.git.repo()
+    repo = bento.git.repo(context.base_path)
     if repo is None:
         echo_error("Not a git project")
         sys.exit(3)

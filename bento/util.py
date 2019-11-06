@@ -12,14 +12,20 @@ import sys
 import threading
 import types
 from importlib import import_module
-from typing import Any, Collection, Dict, List, Optional, Pattern, Type
+from pathlib import Path
+from typing import Any, Collection, Dict, List, Optional, Pattern, Tuple, Type, Union
 
 import click
 import psutil
 import yaml
+from frozendict import frozendict
 from semantic_version import Version
 
 import bento.constants as constants
+
+EMPTY_DICT = frozendict({})
+
+AutocompleteSuggestions = List[Union[str, Tuple[str, str]]]
 
 
 def get_python_version() -> Optional[Version]:
@@ -70,11 +76,13 @@ def persist_global_config(global_config: Dict[str, Any]) -> None:
     click.echo(f"\nUpdated user configs at {constants.GLOBAL_CONFIG_PATH}.")
 
 
-def fetch_line_in_file(path: str, line_number: int) -> Optional[str]:
+def fetch_line_in_file(path: Path, line_number: int) -> Optional[str]:
     """
-    `line_number` is one-indexed! Returns the line if it can be found, throws an exception if the path doesn't exist
+    `line_number` is one-indexed! Returns the line if it can be found, returns None if the path doesn't exist
     """
-    with open(path, buffering=1) as fin:  # buffering=1 turns on line-level reads
+    if not path.exists():
+        return None
+    with path.open(buffering=1) as fin:  # buffering=1 turns on line-level reads
         return next(itertools.islice(fin, line_number - 1, line_number), None)
 
 
@@ -104,12 +112,12 @@ def is_child_process_of(pattern: Pattern) -> bool:
     return next(matches, None) is not None
 
 
-def package_subclasses(t: Type, pkg_path: str) -> List[Type]:
+def package_subclasses(tpe: Type, pkg_path: str) -> List[Type]:
     """
-    Finds all subtypes of a type t within a module path, relative to this module
+    Finds all subtypes of a type within a module path, relative to this module
 
     Parameters:
-        t: The parent type
+        tpe: The parent type
         pkg_path: The path to search, written as a python identifier (e.g. bento.extra)
 
     Returns:
@@ -122,7 +130,7 @@ def package_subclasses(t: Type, pkg_path: str) -> List[Type]:
         if name != "setup" and not ispkg:
             import_module(f"{pkg_path}.{name}", __package__)
 
-    return t.__subclasses__()
+    return tpe.__subclasses__()
 
 
 def less(

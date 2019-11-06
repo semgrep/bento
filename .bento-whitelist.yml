@@ -1,14 +1,5 @@
 r2c.bandit:
   violations:
-    13750426f610b265ba8ceb8791a9725e:
-      check_id: B602
-      message: subprocess call with shell=True identified, security issue.
-      path: tests/integration/py-only/bar.py
-      severity: 2
-      syntactic_context: 'def do_it(cmd: str) -> None:
-
-        subprocess.run(f"bash -c {cmd}", shell=True)'
-      tool_id: r2c.bandit
     30fad05838897b7ff4f15ffc8e194660:
       check_id: B602
       message: subprocess call with shell=True identified, security issue.
@@ -35,14 +26,18 @@ r2c.bandit:
 
         res, _ = proc.communicate()'
       tool_id: r2c.bandit
-    76417f3ef6e6c366a34973dce22c18bd:
-      check_id: error
-      message: syntax error while parsing AST from file
-      path: tests/integration/simple/foo.py
-      severity: 2
-      syntactic_context: ''
+    94f271aa5818b07a58371ffb938b83cc:
+      check_id: B110
+      message: Try, Except, Pass detected.
+      path: tests/commands/test_check.py
+      severity: 0
+      syntactic_context: 'assert False
+
+        except Exception:
+
+        pass'
       tool_id: r2c.bandit
-    89d816eaf5d57945c6042aac64bcf4e1:
+    a818cd9a70b1ccca74b3687b7f4355c5:
       check_id: B602
       message: subprocess call with shell=True identified, security issue.
       path: bento/extra/python_tool.py
@@ -51,7 +46,7 @@ r2c.bandit:
 
         shell=True,
 
-        cwd=self.base_path,
+        cwd=str(self.base_path),
 
         encoding="utf8",
 
@@ -68,24 +63,6 @@ r2c.bandit:
         stdout, stderr = v.communicate()
 
         logging.debug(f"{self.tool_id()}: stderr[:4000]:\n" + stderr[0:4000])'
-      tool_id: r2c.bandit
-    94f271aa5818b07a58371ffb938b83cc:
-      check_id: B110
-      message: Try, Except, Pass detected.
-      path: tests/commands/test_check.py
-      severity: 0
-      syntactic_context: 'assert False
-
-        except Exception:
-
-        pass'
-      tool_id: r2c.bandit
-    a4d6428c38e28b34fec25380351b6e66:
-      check_id: error
-      message: syntax error while parsing AST from file
-      path: tests/integration/py-only/foo.py
-      severity: 2
-      syntactic_context: ''
       tool_id: r2c.bandit
     cb09ff7333a5a433b189c697bfa69116:
       check_id: B602
@@ -108,15 +85,6 @@ r2c.bandit:
 
         assert not stdout'
       tool_id: r2c.bandit
-    cc6171569701e9fe58d5e353ed65870f:
-      check_id: B602
-      message: subprocess call with shell=True identified, security issue.
-      path: tests/integration/simple/bar.py
-      severity: 2
-      syntactic_context: 'def do_it(cmd: str) -> None:
-
-        subprocess.run(f"bash -c {cmd}", shell=True)'
-      tool_id: r2c.bandit
     f8ea89cbc1237d72dcb7ac244658cee3:
       check_id: B602
       message: subprocess call with shell=True identified, security issue.
@@ -130,6 +98,20 @@ r2c.bandit:
       tool_id: r2c.bandit
 r2c.eslint:
   violations:
+    a09a2a6f315e5e77f51b5e69f1b9d886:
+      check_id: import/no-unresolved
+      message: Unable to resolve path to module 'react-dom'.
+      path: tests/integration/react/index.jsx
+      severity: 2
+      syntactic_context: import ReactDOM from 'react-dom';
+      tool_id: r2c.eslint
+    b79fc121a7a638a36e9ab0c656c8dfa2:
+      check_id: import/no-unresolved
+      message: Unable to resolve path to module 'react'.
+      path: tests/integration/react/index.jsx
+      severity: 2
+      syntactic_context: import React from 'react';
+      tool_id: r2c.eslint
     c6e0f687a580ef5e681dc3b4a7ed7fce:
       check_id: no-undef
       message: '''x'' is not defined.'
@@ -137,47 +119,5 @@ r2c.eslint:
       severity: 2
       syntactic_context: x = "potato";
       tool_id: r2c.eslint
-    e024b3fe6f34c173adf6315f5ec8d7a3:
-      check_id: error
-      message: 'Parsing error: Unexpected token :'
-      path: tests/integration/js-and-ts/foo.ts
-      severity: 2
-      syntactic_context: 'const user: int = ''Mom'''
-      tool_id: r2c.eslint
 r2c.flake8:
-  violations:
-    1f30d75ee0b0e66360c9db4ccb58f363:
-      check_id: E999
-      message: 'SyntaxError: invalid syntax'
-      path: tests/integration/py-only/foo.py
-      severity: 2
-      syntactic_context: def broken(x)
-      tool_id: r2c.flake8
-    3fb391aeece0c72ff15fd1fa63ac5d4e:
-      check_id: E999
-      message: 'SyntaxError: invalid syntax'
-      path: tests/integration/simple/foo.py
-      severity: 2
-      syntactic_context: def broken(x)
-      tool_id: r2c.flake8
-    5c4ee71fd2e5c3f3138e8b874ad74a97:
-      check_id: E113
-      message: unexpected indentation
-      path: tests/integration/simple/foo.py
-      severity: 2
-      syntactic_context: '    return x'
-      tool_id: r2c.flake8
-    6bac52a1fc3049527143ebc379a14dd5:
-      check_id: E113
-      message: unexpected indentation
-      path: tests/integration/py-only/foo.py
-      severity: 2
-      syntactic_context: '    return x'
-      tool_id: r2c.flake8
-    8398948b0afd1d6a5154203ec5b3b8d0:
-      check_id: F841
-      message: local variable 'x' is assigned to but never used
-      path: tests/integration/py-only/bar.py
-      severity: 2
-      syntactic_context: '    x: int = cmd + 5 + os.getenv(''doesnotexist'')'
-      tool_id: r2c.flake8
+  violations: {}

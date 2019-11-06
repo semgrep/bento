@@ -28,6 +28,7 @@ tools:
       - B608 # hardcoded_sql_expressions
   r2c.eslint:
     ignore:
+      - "@typescript-eslint/camelcase"
       - array-bracket-newline
       - array-bracket-spacing
       - array-element-newline
@@ -259,6 +260,10 @@ tools:
       - yoda
   r2c.flake8:
     ignore:
+      # Do not call getattr with a constant attribute value
+      - B009
+      # Do not call setattr with a constant attribute value
+      - B010
       # Indentation contains mixed spaces and tabs
       - E101
       # Indentation is not a multiple of four

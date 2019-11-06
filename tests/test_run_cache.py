@@ -1,12 +1,17 @@
+import os
+import tempfile
 import time
 from pathlib import Path
-from typing import List, Tuple
+from typing import Tuple
 
 from _pytest.monkeypatch import MonkeyPatch
+from bento.base_context import BaseContext
+from bento.fignore import FileIgnore
 from bento.run_cache import RunCache
 
 TOOL_ID = "tool_name_here"
 TOOL_OUTPUT = "this is tool output"
+THIS_PATH = os.path.dirname(__file__)
 
 
 def __ensure_ubuntu_mtime_change() -> None:
@@ -18,83 +23,93 @@ def __ensure_ubuntu_mtime_change() -> None:
     time.sleep(1e-2)
 
 
-def __setup_test_dir(tmp_path: Path) -> Tuple[str, List[str], Path]:
-    paths = [str(tmp_path)]
-    subdir = tmp_path / "subdir"
+def __cache(cache_path: Path, run_path: Path) -> RunCache:
+    ignore = FileIgnore(run_path, BaseContext()._open_ignores())
+    return RunCache(ignore, cache_path)
+
+
+def __hash(tmp_path: Path) -> str:
+    with tempfile.TemporaryDirectory() as cache_dir:
+        return __cache(cache_path=Path(cache_dir), run_path=tmp_path)._modified_hash()
+
+
+def __setup_test_dir(
+    tmp_path: Path, subdir_name: str = "subdir", touch_file: bool = True
+) -> Tuple[str, Path]:
+    subdir = tmp_path / subdir_name
     subdir.mkdir()
     file = subdir / "hello.txt"
-    file.touch()
-    return RunCache._modified_hash(paths), paths, file
+    if touch_file:
+        file.touch()
+    hsh = __hash(tmp_path)
+    return hsh, file
 
 
 def test_modified_hash_no_changes(tmp_path: Path) -> None:
     """modified_hash should not change if no files change"""
 
-    hsh, paths, _ = __setup_test_dir(tmp_path)
+    hsh, _ = __setup_test_dir(tmp_path)
     __ensure_ubuntu_mtime_change()
 
-    assert hsh == RunCache._modified_hash(paths)
+    assert hsh == __hash(tmp_path)
 
 
 def test_modified_hash_new_file_subdir(tmp_path: Path) -> None:
     """modified_hash should change if a new file in subdir is added"""
-    paths = [str(tmp_path)]
-    subdir = tmp_path / "subdir"
-    subdir.mkdir()
+    hsh, file = __setup_test_dir(tmp_path, touch_file=False)
 
-    hsh = RunCache._modified_hash(paths)
-    sub_hash = RunCache._modified_hash([str(subdir)])
+    file.touch()
 
-    (subdir / "hello.txt").touch()
-
-    assert hsh != RunCache._modified_hash(paths)
-    assert sub_hash != RunCache._modified_hash([str(subdir)])
+    assert hsh != __hash(tmp_path)
 
 
 def test_modified_hash_touch(tmp_path: Path) -> None:
     """modified_hash should change if a file is modified"""
 
-    hsh, paths, file = __setup_test_dir(tmp_path)
+    hsh, file = __setup_test_dir(tmp_path)
     __ensure_ubuntu_mtime_change()
     file.touch()
 
-    assert hsh != RunCache._modified_hash(paths)
+    assert hsh != __hash(tmp_path)
 
 
 def test_modified_hash_remove(tmp_path: Path) -> None:
     """modified_hash should change if a file is removed"""
 
-    hsh, paths, file = __setup_test_dir(tmp_path)
+    hsh, file = __setup_test_dir(tmp_path)
     file.unlink()
 
-    assert hsh != RunCache._modified_hash(paths)
+    assert hsh != __hash(tmp_path)
 
 
 def test_modified_hash_ignore(tmp_path: Path) -> None:
     """modifed_hash should ignore changes in exclude dirs"""
-    paths = [str(tmp_path)]
-    subdir = tmp_path / "node_modules"
-    subdir.mkdir()
+    hsh, file = __setup_test_dir(tmp_path, subdir_name="node_modules", touch_file=False)
 
-    hsh = RunCache._modified_hash(paths)
+    file.touch()
 
-    (subdir / "hello.txt").touch()
-
-    assert hsh == RunCache._modified_hash(paths)
+    assert hsh == __hash(tmp_path)
 
 
 def test_get(tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
-    _, paths, file = __setup_test_dir(tmp_path)
+    _, file = __setup_test_dir(tmp_path)
 
-    monkeypatch.chdir(paths[0])
+    paths = [str(tmp_path)]
 
-    # Check cache is retrievable
-    assert RunCache.get(TOOL_ID, ["."]) is None
-    RunCache.put(TOOL_ID, ["."], TOOL_OUTPUT)
-    assert RunCache.get(TOOL_ID, ["."]) == TOOL_OUTPUT
+    with tempfile.TemporaryDirectory() as tmpdir:
+        cache_path = Path(tmpdir)
 
-    # Check that modifying file invalidates cache
-    __ensure_ubuntu_mtime_change()
-    file.touch()
+        # Check cache is retrievable
+        cache = __cache(cache_path=cache_path, run_path=tmp_path)
+        assert cache.get(TOOL_ID, paths) is None
+        cache.put(TOOL_ID, paths, TOOL_OUTPUT)
 
-    assert RunCache.get(TOOL_ID, ["."]) is None
+        cache = __cache(cache_path=cache_path, run_path=tmp_path)
+        assert cache.get(TOOL_ID, paths) == TOOL_OUTPUT
+
+        # Check that modifying file invalidates cache
+        __ensure_ubuntu_mtime_change()
+        file.touch()
+
+        cache = __cache(cache_path=cache_path, run_path=tmp_path)
+        assert cache.get(TOOL_ID, paths) is None

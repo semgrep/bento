@@ -65,10 +65,10 @@ class Stylish(Formatter):
         return path
 
     @staticmethod
-    def ellipsis_trim(str: str, max_length: int) -> str:
-        if len(str) > max_length:
-            return str[0 : max_length - 3] + "..."
-        return str
+    def ellipsis_trim(untrimmed: str, max_length: int) -> str:
+        if len(untrimmed) > max_length:
+            return untrimmed[0 : max_length - 3] + "..."
+        return untrimmed
 
     def __print_violation(self, violation: Violation, max_message_len: int) -> str:
 
@@ -153,10 +153,10 @@ class Clippy(Formatter):
         return f"   {arrow} {path}:{line}:{col}"
 
     @staticmethod
-    def ellipsis_trim(str: str, max_length: int) -> str:
-        if len(str) > max_length:
-            return str[0 : max_length - 3] + "..."
-        return str
+    def ellipsis_trim(untrimmed: str, max_length: int) -> str:
+        if len(untrimmed) > max_length:
+            return untrimmed[0 : max_length - 3] + "..."
+        return untrimmed
 
     def __print_violation(self, violation: Violation, max_message_len: int) -> str:
         line = click.style(f"{violation.line:>2d}", fg="blue")

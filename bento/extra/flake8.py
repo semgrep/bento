@@ -1,5 +1,4 @@
 import json
-import os
 import re
 from typing import Any, Dict, Iterable, List, Pattern, Type
 
@@ -26,13 +25,8 @@ from bento.tool import Tool
 
 class Flake8Parser(Parser):
     def to_violation(self, result: Dict[str, Any]) -> Violation:
-        source = result["physical_line"].rstrip()  # Remove trailing whitespace
-        path = result["filename"]
-
-        if not os.path.isabs(path) and path.startswith("./"):
-            path = path[2:]
-        else:
-            path = self.trim_base(path)
+        source = (result["physical_line"] or "").rstrip()  # Remove trailing whitespace
+        path = self.trim_base(result["filename"])
 
         check_id = result["code"]
 
@@ -55,8 +49,8 @@ class Flake8Parser(Parser):
             link=link,
         )
 
-    def parse(self, input: str) -> List[Violation]:
-        results: Dict[str, List[Dict[str, Any]]] = json.loads(input)
+    def parse(self, tool_output: str) -> List[Violation]:
+        results: Dict[str, List[Dict[str, Any]]] = json.loads(tool_output)
         return [self.to_violation(v) for r in results.values() for v in r]
 
 
@@ -64,6 +58,14 @@ class Flake8Tool(PythonTool, Tool):
     TOOL_ID = "r2c.flake8"  # to-do: versioning?
     VENV_DIR = "flake8"
     PROJECT_NAME = "Python"
+    PACKAGES = {
+        "flake8": "3.7.0",
+        "flake8-json": "19.8.0",
+        "flake8-bugbear": "19.8.0",
+        "flake8-builtins": "1.4.1",
+        "flake8-debugger": "3.2.0",
+        "flake8-executable": "2.0.3",
+    }
 
     @property
     def parser_type(self) -> Type[Parser]:
@@ -81,21 +83,21 @@ class Flake8Tool(PythonTool, Tool):
     def file_name_filter(self) -> Pattern:
         return re.compile(r".*\.py\b")
 
-    @property
-    def venv_subdir(self) -> str:
+    @classmethod
+    def venv_subdir_name(self) -> str:
         return Flake8Tool.VENV_DIR
 
     def setup(self) -> None:
         self.venv_create()
-        if self._packages_installed({"flake8": "3.7.0", "flake8-json": "19.8.0"}):
+        if self._packages_installed(self.PACKAGES):
             return
-        cmd = f"{PythonTool.PIP_CMD} install -q flake8 flake8-json"
+        cmd = f"{PythonTool.PIP_CMD} install -q {' '.join(self.PACKAGES.keys())}"
         result = self.venv_exec(cmd, check_output=True).strip()
         if result:
             print(result)
 
     def run(self, paths: Iterable[str]) -> str:
-        cmd = "python $(which flake8) --format=json --exclude=.git,__pycache__,docs/source/conf.py,old,build,dist,.bento,node_modules "
+        cmd = f"python $(which flake8) --format=json --exclude={self._ignore_param()} "
 
         env, args = PythonTool.sanitize_arguments(paths)
         cmd += " ".join(args)

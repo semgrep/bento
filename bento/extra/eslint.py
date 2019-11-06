@@ -8,6 +8,7 @@ from typing import Any, Dict, Iterable, List, Pattern, Type
 
 from semantic_version import Version
 
+from bento.base_context import BaseContext
 from bento.extra.js_tool import JsTool
 from bento.parser import Parser
 from bento.result import Violation
@@ -59,9 +60,9 @@ class EslintParser(Parser):
             link=link,
         )
 
-    def parse(self, input: str) -> List[Violation]:
+    def parse(self, tool_output: str) -> List[Violation]:
         violations: List[Violation] = []
-        for r in json.loads(input):
+        for r in json.loads(tool_output):
             r["source"] = r.get("source", "").split("\n")
             violations += [self.to_violation(r, m) for m in r["messages"]]
         return violations
@@ -105,8 +106,9 @@ class EslintTool(JsTool, Tool):
     def file_name_filter(self) -> Pattern:
         return re.compile(r".*\.(?:js|jsx|ts|tsx)\b")
 
-    def matches_project(self) -> bool:
-        return os.path.exists(os.path.join(self.base_path, "package.json"))
+    @classmethod
+    def matches_project(cls, context: BaseContext) -> bool:
+        return (context.base_path / "package.json").exists()
 
     def __uses_typescript(self) -> bool:
         return self._installed_version("typescript") is not None
@@ -149,6 +151,11 @@ class EslintTool(JsTool, Tool):
                 self.__copy_eslintrc("default")
 
     def run(self, files: Iterable[str]) -> str:
+        ignores = [
+            arg
+            for p in self.context.file_ignores.patterns
+            for arg in ["--ignore-pattern", p]
+        ]
         cmd = [
             "./node_modules/eslint/bin/eslint.js",
             "--no-eslintrc",
@@ -156,18 +163,12 @@ class EslintTool(JsTool, Tool):
             EslintTool.CONFIG_FILE_NAME,
             "-f",
             "json",
-            "--ignore-pattern",
-            "**/node_modules",
-            "--ignore-pattern",
-            "**/*.min.js",
-            "--ignore-pattern",
-            "packages/",
             "--ext",
             "js,jsx,ts,tsx",
-        ]
+        ] + ignores
         for f in files:
             cmd.append(f)
-        result = self.exec(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result = self.execute(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         logging.debug(f"{self.tool_id()}: stderr:\n" + result.stderr[0:4000])
         logging.debug(f"{self.tool_id()}: stdout:\n" + result.stdout[0:4000])
 

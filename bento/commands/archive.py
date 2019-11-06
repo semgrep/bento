@@ -1,10 +1,8 @@
-import os
 import sys
 from typing import List, Set
 
 import click
 
-import bento.constants as constants
 import bento.result
 import bento.tool_runner
 from bento.context import Context
@@ -19,15 +17,15 @@ def archive(context: Context) -> None:
     """
     Adds all current findings to the whitelist.
     """
-    if not os.path.exists(constants.CONFIG_PATH):
+    if not context.config_path.exists():
         echo_error("No Bento configuration found. Please run `bento init`.")
         sys.exit(3)
         return
 
-    if os.path.exists(constants.BASELINE_FILE_PATH):
-        with open(constants.BASELINE_FILE_PATH) as json_file:
+    if context.baseline_file_path.exists():
+        with context.baseline_file_path.open() as json_file:
             old_baseline = bento.result.yml_to_violation_hashes(json_file)
-            old_hashes = set(h for hh in old_baseline.values() for h in hh)
+            old_hashes = {h for hh in old_baseline.values() for h in hh}
     else:
         old_hashes = set()
 
@@ -53,11 +51,8 @@ def archive(context: Context) -> None:
     n_new = n_found - n_existing
     n_removed = len(old_hashes - found_hashes)
 
-    os.makedirs(
-        os.path.dirname(os.path.join(os.getcwd(), constants.BASELINE_FILE_PATH)),
-        exist_ok=True,
-    )
-    with open(constants.BASELINE_FILE_PATH, "w") as json_file:
+    context.baseline_file_path.parent.mkdir(exist_ok=True, parents=True)
+    with context.baseline_file_path.open("w") as json_file:
         json_file.writelines(new_baseline)
 
     success_str = f"Rewrote the whitelist with {n_found} findings from {len(tools)} tools ({n_new} new, {n_existing} previously whitelisted)."
@@ -65,8 +60,6 @@ def archive(context: Context) -> None:
         success_str += (
             f"\n  Also removed {n_removed} fixed findings from the whitelist."
         )
-    success_str += (
-        f"\n  Please check '{constants.BASELINE_FILE_PATH}' in to source control."
-    )
+    success_str += f"\n  Please check '{context.pretty_path(context.baseline_file_path)}' in to source control."
 
     echo_success(success_str)

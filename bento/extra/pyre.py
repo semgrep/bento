@@ -3,6 +3,7 @@ import os
 import re
 from typing import Any, Dict, Iterable, List, Pattern, Type
 
+from bento.base_context import BaseContext
 from bento.parser import Parser
 from bento.result import Violation
 from bento.tool import Tool
@@ -27,14 +28,9 @@ PINNED_PYRE_VERSION = "0.0.32"
 
 class PyreParser(Parser):
     def to_violation(self, result: Dict[str, Any]) -> Violation:
-        path = result["path"]
+        path = self.trim_base(result["path"])
+        abspath = self.base_path / path
 
-        if not os.path.isabs(path) and path.startswith("./"):
-            path = path[2:]
-        else:
-            path = self.trim_base(path)
-
-        abspath = os.path.join(self.base_path, path)
         check_id = str(result["code"])
         line = result["line"]
         return Violation(
@@ -49,8 +45,8 @@ class PyreParser(Parser):
             link="https://pyre-check.org/docs/error-types.html",
         )
 
-    def parse(self, input: str) -> List[Violation]:
-        results: List[Dict[str, Any]] = json.loads(input)
+    def parse(self, tool_output: str) -> List[Violation]:
+        results: List[Dict[str, Any]] = json.loads(tool_output)
         return [self.to_violation(r) for r in results]
 
 
@@ -74,13 +70,14 @@ class PyreTool(Tool):
     def file_name_filter(self) -> Pattern:
         return re.compile(r".*\.py\b")
 
-    def matches_project(self) -> bool:
+    @classmethod
+    def matches_project(cls, context: BaseContext) -> bool:
         # disabled by default for now
         return False
 
     def setup(self) -> None:
         cmd = ["pip3", "install", "-q", f"pyre-check=={PINNED_PYRE_VERSION}"]
-        self.exec(cmd)
+        self.execute(cmd)
 
     def run(self, files: Iterable[str]) -> str:
         # for pyre, we also want to make sure that we are running in the same venv environment that the
@@ -95,21 +92,15 @@ class PyreTool(Tool):
 
         ALL_SOURCE_DIRS = [f"--source-directory={source_dir}" for source_dir in files]
 
-        # highly confusing: it matches based on the *FULL PATH* not the relative path
-        excludes = [
-            r"\.bento",
-            r"\.git",
-            "__pycache__",
-            r"docs/source/conf\.py",
-            "old",
-            "build",
-            "dist",
-        ]
-        ALL_EXCLUDES = [f"--exclude=.*{folder}.*" for folder in excludes]
+        ignores = (
+            e.path for e in self.context.file_ignores.entries() if not e.survives
+        )
+
+        ALL_EXCLUDES = [f"--exclude={os.path.abspath(p)}" for p in ignores]
         cmd = (
             ["pyre", "--noninteractive", "--output=json"]
             + ALL_EXCLUDES
             + ALL_SOURCE_DIRS
             + ["check"]
         )
-        return self.exec(cmd, capture_output=True).stdout
+        return self.execute(cmd, capture_output=True).stdout
