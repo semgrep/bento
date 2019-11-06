@@ -200,7 +200,9 @@ def verify_registration(agree: bool, email: Optional[str]) -> bool:
     if not agree and not confirm_tos_update(global_config):
         return False
 
-    update_email(global_config, email=email)
+    update_email(
+        global_config, email=(email or os.environ.get(constants.BENTO_EMAIL_VAR))
+    )
 
     if not agree:
         _suggest_autocomplete()

@@ -12,6 +12,7 @@ TERMS_OF_SERVICE_VERSION = "0.3.0"
 
 BENTO_TEMPLATE_HASH = "3a04e0f0cd9243d20b1e33da7ac13115"
 
+BENTO_EMAIL_VAR = "BENTO_EMAIL"
 QA_TEST_EMAIL_ADDRESS = "test@returntocorp.com"
 
 ### messages ###

@@ -1,3 +1,4 @@
+import os
 import subprocess
 import tempfile
 from pathlib import Path
@@ -46,21 +47,18 @@ def check_command(step: Any, pwd: str, target: str) -> None:
             expected_err = file.read()
 
     test_identifier = f"Target:{target} Step:{step['name']}"
+    env = os.environ.copy()
+    env[bento.constants.BENTO_EMAIL_VAR] = bento.constants.QA_TEST_EMAIL_ADDRESS
     substituted = [
         part.replace("__BENTO_REPO_ROOT__", BENTO_REPO_ROOT) for part in command
     ]
-    if substituted[0] == "bento":
-        substituted = [
-            "bento",
-            "--email",
-            bento.constants.QA_TEST_EMAIL_ADDRESS,
-        ] + substituted[1:]
 
     runned = subprocess.run(
         substituted,
         # Note that we can't use BENTO_BASE_PATH since the acceptance tests
         # depend on hook installation, which uses the working directory.
         cwd=pwd,
+        env=env,
         stdout=subprocess.PIPE,
         stderr=subprocess.PIPE,
         encoding="utf-8",
