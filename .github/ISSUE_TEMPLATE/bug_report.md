@@ -1,22 +1,28 @@
 ---
-name: Bug report
-about: Create a report to help us improve
+name: Report a bug
+about: File a bug report to help us improve Bento
 title: ''
 labels: bug
 assignees: ''
 
 ---
 
-Make sure you are running the latest version of Bento.
+## Overview
+> Briefly describe the issue and your expected behavior
 
-**Describe the bug**
-Describe the issue briefly here.
+## Current Behavior
+> Describe the actual behavior, and provide the content of `~/bento/last.log` if possible. Screenshots and text dumps are particularly helpful.
 
-**Expected result**
-Describe what you expected to see.
+## Steps to Reproduce
 
-**Actual result**
-When possible, provide verbose output (--verbose)
+1.
+2.
+3.
 
-**Additional context**
-Let us know additional context like the version of Bento you're using (--version), your OS, relevant information about the project you're checking with Bento, if you have existing linters set up, and other information that might help us reproduce the issue. Screenshots are usually helpful, too.
+## Possible Solution
+> Do you have an idea for how to address the issue or feedback?
+
+## Additional Context
+Bento version (run `bento --version`):
+Operation system (e.g. Ubuntu 18.04):
+Any other context that would help us reproduce or understand the issue: 
