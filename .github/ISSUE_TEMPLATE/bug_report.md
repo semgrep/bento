@@ -11,7 +11,7 @@ assignees: ''
 > Briefly describe the issue and your expected behavior
 
 ## Current Behavior
-> Describe the actual behavior, and provide the content of `~/bento/last.log` if possible. Screenshots and text dumps are particularly helpful.
+> Describe the actual behavior, and provide the content of `~/.bento/last.log` if possible. Screenshots and text dumps are particularly helpful.
 
 ## Steps to Reproduce
 
