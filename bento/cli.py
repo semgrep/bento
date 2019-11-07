@@ -187,7 +187,9 @@ def update_email(global_config: Dict[str, Any], email: Optional[str] = None) -> 
 
 def verify_registration(agree: bool, email: Optional[str]) -> bool:
     global_config = read_global_config()
+    first_run = False
     if global_config is None:
+        first_run = True
         global_config = {}
 
         # only show welcome message if running in interactive mode
@@ -204,7 +206,7 @@ def verify_registration(agree: bool, email: Optional[str]) -> bool:
         global_config, email=(email or os.environ.get(constants.BENTO_EMAIL_VAR))
     )
 
-    if not agree:
+    if first_run and not agree:
         _suggest_autocomplete()
 
     return True
