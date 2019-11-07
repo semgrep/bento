@@ -1,6 +1,5 @@
 import itertools
 import os
-from datetime import datetime
 from hashlib import sha256
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
@@ -58,7 +57,7 @@ def get_user_uuid() -> Optional[str]:
 
 
 def violations_to_metrics(
-    tool_id: str, violations: List[Violation], ignores: List[str]
+    tool_id: str, timestamp: str, violations: List[Violation], ignores: List[str]
 ) -> List[Dict[str, Any]]:
     git_url = __hash_sha256(bento.git.url())
     git_commit = bento.git.commit()
@@ -66,7 +65,7 @@ def violations_to_metrics(
     return [
         {
             "tool": tool_id,
-            "timestamp": str(datetime.utcnow().isoformat("T")),
+            "timestamp": timestamp,
             "repository": git_url,
             "commit": git_commit,
             "user": user,
@@ -88,13 +87,14 @@ def read_user_email() -> Optional[str]:
 
 def command_metric(
     command: str,
+    timestamp: str,
     command_kwargs: Dict[str, Any],
     exit_code: int,
     duration: float,
     exception: Optional[Exception],
 ) -> List[Dict[str, Any]]:
     d = {
-        "timestamp": str(datetime.utcnow().isoformat("T")),
+        "timestamp": timestamp,
         "duration": duration,
         "exit_code": exit_code,
         "repository": __hash_sha256(bento.git.url()),

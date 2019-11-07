@@ -145,7 +145,10 @@ def check(
             is_error = True
         elif isinstance(findings, list) and findings:
             findings_to_log += bento.metrics.violations_to_metrics(
-                tool_id, findings, __get_ignores_for_tool(tool_id, config)
+                tool_id,
+                context.timestamp,
+                findings,
+                __get_ignores_for_tool(tool_id, config),
             )
             collapsed_findings += [f for f in findings if not f.filtered]
 

@@ -1,5 +1,6 @@
 import logging
 import time
+from datetime import datetime
 from typing import Dict, Type
 
 import attr
@@ -16,6 +17,9 @@ from bento.util import echo_error
 class Context(BaseContext):
     _formatter = attr.ib(type=Formatter, default=None, init=False)
     _start = attr.ib(type=float, default=time.time(), init=False)
+    _timestamp = attr.ib(
+        type=str, default=str(datetime.utcnow().isoformat("T")), init=False
+    )
     _tool_inventory = attr.ib(type=Dict[str, Type[Tool]], init=False, default=None)
     _tools = attr.ib(type=Dict[str, Tool], init=False, default=None)
 
@@ -39,6 +43,10 @@ class Context(BaseContext):
         if self._tool_inventory is None:
             self._tool_inventory = self._load_tool_inventory()
         return self._tool_inventory
+
+    @property
+    def timestamp(self) -> str:
+        return self._timestamp
 
     def elapsed(self) -> float:
         return time.time() - self._start

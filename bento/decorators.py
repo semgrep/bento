@@ -2,6 +2,7 @@ import logging
 import subprocess
 import sys
 import time
+from datetime import datetime
 from functools import update_wrapper
 from typing import Any, Callable, Optional
 
@@ -35,6 +36,10 @@ def with_metrics(f: _AnyCallable) -> _AnyCallable:
 
         context = click.get_current_context()
         command = context.command.name
+        cli_context = context.obj
+        timestamp = (
+            cli_context.timestamp if cli_context else datetime.utcnow().isoformat("T")
+        )
         logging.info(f"Executing {command}")
 
         try:
@@ -49,7 +54,9 @@ def with_metrics(f: _AnyCallable) -> _AnyCallable:
         elapsed = time.time() - before
         logging.info(f"{command} completed in {elapsed} with exit code {exit_code}")
         bento.network.post_metrics(
-            bento.metrics.command_metric(command, kwargs, exit_code, elapsed, exception)
+            bento.metrics.command_metric(
+                command, timestamp, kwargs, exit_code, elapsed, exception
+            )
         )
         if exit_code != 0:
             sys.exit(exit_code)
