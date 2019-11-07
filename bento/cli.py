@@ -65,7 +65,6 @@ def _print_version(
 
 
 def __post_email_to_mailchimp(email: str) -> bool:
-    email = email.strip("\"'")
     r = requests.post(
         "https://waitlist.r2c.dev/subscribe", json={"email": email}, timeout=5
     )

@@ -23,7 +23,7 @@ def user_email(path: Optional[Path] = None) -> Optional[str]:
     if r is None:
         return None
     try:
-        return r.config_reader().get_value("user", "email")
+        return r.config_reader().get_value("user", "email").strip("\"'")
     except configparser.NoSectionError:
         return None
     except configparser.NoOptionError:
