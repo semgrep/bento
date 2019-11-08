@@ -38,7 +38,7 @@ While using Bento in Beta, we associate these data with your email address to fa
 
 Results data contain information about the code check rules that fired when you ran Bento, and help us make our rules better. These include:
 
-* Data on the number of times rules fired across your repo,
+* The number of times rules fired across your repo,
 * Rules you disabled,
 * The number of results that were fixed or archived since the last run, and
 * Hashes of the repository and commit Bento produced these results for,
