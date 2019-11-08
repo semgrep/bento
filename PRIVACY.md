@@ -41,7 +41,7 @@ Results data contain information about the code check rules that fired when you 
 * The number of times rules fired across your repo,
 * Rules you disabled,
 * The number of results that were fixed or archived since the last run, and
-* Hashes of the repository and commit Bento produced these results for,
+* Hashes of the repository and commit for which Bento produced these results,
 
 In addition, we collect a hashed version of the repo and commit Bento was run on. We consider this information more sensitive and do NOT associate it with user-identifiable information.
 
