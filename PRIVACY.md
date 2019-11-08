@@ -43,11 +43,13 @@ Results data contain information about the code check rules that fired when you 
 * The number of results that were fixed or archived since the last run, and
 * Hashes of the repository and commit for which Bento produced these results,
 
-In addition, we collect a hashed version of the repo and commit Bento was run on. We consider this information more sensitive and do NOT associate it with user-identifiable information.
+We consider this information more sensitive and do NOT associate it with user-identifiable information.
 
 ### Data NOT collected
 
-We try hard to balance our desire to collect data for improving Bento and its underlying tools with our users' need for privacy. It does not leave your computer and is not sent or shared with anyone.
+We strive to balance our desire to collect data for improving Bento and its underlying tools with our users' need for privacy. 
+
+The following items don't leave your computer and are not sent or shared with anyone.
 
 * Source code
 * Raw repository names, filenames, or commit hashes,
