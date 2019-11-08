@@ -211,7 +211,7 @@ def verify_registration(agree: bool, email: Optional[str]) -> bool:
     return True
 
 
-@click.group()
+@click.group(epilog="To get help for a specific command, run `bento COMMAND --help`")
 @click.option(
     "--version",
     is_flag=True,
