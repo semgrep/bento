@@ -33,8 +33,11 @@ def user_email(path: Optional[Path] = None) -> Optional[str]:
 def url(path: Optional[Path] = None) -> Optional[str]:
     """Get remote.origin.url for git dir at dirPath"""
     r = repo(path)
-    if r and r.remotes and "origin" in r.remotes:
-        return r.remotes.origin.url
+    if r and r.remotes:
+        if any(rr.name == "origin" for rr in r.remotes):
+            return r.remotes.origin.url
+        else:
+            return r.remotes[0].url
     else:
         return None
 
