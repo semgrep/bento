@@ -78,9 +78,11 @@ def fetch_latest_version() -> Tuple[Optional[str], Optional[str]]:
         return None, None
 
 
-def post_metrics(data: PostData) -> bool:
+def post_metrics(data: PostData, is_finding: bool = False) -> bool:
     try:
-        url = f"{_get_base_url()}/bento/api/v1/metrics"
+        url = f"{_get_base_url()}/bento/api/v1/metrics/"
+        if is_finding:
+            url = f"{url}finding/"
         r = no_auth_post(url, json=data)
         r.raise_for_status()
         return True

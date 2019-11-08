@@ -153,7 +153,7 @@ def check(
             collapsed_findings += [f for f in findings if not f.filtered]
 
     def post_metrics() -> None:
-        bento.network.post_metrics(findings_to_log)
+        bento.network.post_metrics(findings_to_log, is_finding=True)
 
     stats_thread = threading.Thread(name="stats", target=post_metrics)
     stats_thread.start()
