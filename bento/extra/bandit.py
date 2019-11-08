@@ -6,6 +6,7 @@ from bento.extra.python_tool import PythonTool
 from bento.parser import Parser
 from bento.result import Violation
 from bento.tool import Tool
+from bento.util import fetch_line_in_file
 
 # Input example:
 # {
@@ -109,6 +110,12 @@ class BanditParser(Parser):
         ]
         nonempty = [l for l in lines if l]
         source = "\n".join(nonempty)
+
+        if source == "" and result["line_number"] != 0:
+            source = (
+                fetch_line_in_file(self.base_path / path, result["line_number"])
+                or "<no source found>"
+            )
 
         return Violation(
             check_id=result["test_id"],
