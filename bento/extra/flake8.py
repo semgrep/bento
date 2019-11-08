@@ -24,21 +24,28 @@ from bento.tool import Tool
 
 
 class Flake8Parser(Parser):
-    def to_violation(self, result: Dict[str, Any]) -> Violation:
-        source = (result["physical_line"] or "").rstrip()  # Remove trailing whitespace
-        path = self.trim_base(result["filename"])
-
-        check_id = result["code"]
-
+    @staticmethod
+    def id_to_link(check_id: str) -> str:
         if check_id == "E999":
             link = ""
         elif check_id in ("E722", "E117"):
             link = "https://pycodestyle.readthedocs.io/en/latest/intro.html#error-codes"
         else:
             link = f"https://lintlyci.github.io/Flake8Rules/rules/{check_id}.html"
+        return link
+
+    @staticmethod
+    def tool() -> Type[Tool]:
+        return Flake8Tool
+
+    def to_violation(self, result: Dict[str, Any]) -> Violation:
+        source = (result["physical_line"] or "").rstrip()  # Remove trailing whitespace
+        path = self.trim_base(result["filename"])
+
+        check_id = result["code"]
 
         return Violation(
-            tool_id=Flake8Tool.TOOL_ID,
+            tool_id=self.tool().tool_id(),
             check_id=check_id,
             path=path,
             line=result["line_number"],
@@ -46,7 +53,7 @@ class Flake8Parser(Parser):
             message=result["text"],
             severity=2,
             syntactic_context=source,
-            link=link,
+            link=self.id_to_link(check_id),
         )
 
     def parse(self, tool_output: str) -> List[Violation]:
@@ -87,6 +94,10 @@ class Flake8Tool(PythonTool, Tool):
     def venv_subdir_name(self) -> str:
         return Flake8Tool.VENV_DIR
 
+    def select_clause(self) -> str:
+        """Returns a --select argument to identify which checks flake8 should run"""
+        return ""
+
     def setup(self) -> None:
         self.venv_create()
         if self._packages_installed(self.PACKAGES):
@@ -97,7 +108,7 @@ class Flake8Tool(PythonTool, Tool):
             print(result)
 
     def run(self, paths: Iterable[str]) -> str:
-        cmd = f"python $(which flake8) --format=json --exclude={self._ignore_param()} "
+        cmd = f"python $(which flake8) {self.select_clause()} --format=json --exclude={self._ignore_param()} "
 
         env, args = PythonTool.sanitize_arguments(paths)
         cmd += " ".join(args)

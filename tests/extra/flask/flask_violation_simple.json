@@ -1,0 +1,12 @@
+{
+  "./bad.py": [
+    {
+      "code": "R2C202",
+      "filename": "./bad.py",
+      "line_number": 4,
+      "column_number": 1,
+      "text": "passing a file-like object to flask.send_file without a mimetype or attachment_filename will raise a ValueError",
+      "physical_line": "flask.send_file(open(\"file.txt\"))\n"
+    }
+  ]
+}

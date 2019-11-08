@@ -81,7 +81,9 @@ class FileIgnore(object):
         Recalculates on every call.
         """
         for e in os.scandir(this_path):
-            if (not directories_only or e.is_dir()) and self._survives(root_path, e):
+            if e.is_symlink():
+                continue
+            elif (not directories_only or e.is_dir()) and self._survives(root_path, e):
                 filename = os.path.join(this_path, e.name)
                 yield Entry(filename, e, True)
                 if e.is_dir():
