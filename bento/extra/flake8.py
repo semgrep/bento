@@ -80,11 +80,11 @@ class Flake8Tool(PythonTool, Tool):
 
     @classmethod
     def tool_id(cls) -> str:
-        return Flake8Tool.TOOL_ID
+        return cls.TOOL_ID
 
     @property
     def project_name(self) -> str:
-        return Flake8Tool.PROJECT_NAME
+        return self.PROJECT_NAME
 
     @property
     def file_name_filter(self) -> Pattern:
@@ -92,7 +92,7 @@ class Flake8Tool(PythonTool, Tool):
 
     @classmethod
     def venv_subdir_name(self) -> str:
-        return Flake8Tool.VENV_DIR
+        return self.VENV_DIR
 
     def select_clause(self) -> str:
         """Returns a --select argument to identify which checks flake8 should run"""

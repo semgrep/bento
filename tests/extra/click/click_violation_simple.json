@@ -1,0 +1,20 @@
+{
+  "cli.py": [
+    {
+      "code": "CLC100:",
+      "filename": "cli.py",
+      "line_number": 3,
+      "column_number": 1,
+      "text": "function `cli` missing parameter `version` for `@click.option`",
+      "physical_line": "@click.option(\"--version\")\n"
+    },
+    {
+      "code": "CLC001",
+      "filename": "cli.py",
+      "line_number": 3,
+      "column_number": 2,
+      "text": "@click.option should have `help` text",
+      "physical_line": "@click.option(\"--version\")\n"
+    }
+  ]
+}
