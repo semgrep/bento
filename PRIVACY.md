@@ -32,7 +32,7 @@ As the name suggests, usage data tell us what commands you ran, what options and
 
 See Description of Fields for a full list.
 
-While using Bento in Beta, we associate this data with your email address to facilitate our outreach efforts.
+While using Bento in Beta, we associate these data with your email address to facilitate our outreach efforts.
 
 ### Results Data
 
