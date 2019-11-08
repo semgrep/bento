@@ -36,7 +36,7 @@ While using Bento in Beta, we associate this data with your email address to fac
 
 ### Results Data
 
-Results data contains information about the code check rules that fired when you ran Bento, and helps us make our rules better. This includes:
+Results data contain information about the code check rules that fired when you ran Bento, and help us make our rules better. These include:
 
 * Data on the number of times rules fired across your repo,
 * Rules you disabled,
