@@ -11,7 +11,9 @@ from pre_commit.git import get_staged_files
 from pre_commit.staged_files_only import staged_files_only
 from pre_commit.util import noop_context
 
+import bento.constants
 import bento.formatter
+import bento.metrics
 import bento.network
 import bento.result
 import bento.tool_runner
@@ -141,7 +143,17 @@ def check(
                     f"Node.js not found or version is not compatible with ESLint v6."
                 )
 
-            click.echo("", err=True)
+            click.secho(
+                f"""-------------------------------------------------------------------------------------------------
+This may be due to a corrupted tool installation. You might be able to fix this issue by running:
+
+  bento init --clean
+
+You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PATH}`.
+-------------------------------------------------------------------------------------------------
+""",
+                err=True,
+            )
             is_error = True
         elif isinstance(findings, list) and findings:
             findings_to_log += bento.metrics.violations_to_metrics(

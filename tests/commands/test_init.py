@@ -52,3 +52,22 @@ def test_init_py_only() -> None:
     assert "r2c.eslint" not in config["tools"]
     assert "r2c.flake8" in config["tools"]
     assert "r2c.bandit" in config["tools"]
+
+
+def test_init_clean() -> None:
+    """Validates that `init --clean` recreates tool virtual environments"""
+    context = Context(base_path=INTEGRATION / "py-only")
+    venv_file = INTEGRATION / "py-only" / ".bento" / "flake8" / "bin" / "activate"
+
+    # Ensure venv is created
+    CliRunner(mix_stderr=False).invoke(init, obj=context)
+    assert venv_file.exists()
+
+    # Ensure venv is corrupted, and not fixed with standard init
+    venv_file.unlink()
+    CliRunner(mix_stderr=False).invoke(init, obj=context)
+    assert not venv_file.exists()
+
+    # Ensure --clean recreates venv
+    CliRunner(mix_stderr=False).invoke(init, obj=context, args=["--clean"])
+    assert venv_file.exists()

@@ -128,7 +128,7 @@ class Runner:
                 desc=tool.tool_id(),
                 ncols=40,
                 bar_format=click.style(
-                    "  {desc:<10s}: |{bar}| {elapsed}{postfix}", fg="blue"
+                    "  {desc:<10s}: |{bar}| {elapsed}{postfix}", fg="bright_blue"
                 ),
                 leave=False,
             )

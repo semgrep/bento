@@ -1,6 +1,7 @@
 import logging
 import os
 import shutil
+import subprocess
 import sys
 
 import click
@@ -45,8 +46,14 @@ def __install_config_if_not_exists(context: Context) -> None:
 
 @click.command()
 @click.pass_obj
+@click.option(
+    "--clean",
+    help="Reinstalls tools using a clean installation.",
+    is_flag=True,
+    default=False,
+)
 @with_metrics
-def init(context: Context) -> None:
+def init(context: Context, clean: bool) -> None:
     """
     Autodetects and installs tools.
 
@@ -66,6 +73,10 @@ def init(context: Context) -> None:
         sys.exit(3)
 
     click.secho(f"Detected project with {projects}\n", fg="blue", err=True)
+
+    if clean:
+        click.secho(f"Reinstalling tools due to passed --clean flag", err=True)
+        subprocess.run(["rm", "-r", context.resource_path], check=True)
 
     for t in tools:
         t.setup()
