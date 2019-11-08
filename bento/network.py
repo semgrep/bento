@@ -7,7 +7,6 @@ from typing import Any, Dict, List, Optional, Tuple
 import requests
 from requests.models import Response
 
-from bento.metrics import get_user_uuid
 from bento.util import EMPTY_DICT
 
 BASE_URL = "https://bento.r2c.dev"
@@ -81,7 +80,7 @@ def fetch_latest_version() -> Tuple[Optional[str], Optional[str]]:
 
 def post_metrics(data: PostData) -> bool:
     try:
-        url = f"{_get_base_url()}/bento/api/v1/metrics/u/{get_user_uuid()}/"
+        url = f"{_get_base_url()}/bento/api/v1/metrics"
         r = no_auth_post(url, json=data)
         r.raise_for_status()
         return True

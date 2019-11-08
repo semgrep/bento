@@ -19,41 +19,12 @@ import click
 import psutil
 import yaml
 from frozendict import frozendict
-from semantic_version import Version
 
 import bento.constants as constants
 
 EMPTY_DICT = frozendict({})
 
 AutocompleteSuggestions = List[Union[str, Tuple[str, str]]]
-
-
-def get_python_version() -> Optional[Version]:
-    """ Get python version as specified in sys.info
-        Returns None if python not found in sys.info
-    """
-    vinfo = sys.version_info
-
-    if vinfo:
-        return Version(f"{vinfo.major}.{vinfo.minor}.{vinfo.micro}")
-    return None
-
-
-def get_node_version() -> Optional[Version]:
-    """ Get Node.js version by invoking `node` binary in the system
-        Returns None if `node` call is unsuccessful (exit code < 0)
-    """
-    version = subprocess.run(
-        ["node", "--version"],
-        check=True,
-        stdout=subprocess.PIPE,
-        stderr=subprocess.PIPE,
-    )
-    node_version = version.stdout.decode("utf-8").rstrip().strip("v")
-    if version.returncode >= 0:
-        return Version(node_version)
-
-    return None
 
 
 def read_global_config() -> Optional[Dict[str, Any]]:

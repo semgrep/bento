@@ -41,34 +41,17 @@ def __get_aggregate_violations(violations: List[Violation]) -> List[Dict[str, An
     return out
 
 
-def get_user_uuid() -> Optional[str]:
-    """
-    Returns the user uuid
-
-    If this is a git repo, returns a hash of the git email; otherwise
-    returns a hash of the system-specific user login
-    """
-    email = read_user_email()
-
-    if email:
-        return __hash_sha256(email)
-
-    return None
-
-
 def violations_to_metrics(
     tool_id: str, timestamp: str, violations: List[Violation], ignores: List[str]
 ) -> List[Dict[str, Any]]:
     git_url = __hash_sha256(bento.git.url())
     git_commit = bento.git.commit()
-    user = get_user_uuid()
     return [
         {
             "tool": tool_id,
             "timestamp": timestamp,
             "repository": git_url,
             "commit": git_commit,
-            "user": user,
             "ignored_rules": ignores,
             **aggregates,
         }
