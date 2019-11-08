@@ -5,7 +5,7 @@ from pathlib import Path
 from typing import Iterable, Optional
 
 import attr
-import mmh3
+import pymmh3 as mmh3
 
 from bento import __version__ as BENTO_VERSION
 from bento.fignore import FileIgnore
