@@ -2,6 +2,15 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.3.1] - 2019-11-08
+
+### Fixed
+
+- Fixed an issue where the tool would fail to install if a macOS user
+  had installed `gcc` and then upgraded their OS.
+- Fixed a compatibility issue for users with a pre-existing version
+  of GitPython with version between 2.1.1 and 2.1.13.
+
 ## [0.3.0] - 2019-11-01
 
 ### Changed
