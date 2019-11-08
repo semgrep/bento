@@ -4,7 +4,7 @@
 Bento collects usage data to help us improve the product. This document describes:
 
 * the principles that guide our data-collection decisions
-* the breakdown of the data that is and is not collected
+* the breakdown of the data that are and are not collected
 * how we use data we collect to make Bento better
 
 ## Principles
