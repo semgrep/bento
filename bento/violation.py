@@ -2,7 +2,7 @@ import binascii
 from typing import Any, Dict, Optional
 
 import attr
-import mmh3
+import pymmh3 as mmh3
 
 
 @attr.s(frozen=True, hash=False)
