@@ -21,7 +21,7 @@ Bento collects data to help improve its underlying tools and user experience. Tw
 
 ### Usage Data
 
-As the name suggests, usage data tells us what commands you ran, what options and flags you ran them with, as well as information that helps us debug any issues users may be facing, e.g.
+As the name suggests, usage data tell us what commands you ran, what options and flags you ran them with, as well as information that helps us debug any issues users may be facing, e.g.
 
 * The name of the command you ran,
 * Arguments or options,
