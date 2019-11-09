@@ -57,7 +57,7 @@ The following items don't leave your computer and are not sent or shared with an
 
 ### Examples
 
-This is a sample blob of data collected by Bento and sent to r2c:
+This is a sample blob of usage data collected by Bento and sent to r2c:
 ```json
 {
     "X-R2C-Bento-Cli-Version": "0.3.1b2",
@@ -82,6 +82,37 @@ This is a sample blob of data collected by Bento and sent to r2c:
 }
   ```
   
+The following is a sample of the results data we collect:
+
+```json
+{
+    "X-R2C-Bento-Cli-Version": "0.3.1b2",
+    "X-R2C-Bento-User-Platform": "Linux-4.10.0-35-generic-x86_64-with-debian-9.11",
+    "X-R2C-Bento-User-Shell": "",
+    "check_id": "E999",
+    "client_ip": "35.231.49.0",
+    "hash_of_commit": "a6847d624cad44f9bb3ab40963842289e2fc5c6f",
+    "count": 1,
+    "filtered_count": 0,
+    "ignored_rules": [
+        "B009",
+        "B010",
+        "E101",
+        "E111",
+        "E114",
+        "E115",
+        "E116",
+        ...
+    ],
+    "path_hash": "c2d20e995af6b538c471ccfe0130a32ed950abcdcd4cd0c27e38160fab97c07f",
+    "repository_hash": "79d7408f2c194d95bc502660d46a7be8b838cab9ad24a09e32e29846f7a7d649",
+    "timestamp": "2019-11-08T23:56:59.251Z",
+    "tool": "r2c.flake8",
+    "ua": "python-requests/2.22.0"
+}
+  ```
+
+
 ### Description of fields
 
 | Field        | Description           | Use case  |
