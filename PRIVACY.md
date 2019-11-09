@@ -1,87 +1,146 @@
+
 # Bento Privacy Policy
 
-Bento collects usage data to help inform how to improve the product. This document describes:
+Bento collects usage data to help us improve the product. This document describes:
 
-* principles that guide the collection and usage of usage data
-* the data collected
-* what data is not collected
-* why specific data is collected and how it’s used
+* the principles that guide our data-collection decisions
+* the breakdown of the data that are and are not collected
+* how we use the data we collect to make Bento better
 
 ## Principles
 
-These guidelines inform decisions about data collection:
+These principles inform our decisions around data collection:
 
-1. **Transparency**: collect and use information in a way that is transparent and benefits the user
-2. **User control**: Develop products and advocate for best practices that put users in control of their data
+1. **Transparency**: Collect and use data in a way that is clearly explained to the user and benefits them
+2. **User control**: Put users in control of their data at all times
 3. **Limited data**: Collect what is needed, de-identify where possible, and delete when no longer necessary
 
 ## Collected Data
 
-Bento collects data to help improve the Bento user experience for users everywhere. The following information is collected and sent to r2c:
+Bento collects data to help improve its underlying tools and user experience. Two types of data are collected:
 
-* Anonymized version of repository name, current commit, paths of files, names of checks that fire
-* Aggregate count of checks that fire
-* Names of checks that are disabled for the tools running in Bento
-* The user’s OS, shell information, user agent, and anonymized IP
-* Bento asks users to share error dump data on crashes
-* User’s email address (if the user provides it)
+### Usage Data
+
+As the name suggests, usage data tell us what commands you ran, what options and flags you ran them with, as well as information that helps us debug any issues users may be facing, e.g.
+
+* The name of the command you ran,
+* Arguments or options,
+* How long the command took to run,
+* If the command ran in a CI environment,
+* The version of Bento you're using, 
+* What OS and shell you're running in, etc.
+
+See Description of Fields for a full list.
+
+While using Bento in Beta, we associate these data with your email address to facilitate our outreach efforts.
+
+### Results Data
+
+Results data contain information about the code check rules that fired when you ran Bento, and help us make our rules better. These include:
+
+* The number of times rules fired across your repo,
+* Rules you disabled,
+* The number of results that were fixed or archived since the last run, and
+* Hashes of the repository and commit for which Bento produced these results,
+
+We consider this information more sensitive and do NOT associate it with user-identifiable information.
 
 ### Data NOT collected
 
-Bento minimizes the amount of personal data collected or shared, and limits that only to the amount necessary to support product operation. The following data is not collected and not sent to r2c. It does not leave your computer and is not sent or shared with anyone.
+We strive to balance our desire to collect data for improving Bento and its underlying tools with our users' need for privacy. 
 
-* Client’s raw IP address
-* User’s source code
+The following items don't leave your computer and are not sent or shared with anyone.
+
+* Source code
+* Raw repository names, filenames, or commit hashes,
+* User-identifiable data about Bento's findings in your code
 
 ### Examples
 
-This is a sample blob of data collected by Bento and sent to r2c:
+This is a sample blob of usage data collected by Bento and sent to r2c:
 ```json
 {
-    "X-R2C-Bento-User-Platform": "Darwin-18.7.0-x86_64-i386-64bit",
-    "X-R2C-Bento-User-Shell": "/bin/bash",
-    "ua": "python-requests/2.22.0",
-    "client_ip": "136.24.226.0",
-    "tool": "r2c.flake8",
-    "timestamp": "2019-09-27T17:53:40.148497",
-    "repository": "aa3a1e42e4a89f38c2d5fdede90f45471e2f9f383e09e363197ab03225fd05e8",
-    "commit": "faab68724239ceb66f18c91281d4bcc71d82d0f7",
-    "user": "0207e8d62d5e45e1b464c9b70e60949aeb00a9fc1eac6d96f45af44573d76d70",
-    "ignored_rules": ["F406"],
-    "path_hash": "b08fd7a517303ab07cfa211f74d03c1a4c2e64b3b0656d84ff32ecb449b785d2",
-    "rule_id_hash": "233d7433c1eb2e65b6c36608da1051769ef4cafad4816152c8e9c85d4d3ea7d2",
+    "X-R2C-Bento-Cli-Version": "0.3.1b2",
+    "X-R2C-Bento-User-Platform": "Linux-4.10.0-35-generic-x86_64-with-debian-9.11",
+    "X-R2C-Bento-User-Shell": "zsh",
+    "client_ip": "35.221.28.0",
+    "command": "check",
+    "command_kwargs": {
+        "formatter": null,
+        "pager": true,
+        "paths": [],
+        "staged_only": true
+    },
+    "duration": 1.251570224761963,
+    "email": "test@returntocorp.com",
+    "exit_code": 2,
+    "hash_of_commit": "641c9d42ecc5a442009d241f6528ab982f3d47ab2c61f2dc330ded3da4538aa6",
+    "is_ci": false,
+    "repository": "4a74fa9309d6f79a91442d95f35e68fc8838796448b4398527faabad7aa21a24",
+    "timestamp": "2019-11-08T17:55:16.432Z",
+    "ua": "python-requests/2.22.0"
+}
+  ```
+  
+The following is a sample of the results data we collect:
+
+```json
+{
+    "X-R2C-Bento-Cli-Version": "0.3.1b2",
+    "X-R2C-Bento-User-Platform": "Linux-4.10.0-35-generic-x86_64-with-debian-9.11",
+    "X-R2C-Bento-User-Shell": "",
+    "check_id": "E999",
+    "client_ip": "35.231.49.0",
+    "hash_of_commit": "a6847d624cad44f9bb3ab40963842289e2fc5c6f",
     "count": 1,
     "filtered_count": 0,
-    "error": false,
-    "event_name": "DUMMY_EVENT_NAME"
-  }
+    "ignored_rules": [
+        "B009",
+        "B010",
+        "E101",
+        "E111",
+        "E114",
+        "E115",
+        "E116",
+        ...
+    ],
+    "path_hash": "c2d20e995af6b538c471ccfe0130a32ed950abcdcd4cd0c27e38160fab97c07f",
+    "repository_hash": "79d7408f2c194d95bc502660d46a7be8b838cab9ad24a09e32e29846f7a7d649",
+    "timestamp": "2019-11-08T23:56:59.251Z",
+    "tool": "r2c.flake8",
+    "ua": "python-requests/2.22.0"
+}
   ```
+
+
 ### Description of fields
 
 | Field        | Description           | Use case  |
 | :------------- |:-------------| :-----|
+|X-R2C-Bento-Cli-Version | The version of Bento being used | Understanding average upgrade patterns and debugging specific errors
 | X-R2C-Bento-User-Platform     | OS description | Reproduce and debug issues with specific platforms |
 | X-R2C-Bento-User-Shell| 	shell description| 	Reproduce and debug issues with specific shells
+| duration | How long the command took to run | Understanding performance issues
+| is_ci | A boolean determining whether Bento was running in CI | Understanding if Bento is adopted in CI pipeline or is used locally
 | ua	| user agent| 	Reserved for future Bento variants
-| client_ip	| IP address	| Rough geolocation of clients so we can best support our users
-| tool	| The tool which triggered the event [r2c.eslint, r2c.flake8]| 	Improve Bento integration with the tool
-| timestamp| 	Time when the event fired	| Reproduce and debug issues
-| repository	| SHA256 hash of the repository name| 	Reserved for future tailoring of checks to the repository
-| commit	| Git commit hash| 	To understand when checks get fixed
-| user	| SHA256 hash of GitHub email	| Know if checks are either specifically or universally disdained or fixed
-| ignored_rules	| Rules that are explicitly ignored using Bento (by using `bento disable`)	| Understand which checks are useful and which are not
-| path_hash	| SHA256 hash of the relative file path which is relevant to the event| 	Measure check adoption and fixes; in conjuction with rule\_id\_hash and count, infer if checks get addressed
-| rule\_id\_hash	| SHA256 hash of the rule_id which caused the event	| Measure check adoption and fixes; in conjuction with path_hash and count, infer if checks get addressed
-| count| 	Number of times a check fires for this path| 	Number of times a check fires for a path; in conjuction with path_hash and rule\_id\_hash, infer if checks get addressed
+| client_ip	| IP address	| We record IP addresses to understand 
+| tool	| The underlying tool whose results a telemetry event contains [r2c.eslint, r2c.flake8]| 	Improving underlying OSS tools and excluding unwanted checks
+| timestamp| 	Time when the event fired	| Understanding tool usage over time
+| repository	| SHA256 hash of the repository name| 	Understanding if results we're receiving are associated with the same codebase
+| commit	| Git commit hash| 	Understanding if results we're receiving are associated with the same codebase
+| email	| email address that users enter upon installation	| User reach-out during out Beta period
+| ignored_rules	| Rules that are explicitly ignored by Bento (by using `bento disable`)	| Understanding which checks are useful to users and which are not
+| path_hash	| SHA256 hash of the relative file path which is relevant to the event| Understanding the fix rate of Bento results; in conjunction with check_id and result counts, infer if results are addressed
+| check_id	| SHA256 hash of the check_id which caused the event	| Measure check adoption and fixes; in conjuction with path_hash and count, infer if checks get addressed
+| count| 	Number of times a check fires for this path| 	Number of times a check fires for a path; in conjunction with path_hash and rule\_id\_hash, infer if checks get addressed
 | filtered_count| 	Number of times a check fires, not including archived checks.| 	Measure check adoption and fixes
-| error| 	Boolean reperesenting if this was an error event| 	Reproduce and debug issues
-| event_name	| Generic Bento label| 	Generic Bento label
+| exit_code| 	Bento's exit code, which helps us understand if Bento failed with an error| 	Debug commonly occurring issues
 
 
 ## Data Usage
 We use this information for the following purposes:
 
-- to provide, operate, maintain, support, and improve Bento
+- to support, and improve Bento and the underlying OSS tools it wraps
 - to communicate with users, if users supply their email address, including by sending product announcements, technical notices, updates, security alerts, and support messages
 - to better understand user needs and interests, and to solicit user feedback about Bento
 
