@@ -32,7 +32,6 @@ def __get_aggregate_violations(violations: List[Violation]) -> List[Dict[str, An
         out.append(
             {
                 "path_hash": __hash_sha256(p),
-                "check_id_hash": __hash_sha256(rid),
                 "check_id": rid,
                 "count": sum(1 for _ in v),
                 "filtered_count": __get_filtered_violation_count(v),
@@ -44,14 +43,13 @@ def __get_aggregate_violations(violations: List[Violation]) -> List[Dict[str, An
 def violations_to_metrics(
     tool_id: str, timestamp: str, violations: List[Violation], ignores: List[str]
 ) -> List[Dict[str, Any]]:
-    git_url = __hash_sha256(bento.git.url())
-    git_commit = bento.git.commit()
     return [
         {
             "tool": tool_id,
             "timestamp": timestamp,
-            "repository": git_url,
-            "commit": git_commit,
+            "hash_of_repository": __hash_sha256(bento.git.url()),
+            "repository": __hash_sha256(bento.git.url()),
+            "hash_of_commit": __hash_sha256(bento.git.commit()),
             "ignored_rules": ignores,
             **aggregates,
         }
@@ -76,12 +74,15 @@ def command_metric(
     duration: float,
     exception: Optional[Exception],
 ) -> List[Dict[str, Any]]:
+    email = read_user_email()
     d = {
         "timestamp": timestamp,
         "duration": duration,
         "exit_code": exit_code,
+        "hash_of_repository": __hash_sha256(bento.git.url()),
         "repository": __hash_sha256(bento.git.url()),
-        "email": read_user_email(),
+        "email": email,
+        "user": __hash_sha256(email),
         "hash_of_commit": __hash_sha256(bento.git.commit()),
         "command": command,
         "command_kwargs": command_kwargs,
