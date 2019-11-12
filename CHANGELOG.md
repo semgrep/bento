@@ -2,6 +2,32 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.4.0] - 2019-11-11
+
+### Changed
+
+- We updated our [privacy policy](https://github.com/returntocorp/bento/commits/master/PRIVACY.md).
+  - Notably, we collect email addresses to understand usage and communicate with users through product announcements, technical notices, updates, security alerts, and support messages.
+
+### Added
+
+- Added additional `r2c.click` tool for [Click](http://click.palletsprojects.com/) framework:
+
+  - [flake8-click](https://pypi.org/project/flake8-click/) will be disabled by default.
+
+- Added additional `r2c.flask` tool for [Flask](https://flask.palletsprojects.com/) framework:
+
+  - [flake8-flask](https://pypi.org/project/flake8-flask/) will be disabled by default.
+
+## [0.3.1] - 2019-11-08
+
+### Fixed
+
+- Fixed an issue where the tool would fail to install if a macOS user
+  had installed `gcc` and then upgraded their OS.
+- Fixed a compatibility issue for users with a pre-existing version
+  of GitPython with version between 2.1.1 and 2.1.13.
+
 ## [0.3.0] - 2019-11-01
 
 ### Changed
