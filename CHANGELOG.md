@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.4.1] - 2019-11-14
+
+### Fixed
+
+- Fixes a performance regression due to changes in metrics collection.
+
 ## [0.4.0] - 2019-11-11
 
 ### Changed
