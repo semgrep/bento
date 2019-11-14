@@ -43,13 +43,17 @@ def __get_aggregate_violations(violations: List[Violation]) -> List[Dict[str, An
 def violations_to_metrics(
     tool_id: str, timestamp: str, violations: List[Violation], ignores: List[str]
 ) -> List[Dict[str, Any]]:
+    # NOTE: Do not calculate url() and commit() on a per-item basis.
+    # Doing so causes bento check to take many unnecessary seconds.
+    url = bento.git.url()
+    commit = bento.git.commit()
     return [
         {
             "tool": tool_id,
             "timestamp": timestamp,
-            "hash_of_repository": __hash_sha256(bento.git.url()),
-            "repository": __hash_sha256(bento.git.url()),
-            "hash_of_commit": __hash_sha256(bento.git.commit()),
+            "hash_of_repository": __hash_sha256(url),
+            "repository": __hash_sha256(url),
+            "hash_of_commit": __hash_sha256(commit),
             "ignored_rules": ignores,
             **aggregates,
         }
