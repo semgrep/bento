@@ -38,7 +38,7 @@ class CheckedReturnParser(Parser):
 
 class CheckedReturnTool(Tool):
     ANALYZER_NAME = "r2c/checked-return"
-    ANALYZER_VERSION = Version("0.1.9")
+    ANALYZER_VERSION = Version("0.1.11")
 
     @property
     def file_name_filter(self) -> Pattern:

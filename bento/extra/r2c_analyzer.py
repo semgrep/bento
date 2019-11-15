@@ -100,7 +100,7 @@ REGISTRY: Dict[str, AnalyzerDataJson] = {
     },
     "r2c/checked-return": {
         "versions": {
-            "0.1.9": {
+            "0.1.11": {
                 "manifest": {
                     "analyzer_name": "r2c/checked-return",
                     "author_email": "pad@returntocorp.com",
@@ -111,7 +111,7 @@ REGISTRY: Dict[str, AnalyzerDataJson] = {
                     "readme": "# Analyzer name: checked-return\n\n# Author name: pad\n\n# Description: TODO\n",
                     "spec_version": "1.2.0",
                     "type": "commit",
-                    "version": "0.1.9",
+                    "version": "0.1.11",
                 },
                 "pending": False,
             }

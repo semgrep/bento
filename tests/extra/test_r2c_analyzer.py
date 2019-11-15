@@ -30,12 +30,12 @@ def test_pull_analyzer() -> None:
             "bento.extra.r2c_analyzer._should_pull_analyzer", return_value=False
         ):
             # Should not pull
-            prepull_analyzers("r2c/checked-return", Version("0.1.9"))
+            prepull_analyzers("r2c/checked-return", Version("0.1.11"))
             assert spy.call_count == 0
 
         with patch("bento.extra.r2c_analyzer._should_pull_analyzer", return_value=True):
             # Should pull three times
-            prepull_analyzers("r2c/checked-return", Version("0.1.9"))
+            prepull_analyzers("r2c/checked-return", Version("0.1.11"))
             assert spy.call_count == 3
 
         with patch(
@@ -43,7 +43,7 @@ def test_pull_analyzer() -> None:
             side_effect=[False, True, False],
         ):
             # Should pull one more time
-            prepull_analyzers("r2c/checked-return", Version("0.1.9"))
+            prepull_analyzers("r2c/checked-return", Version("0.1.11"))
             assert spy.call_count == 4
 
 
