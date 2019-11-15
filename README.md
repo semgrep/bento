@@ -91,7 +91,7 @@ jobs:
 Otherwise, you can simply install and run Bento in CI with the following commands:
 
 ```
-pip install bento-cli && bento --version
+pip3 install bento-cli && bento --version
 bento --agree --email <YOUR_EMAIL> check
 ```
 
