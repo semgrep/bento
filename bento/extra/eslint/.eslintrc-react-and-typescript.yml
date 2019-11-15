@@ -15,4 +15,17 @@ parserOptions:
   ecmaVersion: 2018
 plugins:
   - react
+  - "@typescript-eslint"
 rules: {}
+settings:
+  import/resolver:
+    node:
+      extensions:
+        - .js
+        - .jsx
+        - .ts
+        - .tsx
+  import/parsers:
+    "@typescript-eslint/parser":
+      - .ts
+      - .tsx

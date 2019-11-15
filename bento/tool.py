@@ -152,7 +152,8 @@ class Tool(ABC):
         """
         new_args: Dict[str, Any] = {"cwd": self.base_path, "encoding": "utf8"}
         new_args.update(kwargs)
-        logging.debug(f"{self.tool_id()}: Running '{' '.join(command)}'")
+        cmd_args = (f"'{a}'" for a in command)
+        logging.debug(f"{self.tool_id()}: Running: {' '.join(cmd_args)}")
         res = subprocess.run(command, **new_args)
         return res
 

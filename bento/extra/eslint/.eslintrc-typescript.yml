@@ -16,3 +16,15 @@ parserOptions:
 plugins:
   - "@typescript-eslint"
 rules: {}
+settings:
+  import/resolver:
+    node:
+      extensions:
+        - .js
+        - .jsx
+        - .ts
+        - .tsx
+  import/parsers:
+    "@typescript-eslint/parser":
+      - .ts
+      - .tsx

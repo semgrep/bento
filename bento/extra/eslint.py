@@ -156,34 +156,55 @@ class EslintTool(JsTool, Tool):
             for p in self.context.file_ignores.patterns
             for arg in ["--ignore-pattern", p]
         ]
-        cmd = [
-            "./node_modules/eslint/bin/eslint.js",
-            "--no-eslintrc",
-            "-c",
-            EslintTool.CONFIG_FILE_NAME,
-            "-f",
-            "json",
-            "--ext",
-            "js,jsx,ts,tsx",
-        ] + ignores
+        disables = [
+            arg
+            for d in self.config.get("ignore", [])
+            for arg in ["--rule", f"{d}: off"]
+        ]
+        cmd = (
+            [
+                "./node_modules/eslint/bin/eslint.js",
+                "--no-eslintrc",
+                "-c",
+                EslintTool.CONFIG_FILE_NAME,
+                "-f",
+                "json",
+                "--ext",
+                "js,jsx,ts,tsx",
+            ]
+            + ignores
+            + disables
+        )
         for f in files:
             cmd.append(f)
-        result = self.execute(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        result = self.execute(
+            cmd,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
+            env={"TIMING": "1", **os.environ},
+            check=False,
+        )
         logging.debug(f"{self.tool_id()}: stderr:\n" + result.stderr[0:4000])
         logging.debug(f"{self.tool_id()}: stdout:\n" + result.stdout[0:4000])
 
         # Return codes:
         # 0 = no violations, 1 = violations, 2+ = tool failure
+        data = ""
         try:
             # TODO: this double-parses, which we can avoid in the future by having type-parameterized parsers
-            json.loads(result.stdout.strip())
+            lines = result.stdout.split("\n")
+            data = lines[0]
+            timing = "\n".join(lines[1:])
+            logging.debug(f"r2c.eslint: TIMING:\n{timing}")
+            json.loads(data.strip())
             not_valid_json = False
         except Exception:
             not_valid_json = True
+
         if (result.returncode > 1) or not_valid_json:
-            # Tool returned fialure, or did not return json
+            # Tool returned failure, or did not return json
             raise subprocess.CalledProcessError(
                 result.returncode, cmd, output=result.stdout, stderr=result.stderr
             )
 
-        return result.stdout.rstrip()
+        return data.rstrip()
