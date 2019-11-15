@@ -65,7 +65,7 @@ $ bento archive
 
 Bento is at its best when run automatically as a commit hook (i.e. `bento install-hook`) or as part of CI.
 
-### CI setup
+### Running Bento in CI
 
 If you like what you see, try adding Bento to your CI pipeline. 
 
