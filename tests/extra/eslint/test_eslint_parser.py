@@ -1,3 +1,4 @@
+import json
 import os
 import subprocess
 from pathlib import Path
@@ -13,9 +14,9 @@ BASE_PATH = THIS_PATH / ".." / ".." / ".."
 
 def test_parse() -> None:
     with (THIS_PATH / "eslint_violation_simple.json").open() as json_file:
-        json = json_file.read()
+        data = json_file.read()
 
-    result = EslintParser(BASE_PATH).parse(json)
+    result = EslintParser(BASE_PATH).parse(json.loads(data))
 
     expectation = [
         Violation(
@@ -47,9 +48,9 @@ def test_line_move() -> None:
     parser = EslintParser(BASE_PATH)
 
     with (THIS_PATH / "eslint_violation_move_before.json").open() as json_file:
-        before = parser.parse(json_file.read())
+        before = parser.parse(json.loads(json_file.read()))
     with (THIS_PATH / "eslint_violation_move_after.json").open() as json_file:
-        after = parser.parse(json_file.read())
+        after = parser.parse(json.loads(json_file.read()))
 
     assert before == after
     assert [b.syntactic_identifier_str() for b in before] == [
@@ -167,9 +168,9 @@ def test_file_match(tmp_path_factory: tmp_path_factory) -> None:
 
 def test_missing_source() -> None:
     with (THIS_PATH / "eslint_violation_missing_source.json").open() as json_file:
-        json = json_file.read()
+        json_data = json_file.read()
 
-    result = EslintParser(BASE_PATH).parse(json)
+    result = EslintParser(BASE_PATH).parse(json.loads(json_data))
 
     expectation = [
         Violation(

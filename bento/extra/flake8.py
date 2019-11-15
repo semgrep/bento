@@ -5,7 +5,7 @@ from typing import Any, Dict, Iterable, List, Pattern, Type
 from bento.extra.python_tool import PythonTool
 from bento.parser import Parser
 from bento.result import Violation
-from bento.tool import Tool
+from bento.tool import StrTool
 
 # Input example:
 # {
@@ -23,7 +23,7 @@ from bento.tool import Tool
 #
 
 
-class Flake8Parser(Parser):
+class Flake8Parser(Parser[str]):
     @staticmethod
     def id_to_link(check_id: str) -> str:
         if check_id == "E999":
@@ -35,7 +35,7 @@ class Flake8Parser(Parser):
         return link
 
     @staticmethod
-    def tool() -> Type[Tool]:
+    def tool() -> Type[StrTool]:
         return Flake8Tool
 
     def to_violation(self, result: Dict[str, Any]) -> Violation:
@@ -61,7 +61,7 @@ class Flake8Parser(Parser):
         return [self.to_violation(v) for r in results.values() for v in r]
 
 
-class Flake8Tool(PythonTool, Tool):
+class Flake8Tool(PythonTool[str], StrTool):
     TOOL_ID = "r2c.flake8"  # to-do: versioning?
     VENV_DIR = "flake8"
     PROJECT_NAME = "Python"

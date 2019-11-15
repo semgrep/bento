@@ -5,17 +5,17 @@ import subprocess
 import venv
 from abc import abstractmethod
 from pathlib import Path
-from typing import Dict, Iterable, List, Tuple
+from typing import Dict, Generic, Iterable, List, Tuple
 
 import click
 from packaging.version import InvalidVersion, Version
 
-import bento.tool
 from bento.base_context import BaseContext
-from bento.util import echo_success
+from bento.tool import R, Tool
+from bento.util import EMPTY_DICT, echo_success
 
 
-class PythonTool(bento.tool.Tool):
+class PythonTool(Generic[R], Tool[R]):
     # On most environments, just "pip" will point to the wrong Python installation
     # Fix by using the virtual environment's python
     PIP_CMD = "python -m pip"
@@ -52,10 +52,7 @@ class PythonTool(bento.tool.Tool):
                 venv.create(str(self.__venv_dir), with_pip=True)
 
     def venv_exec(
-        self,
-        cmd: str,
-        env: Dict[str, str] = bento.util.EMPTY_DICT,
-        check_output: bool = True,
+        self, cmd: str, env: Dict[str, str] = EMPTY_DICT, check_output: bool = True
     ) -> str:
         """
         Executes tool set-up or check within its virtual environment

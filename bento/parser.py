@@ -1,10 +1,12 @@
 import os
 from pathlib import Path
-from typing import List
+from typing import Generic, List, TypeVar
 
 import attr
 
 from bento.result import Violation
+
+R = TypeVar("R", contravariant=True)
 
 
 def _absolute(path: Path) -> Path:
@@ -12,7 +14,7 @@ def _absolute(path: Path) -> Path:
 
 
 @attr.s
-class Parser(object):
+class Parser(Generic[R]):
     base_path = attr.ib(type=Path, converter=_absolute)
 
     def trim_base(self, path: str) -> str:
@@ -21,5 +23,5 @@ class Parser(object):
             wrapped = self.base_path / wrapped
         return os.path.relpath(wrapped, self.base_path)
 
-    def parse(self, results: str) -> List[Violation]:
+    def parse(self, result: R) -> List[Violation]:
         return []

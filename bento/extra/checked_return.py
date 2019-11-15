@@ -7,11 +7,11 @@ from semantic_version import Version
 from bento.base_context import BaseContext
 from bento.extra.r2c_analyzer import prepull_analyzers, run_analyzer_on_local_code
 from bento.parser import Parser
-from bento.tool import Tool
+from bento.tool import StrTool
 from bento.violation import Violation
 
 
-class CheckedReturnParser(Parser):
+class CheckedReturnParser(Parser[str]):
     def parse(self, results: str) -> List[Violation]:
         violations: List[Violation] = []
         checks = json.loads(results).get("results", [])
@@ -36,7 +36,7 @@ class CheckedReturnParser(Parser):
         return violations
 
 
-class CheckedReturnTool(Tool):
+class CheckedReturnTool(StrTool):
     ANALYZER_NAME = "r2c/checked-return"
     ANALYZER_VERSION = Version("0.1.11")
 

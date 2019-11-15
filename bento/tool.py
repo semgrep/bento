@@ -1,10 +1,22 @@
+import json
 import logging
 import os
 import subprocess
 from abc import ABC, abstractmethod
 from fnmatch import fnmatch
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Pattern, Set, Type, TypeVar
+from typing import (
+    Any,
+    Dict,
+    Generic,
+    Iterable,
+    List,
+    Optional,
+    Pattern,
+    Set,
+    Type,
+    TypeVar,
+)
 
 import attr
 
@@ -12,14 +24,18 @@ from bento.base_context import BaseContext
 from bento.parser import Parser
 from bento.result import Violation
 
-ToolT = TypeVar("ToolT", bound="Tool")
+R = TypeVar("R")
+"""Generic return type"""
+
+JsonR = List[Dict[str, Any]]
+"""Return type for tools with a JSON representation"""
 
 
 # Note: for now, every tool *HAS* to directly inherit from this, even if it
 # also inherits from JsTool or PythonTool. This is so we can list all tools by
 # looking at subclasses of Tool.
 @attr.s
-class Tool(ABC):
+class Tool(ABC, Generic[R]):
     context = attr.ib(type=BaseContext)
 
     @property
@@ -32,20 +48,32 @@ class Tool(ABC):
         """Returns this tool's configuration"""
         return self.context.config["tools"][self.tool_id()]
 
-    def parser(self) -> Parser:
+    def parser(self) -> Parser[R]:
         """Returns this tool's parser"""
         return self.parser_type(self.base_path)
 
     @property
     @abstractmethod
-    def parser_type(self) -> Type[Parser]:
+    def parser_type(self) -> Type[Parser[R]]:
         """Returns this tool's parser type"""
         pass
 
     @classmethod
     @abstractmethod
-    def tool_id(self) -> str:
+    def tool_id(cls) -> str:
         """Returns this tool's string ID"""
+        pass
+
+    @classmethod
+    @abstractmethod
+    def serialize(cls, results: R) -> str:
+        """Converts a tool's output to its cache representation"""
+        pass
+
+    @classmethod
+    @abstractmethod
+    def deserialize(cls, rep: str) -> R:
+        """Converts a tool's cache representation to its parseable form"""
         pass
 
     @property
@@ -76,9 +104,9 @@ class Tool(ABC):
         pass
 
     @abstractmethod
-    def run(self, files: Iterable[str]) -> str:
+    def run(self, files: Iterable[str]) -> R:
         """
-        Runs this tool, returning its standard output
+        Runs this tool, returning its results
 
         Code runs inside virtual environment.
 
@@ -178,11 +206,13 @@ class Tool(ABC):
 
         if paths:
             logging.debug(f"Checking for local cache for {self.tool_id}")
-            raw = self.context.cache.get(self.tool_id(), paths)
-            if raw is None:
+            cache_repr = self.context.cache.get(self.tool_id(), paths)
+            if cache_repr is None:
                 logging.debug(f"Cache entry invalid for {self.tool_id}. Running Tool.")
                 raw = self.run(paths)
-                self.context.cache.put(self.tool_id(), paths, raw)
+                self.context.cache.put(self.tool_id(), paths, self.serialize(raw))
+            else:
+                raw = self.deserialize(cache_repr)
 
             try:
                 violations = self.parser().parse(raw)
@@ -195,3 +225,23 @@ class Tool(ABC):
             return filtered
         else:
             return []
+
+
+class StrTool(Tool[str]):
+    @classmethod
+    def serialize(cls, results: str) -> str:
+        return results
+
+    @classmethod
+    def deserialize(cls, rep: str) -> str:
+        return rep
+
+
+class JsonTool(Tool[JsonR]):
+    @classmethod
+    def serialize(cls, results: JsonR) -> str:
+        return json.dumps(results)
+
+    @classmethod
+    def deserialize(cls, rep: str) -> JsonR:
+        return json.loads(rep)

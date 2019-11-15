@@ -5,7 +5,7 @@ from typing import Any, Dict, Iterable, List, Optional, Pattern, Type
 
 from _pytest.tmpdir import tmp_path_factory
 from bento.base_context import BaseContext
-from bento.tool import Parser, Tool
+from bento.tool import Parser, StrTool
 from bento.violation import Violation
 
 THIS_PATH = Path(os.path.dirname(__file__))
@@ -43,7 +43,7 @@ class ParserFixture(Parser):
         return [result_for(f) for f in tool_output.split(",")]
 
 
-class ToolFixture(Tool):
+class ToolFixture(StrTool):
     def __init__(
         self,
         tmp_path_factory: Any,

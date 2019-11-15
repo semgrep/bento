@@ -6,7 +6,7 @@ from typing import Any, Dict, Iterable, List, Pattern, Type
 from bento.base_context import BaseContext
 from bento.parser import Parser
 from bento.result import Violation
-from bento.tool import Tool
+from bento.tool import StrTool
 from bento.util import fetch_line_in_file
 
 # Input example:
@@ -50,7 +50,7 @@ class PyreParser(Parser):
         return [self.to_violation(r) for r in results]
 
 
-class PyreTool(Tool):
+class PyreTool(StrTool):
     TOOL_ID = "r2c.pyre"  # to-do: versioning?
     PROJECT_NAME = "Python"
 

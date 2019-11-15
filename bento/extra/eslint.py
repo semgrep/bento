@@ -12,7 +12,7 @@ from bento.base_context import BaseContext
 from bento.extra.js_tool import JsTool
 from bento.parser import Parser
 from bento.result import Violation
-from bento.tool import Tool
+from bento.tool import JsonR, JsonTool
 
 # Input example:
 # [
@@ -32,7 +32,7 @@ from bento.tool import Tool
 #
 
 
-class EslintParser(Parser):
+class EslintParser(Parser[JsonR]):
     def to_violation(
         self, result: Dict[str, Any], message: Dict[str, Any]
     ) -> Violation:
@@ -60,15 +60,15 @@ class EslintParser(Parser):
             link=link,
         )
 
-    def parse(self, tool_output: str) -> List[Violation]:
+    def parse(self, tool_output: JsonR) -> List[Violation]:
         violations: List[Violation] = []
-        for r in json.loads(tool_output):
+        for r in tool_output:
             r["source"] = r.get("source", "").split("\n")
             violations += [self.to_violation(r, m) for m in r["messages"]]
         return violations
 
 
-class EslintTool(JsTool, Tool):
+class EslintTool(JsTool, JsonTool):
     ESLINT_TOOL_ID = "r2c.eslint"  # to-do: versioning?
     CONFIG_FILE_NAME = ".eslintrc.yml"
     PROJECT_NAME = "node-js"
@@ -150,7 +150,14 @@ class EslintTool(JsTool, Tool):
             else:
                 self.__copy_eslintrc("default")
 
-    def run(self, files: Iterable[str]) -> str:
+    @staticmethod
+    def raise_failure(cmd: List[str], result: subprocess.CompletedProcess) -> None:
+        # Tool returned fialure, or did not return json
+        raise subprocess.CalledProcessError(
+            result.returncode, cmd, output=result.stdout, stderr=result.stderr
+        )
+
+    def run(self, files: Iterable[str]) -> JsonR:
         ignores = [
             arg
             for p in self.context.file_ignores.patterns
@@ -189,22 +196,17 @@ class EslintTool(JsTool, Tool):
 
         # Return codes:
         # 0 = no violations, 1 = violations, 2+ = tool failure
-        data = ""
+        if result.returncode > 1:
+            self.raise_failure(cmd, result)
+
         try:
             # TODO: this double-parses, which we can avoid in the future by having type-parameterized parsers
             lines = result.stdout.split("\n")
             data = lines[0]
             timing = "\n".join(lines[1:])
             logging.debug(f"r2c.eslint: TIMING:\n{timing}")
-            json.loads(data.strip())
-            not_valid_json = False
-        except Exception:
-            not_valid_json = True
-
-        if (result.returncode > 1) or not_valid_json:
-            # Tool returned failure, or did not return json
-            raise subprocess.CalledProcessError(
-                result.returncode, cmd, output=result.stdout, stderr=result.stderr
-            )
-
-        return data.rstrip()
+            return json.loads(data.strip())
+        except Exception as ex:
+            logging.error("Could not parse json output of eslint tool", ex)
+            self.raise_failure(cmd, result)
+            return []  # Unreachable, but mypy is poor

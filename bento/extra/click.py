@@ -3,7 +3,7 @@ from typing import Type
 from bento.base_context import BaseContext
 from bento.extra.flake8 import Flake8Parser, Flake8Tool
 from bento.parser import Parser
-from bento.tool import Tool
+from bento.tool import StrTool
 
 
 class ClickParser(Flake8Parser):
@@ -12,7 +12,7 @@ class ClickParser(Flake8Parser):
         return ""
 
     @staticmethod
-    def tool() -> Type[Tool]:
+    def tool() -> Type[StrTool]:
         return ClickTool
 
 

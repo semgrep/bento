@@ -5,7 +5,7 @@ from typing import Any, Dict, Iterable, List, Pattern, Type
 from bento.extra.python_tool import PythonTool
 from bento.parser import Parser
 from bento.result import Violation
-from bento.tool import Tool
+from bento.tool import StrTool
 from bento.util import fetch_line_in_file
 
 # Input example:
@@ -81,7 +81,7 @@ from bento.util import fetch_line_in_file
 # }
 
 
-class BanditParser(Parser):
+class BanditParser(Parser[str]):
     SEVERITY = {"LOW": 0, "MEDIUM": 1, "HIGH": 2}
     LINE_NO_CHARS = "0123456789"
 
@@ -136,7 +136,7 @@ class BanditParser(Parser):
         return errors + violations
 
 
-class BanditTool(PythonTool, Tool):
+class BanditTool(PythonTool[str], StrTool):
     TOOL_ID = "r2c.bandit"  # to-do: versioning?
     VENV_DIR = "bandit"
     PROJECT_NAME = "Python"
