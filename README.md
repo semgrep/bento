@@ -80,7 +80,7 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Install bento-cli"
+          name: "Install Bento"
           command: pip3 install bento-cli && bento --version
       - run:
           name: "Run Bento check"
