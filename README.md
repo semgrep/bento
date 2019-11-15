@@ -63,7 +63,41 @@ To set aside preexisting results so you only see issues in new code:
 $ bento archive
 ```
 
-Bento really sings when you run it automatically in your editor, as a commit hook (`bento install-hook`), or in CI.
+Bento really sings when you run it automatically in your editor or as a commit hook (`bento install-hook`).
+
+### CI setup
+
+If you like what you see, try adding Bento to your CI pipeline. 
+
+If you use CircleCI, you can add the following job:
+
+```
+version: 2.1
+
+jobs:
+    bentoRun:
+    executor: circleci/python:3.7.4-stretch-node
+    steps:
+      - checkout
+      - run:
+          name: "Install bento-cli"
+          command: pip install bento-cli && bento --version
+      - run:
+          name: "Running bento check"
+          command: bento --agree --email <YOUR_EMAIL> check
+```
+
+
+Otherwise, you can simply install and run Bento in CI with the following commands:
+
+```
+pip install bento-cli && bento --version
+bento --agree --email <YOUR_EMAIL> check
+```
+
+`bento check` will exit with an exit code of `2` if it finds any issues, and with an exit code of `3` if it fails to run. Address the issues or unblock yourself by running `bento archive` to add them to your `.bento-whitelist` file and addressing them later. Then check in your whitelist file.
+
+Please open an issue if you need help setting up Bento with another CI provider.
 
 ## Command Line Options
 ```
