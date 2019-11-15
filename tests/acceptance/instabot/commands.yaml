@@ -8,8 +8,6 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ '.bentoignore' not found; using default ignore patterns."
-      - "  Please run 'bento init' to configure a .bentoignore for your project."
       - "✘ No Bento configuration found. Please run `bento init`."
     expected_out: ""
     returncode: 3
@@ -20,11 +18,11 @@ steps:
       - --agree
       - init
     expected_err: |
-      Creating default configuration at .bento.yml
-      ✔ Created .bento.yml. Please check this file in to source control.
-
       Creating default ignore file at .bentoignore
       ✔ Created .bentoignore. Please check this file in to source control.
+
+      Creating default configuration at .bento.yml
+      ✔ Created .bento.yml. Please check this file in to source control.
 
       Detected project with Python
 
@@ -42,7 +40,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 67 findings in"
+      - "⚠ 66 findings in"
       - To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-init.out
@@ -88,7 +86,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 67 findings in"
+      - "⚠ 66 findings in"
       - To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-init.out
@@ -100,7 +98,7 @@ steps:
       - --agree
       - archive
     expected_err:
-      - ✔ Rewrote the whitelist with 67 findings from 2 tools (67 new, 0 previously whitelisted).
+      - ✔ Rewrote the whitelist with 66 findings from 2 tools (66 new, 0 previously whitelisted).
       - Please check '.bento-whitelist.yml' in to source control.
     expected_out: ""
     returncode: 0

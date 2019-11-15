@@ -48,9 +48,6 @@ examples/multi_script_CLI.py
 580:0  error   The input method in Python 2 will read from standard input, evaluate and run the resulting string... r2c.bandit     B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
 618:5  error   "input" is a python builtin and is being shadowed, consider renaming the variable                    r2c.flake8     A001 https://lintlyci.github.io/Flake8Rules/rules/A001.html
 
-examples/photos/upload_photos.py
- 75:0  error   The input method in Python 2 will read from standard input, evaluate and run the resulting string... r2c.bandit     B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
-
 examples/reset_following.py
  20:0  error   The input method in Python 2 will read from standard input, evaluate and run the resulting string... r2c.bandit     B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
 

@@ -111,7 +111,8 @@ class Stylish(Formatter):
 
         if sys.stdout.isatty():
             terminal_width, _ = shutil.get_terminal_size((50, 20))
-            max_message_len = max(min(max_message_len, terminal_width - 50), 20)
+            if terminal_width > 0:
+                max_message_len = max(min(max_message_len, terminal_width - 40), 50)
 
         ordered: List[Violation] = sorted(violations, key=Stylish.__path_of)
         for path, vv in itertools.groupby(ordered, Stylish.__path_of):

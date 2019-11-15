@@ -1,13 +1,14 @@
+import io
 import os
 from pathlib import Path
 from typing import Collection, Set
 
+import pytest
 from _pytest.monkeypatch import MonkeyPatch
-from bento.context import Context
-from bento.fignore import FileIgnore
+from bento.fignore import FileIgnore, Parser, Processor, open_ignores
 
 THIS_PATH = Path(os.path.dirname(__file__))
-BASE_PATH = (THIS_PATH / "..").absolute()
+BASE_PATH = (THIS_PATH / "..").resolve()
 WALK_PATH = (BASE_PATH / "tests/integration/simple").relative_to(Path(os.getcwd()))
 
 
@@ -77,6 +78,48 @@ def test_ignore_full_path() -> None:
     assert str(WALK_PATH / "dist/foo/bar.js") not in all_files
 
 
+def __parse(text: str, base_path: Path = BASE_PATH) -> Set[str]:
+    lines = io.StringIO(text)
+    parser = Parser(base_path, Path("test"))
+    return parser.parse(lines)
+
+
+def test_load_includes(monkeypatch: MonkeyPatch) -> None:
+    monkeypatch.chdir(BASE_PATH)
+
+    assert "node_modules/" in __parse(":include .gitignore")
+
+
+def test_load_includes_from_path(monkeypatch: MonkeyPatch) -> None:
+    monkeypatch.chdir(BASE_PATH)
+
+    assert "node_modules/" in __parse(":include ../.gitignore", BASE_PATH / "tests")
+
+
+def test_load_escape_colon() -> None:
+    assert r"\:foo" in __parse(r"\:foo")
+
+
+def test_load_git_include() -> None:
+    assert not __parse(r"!foo")
+
+
+def test_load_git_multi_char() -> None:
+    assert not __parse(r"*.py[cod]")
+
+
+def test_load_unknown_command() -> None:
+    with pytest.raises(ValueError) as ex:
+        __parse(":unknown")
+    assert ex
+
+
+def test_load_invalid_escape() -> None:
+    with pytest.raises(ValueError) as ex:
+        Processor(BASE_PATH).process(__parse("\\r"))
+    assert ex
+
+
 def test_ignores_from_ignore_file(monkeypatch: MonkeyPatch) -> None:
     monkeypatch.chdir(BASE_PATH)
 
@@ -84,8 +127,8 @@ def test_ignores_from_ignore_file(monkeypatch: MonkeyPatch) -> None:
     (test_path / ".bento").mkdir(exist_ok=True)
     (test_path / "node_modules").mkdir(exist_ok=True)
 
-    ignores = Context(base_path=(BASE_PATH / "bento" / "configs"))._open_ignores()
-    fi = FileIgnore(test_path, ignores)
+    fi = open_ignores(test_path, BASE_PATH / ".bentoignore")
+    print(fi.patterns)
 
     survivors = {e.path for e in fi.entries() if e.survives}
     assert survivors == {
@@ -103,6 +146,7 @@ def test_ignores_from_ignore_file(monkeypatch: MonkeyPatch) -> None:
     rejects = {e.path for e in fi.entries() if not e.survives}
     assert rejects == {
         "tests/integration/simple/.bento",
+        "tests/integration/simple/.gitignore",
         "tests/integration/simple/dist",
         "tests/integration/simple/node_modules",
     }

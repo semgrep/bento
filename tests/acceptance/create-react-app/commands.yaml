@@ -13,8 +13,6 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ '.bentoignore' not found; using default ignore patterns."
-      - "  Please run 'bento init' to configure a .bentoignore for your project."
       - "✘ No Bento configuration found. Please run `bento init`."
     expected_out: ""
     returncode: 3

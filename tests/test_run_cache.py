@@ -6,7 +6,6 @@ from typing import Tuple
 
 from _pytest.monkeypatch import MonkeyPatch
 from bento.base_context import BaseContext
-from bento.fignore import FileIgnore
 from bento.run_cache import RunCache
 
 TOOL_ID = "tool_name_here"
@@ -24,7 +23,8 @@ def __ensure_ubuntu_mtime_change() -> None:
 
 
 def __cache(cache_path: Path, run_path: Path) -> RunCache:
-    ignore = FileIgnore(run_path, BaseContext()._open_ignores())
+    context = BaseContext(base_path=run_path)
+    ignore = context.file_ignores
     return RunCache(ignore, cache_path)
 
 
@@ -84,7 +84,7 @@ def test_modified_hash_remove(tmp_path: Path) -> None:
 
 def test_modified_hash_ignore(tmp_path: Path) -> None:
     """modifed_hash should ignore changes in exclude dirs"""
-    hsh, file = __setup_test_dir(tmp_path, subdir_name="node_modules", touch_file=False)
+    hsh, file = __setup_test_dir(tmp_path, subdir_name=".bento", touch_file=False)
 
     file.touch()
 

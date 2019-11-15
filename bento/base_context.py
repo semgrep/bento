@@ -1,14 +1,12 @@
 import logging
-import os
 from pathlib import Path
-from typing import Any, ClassVar, Dict, Set, Union
+from typing import Any, ClassVar, Dict, Union
 
 import attr
 import yaml
 
-from bento.fignore import FileIgnore
+from bento.fignore import FileIgnore, open_ignores
 from bento.run_cache import RunCache
-from bento.util import echo_warning
 
 
 def _clean_path(path: Union[str, Path]) -> Path:
@@ -85,7 +83,6 @@ class BaseContext:
         # We need to make sure the resource directory exists prior to creating the FileIgnore object,
         # otherwise it won't be detected in its directory scan.
         self.resource_path.mkdir(parents=True, exist_ok=True)
-        self._ignores = FileIgnore(self.base_path, self._open_ignores())
 
     @property
     def config(self) -> Dict[str, Any]:
@@ -100,6 +97,10 @@ class BaseContext:
 
     @property
     def file_ignores(self) -> FileIgnore:
+        if self._ignores is None:
+            self._ignores = open_ignores(
+                self.base_path, self.ignore_file_path, self.is_init
+            )
         return self._ignores
 
     @property
@@ -124,34 +125,3 @@ class BaseContext:
         logging.info(f"Writing bento configuration to {self.config_path}")
         with self.config_path.open("w") as yaml_file:
             yaml.safe_dump(config, yaml_file)
-
-    def _open_ignores(self) -> Set[str]:
-        """
-        Opens this project's ignore file
-        """
-        ignore_file_path = self.ignore_file_path
-        if not ignore_file_path.exists():
-            if not self.is_init:
-                echo_warning(
-                    f"""'{self.ignore_file_path.relative_to(os.getcwd())}' not found; using default ignore patterns.
-  Please run 'bento init' to configure a .bentoignore for your project.
-"""
-                )
-            ignore_file_path = (
-                Path(os.path.dirname(__file__)) / "configs" / ".bentoignore"
-            )
-
-        logging.info(
-            f"Loading bento file ignores from {os.path.abspath(ignore_file_path)}"
-        )
-
-        def remove_comments(l: str) -> str:
-            ix = l.find("#")
-            if ix >= 0:
-                return l[0:ix]
-            else:
-                return l
-
-        with ignore_file_path.open() as ignore_file:
-            stripped = (remove_comments(l).rstrip() for l in ignore_file)
-            return {s for s in stripped if s}

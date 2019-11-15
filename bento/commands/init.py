@@ -3,6 +3,7 @@ import os
 import shutil
 import subprocess
 import sys
+from pathlib import Path
 
 import click
 import yaml
@@ -32,13 +33,35 @@ def __install_config_if_not_exists(context: Context) -> None:
             f"Created {pretty_path}. Please check this file in to source control.\n"
         )
 
+
+def __install_ignore_if_not_exists(context: Context) -> None:
     if not context.ignore_file_path.exists():
         pretty_path = context.pretty_path(context.ignore_file_path)
         click.echo(f"Creating default ignore file at {pretty_path}", err=True)
-        shutil.copy(
-            os.path.join(os.path.dirname(__file__), "..", "configs", ".bentoignore"),
-            str(context.ignore_file_path),
-        )
+        templates_path = Path(os.path.dirname(__file__)) / ".." / "configs"
+        shutil.copy(templates_path / ".bentoignore", context.ignore_file_path)
+
+        gitignore_added = False
+
+        # If we're in a git repo with a .gitignore, add it to .bentoignore
+        repo = bento.git.repo()
+        if repo:
+            path_to_gitignore = (
+                Path(os.path.relpath(repo.working_tree_dir, context.base_path))
+                / ".gitignore"
+            )
+            if path_to_gitignore.exists():
+                with context.ignore_file_path.open("a") as ignore_file:
+                    ignore_file.write(f":include {path_to_gitignore}\n")
+                gitignore_added = True
+
+        # Otherwise, add the contents of configs/extra-ignore-patterns
+        if not gitignore_added:
+            with (templates_path / "extra-ignore-patterns").open() as extras:
+                with context.ignore_file_path.open("a") as ignore_file:
+                    for e in extras:
+                        ignore_file.write(e)
+
         echo_success(
             f"Created {pretty_path}. Please check this file in to source control.\n"
         )
@@ -59,6 +82,7 @@ def init(context: Context, clean: bool) -> None:
 
     Run again after changing tool list in .bento.yml
     """
+    __install_ignore_if_not_exists(context)
     __install_config_if_not_exists(context)
 
     tools = context.tools.values()

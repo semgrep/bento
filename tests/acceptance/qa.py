@@ -2,7 +2,7 @@ import os
 import subprocess
 import tempfile
 from pathlib import Path
-from typing import Any, List, Union
+from typing import Any, Callable, List, Optional, Union
 
 import yaml
 
@@ -72,7 +72,13 @@ def check_command(step: Any, pwd: str, target: str) -> None:
         match_expected(runned.stderr, expected_err, f"{test_identifier}: stderr")
 
 
-def run_repo(target: str) -> None:
+def run_repo(target: str, pre: Optional[Callable[[Path], None]] = None) -> None:
+    """
+    Runs commands for a repository definition file.
+
+    :param target: Subdirectory where the repository's commands are stored
+    :param pre: A setup function to run after the repository is checked out, but prior to running commands
+    """
     with open(f"tests/acceptance/{target}/commands.yaml") as file:
         info = yaml.safe_load(file)
 
@@ -103,6 +109,9 @@ def run_repo(target: str) -> None:
             check=True,
         )
 
+        if pre:
+            pre(Path(target_dir))
+
         for step in steps:
             check_command(step, target_dir, target)
 
@@ -113,7 +122,12 @@ def test_flask() -> None:
 
 
 def test_create_react_app() -> None:
-    run_repo("create-react-app")
+    # eslint runs forever unless we ignore 'packages/'
+    def setup_ignores(root: Path) -> None:
+        with (root / ".gitignore").open("a") as gitignore:
+            gitignore.writelines(["packages/\n"])
+
+    run_repo("create-react-app", pre=setup_ignores)
 
 
 def test_django_example() -> None:

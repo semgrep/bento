@@ -3,7 +3,12 @@ from pathlib import Path
 from click.testing import CliRunner
 
 import util
-from bento.commands.init import __install_config_if_not_exists, init
+from _pytest.monkeypatch import MonkeyPatch
+from bento.commands.init import (
+    __install_config_if_not_exists,
+    __install_ignore_if_not_exists,
+    init,
+)
 from bento.context import Context
 
 INTEGRATION = Path(__file__).parent.parent / "integration"
@@ -20,6 +25,28 @@ def test_install_config() -> None:
         assert "r2c.eslint" in cfg["tools"]
         assert "r2c.flake8" in cfg["tools"]
         assert "r2c.bandit" in cfg["tools"]
+
+
+def test_install_ignore_in_repo() -> None:
+    """Validates that bento installs an ignore file if none exists"""
+    context = Context(base_path=SIMPLE, is_init=True)
+    with util.mod_file(context.ignore_file_path):
+        context.ignore_file_path.unlink()
+        __install_ignore_if_not_exists(context)
+        context = Context(base_path=SIMPLE, is_init=True)
+        ig = context.file_ignores
+        assert "node_modules/" in ig.patterns
+
+
+def test_install_ignore_no_repo(tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
+    """Validates that bento installs extra ignore items when not in a git repo"""
+    monkeypatch.chdir(tmp_path)
+
+    context = Context(base_path=tmp_path, is_init=True)
+    __install_ignore_if_not_exists(context)
+    context = Context(base_path=tmp_path, is_init=True)
+    ig = context.file_ignores
+    assert "node_modules/" in ig.patterns
 
 
 def test_init_already_setup() -> None:

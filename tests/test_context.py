@@ -26,27 +26,5 @@ def test_tool_from_config_missing() -> None:
 
 def test_loads_ignores(monkeypatch: MonkeyPatch) -> None:
     context = bento.context.Context(base_path=(Path(BASE_PATH) / "bento" / "configs"))
-    expected = {
-        "*.min.js",
-        "*.egg-info/",
-        ".bento/",
-        ".eggs/",
-        ".git/",
-        ".mypy_cache/",
-        "__pycache__/",
-        "build/",
-        "develop-eggs/",
-        "dist/",
-        "eggs/",
-        "lib/",
-        "lib64/",
-        "node_modules/",
-        "packages/",
-        "parts/",
-        "pip-wheel-metadata/",
-        "sdist/",
-        "share/python-wheels/",
-        "var/",
-        "wheels/",
-    }
+    expected = {".bento/", ".git/", ".gitignore"}
     assert context.file_ignores.patterns == expected
