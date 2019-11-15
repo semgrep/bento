@@ -26,17 +26,6 @@ r2c.bandit:
 
         res, _ = proc.communicate()'
       tool_id: r2c.bandit
-    94f271aa5818b07a58371ffb938b83cc:
-      check_id: B110
-      message: Try, Except, Pass detected.
-      path: tests/commands/test_check.py
-      severity: 0
-      syntactic_context: 'assert False
-
-        except Exception:
-
-        pass'
-      tool_id: r2c.bandit
     a818cd9a70b1ccca74b3687b7f4355c5:
       check_id: B602
       message: subprocess call with shell=True identified, security issue.
@@ -63,6 +52,30 @@ r2c.bandit:
         stdout, stderr = v.communicate()
 
         logging.debug(f"{self.tool_id()}: stderr[:4000]:\n" + stderr[0:4000])'
+      tool_id: r2c.bandit
+    c0441bba86cc9ce3775cbadde6f3fe06:
+      check_id: B602
+      message: subprocess call with shell=True identified, security issue.
+      path: bento/extra/hadolint.py
+      severity: 2
+      syntactic_context: 'f"docker run --network none --rm -i {self.DOCKER_IMAGE}
+        hadolint --format json - < {file}",
+
+        shell=True,
+
+        cwd=self.base_path,
+
+        encoding="utf8",
+
+        stdout=subprocess.PIPE,
+
+        stderr=subprocess.PIPE,
+
+        )
+
+        hadolint_output = res.stdout
+
+        hadolint_json = json.loads(hadolint_output)'
       tool_id: r2c.bandit
     cb09ff7333a5a433b189c697bfa69116:
       check_id: B602
@@ -98,20 +111,6 @@ r2c.bandit:
       tool_id: r2c.bandit
 r2c.eslint:
   violations:
-    a09a2a6f315e5e77f51b5e69f1b9d886:
-      check_id: import/no-unresolved
-      message: Unable to resolve path to module 'react-dom'.
-      path: tests/integration/react/index.jsx
-      severity: 2
-      syntactic_context: import ReactDOM from 'react-dom';
-      tool_id: r2c.eslint
-    b79fc121a7a638a36e9ab0c656c8dfa2:
-      check_id: import/no-unresolved
-      message: Unable to resolve path to module 'react'.
-      path: tests/integration/react/index.jsx
-      severity: 2
-      syntactic_context: import React from 'react';
-      tool_id: r2c.eslint
     c6e0f687a580ef5e681dc3b4a7ed7fce:
       check_id: no-undef
       message: '''x'' is not defined.'
