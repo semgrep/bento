@@ -83,7 +83,7 @@ jobs:
           name: "Install bento-cli"
           command: pip3 install bento-cli && bento --version
       - run:
-          name: "Running bento check"
+          name: "Run Bento check"
           command: bento --agree --email <YOUR_EMAIL> check
 ```
 
