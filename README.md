@@ -75,7 +75,7 @@ If you use CircleCI, you can add the following job:
 version: 2.1
 
 jobs:
-    bentoRun:
+    bentoCheck:
     executor: circleci/python:3.7.4-stretch-node
     steps:
       - checkout
