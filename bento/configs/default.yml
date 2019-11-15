@@ -29,6 +29,7 @@ tools:
   r2c.eslint:
     ignore:
       - "@typescript-eslint/camelcase"
+      - "@typescript-eslint/member-delimiter-style"
       - array-bracket-newline
       - array-bracket-spacing
       - array-element-newline
@@ -61,6 +62,7 @@ tools:
       - import/max-dependencies
       - import/newline-after-import
       - import/no-anonymous-default-export
+      - import/no-cycle
       - import/no-default-export
       - import/no-duplicates
       - import/no-named-default
