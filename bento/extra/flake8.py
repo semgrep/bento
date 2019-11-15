@@ -28,7 +28,7 @@ class Flake8Parser(Parser):
     def id_to_link(check_id: str) -> str:
         if check_id == "E999":
             link = ""
-        elif check_id in ("E722", "E117"):
+        elif check_id in ("E722", "E306", "E117"):
             link = "https://pycodestyle.readthedocs.io/en/latest/intro.html#error-codes"
         else:
             link = f"https://lintlyci.github.io/Flake8Rules/rules/{check_id}.html"

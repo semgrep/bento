@@ -362,6 +362,8 @@ tools:
       - E304
       # Expected 2 blank lines after end of function or class
       - E305
+      # Expected 1 blank line before a nested definition, found 0
+      - E306
       # Multiple imports on one line
       - E401
       # Module level import not at top of file
