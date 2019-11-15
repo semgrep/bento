@@ -67,9 +67,9 @@ Bento is at its best when run automatically as a commit hook (i.e. `bento instal
 
 ### Exit Codes
 `bento check` may exit with the following exit codes: 
+- `0`: Bento ran successfully and found no errors
 - `2`: Bento ran successfully and found issues in your code
 - `3`: Bento or one of its underlying tools failed to run
-- `0`: Bento ran successfully and found no errors
 
 ### Running Bento in CI
 
