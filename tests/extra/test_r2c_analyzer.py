@@ -10,18 +10,29 @@ from semantic_version import Version
 from bento.extra.r2c_analyzer import (
     REGISTRY,
     _ignore_files_factory,
+    _should_pull_analyzer,
     prepull_analyzers,
     run_analyzer_on_local_code,
 )
 
-# This should be imported after r2c_analyzer because of monkeypatching
+# These should be imported after r2c_analyzer because of monkeypatching
 from r2c.lib.registry import RegistryData  # isort:skip
+from r2c.lib.specified_analyzer import SpecifiedAnalyzer  # isort:skip
+from r2c.lib.versioned_analyzer import AnalyzerName, VersionedAnalyzer  # isort:skip
 
 
 def test_registry_parses() -> None:
     # Registry should parse without failures
     registry = RegistryData.from_json(REGISTRY)
     assert registry is not None
+
+
+def test_should_pull() -> None:
+    assert _should_pull_analyzer(
+        SpecifiedAnalyzer(
+            VersionedAnalyzer(AnalyzerName("doesnt/exist"), Version("9.1.1"))
+        )
+    )
 
 
 def test_pull_analyzer() -> None:

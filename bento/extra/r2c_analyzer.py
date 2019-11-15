@@ -150,7 +150,7 @@ def _should_pull_analyzer(analyzer: SpecifiedAnalyzer) -> bool:
 
     client = docker.from_env()
     image_id = analyzer.versioned_analyzer.image_id
-    return any(i for i in client.images.list() if image_id in i.tags)
+    return not any(i for i in client.images.list() if image_id in i.tags)
 
 
 def prepull_analyzers(analyzer_name: str, version: Version) -> None:
