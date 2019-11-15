@@ -63,7 +63,7 @@ To set aside preexisting results so you only see issues in new code:
 $ bento archive
 ```
 
-Bento really sings when you run it automatically in your editor or as a commit hook (`bento install-hook`).
+Bento is at its best when run automatically as a commit hook (i.e. `bento install-hook`) or as part of CI.
 
 ### CI setup
 
