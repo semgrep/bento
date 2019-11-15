@@ -65,6 +65,12 @@ $ bento archive
 
 Bento is at its best when run automatically as a commit hook (i.e. `bento install-hook`) or as part of CI.
 
+### Exit Codes
+`bento check` may exit with the following exit codes: 
+- `2`: Bento ran successfully and found issues in your code
+- `3`: Bento or one of its underlying tools failed to run
+- `0`: Bento ran successfully and found no errors
+
 ### Running Bento in CI
 
 If you like what you see, try adding Bento to your CI pipeline. 
@@ -95,9 +101,9 @@ pip3 install bento-cli && bento --version
 bento --agree --email <YOUR_EMAIL> check
 ```
 
-`bento check` will exit with an exit code of `2` if it finds any issues, and with an exit code of `3` if it fails to run. Address the issues or unblock yourself by running `bento archive` to add them to your `.bento-whitelist` file and addressing them later. Then check in your whitelist file.
+`bento check` will exit with a non-zero exit code if it finds issues in your code (see <link to exit codes>). You can run `bento --agree --email <YOUR_EMAIL> check || true` if you'd like to prevent Bento from blocking your build. Otherwise, address the issues or unblock yourself by running `bento archive` to add them to your `.bento-whitelist` file to address later. Don't forget to check in your whitelist file.
 
-Please open an issue if you need help setting up Bento with another CI provider.
+Please [open an issue](https://github.com/returntocorp/bento/issues/new?template=feature_request.md) if you need help setting up Bento with another CI provider. If you set up Bento with your provider of choice, we'd appreciate a PR to add instructions here! 
 
 ## Command Line Options
 ```
@@ -106,7 +112,7 @@ $ bento --help
 Usage: bento [OPTIONS] COMMAND [ARGS]...
 
 Options:
-  --version  Show current Bento version.
+  - if it finds results (see <link to exit codes>) ersion  Show current Bento version.
   --agree    Automatically agree to terms of service.
   --help     Show this message and exit.
 
