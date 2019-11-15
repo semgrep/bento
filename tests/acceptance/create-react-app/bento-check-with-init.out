@@ -11,36 +11,21 @@ tasks/compile-lockfile.js
  12:13 error   'fs-extra' should be listed in the project's dependencies, not devDependencies.                      r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
  27:24 error   'react-scripts' should be listed in the project's dependencies. Run 'npm i -S react-scripts' to a... r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
  27:24 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
- 29:5  error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
-
-tasks/cra.js
- 29:21 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
- 64:37 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
- 71:41 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
- 74:43 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
 
 tasks/screencast-start.js
  12:15 error   'execa' should be listed in the project's dependencies, not devDependencies.                         r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
  13:14 error   'meow' should be listed in the project's dependencies, not devDependencies.                          r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
  14:20 error   'multimatch' should be listed in the project's dependencies, not devDependencies.                    r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
  16:1  error   'main' was used before it was defined.                                                               r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
- 27:24 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
- 47:17 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
 
 tasks/screencast.js
  14:15 error   'execa' should be listed in the project's dependencies, not devDependencies.                         r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
  15:15 error   'tempy' should be listed in the project's dependencies, not devDependencies.                         r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
  17:1  error   'main' was used before it was defined.                                                               r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
- 27:23 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
- 28:21 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
- 29:21 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
- 30:20 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
  41:18 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
  41:18 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
  43:5  error   'cut' was used before it was defined.                                                                r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
  44:5  error   'cut' was used before it was defined.                                                                r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
  45:5  error   'replace' was used before it was defined.                                                            r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
  54:5  error   Unnecessary catch clause.                                                                            r2c.eslint     no-useless-catch https://eslint.org/docs/rules/no-useless-catch
- 73:18 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
- 74:26 error   Expected parentheses around arrow function argument.                                                 r2c.eslint     arrow-parens https://eslint.org/docs/rules/arrow-parens
 
