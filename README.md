@@ -81,7 +81,7 @@ jobs:
       - checkout
       - run:
           name: "Install bento-cli"
-          command: pip install bento-cli && bento --version
+          command: pip3 install bento-cli && bento --version
       - run:
           name: "Running bento check"
           command: bento --agree --email <YOUR_EMAIL> check
