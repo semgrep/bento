@@ -8,12 +8,12 @@ import docker
 
 from bento.base_context import BaseContext
 from bento.parser import Parser
-from bento.tool import Tool
+from bento.tool import StrTool
 from bento.util import echo_success, fetch_line_in_file
 from bento.violation import Violation
 
 
-class HadolintParser(Parser):
+class HadolintParser(Parser[str]):
     def to_violation(self, result: Dict[str, Any]) -> Violation:
         start_line = result["line"]
         column = result["column"]
@@ -63,7 +63,7 @@ class HadolintParser(Parser):
         return violations
 
 
-class HadolintTool(Tool):
+class HadolintTool(StrTool):
     TOOL_ID = "r2c.hadolint"
     DOCKER_IMAGE = "hadolint/hadolint:v1.17.2-8-g65736cb"
 

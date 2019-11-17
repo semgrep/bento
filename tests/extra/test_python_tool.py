@@ -3,7 +3,7 @@ import subprocess
 from bento.extra.python_tool import PythonTool
 
 
-def test_venv_sanitization_string_arg():
+def test_venv_sanitization_string_arg() -> None:
     """
     Demonstrates that sanitization prevents shell injection with a
     malicious string argument
@@ -28,7 +28,7 @@ def test_venv_sanitization_string_arg():
     assert res.rstrip() == '"cat"; echo "dog"'
 
 
-def test_venv_sanitization_array_arg():
+def test_venv_sanitization_array_arg() -> None:
     """
     Demonstrates that sanitization prevents shell injection with a
     malicious array argument (e.g. '*')
