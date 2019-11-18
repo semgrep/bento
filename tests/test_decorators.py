@@ -70,4 +70,4 @@ def test_sends_metrics_exception(monkeypatch: MonkeyPatch) -> None:
     assert len(posted) == 1
     assert posted[0][0]["command"] == "test"
     assert posted[0][0]["exit_code"] == 3
-    assert posted[0][0]["exception"] == "hi"
+    # TODO add back test for "exception" once we have better exception types or messages without PII

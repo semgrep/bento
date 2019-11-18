@@ -92,6 +92,5 @@ def command_metric(
         "command_kwargs": command_kwargs,
         "is_ci": bool(os.environ.get("CI", False)),
     }
-    if exception is not None:
-        d["exception"] = str(exception)
+    # TODO: add exceptions back to telemetry when we have better error handling
     return [d]
