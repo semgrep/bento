@@ -122,10 +122,10 @@ def test_flask() -> None:
 
 
 def test_create_react_app() -> None:
-    # eslint runs forever unless we ignore 'packages/'
+    # eslint runs forever unless we ignore 'lib/'
     def setup_ignores(root: Path) -> None:
         with (root / ".gitignore").open("a") as gitignore:
-            gitignore.writelines(["packages/\n"])
+            gitignore.writelines(["lib/\n"])
 
     run_repo("create-react-app", pre=setup_ignores)
 

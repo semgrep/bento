@@ -1,8 +1,8 @@
 import json
-import os
 import subprocess
 from typing import Dict, Optional, Set
 
+import attr
 from semantic_version import NpmSpec, Version
 
 from bento.error import NodeError
@@ -10,17 +10,42 @@ from bento.tool import Tool
 
 NODE_VERSION_RANGE = NpmSpec("^8.10.0 || ^10.13.0 || >=11.10.1")
 
+VersionDict = Dict[str, Version]
+
+
+@attr.s(auto_attribs=True)
+class NpmDeps(object):
+    """Represents top-level npm package dependencies for a project"""
+
+    main: Dict[str, Version]
+    dev: Dict[str, Version]
+
+    def __contains__(self, item: str) -> bool:
+        return item in self.main or item in self.dev
+
 
 class JsTool(Tool):
+    def _dependencies(self) -> NpmDeps:
+        """
+        Returns an inventory of all top-level dependencies (not necessarily installed)
+
+        :return: The dependencies, with versions
+        """
+        package_json_path = self.base_path / "package.json"
+        with package_json_path.open() as stream:
+            packages = json.load(stream)
+
+        return NpmDeps(
+            packages.get("dependencies", {}), packages.get("devDependencies", {})
+        )
+
     def _installed_version(self, package: str) -> Optional[Version]:
         """Gets the version of a package that was installed.
 
         Returns None if that package has not been installed."""
-        package_json_path = os.path.join(
-            self.base_path, "node_modules", package, "package.json"
-        )
+        package_json_path = self.base_path / "node_modules" / package / "package.json"
         try:
-            with open(package_json_path) as f:
+            with package_json_path.open() as f:
                 package_json = json.load(f)
         except FileNotFoundError:
             return None
@@ -29,10 +54,10 @@ class JsTool(Tool):
         else:
             return None
 
-    def _npm_install(self, packages: Dict[str, Version]) -> None:
+    def _npm_install(self, packages: VersionDict) -> None:
         """Runs npm install $package@^$version for each package."""
         print(f"Installing {packages}...")
-        uses_yarn = os.path.exists(os.path.join(self.base_path, "yarn.lock"))
+        uses_yarn = (self.base_path / "yarn.lock").exists()
         args = [f"{name}@^{version}" for name, version in packages.items()]
         if uses_yarn:
             # If yarn is using nested project, we still want to install in workspace root
@@ -41,7 +66,7 @@ class JsTool(Tool):
             cmd = ["npm", "install", "--save-dev"]
         self.execute(cmd + args, check=True)
 
-    def _ensure_packages(self, packages: Dict[str, Version]) -> Set[str]:
+    def _ensure_packages(self, packages: VersionDict) -> Set[str]:
         """Ensures that the given packages are installed.
 
         Returns the list of all packages that were installed.

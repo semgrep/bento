@@ -53,7 +53,7 @@ def test_init_already_setup() -> None:
     context = Context(base_path=SIMPLE)
     result = CliRunner(mix_stderr=False).invoke(init, obj=context)
 
-    expectation = "Detected project with Python and node-js\n\n✔ Bento is initialized on your project."
+    expectation = "Detected project with Python and node-js (with react)\n\n✔ Bento is initialized on your project."
     assert result.stderr.strip() == expectation
 
 

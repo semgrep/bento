@@ -28,7 +28,7 @@ steps:
       - Creating default ignore file at .bentoignore
       - ✔ Created .bentoignore. Please check this file in to source control.
       - ✔ Bento is initialized on your project.
-      - Detected project with node-js
+      - Detected project with node-js (with jest)
     expected_out: []
     returncode: 0
   - name: bento-check-with-init
@@ -38,7 +38,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 23 findings in"
+      - "⚠ 300 findings in"
       - To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-init.out
@@ -61,7 +61,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 18 findings in"
+      - "⚠ 277 findings in"
       - To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-disable.out
@@ -84,7 +84,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 23 findings in"
+      - "⚠ 300 findings in"
       - To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-init.out
@@ -96,7 +96,7 @@ steps:
       - --agree
       - archive
     expected_err:
-      - ✔ Rewrote the whitelist with 23 findings from 1 tools (23 new, 0 previously whitelisted).
+      - ✔ Rewrote the whitelist with 300 findings from 1 tools (300 new, 0 previously whitelisted).
       - Please check '.bento-whitelist.yml' in to source control.
     expected_out: ""
     returncode: 0

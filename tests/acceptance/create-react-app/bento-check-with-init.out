@@ -7,6 +7,465 @@ docusaurus/website/src/pages/index.js
  16:24 error   Unable to resolve path to module 'classnames'.                                                       r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
  71:24 error   Do not use Array index in keys                                                                       r2c.eslint     react/no-array-index-key https://eslint.org/docs/rules/react/no-array-index-key
 
+packages/babel-preset-react-app/create.js
+ 28:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 29:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 30:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 32:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 37:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 38:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 43:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 44:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 50:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 50:7  error   It's not necessary to initialize 'absoluteRuntimePath' to undefined.                                 r2c.eslint     no-undef-init https://eslint.org/docs/rules/no-undef-init
+ 71:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 80:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 94:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+104:31 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+114:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+119:7  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+124:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+145:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+152:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+161:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+169:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+176:20 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+190:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+196:7  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+199:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+204:19 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+210:13 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+
+packages/babel-preset-react-app/dependencies.js
+ 34:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 35:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 36:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 37:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 39:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 40:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 46:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 46:7  error   It's not necessary to initialize 'absoluteRuntimePath' to undefined.                                 r2c.eslint     no-undef-init https://eslint.org/docs/rules/no-undef-init
+ 72:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 85:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+104:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+126:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+142:7  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+145:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+
+packages/create-react-app/createReactApp.js
+129:3  error   Parsing error: 'return' outside of function                                                          r2c.eslint     error
+
+packages/create-react-app/index.js
+ 39:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 40:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 41:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+
+packages/react-app-polyfill/ie11.js
+ 13:3  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 14:3  error   Unexpected use of 'self'.                                                                            r2c.eslint     no-restricted-globals https://eslint.org/docs/rules/no-restricted-globals
+ 14:18 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 21:3  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+
+packages/react-app-polyfill/jsdom.js
+ 13:3  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+
+packages/react-dev-utils/FileSizeReporter.js
+ 10:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 11:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 12:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 13:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 14:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 15:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 16:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 34:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 35:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 36:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 42:11 error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 43:11 error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 44:11 error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 44:36 error   'removeFileNameHash' was used before it was defined.                                                 r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+ 45:11 error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 45:28 error   'getDifferenceLabel' was used before it was defined.                                                 r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+ 52:13 error   Expected property shorthand.                                                                         r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+ 60:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 64:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 66:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 67:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 69:7  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 72:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 73:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 76:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+119:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+120:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+121:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+136:7  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+139:11 error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+140:11 error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+154:3  error   Expected property shorthand.                                                                         r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+155:3  error   Expected property shorthand.                                                                         r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+
+packages/react-dev-utils/ForkTsCheckerWebpackPlugin.js
+ 10:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+
+packages/react-dev-utils/WatchMissingNodeModulesPlugin.js
+ 21:7  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 22:7  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+
+packages/react-dev-utils/WebpackDevServerUtils.js
+416:7  error   Expected method shorthand.                                                                           r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+
+packages/react-dev-utils/browsersHelper.js
+ 64:48 error   'shouldSetBrowsers' is already declared in the upper scope.                                          r2c.eslint     no-shadow https://eslint.org/docs/rules/no-shadow
+
+packages/react-dev-utils/chalk.js
+ 10:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+
+packages/react-dev-utils/checkRequiredFiles.js
+ 10:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 11:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 12:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 15:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 23:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 24:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+
+packages/react-dev-utils/crossSpawn.js
+ 10:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+
+packages/react-dev-utils/evalSourceMapMiddleware.js
+ 17:67 error   Expected '===' and instead saw '=='.                                                                 r2c.eslint     eqeqeq https://eslint.org/docs/rules/eqeqeq
+
+packages/react-dev-utils/getCacheIdentifier.js
+ 15:26 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+ 15:26 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+
+packages/react-dev-utils/getProcessForPort.js
+ 10:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 11:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 12:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 14:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 34:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 37:12 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+ 37:12 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 44:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 70:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 71:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 72:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+
+packages/react-dev-utils/globby.js
+ 10:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+
+packages/react-dev-utils/immer.js
+ 10:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+
+packages/react-dev-utils/inquirer.js
+ 10:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+
+packages/react-dev-utils/launchEditor.js
+ 17:3  error   Expected a default case.                                                                             r2c.eslint     default-case https://eslint.org/docs/rules/default-case
+127:3  error   Expected a default case.                                                                             r2c.eslint     default-case https://eslint.org/docs/rules/default-case
+
+packages/react-dev-utils/openBrowser.js
+ 10:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 11:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 12:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 13:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 16:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 61:7  error   Unnecessary return statement.                                                                        r2c.eslint     no-useless-return https://eslint.org/docs/rules/no-useless-return
+107:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+
+packages/react-dev-utils/printHostingInstructions.js
+ 26:5  error   'printBaseMessage' was used before it was defined.                                                   r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+ 28:5  error   'printDeployInstructions' was used before it was defined.                                            r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+ 31:5  error   'printBaseMessage' was used before it was defined.                                                   r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+ 35:5  error   'printBaseMessage' was used before it was defined.                                                   r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+ 37:5  error   'printStaticServerInstructions' was used before it was defined.                                      r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+
+packages/react-dev-utils/typescriptFormatter.js
+ 39:20 error   Expected property shorthand.                                                                         r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+
+packages/react-dev-utils/webpackHotDevClient.js
+ 19:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 20:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 21:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 22:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 23:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 24:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 45:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 47:3  error   Expected method shorthand.                                                                           r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+ 61:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 83:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 84:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+ 85:1  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+100:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+106:5  error   'tryApplyUpdates' was used before it was defined.                                                    r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+109:7  error   'tryDismissErrorOverlay' was used before it was defined.                                             r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+118:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+124:5  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+125:7  error   Expected property shorthand.                                                                         r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+130:12 error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+147:5  error   'tryApplyUpdates' was used before it was defined.                                                    r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+150:7  error   'tryDismissErrorOverlay' was used before it was defined.                                             r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+163:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+164:5  error   Expected property shorthand.                                                                         r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+173:10 error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+196:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+263:3  error   Unexpected var, use let or const instead.                                                            r2c.eslint     no-var https://eslint.org/docs/rules/no-var
+
+packages/react-error-overlay/build.js
+  7:17 error   'webpack' should be listed in the project's dependencies, not devDependencies.                       r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+  8:15 error   'chalk' should be listed in the project's dependencies, not devDependencies.                         r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+ 11:16 error   'rimraf' should be listed in the project's dependencies, not devDependencies.                        r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+ 12:18 error   'chokidar' should be listed in the project's dependencies, not devDependencies.                      r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+ 47:7  error   Expected an assignment or function call and instead saw an expression.                               r2c.eslint     no-unused-expressions https://eslint.org/docs/rules/no-unused-expressions
+ 94:3  error   Expected an assignment or function call and instead saw an expression.                               r2c.eslint     no-unused-expressions https://eslint.org/docs/rules/no-unused-expressions
+
+packages/react-error-overlay/flow/env.js
+  1:9  error   Parsing error: Unexpected token module                                                               r2c.eslint     error
+
+packages/react-error-overlay/src/__tests__/extract-source-map.js
+  8:37 error   Parse errors in imported module '../utils/getSourceMap': Unexpected token : (17:15)                  r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+
+packages/react-error-overlay/src/__tests__/get-source-map.js
+  8:30 error   Parse errors in imported module '../utils/getSourceMap': Unexpected token : (17:15)                  r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+
+packages/react-error-overlay/src/__tests__/lines-around.js
+  8:32 error   Parse errors in imported module '../utils/getLinesAround': Unexpected token : (18:7)                 r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+
+packages/react-error-overlay/src/__tests__/mapper.js
+  8:21 error   Parse errors in imported module '../utils/mapper': Unexpected token : (20:9)                         r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+  9:23 error   Parse errors in imported module '../utils/parser': Unexpected token : (13:31)                        r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+
+packages/react-error-overlay/src/__tests__/parser/chrome.js
+  8:23 error   Parse errors in imported module '../../utils/parser': Unexpected token : (13:31)                     r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+
+packages/react-error-overlay/src/__tests__/parser/firefox.js
+  8:23 error   Parse errors in imported module '../../utils/parser': Unexpected token : (13:31)                     r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+
+packages/react-error-overlay/src/__tests__/parser/generic.js
+  8:23 error   Parse errors in imported module '../../utils/parser': Unexpected token : (13:31)                     r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+
+packages/react-error-overlay/src/__tests__/parser/react.js
+  8:23 error   Parse errors in imported module '../../utils/parser': Unexpected token : (13:31)                     r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+
+packages/react-error-overlay/src/__tests__/parser/safari.js
+  8:23 error   Parse errors in imported module '../../utils/parser': Unexpected token : (13:31)                     r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+
+packages/react-error-overlay/src/__tests__/script-lines.js
+  8:28 error   Parse errors in imported module '../utils/stack-frame': Unexpected token : (13:13)                   r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+
+packages/react-error-overlay/src/__tests__/stack-frame.js
+  8:28 error   Parse errors in imported module '../utils/stack-frame': Unexpected token : (13:13)                   r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+
+packages/react-error-overlay/src/__tests__/unmapper.js
+  8:23 error   Parse errors in imported module '../utils/unmapper': Unexpected token : (14:22)                      r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+  9:23 error   Parse errors in imported module '../utils/parser': Unexpected token : (13:31)                        r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+
+packages/react-error-overlay/src/components/CloseButton.js
+ 23:6  error   Parsing error: Unexpected token CloseCallback                                                        r2c.eslint     error
+
+packages/react-error-overlay/src/components/CodeBlock.js
+ 37:6  error   Parsing error: Unexpected token CodeBlockPropsType                                                   r2c.eslint     error
+
+packages/react-error-overlay/src/components/Collapsible.js
+ 12:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/components/ErrorOverlay.js
+ 12:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/components/Footer.js
+ 19:6  error   Parsing error: Unexpected token FooterPropsType                                                      r2c.eslint     error
+
+packages/react-error-overlay/src/components/Header.js
+ 25:6  error   Parsing error: Unexpected token HeaderPropType                                                       r2c.eslint     error
+
+packages/react-error-overlay/src/components/NavigationBar.js
+ 42:6  error   Parsing error: Unexpected token Callback                                                             r2c.eslint     error
+
+packages/react-error-overlay/src/containers/CompileErrorContainer.js
+ 16:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/containers/RuntimeError.js
+ 13:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/containers/RuntimeErrorContainer.js
+ 16:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/containers/StackFrame.js
+ 14:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/containers/StackFrameCodeBlock.js
+ 13:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/containers/StackTrace.js
+ 15:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/effects/proxyConsole.js
+ 10:6  error   Parsing error: Unexpected token ReactFrame                                                           r2c.eslint     error
+
+packages/react-error-overlay/src/effects/stackTraceLimit.js
+  9:25 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/effects/unhandledError.js
+ 11:6  error   Parsing error: Unexpected token ErrorCallback                                                        r2c.eslint     error
+
+packages/react-error-overlay/src/effects/unhandledRejection.js
+ 11:6  error   Parsing error: Unexpected token ErrorCallback                                                        r2c.eslint     error
+
+packages/react-error-overlay/src/iframeScript.js
+  8:1  error   'react-app-polyfill' should be listed in the project's dependencies, not devDependencies.            r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+  9:1  error   'react' should be listed in the project's dependencies, not devDependencies.                         r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+ 10:1  error   'react-dom' should be listed in the project's dependencies, not devDependencies.                     r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+ 11:35 error   Parse errors in imported module './containers/CompileErrorContainer': Unexpected token { (16:13)     r2c.eslint     import/no-named-as-default https://eslint.org/docs/rules/import/no-named-as-default
+ 11:35 error   Parse errors in imported module './containers/CompileErrorContainer': Unexpected token { (16:13)     r2c.eslint     import/no-named-as-default-member https://eslint.org/docs/rules/import/no-named-as-default-member
+ 12:35 error   Parse errors in imported module './containers/RuntimeErrorContainer': Unexpected token { (16:13)     r2c.eslint     import/no-named-as-default https://eslint.org/docs/rules/import/no-named-as-default
+ 12:35 error   Parse errors in imported module './containers/RuntimeErrorContainer': Unexpected token { (16:13)     r2c.eslint     import/no-named-as-default-member https://eslint.org/docs/rules/import/no-named-as-default-member
+ 14:29 error   Parse errors in imported module './utils/dom/css': Unexpected token : (12:26)                        r2c.eslint     import/named https://eslint.org/docs/rules/import/named
+
+packages/react-error-overlay/src/index.js
+ 20:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/listenToRuntimeErrors.js
+ 28:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/dom/absolutifyCaret.js
+  9:40 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/dom/css.js
+ 12:26 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/generateAnsiHTML.js
+ 64:30 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/getLinesAround.js
+ 18:7  error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/getPrettyURL.js
+ 10:17 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/getSourceMap.js
+ 17:15 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/getStackFrames.js
+  9:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/isBultinErrorName.js
+  9:37 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/isInternalFile.js
+  9:39 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/mapper.js
+ 20:9  error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/parseCompileError.js
+  4:8  error   Parsing error: Unexpected token type                                                                 r2c.eslint     error
+
+packages/react-error-overlay/src/utils/parser.js
+ 13:31 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/stack-frame.js
+ 13:13 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/unmapper.js
+ 14:22 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-error-overlay/src/utils/warnings.js
+  9:13 error   Parsing error: Unexpected token {                                                                    r2c.eslint     error
+
+packages/react-scripts/config/env.js
+ 43:5  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 44:7  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+
+packages/react-scripts/config/modules.js
+126:16 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+126:16 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+133:14 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+133:14 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+142:5  error   Expected property shorthand.                                                                         r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+
+packages/react-scripts/config/paths.js
+ 34:19 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+ 34:19 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+ 65:47 error   'extension' is already declared in the upper scope.                                                  r2c.eslint     no-shadow https://eslint.org/docs/rules/no-shadow
+
+packages/react-scripts/config/pnpTs.js
+ 19:6  error   Unexpected block statement surrounding arrow body; move the returned value immediately after the ... r2c.eslint     arrow-body-style https://eslint.org/docs/rules/arrow-body-style
+ 35:6  error   Unexpected block statement surrounding arrow body; move the returned value immediately after the ... r2c.eslint     arrow-body-style https://eslint.org/docs/rules/arrow-body-style
+
+packages/react-scripts/config/webpack.config.js
+ 42:24 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+ 50:30 error   Missing radix parameter.                                                                             r2c.eslint     radix https://eslint.org/docs/rules/radix
+115:13 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+116:13 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+198:7  error   Expected property shorthand.                                                                         r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+661:9  error   Expected property shorthand.                                                                         r2c.eslint     object-shorthand https://eslint.org/docs/rules/object-shorthand
+
+packages/react-scripts/config/webpackDevServer.config.js
+ 96:9  error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+ 96:9  error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+
+packages/react-scripts/scripts/build.js
+ 69:15 error   Unexpected block statement surrounding arrow body; move the returned value immediately after the ... r2c.eslint     arrow-body-style https://eslint.org/docs/rules/arrow-body-style
+ 79:5  error   'copyPublicFolder' was used before it was defined.                                                   r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+ 81:12 error   'build' was used before it was defined.                                                              r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+112:26 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+112:26 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+
+packages/react-scripts/scripts/eject.js
+117:35 error   'files' is already declared in the upper scope.                                                      r2c.eslint     no-shadow https://eslint.org/docs/rules/no-shadow
+117:53 error   Unexpected block statement surrounding arrow body; move the returned value immediately after the ... r2c.eslint     arrow-body-style https://eslint.org/docs/rules/arrow-body-style
+171:24 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+171:24 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+172:24 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+172:24 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+
+packages/react-scripts/scripts/init.js
+ 88:22 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+ 88:22 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+193:34 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+193:34 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+195:52 error   Unexpected block statement surrounding arrow body; move the returned value immediately after the ... r2c.eslint     arrow-body-style https://eslint.org/docs/rules/arrow-body-style
+205:8  error   'isReactInstalled' was used before it was defined.                                                   r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+
+packages/react-scripts/scripts/start.js
+ 84:15 error   Unexpected block statement surrounding arrow body; move the returned value immediately after the ... r2c.eslint     arrow-body-style https://eslint.org/docs/rules/arrow-body-style
+ 96:21 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+ 96:21 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+102:9  error   'devServer' was used before it was defined.                                                          r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+102:29 error   'devServer' was used before it was defined.                                                          r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+104:9  error   'devServer' was used before it was defined.                                                          r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+104:29 error   'devServer' was used before it was defined.                                                          r2c.eslint     no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+118:26 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+118:26 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+
+packages/react-scripts/scripts/utils/createJestConfig.js
+ 72:39 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+ 72:39 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+
+packages/react-scripts/scripts/utils/verifyPackageTree.js
+ 36:26 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+
+packages/react-scripts/scripts/utils/verifyTypeScriptSetup.js
+ 62:10 error   Calls to require() should use string literals                                                        r2c.eslint     import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+ 62:10 error   Unexpected require().                                                                                r2c.eslint     global-require https://eslint.org/docs/rules/global-require
+
+packages/react-scripts/template-typescript/src/App.test.tsx
+  1:1  error   'react' should be listed in the project's dependencies, not devDependencies.                         r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+  2:1  error   'react-dom' should be listed in the project's dependencies, not devDependencies.                     r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+  3:17 error   Unable to resolve path to module './App'.                                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+
+packages/react-scripts/template-typescript/src/App.tsx
+  5:10 error   Parsing error: Unexpected token :                                                                    r2c.eslint     error
+
+packages/react-scripts/template-typescript/src/index.tsx
+  1:1  error   'react' should be listed in the project's dependencies, not devDependencies.                         r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+  2:1  error   'react-dom' should be listed in the project's dependencies, not devDependencies.                     r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+  4:17 error   Unable to resolve path to module './App'.                                                            r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+  5:32 error   Unable to resolve path to module './serviceWorker'.                                                  r2c.eslint     import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+
+packages/react-scripts/template-typescript/src/serviceWorker.ts
+ 23:6  error   Parsing error: Unexpected token Config                                                               r2c.eslint     error
+
 tasks/compile-lockfile.js
  12:13 error   'fs-extra' should be listed in the project's dependencies, not devDependencies.                      r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
  27:24 error   'react-scripts' should be listed in the project's dependencies. Run 'npm i -S react-scripts' to a... r2c.eslint     import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies

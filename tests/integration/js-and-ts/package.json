@@ -5,6 +5,7 @@
   "main": "index.js",
   "dependencies": {
     "install-peerdeps": "^1.10.2",
+    "jquery": "^3.4.1",
     "react": "^16.9.0",
     "typescript": "^3.6.4"
   },

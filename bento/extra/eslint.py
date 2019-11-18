@@ -4,12 +4,15 @@ import os
 import re
 import shutil
 import subprocess
+from pathlib import Path
 from typing import Any, Dict, Iterable, List, Pattern, Type
 
+import click
+import yaml
 from semantic_version import Version
 
 from bento.base_context import BaseContext
-from bento.extra.js_tool import JsTool
+from bento.extra.js_tool import JsTool, NpmDeps
 from bento.parser import Parser
 from bento.result import Violation
 from bento.tool import JsonR, JsonTool
@@ -30,6 +33,9 @@ from bento.tool import JsonR, JsonTool
 #   }
 # ]
 #
+
+RC_ENVIRONMENTS = "env"
+"""'env' field of .eslintrc.yml"""
 
 
 class EslintParser(Parser[JsonR]):
@@ -88,6 +94,31 @@ class EslintTool(JsTool, JsonTool):
         "@typescript-eslint/eslint-plugin": Version("2.3.3"),
     }
 
+    # Never fire on 'window', etc.
+    ALWAYS_INCLUDE_GLOBALS = ["browser", "commonjs", "es6", "node"]
+
+    # Remaining environments are determined by inspecting package.json
+    POSSIBLE_GLOBALS = [
+        "applescript",
+        "atomtest",
+        "embertest",
+        "greasemonkey",
+        "jasmine",
+        "jest",
+        "jquery",
+        "mango",
+        "meteor",
+        "mocha",
+        "nashorn",
+        "phantomjs",
+        "prototypejs",
+        "protractor",
+        "qunit",
+        "serviceworker",
+        "shelljs",
+        "webextensions",
+    ]
+
     @property
     def parser_type(self) -> Type[Parser]:
         return EslintParser
@@ -98,34 +129,69 @@ class EslintTool(JsTool, JsonTool):
 
     @property
     def project_name(self) -> str:
-        if self.__uses_typescript():
-            return EslintTool.PROJECT_NAME + " (with TypeScript)"
+        deps = self._dependencies()
+        all_used = [g for g in self.POSSIBLE_GLOBALS if g in deps]
+        if self.__uses_typescript(deps):
+            all_used.append("TypeScript")
+        if self.__uses_react(deps):
+            all_used.append("react")
+
+        if all_used:
+            fws = ", ".join(sorted(all_used))
+            return f"{EslintTool.PROJECT_NAME} (with {fws})"
         return EslintTool.PROJECT_NAME
 
     @property
     def file_name_filter(self) -> Pattern:
         return re.compile(r".*\.(?:js|jsx|ts|tsx)\b")
 
+    @property
+    def eslintrc_path(self) -> Path:
+        return self.base_path / EslintTool.CONFIG_FILE_NAME
+
     @classmethod
     def matches_project(cls, context: BaseContext) -> bool:
         return (context.base_path / "package.json").exists()
 
-    def __uses_typescript(self) -> bool:
-        return self._installed_version("typescript") is not None
+    def __uses_typescript(self, deps: NpmDeps) -> bool:
+        return (
+            "typescript" in deps
+        )  # ts dependency shouldn't be in main deps, but, if it is, ok
+
+    def __uses_react(self, deps: NpmDeps) -> bool:
+        return "react" in deps.main  # react dependency must be in main deps
+
+    def __load_default_rc(self) -> Dict[str, Any]:
+        with self.eslintrc_path.open() as stream:
+            return yaml.safe_load(stream)
 
     def __copy_eslintrc(self, identifier: str) -> None:
-        print(f"Using {identifier} .eslintrc configuration")
+        click.secho(f"Using {identifier} .eslintrc configuration", err=True)
         shutil.copy(
             os.path.join(
                 os.path.dirname(__file__), f"eslint/.eslintrc-{identifier}.yml"
             ),
-            os.path.join(self.base_path, EslintTool.CONFIG_FILE_NAME),
+            self.eslintrc_path,
         )
+
+    def __add_globals(self, deps: NpmDeps) -> None:
+        """Adds global environments to eslintrc"""
+        node_globals = [
+            g for g in self.POSSIBLE_GLOBALS if g in deps
+        ] + self.ALWAYS_INCLUDE_GLOBALS
+        env_dict = dict((g, True) for g in node_globals)
+
+        with self.eslintrc_path.open() as stream:
+            rc = yaml.safe_load(stream)
+        rc[RC_ENVIRONMENTS] = env_dict
+        with self.eslintrc_path.open("w") as stream:
+            yaml.safe_dump(rc, stream)
 
     def setup(self) -> None:
         needed_packages = self.ALWAYS_NEEDED.copy()
-        project_has_typescript = self.__uses_typescript()
-        project_has_react = self._installed_version("react") is not None
+        deps = self._dependencies()
+        project_has_typescript = self.__uses_typescript(deps)
+        project_has_react = self.__uses_react(deps)
         if project_has_react:
             needed_packages[
                 "eslint-plugin-react"
@@ -135,11 +201,10 @@ class EslintTool(JsTool, JsonTool):
 
         self._ensure_packages(needed_packages)
         self._ensure_node_version()
-        # install .eslintrc.yml
-        if not os.path.exists(
-            os.path.join(self.base_path, EslintTool.CONFIG_FILE_NAME)
-        ):
-            print(f"Installing {EslintTool.CONFIG_FILE_NAME}...")
+
+        # install .eslintrc.yml if necessary
+        if not self.eslintrc_path.exists():
+            click.echo(f"Installing {EslintTool.CONFIG_FILE_NAME}...", err=True)
 
             if project_has_react and project_has_typescript:
                 self.__copy_eslintrc("react-and-typescript")
@@ -149,6 +214,8 @@ class EslintTool(JsTool, JsonTool):
                 self.__copy_eslintrc("typescript")
             else:
                 self.__copy_eslintrc("default")
+
+            self.__add_globals(deps)
 
     @staticmethod
     def raise_failure(cmd: List[str], result: subprocess.CompletedProcess) -> None:
