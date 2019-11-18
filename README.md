@@ -44,7 +44,7 @@ Bento includes checks written by [r2c](https://r2c.dev/) and curated from [Bandi
 </p>
 
 ## Installation
-```
+```bash
 $ pip3 install bento-cli
 ```
 
@@ -53,13 +53,13 @@ Bento is for JavaScript, TypeScript, and Python projects. It requires Python 3.6
 ## Usage
 To get started right away with sensible defaults:
 
-```
+```bash
 $ bento init && bento check
 ```
 
 To set aside preexisting results so you only see issues in new code:
 
-```
+```bash
 $ bento archive
 ```
 
@@ -73,9 +73,7 @@ Bento is at its best when run automatically as a commit hook (i.e. `bento instal
 
 ### Running Bento in CI
 
-If you like what you see, try adding Bento to your CI pipeline. 
-
-If you use CircleCI, you can add the following job:
+If you use CircleCI, add the following job:
 
 ```yaml
 version: 2.1
@@ -96,7 +94,7 @@ jobs:
 
 Otherwise, you can simply install and run Bento in CI with the following commands:
 
-```
+```bash
 pip3 install bento-cli && bento --version
 bento --agree --email <YOUR_EMAIL> check
 ```
@@ -106,7 +104,7 @@ bento --agree --email <YOUR_EMAIL> check
 Please [open an issue](https://github.com/returntocorp/bento/issues/new?template=feature_request.md) if you need help setting up Bento with another CI provider. If you set up Bento with your provider of choice, we'd appreciate a PR to add instructions here! 
 
 ## Command Line Options
-```
+```bash
 $ bento --help
 
 Usage: bento [OPTIONS] COMMAND [ARGS]...
