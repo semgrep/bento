@@ -26,7 +26,8 @@ from bento.violation import Violation
 
 def __get_ignores_for_tool(tool: str, config: Dict[str, Any]) -> List[str]:
     tool_config = config["tools"]
-    return tool_config[tool].get("ignore", [])
+    tool_specific_config = tool_config[tool] or {}
+    return tool_specific_config.get("ignore", [])
 
 
 def __list_paths(ctx: Any, args: List[str], incomplete: str) -> AutocompleteSuggestions:

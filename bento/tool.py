@@ -46,7 +46,7 @@ class Tool(ABC, Generic[R]):
     @property
     def config(self) -> Dict[str, Any]:
         """Returns this tool's configuration"""
-        return self.context.config["tools"][self.tool_id()]
+        return self.context.config["tools"][self.tool_id()] or {}
 
     def parser(self) -> Parser[R]:
         """Returns this tool's parser"""
