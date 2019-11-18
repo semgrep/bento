@@ -15,9 +15,9 @@ from importlib import import_module
 from pathlib import Path
 from typing import Any, Collection, Dict, List, Optional, Pattern, Tuple, Type, Union
 
-import click
 import psutil
 import yaml
+from click.termui import secho
 from frozendict import frozendict
 
 import bento.constants as constants
@@ -44,7 +44,7 @@ def persist_global_config(global_config: Dict[str, Any]) -> None:
     with open(constants.GLOBAL_CONFIG_PATH, "w+") as yaml_file:
         yaml.safe_dump(global_config, yaml_file)
 
-    click.echo(f"\nUpdated user configs at {constants.GLOBAL_CONFIG_PATH}.")
+    secho(f"\nUpdated user configs at {constants.GLOBAL_CONFIG_PATH}.")
 
 
 def fetch_line_in_file(path: Path, line_number: int) -> Optional[str]:
@@ -131,7 +131,7 @@ def less(
 
     if use_echo:
         for t in text:
-            click.echo(t)
+            secho(t)
     else:
         # NOTE: Using signal.SIG_IGN here DOES NOT IGNORE the resulting SIGPIPE
         signal.signal(signal.SIGPIPE, drop_sig)
@@ -150,17 +150,17 @@ def less(
 
 def echo_error(text: str, indent: str = "") -> None:
     logging.error(text)
-    click.secho(f"{indent}✘ {text}", fg="red", err=True)
+    secho(f"{indent}✘ {text}", fg="red", err=True)
 
 
 def echo_warning(text: str, indent: str = "") -> None:
     logging.warning(text)
-    click.secho(f"{indent}⚠ {text}", fg="yellow", err=True)
+    secho(f"{indent}⚠ {text}", fg="yellow", err=True)
 
 
 def echo_success(text: str, indent: str = "") -> None:
     logging.info(text)
-    click.secho(f"{indent}✔ {text}", fg="green", err=True)
+    secho(f"{indent}✔ {text}", fg="green", err=True)
 
 
 # Taken from http://www.madhur.co.in/blog/2015/11/02/countdownlatch-python.html

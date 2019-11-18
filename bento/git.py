@@ -1,15 +1,19 @@
 import configparser
 from pathlib import Path
-from typing import Optional
-
-import git
-import git.exc
+from typing import TYPE_CHECKING, Optional
 
 # XXX: This is hacky. This should maybe use the Context object or something to
 # determine the base directory.
 
+if TYPE_CHECKING:
+    # Only import when type checking to avoid loading module when unecessary
+    import git  # noqa
 
-def repo(path: Optional[Path] = None) -> Optional[git.Repo]:
+
+def repo(path: Optional[Path] = None) -> Optional["git.Repo"]:
+    # import inside def for performance
+    import git.exc
+
     try:
         r = git.Repo(str(path or Path.cwd()), search_parent_directories=True)
         return r

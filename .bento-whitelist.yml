@@ -1,5 +1,32 @@
 r2c.bandit:
   violations:
+    20abcea1b24eb8ff1e6aed1c33f47fb2:
+      check_id: B602
+      message: subprocess call with shell=True identified, security issue.
+      path: bento/extra/python_tool.py
+      severity: 2
+      syntactic_context: 'wrapped,
+
+        shell=True,
+
+        cwd=str(self.base_path),
+
+        encoding="utf8",
+
+        executable="/bin/bash",
+
+        env=env,
+
+        stdout=subprocess.PIPE,
+
+        stderr=subprocess.PIPE,
+
+        )
+
+        stdout, stderr = v.communicate()
+
+        after = time()'
+      tool_id: r2c.bandit
     30fad05838897b7ff4f15ffc8e194660:
       check_id: B602
       message: subprocess call with shell=True identified, security issue.
@@ -25,33 +52,6 @@ r2c.bandit:
         )
 
         res, _ = proc.communicate()'
-      tool_id: r2c.bandit
-    a818cd9a70b1ccca74b3687b7f4355c5:
-      check_id: B602
-      message: subprocess call with shell=True identified, security issue.
-      path: bento/extra/python_tool.py
-      severity: 2
-      syntactic_context: 'wrapped,
-
-        shell=True,
-
-        cwd=str(self.base_path),
-
-        encoding="utf8",
-
-        executable="/bin/bash",
-
-        env=env,
-
-        stdout=subprocess.PIPE,
-
-        stderr=subprocess.PIPE,
-
-        )
-
-        stdout, stderr = v.communicate()
-
-        logging.debug(f"{self.tool_id()}: stderr[:4000]:\n" + stderr[0:4000])'
       tool_id: r2c.bandit
     c0441bba86cc9ce3775cbadde6f3fe06:
       check_id: B602

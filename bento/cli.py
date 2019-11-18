@@ -4,9 +4,7 @@ import sys
 from typing import Any, Dict, Optional, Union
 
 import click
-import requests
 from semantic_version import Version
-from validate_email import validate_email
 
 import bento.constants as constants
 import bento.decorators
@@ -65,6 +63,9 @@ def _print_version(
 
 
 def __post_email_to_mailchimp(email: str) -> bool:
+    # import inside def for performance
+    import requests
+
     r = requests.post(
         "https://waitlist.r2c.dev/subscribe", json={"email": email}, timeout=5
     )
@@ -164,6 +165,9 @@ def _suggest_autocomplete() -> None:
 
 def update_email(global_config: Dict[str, Any], email: Optional[str] = None) -> bool:
     if not email and "email" not in global_config:
+        # import inside def for performance
+        from validate_email import validate_email
+
         click.echo(
             "For the Bento beta, we may contact you infrequently via email to ask for your feedback and let you know about updates. You can unsubscribe at any time."
         )

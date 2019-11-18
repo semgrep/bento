@@ -1,5 +1,6 @@
 import logging
 from pathlib import Path
+from threading import Lock
 from typing import Any, ClassVar, Dict, Union
 
 import attr
@@ -26,6 +27,7 @@ class BaseContext:
     _resource_path = attr.ib(type=Path, default=None)
     _cache = attr.ib(type=RunCache, default=None, init=False)
     _ignores = attr.ib(type=FileIgnore, default=None, init=False)
+    _ignore_lock = attr.ib(type=Lock, factory=Lock, init=False)
 
     CONFIG_FILE: ClassVar[str] = ".bento.yml"
     RESOURCE_DIR: ClassVar[str] = ".bento"
@@ -97,11 +99,14 @@ class BaseContext:
 
     @property
     def file_ignores(self) -> FileIgnore:
-        if self._ignores is None:
-            self._ignores = open_ignores(
-                self.base_path, self.ignore_file_path, self.is_init
-            )
-        return self._ignores
+        with self._ignore_lock:
+            # Only initialize the file ignores once. Since this uses system calls,
+            # multiple attempts at initialization do nothing but slow down the CLI.
+            if self._ignores is None:
+                self._ignores = open_ignores(
+                    self.base_path, self.ignore_file_path, self.is_init
+                )
+            return self._ignores
 
     @property
     def cache(self) -> RunCache:

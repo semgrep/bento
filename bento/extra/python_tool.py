@@ -5,6 +5,7 @@ import subprocess
 import venv
 from abc import abstractmethod
 from pathlib import Path
+from time import time
 from typing import Dict, Generic, Iterable, List, Tuple
 
 import click
@@ -59,6 +60,7 @@ class PythonTool(Generic[R], Tool[R]):
         """
         wrapped = f". {self.__venv_dir}/bin/activate; {cmd}"
         logging.debug(f"{self.tool_id()}: Running '{wrapped}'")
+        before = time()
         v = subprocess.Popen(
             wrapped,
             shell=True,
@@ -70,6 +72,8 @@ class PythonTool(Generic[R], Tool[R]):
             stderr=subprocess.PIPE,
         )
         stdout, stderr = v.communicate()
+        after = time()
+        logging.debug(f"{self.tool_id()}: Command completed in {after - before:2f} s")
         logging.debug(f"{self.tool_id()}: stderr[:4000]:\n" + stderr[0:4000])
         logging.debug(f"{self.tool_id()}: stdout[:4000]:\n" + stdout[0:4000])
         if check_output and v.returncode != 0:

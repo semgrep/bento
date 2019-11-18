@@ -4,8 +4,6 @@ import re
 import subprocess
 from typing import Any, Dict, Iterable, List, Pattern, Set, Type
 
-import docker
-
 from bento.base_context import BaseContext
 from bento.parser import Parser
 from bento.tool import StrTool
@@ -99,6 +97,9 @@ class HadolintTool(StrTool):
         return "Docker"
 
     def setup(self) -> None:
+        # import inside def for performance
+        import docker
+
         client = docker.from_env()
         if not any(i for i in client.images.list() if self.DOCKER_IMAGE in i.tags):
             client.images.pull(self.DOCKER_IMAGE)

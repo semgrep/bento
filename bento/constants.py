@@ -1,6 +1,6 @@
 import os
 
-import click
+from click.termui import style
 
 GLOBAL_CONFIG_DIR = os.path.expanduser("~/.bento")
 GLOBAL_CONFIG_PATH = os.path.join(GLOBAL_CONFIG_DIR, "config.yml")
@@ -24,7 +24,7 @@ UPGRADE_WARNING_OUTPUT = f"""
 │  🎉 A new version of Bento is available 🎉  │
 │  Try it out by running:                     │
 │                                             │
-│       {click.style("pip3 install --upgrade bento-cli", fg="blue")}      │
+│       {style("pip3 install --upgrade bento-cli", fg="blue")}      │
 │                                             │
 ╰─────────────────────────────────────────────╯
 """

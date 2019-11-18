@@ -4,7 +4,6 @@ import stat
 import sys
 
 import click
-import git
 
 import bento.constants as constants
 import bento.git
@@ -24,6 +23,7 @@ def install_hook(context: Context) -> None:
     Saves any existing pre-commit hook to .git/hooks/pre-commit.pre-bento and
     runs said hook after bento hook is run.
     """
+    import git  # import inside def for performance
 
     def is_bento_precommit(filename: str) -> bool:
         if not os.path.exists(filename):

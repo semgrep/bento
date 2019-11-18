@@ -12,7 +12,6 @@ import tempfile
 from typing import Callable, Dict, List, Set
 from pathlib import Path
 
-import docker
 from semantic_version import Version
 import r2c.lib.versioned_analyzer
 
@@ -145,6 +144,9 @@ def _should_pull_analyzer(analyzer: SpecifiedAnalyzer) -> bool:
         available locally. Always returns False if the analyzer is a base
         analyzer (exists in SPECIAL_ANALYZERS)
     """
+    # import inside def for performance
+    import docker
+
     if analyzer.versioned_analyzer.name in SPECIAL_ANALYZERS:
         return False
 
@@ -157,6 +159,9 @@ def prepull_analyzers(analyzer_name: str, version: Version) -> None:
     """
         Pulls all needed analyzers to run SPECIFIED_ANALYZER (i.e. dependencies)
     """
+    # import inside def for performance
+    import docker
+
     specified_analyzer = SpecifiedAnalyzer(
         VersionedAnalyzer(AnalyzerName(analyzer_name), version)
     )

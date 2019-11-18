@@ -4,9 +4,9 @@ import shutil
 from pathlib import Path
 from unittest.mock import patch
 
-import docker
 from semantic_version import Version
 
+import docker
 from bento.extra.r2c_analyzer import (
     REGISTRY,
     _ignore_files_factory,

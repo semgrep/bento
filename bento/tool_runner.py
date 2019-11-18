@@ -56,9 +56,9 @@ class Runner:
     ) -> RunResults:
         """Runs a tool and filters out existing findings using baseline"""
 
+        ix, tool = index_and_tool
         try:
             before = time.time()
-            ix, tool = index_and_tool
             bar = self._bars[ix]
             self._run[ix] = True
 
@@ -93,7 +93,7 @@ class Runner:
             after = time.time()
 
             logging.debug(
-                f"{tool.tool_id} completed in {(after - before):2f} s (setup in {(after_setup - before):2f} s)"
+                f"{tool.tool_id()} completed in {(after - before):2f} s (setup in {(after_setup - before):2f} s)"
             )  # TODO: Move to debug
             return (tool.tool_id(), results)
         except Exception as e:

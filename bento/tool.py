@@ -5,6 +5,7 @@ import subprocess
 from abc import ABC, abstractmethod
 from fnmatch import fnmatch
 from pathlib import Path
+from time import time
 from typing import (
     Any,
     Dict,
@@ -182,7 +183,10 @@ class Tool(ABC, Generic[R]):
         new_args.update(kwargs)
         cmd_args = (f"'{a}'" for a in command)
         logging.debug(f"{self.tool_id()}: Running: {' '.join(cmd_args)}")
+        before = time()
         res = subprocess.run(command, **new_args)
+        after = time()
+        logging.debug(f"{self.tool_id()}: Command completed in {after - before:2f} s")
         return res
 
     def results(self, paths: Optional[Iterable[str]] = None) -> List[Violation]:
@@ -205,10 +209,12 @@ class Tool(ABC, Generic[R]):
         paths = self.filter_paths(paths)
 
         if paths:
-            logging.debug(f"Checking for local cache for {self.tool_id}")
+            logging.debug(f"Checking for local cache for {self.tool_id()}")
             cache_repr = self.context.cache.get(self.tool_id(), paths)
             if cache_repr is None:
-                logging.debug(f"Cache entry invalid for {self.tool_id}. Running Tool.")
+                logging.debug(
+                    f"Cache entry invalid for {self.tool_id()}. Running Tool."
+                )
                 raw = self.run(paths)
                 self.context.cache.put(self.tool_id(), paths, self.serialize(raw))
             else:
