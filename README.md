@@ -77,7 +77,7 @@ If you like what you see, try adding Bento to your CI pipeline.
 
 If you use CircleCI, you can add the following job:
 
-```
+```yaml
 version: 2.1
 
 jobs:
