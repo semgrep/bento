@@ -36,7 +36,7 @@ setuptools.setup(
     description="Free program analysis focused on bugs that matter to you.",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://r2c.dev",
+    url="https://bento.dev",
     install_requires=all_deps,
     packages=setuptools.find_packages(),
     py_modules="bento",
