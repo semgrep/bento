@@ -44,7 +44,7 @@ Bento includes checks written by [r2c](https://r2c.dev/) and curated from [Bandi
 </p>
 
 ## Installation
-```
+```bash
 $ pip3 install bento-cli
 ```
 
@@ -53,20 +53,58 @@ Bento is for JavaScript, TypeScript, and Python projects. It requires Python 3.6
 ## Usage
 To get started right away with sensible defaults:
 
-```
+```bash
 $ bento init && bento check
 ```
 
 To set aside preexisting results so you only see issues in new code:
 
-```
+```bash
 $ bento archive
 ```
 
-Bento really sings when you run it automatically in your editor, as a commit hook (`bento install-hook`), or in CI.
+Bento is at its best when run automatically as a commit hook (i.e. `bento install-hook`) or as part of CI.
+
+### Exit Codes
+`bento check` may exit with the following exit codes: 
+- `0`: Bento ran successfully and found no errors
+- `2`: Bento ran successfully and found issues in your code
+- `3`: Bento or one of its underlying tools failed to run
+
+### Running Bento in CI
+
+If you use CircleCI, add the following job:
+
+```yaml
+version: 2.1
+
+jobs:
+    bentoCheck:
+    executor: circleci/python:3.7.4-stretch-node
+    steps:
+      - checkout
+      - run:
+          name: "Install Bento"
+          command: pip3 install bento-cli && bento --version
+      - run:
+          name: "Run Bento check"
+          command: bento --agree --email <YOUR_EMAIL> check
+```
+
+
+Otherwise, you can simply install and run Bento in CI with the following commands:
+
+```bash
+pip3 install bento-cli && bento --version
+bento --agree --email <YOUR_EMAIL> check
+```
+
+`bento check` will exit with a non-zero exit code if it finds issues in your code (see [Exit Codes](#exit-codes)). You can run `bento --agree --email <YOUR_EMAIL> check || true` if you'd like to prevent Bento from blocking your build. Otherwise, address the issues or unblock yourself by running `bento archive`.
+
+Please [open an issue](https://github.com/returntocorp/bento/issues/new?template=feature_request.md) if you need help setting up Bento with another CI provider. If you set up Bento with your provider of choice, we'd appreciate a PR to add instructions here! 
 
 ## Command Line Options
-```
+```bash
 $ bento --help
 
 Usage: bento [OPTIONS] COMMAND [ARGS]...
