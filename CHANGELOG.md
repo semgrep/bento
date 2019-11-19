@@ -2,6 +2,35 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2019-11-18
+
+### Fixed
+
+- `r2c.eslint` now properly detects TypeScript imports.
+- `r2c.eslint` now detects global node environments (e.g., `jest`),
+  and properly resolves their global variables.
+
+### Changed
+
+- To better protect users' data, error messages are no longer reported to our backend.
+- `.bentoignore` can now be configured to include patterns from other files; by default
+  the contents of the project's `.gitignore` are included. For more information, please see the comments at
+  the top of the generated `.bentoignore` file.
+- Tab completion times reduced by approximately half.
+- Disabled a number of `r2c.eslint` checks by default:
+  - `arrow-parens`, as it conflicts with Prettier's default behavior.
+  - TypeScript semicolon checking, which is stylistic.
+  - `import/no-cycle` which takes 50% of tool runtime on moderately large code bases.
+- `r2c.flake8 E306` disabled by default, as it is stylistic in nature.
+- Runtime of `r2c.eslint` has been reduced by up to 30% for some projects.
+
+### Added
+
+- Added `r2c.shellcheck` tool for shell scripts. To enable, add `r2c.shellcheck` to the
+  tools section of your `.bento.yml`. Note that this tool requires `docker` as a dependency.
+- Added `r2c.hadolint` tool for Docker files. To enable, add `r2c.hadolint` to the
+  tools section of your `.bento.yml`. Note that this tool requires `docker` to be installed in order to run.
+
 ## [0.4.1] - 2019-11-14
 
 ### Fixed
