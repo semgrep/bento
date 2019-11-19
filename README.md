@@ -77,7 +77,7 @@ To set aside preexisting results so you only see issues in new code:
 $ bento archive
 ```
 
-Bento is at its best when run automatically as a git hook (i.e. `bento install-hook`) or as part of CI.
+Bento is at its best when run automatically as a Git pre-commit hook (i.e. `bento install-hook`) or as part of CI.
 
 ### Command Line Options
 ```bash
