@@ -29,6 +29,8 @@ Install, configure, and adopt Bento in seconds. Runs 100% locally.
 <h3 align="center">
   <a href="#installation">Installation</a>
   <span> · </span>
+  <a href="#motivations">Motivations</a>
+  <span> · </span>
   <a href="#usage">Usage</a>
   <span> · </span>
   <a href="#running-bento-in-ci">CI/CD</a>
@@ -38,7 +40,7 @@ Install, configure, and adopt Bento in seconds. Runs 100% locally.
 
 Bento is a free and opinionated toolkit for gradually adopting linters[¹](https://en.wikipedia.org/wiki/Lint_(software)) and program analysis[²](https://en.wikipedia.org/wiki/Program_analysis) in your codebase. Be the bug-squashing advocate your team needs but (maybe) doesn’t deserve.
 
-- **Find bugs that matter.** Bento automatically enables and configures relevant analysis based on your dependencies and frameworks, and it will never report style-related issues. You won’t painstakingly configure your tooling.
+- **Find bugs that matter.** Bento automatically enables and configures relevant analysis based on your dependencies and frameworks, and it will [never report style-related issues](https://blog.r2c.dev/posts/three-things-your-linter-shouldnt-tell-you/). You won’t painstakingly configure your tooling.
 - **Get started immediately.** Bento doesn’t force you to fix all your preexisting issues today. Instead, you can archive them and address them incrementally when it makes sense for your project.
 - **Go fast.** Bento installs in 5 seconds and self-configures in less than 30. Its tools check your code in parallel, not sequentially.
 
@@ -54,6 +56,11 @@ $ pip3 install bento-cli
 ```
 
 Bento is for JavaScript, TypeScript, and Python projects. It requires Python 3.6+ and works on macOS Mojave (10.14) and Ubuntu 18.04+.
+
+## Motivations
+r2c is on a quest to make world-class security and bugfinding available to all developers, for free. We’ve learned that most developers have never heard of—let alone tried—tools that find deep flaws in code: like Codenomicon, which found Heartbleed, or Zoncolan at Facebook, which finds more top-severity security issues than any human effort. These tools find severe issues and also save tons of time, identifying hundreds of thousands of issues before humans can. Bento is a step towards universal access to tools like these. See [our Bento blog post](https://medium.com/@ievans/our-quest-to-make-world-class-security-and-bugfinding-available-to-all-developers-for-free-dce9eb7b06d0) to learn more.
+
+We're also big proponents of opinionated tools like Black and Prettier. This has two implications: Bento ignores style-related issues and the bikeshedding that comes with them, and it ships with a curated set of checks that we believe are high signal and bug-worthy. See [Three things your linter shouldn’t tell you](https://blog.r2c.dev/posts/three-things-your-linter-shouldnt-tell-you/) for more details on our decision making process.
 
 ## Usage
 To get started right away with sensible defaults:
@@ -132,6 +139,7 @@ Please [open an issue](https://github.com/returntocorp/bento/issues/new?template
 - We’re shipping new Bento features all the time. Want to be first to know about what’s new? [Sign up for the newsletter](http://eepurl.com/gDeFvL) so you don’t miss out! We promise not to spam you, and you can unsubscribe at any time. 📫
 - We’re fortunate to benefit from the contributions of the open source community and great projects such as [Bandit](https://pypi.org/project/bandit/), [ESLint](https://eslint.org/), [Flake8](https://pypi.org/project/flake8/), and their plugins. 🙏
 - You’re also welcome to [file an issue](https://github.com/returntocorp/bento/issues/new?assignees=&labels=bug&template=bug_report.md&title=) directly on GitHub. Or [submit a feature request](https://github.com/returntocorp/bento/issues/new?assignees=&labels=feature-request&template=feature_request.md&title=) &mdash; we welcome those, too!
+- See past announcements, releases, and issues [here](https://us18.campaign-archive.com/home/?u=ee2dc8f77e27d3739cf4df9ef&id=d13f5e938e)!
 
 ## License and Legal
 Please refer to the [terms and privacy document](https://github.com/returntocorp/bento/blob/master/PRIVACY.md).
