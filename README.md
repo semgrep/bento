@@ -21,15 +21,20 @@ Install, configure, and adopt Bento in seconds. Runs 100% locally.
   <a href="https://github.com/returntocorp/bento/issues/new/choose">
     <img src="https://img.shields.io/badge/issues-welcome-green?style=flat-square" alt="Issues welcome!" />
   </a>
-  <a href="https://join.slack.com/t/r2c-community/shared_invite/enQtNjU0NDYzMjAwODY4LWE3NTg1MGNhYTAwMzk5ZGRhMjQ2MzVhNGJiZjI1ZWQ0NjQ2YWI4ZGY3OGViMGJjNzA4ODQ3MjEzOWExNjZlNTA">
-    <img src="https://img.shields.io/badge/chat-on%20slack-blue?style=flat-square">
-  </a>
   <a href="https://twitter.com/intent/follow?screen_name=r2cdev">
     <img src="https://img.shields.io/twitter/follow/r2cdev?label=Follow%20r2cdev&style=social&color=blue" alt="Follow @r2cdev" />
   </a>
 </p>
-<br>
-<br>
+
+<h3 align="center">
+  <a href="#installation">Installation</a>
+  <span> · </span>
+  <a href="#usage">Usage</a>
+  <span> · </span>
+  <a href="#running-bento-in-ci">CI/CD</a>
+  <span> · </span>
+  <a href="#help-and-community">Help & Community</a>
+</h3>
 
 Bento is a free and opinionated toolkit for gradually adopting linters[¹](https://en.wikipedia.org/wiki/Lint_(software)) and program analysis[²](https://en.wikipedia.org/wiki/Program_analysis) in your codebase. Be the bug-squashing advocate your team needs but (maybe) doesn’t deserve.
 
@@ -63,47 +68,9 @@ To set aside preexisting results so you only see issues in new code:
 $ bento archive
 ```
 
-Bento is at its best when run automatically as a commit hook (i.e. `bento install-hook`) or as part of CI.
+Bento is at its best when run automatically as a git hook (i.e. `bento install-hook`) or as part of CI.
 
-### Exit Codes
-`bento check` may exit with the following exit codes: 
-- `0`: Bento ran successfully and found no errors
-- `2`: Bento ran successfully and found issues in your code
-- `3`: Bento or one of its underlying tools failed to run
-
-### Running Bento in CI
-
-If you use CircleCI, add the following job:
-
-```yaml
-version: 2.1
-
-jobs:
-    bentoCheck:
-    executor: circleci/python:3.7.4-stretch-node
-    steps:
-      - checkout
-      - run:
-          name: "Install Bento"
-          command: pip3 install bento-cli && bento --version
-      - run:
-          name: "Run Bento check"
-          command: bento --agree --email <YOUR_EMAIL> check
-```
-
-
-Otherwise, you can simply install and run Bento in CI with the following commands:
-
-```bash
-pip3 install bento-cli && bento --version
-bento --agree --email <YOUR_EMAIL> check
-```
-
-`bento check` will exit with a non-zero exit code if it finds issues in your code (see [Exit Codes](#exit-codes)). You can run `bento --agree --email <YOUR_EMAIL> check || true` if you'd like to prevent Bento from blocking your build. Otherwise, address the issues or unblock yourself by running `bento archive`.
-
-Please [open an issue](https://github.com/returntocorp/bento/issues/new?template=feature_request.md) if you need help setting up Bento with another CI provider. If you set up Bento with your provider of choice, we'd appreciate a PR to add instructions here! 
-
-## Command Line Options
+### Command Line Options
 ```bash
 $ bento --help
 
@@ -123,6 +90,41 @@ Commands:
   install-hook  Installs Bento as a git pre-commit hook.
 ```
 
+### Exit Codes
+`bento check` may exit with the following exit codes: 
+- `0`: Bento ran successfully and found no errors
+- `2`: Bento ran successfully and found issues in your code
+- `3`: Bento or one of its underlying tools failed to run
+
+### Running Bento in CI
+If you use CircleCI, add the following job:
+
+```yaml
+version: 2.1
+
+jobs:
+    bentoCheck:
+    executor: circleci/python:3.7.4-stretch-node
+    steps:
+      - checkout
+      - run:
+          name: "Install Bento"
+          command: pip3 install bento-cli && bento --version
+      - run:
+          name: "Run Bento check"
+          command: bento --agree --email <YOUR_EMAIL> check
+```
+
+Otherwise, you can simply install and run Bento in CI with the following commands:
+
+```bash
+pip3 install bento-cli && bento --version
+bento --agree --email <YOUR_EMAIL> check
+```
+
+`bento check` will exit with a non-zero exit code if it finds issues in your code (see [Exit Codes](#exit-codes)). You can run `bento --agree --email <YOUR_EMAIL> check || true` if you'd like to prevent Bento from blocking your build. Otherwise, address the issues or unblock yourself by running `bento archive`.
+
+Please [open an issue](https://github.com/returntocorp/bento/issues/new?template=feature_request.md) if you need help setting up Bento with another CI provider. If you set up Bento with your provider of choice, we'd appreciate a PR to add instructions here! 
 
 ## Help and Community
 - Need help or want to share feedback? Reach out to us at [support@r2c.dev](mailto:support@r2c.dev). We’d love to hear from you! 💌
