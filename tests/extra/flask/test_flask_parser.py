@@ -19,11 +19,11 @@ def test_parse() -> None:
     expectation = [
         Violation(
             tool_id="r2c.flask",
-            check_id="R2C202",
+            check_id="r2c-need-filename-or-mimetype-for-file-objects-in-send-file",
             path="bad.py",
             line=4,
             column=1,
-            message="passing a file-like object to flask.send_file without a mimetype or attachment_filename will raise a ValueError",
+            message="Passing a file-like object to flask.send_file without the mimetype or attachment_filename keyword arg will raise a ValueError. If you are sending a static file, pass in a string path to the file instead. Otherwise, specify a mimetype or attachment_filename in flask.send_file.",
             severity=2,
             syntactic_context='flask.send_file(open("file.txt"))',
             filtered=None,
@@ -52,11 +52,11 @@ def test_run_flask_violations(tmp_path_factory: tmp_path_factory) -> None:
     expectation = [
         Violation(
             tool_id="r2c.flask",
-            check_id="R2C202",
+            check_id="r2c-need-filename-or-mimetype-for-file-objects-in-send-file",
             path="bad.py",
             line=4,
             column=1,
-            message="passing a file-like object to flask.send_file without a mimetype or attachment_filename will raise a ValueError",
+            message="Passing a file-like object to flask.send_file without the mimetype or attachment_filename keyword arg will raise a ValueError. If you are sending a static file, pass in a string path to the file instead. Otherwise, specify a mimetype or attachment_filename in flask.send_file.",
             severity=2,
             syntactic_context='flask.send_file(open("file.txt"))',
             filtered=None,

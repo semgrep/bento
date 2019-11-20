@@ -19,7 +19,7 @@ class FlaskParser(Flake8Parser):
 class FlaskTool(Flake8Tool):
     TOOL_ID = "r2c.flask"  # to-do: versioning?
     VENV_DIR = "flask"
-    PACKAGES = {"flake8": "3.7.0", "flake8-json": "19.8.0", "flake8-flask": "0.1.0"}
+    PACKAGES = {"flake8": "3.7.0", "flake8-json": "19.8.0", "flake8-flask": "0.1.5"}
 
     @classmethod
     def matches_project(cls, context: BaseContext) -> bool:
@@ -34,4 +34,4 @@ class FlaskTool(Flake8Tool):
         return cls.TOOL_ID
 
     def select_clause(self) -> str:
-        return "--select=R2C"
+        return "--select=r2c"
