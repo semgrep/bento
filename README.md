@@ -55,7 +55,7 @@ Bento includes checks written by [r2c](https://r2c.dev/) and curated from [Bandi
 $ pip3 install bento-cli
 ```
 
-Bento is for JavaScript, TypeScript, and Python projects. It requires Python 3.6+ and works on macOS Mojave (10.14) and Ubuntu 18.04+.
+Bento is for JavaScript, TypeScript, and Python 3 projects. It requires Python 3.6+ and works on macOS Mojave (10.14) and Ubuntu 18.04+.
 
 ## Motivations
 > See our [Bento introductory blog post](https://medium.com/@ievans/our-quest-to-make-world-class-security-and-bugfinding-available-to-all-developers-for-free-dce9eb7b06d0) to learn the full story.
