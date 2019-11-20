@@ -27,11 +27,12 @@ def __install_config_if_not_exists(context: Context) -> None:
         for tid, tool in context.tool_inventory.items():
             if not tool.matches_project(context) and tid in yml["tools"]:
                 del yml["tools"][tid]
-        with config_path.open("w") as config_file:
-            yaml.safe_dump(yml, stream=config_file)
-        echo_success(
-            f"Created {pretty_path}. Please check this file in to source control.\n"
-        )
+        if yml["tools"]:
+            with config_path.open("w") as config_file:
+                yaml.safe_dump(yml, stream=config_file)
+            echo_success(
+                f"Created {pretty_path}. Please check this file in to source control.\n"
+            )
 
 
 def __install_ignore_if_not_exists(context: Context) -> None:

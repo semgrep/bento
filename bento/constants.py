@@ -16,6 +16,7 @@ GREP_CONFIG_PATH = ".bento-grep.yml"
 
 BENTO_EMAIL_VAR = "BENTO_EMAIL"
 QA_TEST_EMAIL_ADDRESS = "test@returntocorp.com"
+SUPPORT_EMAIL_ADDRESS = "support@r2c.dev"
 
 ### messages ###
 

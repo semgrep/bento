@@ -12,6 +12,7 @@ from tqdm import tqdm
 
 import bento.result
 import bento.util
+from bento.constants import SUPPORT_EMAIL_ADDRESS
 from bento.result import Baseline, Violation
 from bento.tool import Tool
 
@@ -119,6 +120,11 @@ class Runner:
         """
         indices_and_tools = list(enumerate(tools))
         n_tools = len(indices_and_tools)
+
+        if n_tools == 0:
+            raise Exception(
+                f"No tools are configured in this project's .bento.yml.\nPlease contact {SUPPORT_EMAIL_ADDRESS} if this is incorrect."
+            )
 
         self._bars = [
             tqdm(

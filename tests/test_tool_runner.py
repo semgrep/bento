@@ -5,6 +5,7 @@ import bento.cli
 import bento.context
 import bento.result
 import bento.tool_runner
+import pytest
 from _pytest.monkeypatch import MonkeyPatch
 from bento.violation import Violation
 
@@ -24,7 +25,10 @@ def __violation_counts(violations: Iterable[Violation]) -> Tuple[int, int]:
 
 
 def __count_simple_findings(
-    archive: Dict[str, Set[str]], files: Optional[List[str]], monkeypatch: MonkeyPatch
+    archive: Dict[str, Set[str]],
+    files: Optional[List[str]],
+    monkeypatch: MonkeyPatch,
+    path: str = "tests/integration/simple",
 ) -> Dict[str, Tuple[int, int]]:
     """
     Runs __tool_parallel_results from the CLI
@@ -32,7 +36,7 @@ def __count_simple_findings(
     Returns:
         (dict): Counts of (unfiltered, filtered) findings for each tool
     """
-    monkeypatch.chdir(os.path.join(BASE_PATH, "tests/integration/simple"))
+    monkeypatch.chdir(os.path.join(BASE_PATH, path))
     context = bento.context.Context()
     tools = context.tools.values()
     results = bento.tool_runner.Runner().parallel_results(tools, archive, files)
@@ -86,3 +90,10 @@ def test_tool_parallel_results_archive_py_files(monkeypatch: MonkeyPatch) -> Non
     expectation = {"r2c.bandit": (1, 0), "r2c.eslint": (0, 0), "r2c.flake8": (1, 1)}
 
     assert counts == expectation
+
+
+def test_tool_runner_no_yml() -> None:
+    """Validates that tool runner aborts if there are no tools"""
+    runner = bento.tool_runner.Runner()
+    args = [runner, [], set(), None]
+    pytest.raises(Exception, bento.tool_runner.Runner.parallel_results, *args)

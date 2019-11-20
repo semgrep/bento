@@ -27,6 +27,13 @@ def test_install_config() -> None:
         assert "r2c.bandit" in cfg["tools"]
 
 
+def test_no_install_empty_project() -> None:
+    """Validates that bento does not install a config on an empty project"""
+    context = Context(base_path=INTEGRATION / "none")
+    __install_config_if_not_exists(context)
+    assert not context.config_path.exists()
+
+
 def test_install_ignore_in_repo() -> None:
     """Validates that bento installs an ignore file if none exists"""
     context = Context(base_path=SIMPLE, is_init=True)
