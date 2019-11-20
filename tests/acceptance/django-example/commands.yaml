@@ -109,6 +109,7 @@ steps:
       - check
     expected_err:
       - "✔ 0 findings in"
+      - "Not showing 3 archived findings. To view, run `bento check --show-all`"
     expected_out: ""
     returncode: 0
   - name: install-hook

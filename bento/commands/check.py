@@ -20,8 +20,16 @@ import bento.tool_runner
 from bento.context import Context
 from bento.decorators import with_metrics
 from bento.error import NodeError
-from bento.util import AutocompleteSuggestions, echo_error, echo_success, echo_warning
+from bento.util import (
+    AutocompleteSuggestions,
+    Colors,
+    echo_error,
+    echo_success,
+    echo_warning,
+)
 from bento.violation import Violation
+
+SHOW_ALL = "--show-all"
 
 
 def __get_ignores_for_tool(tool: str, config: Dict[str, Any]) -> List[str]:
@@ -64,9 +72,15 @@ def __list_paths(ctx: Any, args: List[str], incomplete: str) -> AutocompleteSugg
     default=True,
 )
 @click.option(
+    SHOW_ALL,
+    help="Show all findings, including those previously archived.",
+    is_flag=True,
+    default=False,
+)
+@click.option(
     "--staged-only",
     is_flag=True,
-    help="Only runs over files staged in git. This should not be used with explicit paths",
+    help="Only runs over files staged in git. This should not be used with explicit paths.",
 )
 @click.argument("paths", nargs=-1, type=str, autocompletion=__list_paths)
 @click.pass_obj
@@ -75,13 +89,15 @@ def check(
     context: Context,
     formatter: Optional[str] = None,
     pager: bool = True,
+    show_all: bool = False,
     staged_only: bool = False,
     paths: Optional[List[str]] = None,
 ) -> None:
     """
     Checks for new findings.
 
-    Only findings not previously whitelisted will be displayed.
+    Only findings not previously archived will be displayed (use --show-all
+    to display archived findings).
 
     By default, 'bento check' will check the entire project. To run
     on one or more paths only, run:
@@ -93,7 +109,7 @@ def check(
         echo_error("No Bento configuration found. Please run `bento init`.")
         sys.exit(3)
 
-    if context.baseline_file_path.exists():
+    if not show_all and context.baseline_file_path.exists():
         with context.baseline_file_path.open() as json_file:
             baseline = bento.result.yml_to_violation_hashes(json_file)
     else:
@@ -131,6 +147,7 @@ def check(
 
     is_error = False
 
+    n_all = 0
     collapsed_findings: List[Violation] = []
     for tool_id, findings in all_results:
         if isinstance(findings, Exception):
@@ -163,6 +180,7 @@ You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PA
                 findings,
                 __get_ignores_for_tool(tool_id, config),
             )
+            n_all += len(findings)
             collapsed_findings += [f for f in findings if not f.filtered]
 
     def post_metrics() -> None:
@@ -179,10 +197,18 @@ You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PA
 
     if collapsed_findings:
         echo_warning(f"{len(collapsed_findings)} findings in {elapsed:.2f} s\n")
-        suppress_str = click.style("bento archive", fg="blue")
+        suppress_str = click.style("bento archive", fg=Colors.STATUS)
         click.echo(f"To suppress all findings run `{suppress_str}`.", err=True)
     else:
         echo_success(f"0 findings in {elapsed:.2f} s")
+
+    n_archived = n_all - len(collapsed_findings)
+    if n_archived > 0 and not show_all:
+        show_cmd = click.style(f"bento check {SHOW_ALL}", fg=Colors.STATUS)
+        click.echo(
+            f"  Not showing {n_archived} archived findings. To view, run `{show_cmd}`.",
+            err=True,
+        )
 
     if is_error:
         sys.exit(3)

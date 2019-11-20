@@ -150,17 +150,17 @@ def less(
 
 def echo_error(text: str, indent: str = "") -> None:
     logging.error(text)
-    secho(f"{indent}✘ {text}", fg="red", err=True)
+    secho(f"{indent}✘ {text}", fg=Colors.ERROR, err=True)
 
 
 def echo_warning(text: str, indent: str = "") -> None:
     logging.warning(text)
-    secho(f"{indent}⚠ {text}", fg="yellow", err=True)
+    secho(f"{indent}⚠ {text}", fg=Colors.WARNING, err=True)
 
 
 def echo_success(text: str, indent: str = "") -> None:
     logging.info(text)
-    secho(f"{indent}✔ {text}", fg="green", err=True)
+    secho(f"{indent}✔ {text}", fg=Colors.SUCCESS, err=True)
 
 
 # Taken from http://www.madhur.co.in/blog/2015/11/02/countdownlatch-python.html
@@ -179,3 +179,10 @@ class CountDownLatch(object):
         with self.lock:
             while self.count > 0:
                 self.lock.wait()
+
+
+class Colors:
+    STATUS = "bright_blue"
+    ERROR = "red"
+    WARNING = "yellow"
+    SUCCESS = "green"
