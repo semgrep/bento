@@ -2,6 +2,8 @@ import json
 import re
 from typing import Any, Dict, Iterable, List, Pattern, Type
 
+from semantic_version import SimpleSpec
+
 from bento.extra.python_tool import PythonTool
 from bento.parser import Parser
 from bento.result import Violation
@@ -66,12 +68,12 @@ class Flake8Tool(PythonTool[str], StrTool):
     VENV_DIR = "flake8"
     PROJECT_NAME = "Python"
     PACKAGES = {
-        "flake8": "3.7.0",
-        "flake8-json": "19.8.0",
-        "flake8-bugbear": "19.8.0",
-        "flake8-builtins": "1.4.1",
-        "flake8-debugger": "3.2.0",
-        "flake8-executable": "2.0.3",
+        "flake8": SimpleSpec("~=3.7.0"),
+        "flake8-json": SimpleSpec("~=19.8.0"),
+        "flake8-bugbear": SimpleSpec("~=19.8.0"),
+        "flake8-builtins": SimpleSpec("~=1.4.1"),
+        "flake8-debugger": SimpleSpec("~=3.2.0"),
+        "flake8-executable": SimpleSpec("~=2.0.3"),
     }
 
     @property
@@ -97,15 +99,6 @@ class Flake8Tool(PythonTool[str], StrTool):
     def select_clause(self) -> str:
         """Returns a --select argument to identify which checks flake8 should run"""
         return ""
-
-    def setup(self) -> None:
-        self.venv_create()
-        if self._packages_installed(self.PACKAGES):
-            return
-        cmd = f"{PythonTool.PIP_CMD} install -q {' '.join(self.PACKAGES.keys())}"
-        result = self.venv_exec(cmd, check_output=True).strip()
-        if result:
-            print(result)
 
     def run(self, paths: Iterable[str]) -> str:
         cmd = f"python $(which flake8) {self.select_clause()} --format=json --exclude={self._ignore_param()} "

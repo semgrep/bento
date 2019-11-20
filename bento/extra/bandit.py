@@ -2,6 +2,8 @@ import json
 import re
 from typing import Any, Dict, Iterable, List, Pattern, Type
 
+from semantic_version import SimpleSpec
+
 from bento.extra.python_tool import PythonTool
 from bento.parser import Parser
 from bento.result import Violation
@@ -141,6 +143,7 @@ class BanditTool(PythonTool[str], StrTool):
     VENV_DIR = "bandit"
     PROJECT_NAME = "Python"
     FILE_NAME_FILTER = re.compile(r".*\.py\b")
+    PACKAGES = {"bandit": SimpleSpec("~=1.6.0")}
 
     @property
     def parser_type(self) -> Type[Parser]:
@@ -161,15 +164,6 @@ class BanditTool(PythonTool[str], StrTool):
     @property
     def file_name_filter(self) -> Pattern:
         return BanditTool.FILE_NAME_FILTER
-
-    def setup(self) -> None:
-        self.venv_create()
-        if self._packages_installed({"bandit": "1.6.0"}):
-            return
-        cmd = f"{PythonTool.PIP_CMD} install -q bandit"
-        result = self.venv_exec(cmd, check_output=True)
-        if result:
-            print(result)
 
     def run(self, paths: Iterable[str]) -> str:
         cmd = f"python $(which bandit) --f json -x {self._ignore_param()} -r "

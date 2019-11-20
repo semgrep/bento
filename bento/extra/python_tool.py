@@ -9,7 +9,7 @@ from time import time
 from typing import Dict, Generic, Iterable, List, Tuple
 
 import click
-from packaging.version import InvalidVersion, Version
+from semantic_version import SimpleSpec, Version
 
 from bento.base_context import BaseContext
 from bento.tool import R, Tool
@@ -20,6 +20,7 @@ class PythonTool(Generic[R], Tool[R]):
     # On most environments, just "pip" will point to the wrong Python installation
     # Fix by using the virtual environment's python
     PIP_CMD = "python -m pip"
+    PACKAGES: Dict[str, SimpleSpec] = {}
 
     @classmethod
     def matches_project(cls, context: BaseContext) -> bool:
@@ -29,6 +30,10 @@ class PythonTool(Generic[R], Tool[R]):
     @abstractmethod
     def venv_subdir_name(cls) -> str:
         pass
+
+    @classmethod
+    def required_packages(cls) -> Dict[str, SimpleSpec]:
+        return cls.PACKAGES
 
     @property
     def __venv_dir(self) -> Path:
@@ -118,31 +123,27 @@ class PythonTool(Generic[R], Tool[R]):
             args.append(f'"${var}"')
         return env, args
 
-    def _packages_installed(self, packages: Dict[str, str]) -> bool:
-        """Checks whether the given packages are installed.
+    def _packages_installed(self) -> Dict[str, SimpleSpec]:
+        """
+        Checks whether the given packages are installed.
 
-        The value for each package is the minimum required version."""
+        The value for each package is the version specification.
+        """
         installed: Dict[str, Version] = {}
         for package in json.loads(
             self.venv_exec(f"{PythonTool.PIP_CMD} list --format json")
         ):
             try:
                 installed[package["name"]] = Version(package["version"])
-            except InvalidVersion:
+            except ValueError:
                 # skip it
                 pass
 
-        to_install: Dict[str, str] = {}
-        for name in packages:
-            minimum_version = Version(packages[name])
-            if name not in installed or installed[name] < minimum_version:
-                to_install[name] = str(minimum_version)
-
-        if to_install:
-            click.echo(f"Installing Python packages: {to_install}", err=True)
-            return False
-        else:
-            return True
+        to_install: Dict[str, SimpleSpec] = {}
+        for name, spec in self.required_packages().items():
+            if name not in installed or not spec.match(installed[name]):
+                to_install[name] = spec
+        return to_install
 
     def _ignore_param(self) -> str:
         """
@@ -154,3 +155,14 @@ class PythonTool(Generic[R], Tool[R]):
             if not e.survives
         )
         return ",".join(ignores)
+
+    def setup(self) -> None:
+        self.venv_create()
+        to_install = self._packages_installed()
+        if not to_install:
+            return
+
+        install_list = [f"{p}{s.expression}" for p, s in to_install.items()]
+        click.echo(f"Installing Python packages: {', '.join(install_list)}", err=True)
+        cmd = f"{PythonTool.PIP_CMD} install -q {' '.join(install_list)}"
+        self.venv_exec(cmd, check_output=True)

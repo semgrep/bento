@@ -1,5 +1,7 @@
 from typing import Type
 
+from semantic_version import SimpleSpec
+
 from bento.base_context import BaseContext
 from bento.extra.flake8 import Flake8Parser, Flake8Tool
 from bento.parser import Parser
@@ -19,7 +21,11 @@ class ClickParser(Flake8Parser):
 class ClickTool(Flake8Tool):
     TOOL_ID = "r2c.click"  # to-do: versioning?
     VENV_DIR = "click"
-    PACKAGES = {"flake8": "3.7.0", "flake8-json": "19.8.0", "flake8-click": "0.2.0"}
+    PACKAGES = {
+        "flake8": SimpleSpec("~=3.7.0"),
+        "flake8-json": SimpleSpec("~=19.8.0"),
+        "flake8-click": SimpleSpec("~=0.2.0"),
+    }
 
     @classmethod
     def matches_project(cls, context: BaseContext) -> bool:

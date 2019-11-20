@@ -17,20 +17,17 @@ steps:
       - bento
       - --agree
       - init
-    expected_err: |
-      Creating default ignore file at .bentoignore
-      ✔ Created .bentoignore. Please check this file in to source control.
-
-      Creating default configuration at .bento.yml
-      ✔ Created .bento.yml. Please check this file in to source control.
-
-      Detected project with Python
-
-      ✔ Creating virtual environment for r2c.bandit
-      Installing Python packages: {'bandit': '1.6.0'}
-      ✔ Creating virtual environment for r2c.flake8
-      Installing Python packages: {'flake8': '3.7.0', 'flake8-json': '19.8.0', 'flake8-bugbear': '19.8.0', 'flake8-builtins': '1.4.1', 'flake8-debugger': '3.2.0', 'flake8-executable': '2.0.3'}
-      ✔ Bento is initialized on your project.
+    expected_err:
+      - Creating default ignore file at .bentoignore
+      - ✔ Created .bentoignore. Please check this file in to source control.
+      - Creating default configuration at .bento.yml
+      - ✔ Created .bento.yml. Please check this file in to source control.
+      - Detected project with Python
+      - ✔ Creating virtual environment for r2c.bandit
+      - "Installing Python packages: bandit~=1.6.0"
+      - ✔ Creating virtual environment for r2c.flake8
+      - "Installing Python packages: flake8~=3.7.0, flake8-json~=19.8.0, flake8-bugbear~=19.8.0, flake8-builtins~=1.4.1, flake8-debugger~=3.2.0, flake8-executable~=2.0.3"
+      - ✔ Bento is initialized on your project.
     expected_out: ""
     returncode: 0
   - name: bento-check-with-init
