@@ -135,6 +135,26 @@ REGISTRY: Dict[str, AnalyzerDataJson] = {
         },
         "public": False,
     },
+    "r2c/sgrep-lint": {
+        "versions": {
+            "0.1.10": {
+                "manifest": {
+                    "analyzer_name": "r2c/sgrep-lint",
+                    "author_name": "pad",
+                    "author_email": "pad@returntocorp.com",
+                    "version": "0.1.10",
+                    "spec_version": "1.2.0",
+                    "dependencies": {"public/source-code": "*"},
+                    "type": "commit",
+                    "output": {"type": "json"},
+                    "deterministic": True,
+                    "readme": "# Analyzer name: sgrep-lint\n\n# Author name: pad\n\n# Description: TODO\n",
+                },
+                "pending": False,
+            }
+        },
+        "public": False,
+    },
 }
 
 

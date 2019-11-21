@@ -8,6 +8,7 @@ from bento.extra.flask import FlaskTool
 from bento.extra.grep import GrepTool
 from bento.extra.hadolint import HadolintTool
 from bento.extra.pyre import PyreTool
+from bento.extra.sgrep import SGrepTool
 from bento.extra.shellcheck import ShellcheckTool
 from bento.tool import Tool
 
@@ -20,5 +21,6 @@ TOOLS: Iterable[Type[Tool]] = [
     PyreTool,
     GrepTool,
     HadolintTool,
+    SGrepTool,
     ShellcheckTool,
 ]
