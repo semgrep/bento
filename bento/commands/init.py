@@ -33,6 +33,8 @@ def __install_config_if_not_exists(context: Context) -> None:
             echo_success(
                 f"Created {pretty_path}. Please check this file in to source control.\n"
             )
+        else:
+            logging.debug('yml["tools"] is false')
 
 
 def __install_ignore_if_not_exists(context: Context) -> None:

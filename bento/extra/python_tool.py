@@ -63,7 +63,7 @@ class PythonTool(Generic[R], Tool[R]):
         """
         Executes tool set-up or check within its virtual environment
         """
-        wrapped = f". {self.__venv_dir}/bin/activate; {cmd}"
+        wrapped = f". '{self.__venv_dir}/bin/activate'; {cmd}"
         logging.debug(f"{self.tool_id()}: Running '{wrapped}'")
         before = time()
         v = subprocess.Popen(

@@ -166,8 +166,7 @@ class BanditTool(PythonTool[str], StrTool):
         return BanditTool.FILE_NAME_FILTER
 
     def run(self, paths: Iterable[str]) -> str:
-        cmd = f"python $(which bandit) --f json -x {self._ignore_param()} -r "
-
+        cmd = f"""python "$(which bandit)" --f json -x {self._ignore_param()} -r """
         env, args = PythonTool.sanitize_arguments(paths)
         cmd += " ".join(args)
         return self.venv_exec(cmd, env=env, check_output=False)

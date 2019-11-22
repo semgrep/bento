@@ -101,8 +101,7 @@ class Flake8Tool(PythonTool[str], StrTool):
         return ""
 
     def run(self, paths: Iterable[str]) -> str:
-        cmd = f"python $(which flake8) {self.select_clause()} --format=json --exclude={self._ignore_param()} "
-
+        cmd = f"""python "$(which flake8)" {self.select_clause()} --format=json --exclude={self._ignore_param().replace(" ", "*")} """  # stupid hack to deal with spaces in flake8 exclude see https://stackoverflow.com/a/53176372
         env, args = PythonTool.sanitize_arguments(paths)
         cmd += " ".join(args)
         return self.venv_exec(cmd, env=env, check_output=False)
