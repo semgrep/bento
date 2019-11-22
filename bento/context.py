@@ -95,7 +95,7 @@ class Context(BaseContext):
         Returns this project's configured formatter
         """
         if "formatter" not in self.config:
-            return bento.formatter.Stylish()
+            return bento.formatter.stylish.Stylish()
         else:
             f_class, cfg = next(iter(self.config["formatter"].items()))
             return bento.formatter.for_name(f_class, cfg)

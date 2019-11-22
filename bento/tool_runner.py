@@ -130,13 +130,12 @@ class Runner:
             tqdm(
                 total=MAX_BAR_VALUE,
                 position=ix,
+                ascii="□■",
                 mininterval=BAR_UPDATE_INTERVAL,
                 desc=tool.tool_id(),
                 ncols=40,
-                bar_format=click.style(
-                    "  {desc:<10s}: |{bar}| {elapsed}{postfix}",
-                    fg=bento.util.Colors.STATUS,
-                ),
+                bar_format="  {desc:<10s}: "
+                + click.style("|{bar}| {elapsed}{postfix}", dim=True),
                 leave=False,
             )
             for ix, tool in indices_and_tools

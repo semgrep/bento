@@ -64,6 +64,11 @@ def check_command(step: Any, pwd: str, target: str) -> None:
         encoding="utf-8",
     )
 
+    print(f"======= {test_identifier} ========")
+    print("Command return code:", runned.returncode)
+    print("Command standard out:\n", runned.stdout)
+    print("Command standard error:\n", runned.stderr)
+
     if expected_returncode is not None:
         assert runned.returncode == expected_returncode, test_identifier
     if expected_out is not None:

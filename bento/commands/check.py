@@ -61,6 +61,7 @@ def __list_paths(ctx: Any, args: List[str], incomplete: str) -> AutocompleteSugg
 
 @click.command()
 @click.option(
+    "-f",
     "--formatter",
     type=click.Choice(bento.formatter.FORMATTERS.keys()),
     help="Which output format to use. Falls back to the config.",
@@ -121,9 +122,6 @@ def check(
     fmt = context.formatter
     findings_to_log: List[Any] = []
 
-    def by_path(v: Violation) -> str:
-        return v.path
-
     click.echo("Running Bento checks...", err=True)
 
     ctx = noop_context()
@@ -148,7 +146,8 @@ def check(
     is_error = False
 
     n_all = 0
-    collapsed_findings: List[Violation] = []
+    n_all_filtered = 0
+    filtered_findings: Dict[str, List[Violation]] = {}
     for tool_id, findings in all_results:
         if isinstance(findings, Exception):
             logging.error(findings)
@@ -180,8 +179,13 @@ You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PA
                 findings,
                 __get_ignores_for_tool(tool_id, config),
             )
+            filtered = [f for f in findings if not f.filtered]
+            filtered_findings[tool_id] = filtered
+
             n_all += len(findings)
-            collapsed_findings += [f for f in findings if not f.filtered]
+            n_filtered = len(filtered)
+            n_all_filtered += n_filtered
+            logging.debug(f"{tool_id}: {n_filtered} findings passed filter")
 
     def post_metrics() -> None:
         bento.network.post_metrics(findings_to_log, is_finding=True)
@@ -189,20 +193,16 @@ You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PA
     stats_thread = threading.Thread(name="stats", target=post_metrics)
     stats_thread.start()
 
-    if collapsed_findings:
-        findings_by_path = sorted(collapsed_findings, key=by_path)
-        for f in findings_by_path:
-            logging.debug(f)
-        bento.util.less(fmt.dump(findings_by_path), pager=pager, only_if_overrun=True)
+    if n_all_filtered > 0:
+        bento.util.less(fmt.dump(filtered_findings), pager=pager, only_if_overrun=True)
 
-    if collapsed_findings:
-        echo_warning(f"{len(collapsed_findings)} findings in {elapsed:.2f} s\n")
+        echo_warning(f"{n_all_filtered} findings in {elapsed:.2f} s\n")
         suppress_str = click.style("bento archive", fg=Colors.STATUS)
         click.echo(f"To suppress all findings run `{suppress_str}`.", err=True)
     else:
         echo_success(f"0 findings in {elapsed:.2f} s")
 
-    n_archived = n_all - len(collapsed_findings)
+    n_archived = n_all - n_all_filtered
     if n_archived > 0 and not show_all:
         show_cmd = click.style(f"bento check {SHOW_ALL}", fg=Colors.STATUS)
         click.echo(
@@ -212,5 +212,5 @@ You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PA
 
     if is_error:
         sys.exit(3)
-    elif collapsed_findings:
+    elif n_all_filtered > 0:
         sys.exit(2)
