@@ -53,10 +53,10 @@ def test_clippy_formatter() -> None:
         "\x1b[1m==> Bento Summary\x1b[0m",
         "\x1b[1m\x1b[31merror\x1b[0m: \x1b[1mr2c.eslint.semi https://eslint.org/docs/rules/semi\x1b[0m",
         "   \x1b[34m-->\x1b[0m bento/test/integration/init.js:0:0",
-        "    \x1b[34m|\x1b[0m\n \x1b[34m 0\x1b[0m \x1b[34m|\x1b[0m   console.log(3)\n    \x1b[34m|\x1b[0m\n    = \x1b[1mnote:\x1b[0m Missing semicolon.           \n",
+        "      \x1b[34m|\x1b[0m\n \x1b[94m   0\x1b[0m \x1b[34m|\x1b[0m   console.log(3)\n      \x1b[34m|\x1b[0m\n    = \x1b[1mnote:\x1b[0m Missing semicolon.           \n",
         "\x1b[1m\x1b[33mwarning\x1b[0m: \x1b[1mr2c.eslint.no-console https://eslint.org/docs/rules/no-console\x1b[0m",
         "   \x1b[34m-->\x1b[0m bento/test/integration/init.js:0:0",
-        "    \x1b[34m|\x1b[0m\n \x1b[34m 0\x1b[0m \x1b[34m|\x1b[0m   console.log(3)\n    \x1b[34m|\x1b[0m\n    = \x1b[1mnote:\x1b[0m Unexpected console statement.\n",
+        "      \x1b[34m|\x1b[0m\n \x1b[94m   0\x1b[0m \x1b[34m|\x1b[0m   console.log(3)\n      \x1b[34m|\x1b[0m\n    = \x1b[1mnote:\x1b[0m Unexpected console statement.\n",
         "",
     ]
 

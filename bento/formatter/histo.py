@@ -47,7 +47,10 @@ class Histo(Formatter):
     def _render_hit(self, hit: Hit, max_count: int, check_width: int) -> str:
         check_str = click.style(
             self.render_link(
-                hit.check_id[:check_width], href=hit.link, width=check_width
+                hit.check_id[:check_width],
+                href=hit.link,
+                print_alternative=False,
+                width=check_width,
             )
         )
         count_str = click.style(f"{hit.count:>5d}", dim=True)

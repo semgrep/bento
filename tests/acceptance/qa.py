@@ -13,6 +13,10 @@ Expectation = Union[str, List[str]]
 BENTO_REPO_ROOT = str(Path(__file__).parent.parent.parent)
 
 
+def remove_trailing_space(string: str) -> str:
+    return "\n".join([o.rstrip() for o in string.split("\n")])
+
+
 def match_expected(output: str, expected: Expectation, test_identifier: str) -> None:
     """Checks that OUTPUT matches EXPECTED
 
@@ -21,11 +25,14 @@ def match_expected(output: str, expected: Expectation, test_identifier: str) -> 
 
     If EXPECTED is a List then checks that every string in EXPECTED is contained in OUTPUT
     """
+    output = remove_trailing_space(output)
+
     if isinstance(expected, str):
+        expected = remove_trailing_space(expected)
         assert output.strip() == expected.strip(), test_identifier
     else:
         for elem in expected:
-            assert elem.strip() in output, test_identifier
+            assert remove_trailing_space(elem).strip() in output, test_identifier
 
 
 def check_command(step: Any, pwd: str, target: str) -> None:

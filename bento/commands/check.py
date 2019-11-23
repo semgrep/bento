@@ -4,7 +4,7 @@ import subprocess
 import sys
 import threading
 import time
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import click
 from pre_commit.git import get_staged_files
@@ -30,6 +30,7 @@ from bento.util import (
 from bento.violation import Violation
 
 SHOW_ALL = "--show-all"
+OVERRUN_PAGES = 3
 
 
 def __get_ignores_for_tool(tool: str, config: Dict[str, Any]) -> List[str]:
@@ -65,7 +66,7 @@ def __list_paths(ctx: Any, args: List[str], incomplete: str) -> AutocompleteSugg
     "--formatter",
     type=click.Choice(bento.formatter.FORMATTERS.keys()),
     help="Which output format to use. Falls back to the config.",
-    default=None,
+    multiple=True,
 )
 @click.option(
     "--pager/--no-pager",
@@ -88,7 +89,7 @@ def __list_paths(ctx: Any, args: List[str], incomplete: str) -> AutocompleteSugg
 @with_metrics
 def check(
     context: Context,
-    formatter: Optional[str] = None,
+    formatter: Tuple[str, ...] = (),
     pager: bool = True,
     show_all: bool = False,
     staged_only: bool = False,
@@ -118,8 +119,8 @@ def check(
 
     config = context.config
     if formatter:
-        config["formatter"] = {formatter: {}}
-    fmt = context.formatter
+        config["formatter"] = [{f: {}} for f in formatter]
+    fmts = context.formatters
     findings_to_log: List[Any] = []
 
     click.echo("Running Bento checks...", err=True)
@@ -194,19 +195,20 @@ You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PA
     stats_thread.start()
 
     if n_all_filtered > 0:
-        bento.util.less(fmt.dump(filtered_findings), pager=pager, only_if_overrun=True)
+        dumped = [f.dump(filtered_findings) for f in fmts]
+        bento.util.less(dumped, pager=pager, overrun_pages=OVERRUN_PAGES)
 
-        echo_warning(f"{n_all_filtered} findings in {elapsed:.2f} s\n")
+        echo_warning(f"{n_all_filtered} finding(s) in {elapsed:.2f} s\n")
         suppress_str = click.style("bento archive", fg=Colors.STATUS)
-        click.echo(f"To suppress all findings run `{suppress_str}`.", err=True)
+        click.echo(f"◦ To suppress all findings run `{suppress_str}`.", err=True)
     else:
-        echo_success(f"0 findings in {elapsed:.2f} s")
+        echo_success(f"0 findings in {elapsed:.2f} s\n")
 
     n_archived = n_all - n_all_filtered
     if n_archived > 0 and not show_all:
         show_cmd = click.style(f"bento check {SHOW_ALL}", fg=Colors.STATUS)
         click.echo(
-            f"  Not showing {n_archived} archived findings. To view, run `{show_cmd}`.",
+            f"◦ Not showing {n_archived} archived finding(s). To view, run `{show_cmd}`.",
             err=True,
         )
 

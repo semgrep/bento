@@ -37,8 +37,8 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 66 findings in"
-      - To suppress all findings run `bento archive`.
+      - "⚠ 66 finding(s) in"
+      - ◦ To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-init.out
     returncode: 2
@@ -60,8 +60,8 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 30 findings in"
-      - To suppress all findings run `bento archive`.
+      - "⚠ 30 finding(s) in"
+      - ◦ To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-disable.out
     returncode: 2
@@ -83,8 +83,8 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 66 findings in"
-      - To suppress all findings run `bento archive`.
+      - "⚠ 66 finding(s) in"
+      - ◦ To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-init.out
     returncode: 2
@@ -107,7 +107,7 @@ steps:
       - check
     expected_err:
       - "✔ 0 findings in"
-      - "Not showing 66 archived findings. To view, run `bento check --show-all`"
+      - "Not showing 66 archived finding(s). To view, run `bento check --show-all`"
     expected_out: ""
     returncode: 0
   - name: install-hook
@@ -157,11 +157,24 @@ steps:
       - commit
     expected_err:
       - Running Bento checks...
-      - "⚠ 3 findings in"
+      - "⚠ 3 finding(s) in"
       - |
-        failure.py
-          0:0  error   syntax error while parsing AST from file r2c.bandit     error
-          5:13 error   SyntaxError: invalid syntax              r2c.flake8     E999
-          6:5  error   unexpected indentation                   r2c.flake8     E113 https://lintlyci.github.io/Flake8Rules/rules/E113.html
+        error: r2c.bandit.error
+           --> failure.py:0:0
+            = note: syntax error while parsing AST from file
+
+        error: r2c.flake8.E999
+           --> failure.py:5:13
+              |
+            5 |   def broken(x)
+              |
+            = note: SyntaxError: invalid syntax
+
+        error: r2c.flake8.E113 https://lintlyci.github.io/Flake8Rules/rules/E113.html
+           --> failure.py:6:5
+              |
+            6 |   return x
+              |
+            = note: unexpected indentation
     expected_out: ""
     returncode: 1

@@ -38,8 +38,8 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 300 findings in"
-      - To suppress all findings run `bento archive`.
+      - "⚠ 300 finding(s) in"
+      - ◦ To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-init.out
     returncode: 2
@@ -61,8 +61,8 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 277 findings in"
-      - To suppress all findings run `bento archive`.
+      - "⚠ 277 finding(s) in"
+      - ◦ To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-disable.out
     returncode: 2
@@ -84,8 +84,8 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 300 findings in"
-      - To suppress all findings run `bento archive`.
+      - "⚠ 300 finding(s) in"
+      - ◦ To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-init.out
     returncode: 2
@@ -108,7 +108,7 @@ steps:
       - check
     expected_err:
       - "✔ 0 findings in"
-      - "Not showing 300 archived findings. To view, run `bento check --show-all`"
+      - "Not showing 300 archived finding(s). To view, run `bento check --show-all`"
     expected_out: ""
     returncode: 0
   - name: install-hook
@@ -158,9 +158,13 @@ steps:
       - commit
     expected_err:
       - Running Bento checks...
-      - "⚠ 1 findings in"
+      - "⚠ 1 finding(s) in"
       - |
-        bad.js
-          1:1  error   'x' is not defined. r2c.eslint     no-undef https://eslint.org/docs/rules/no-undef
+        error: r2c.eslint.no-undef https://eslint.org/docs/rules/no-undef
+           --> bad.js:1:1
+              |
+            1 |   x = "potato";
+              |
+            = note: 'x' is not defined.
     expected_out: ""
     returncode: 1

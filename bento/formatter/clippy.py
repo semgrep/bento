@@ -6,6 +6,7 @@ from typing import Collection, List
 import click
 
 from bento.formatter.base import FindingsMap, Formatter
+from bento.util import Colors
 from bento.violation import Violation
 
 
@@ -15,9 +16,9 @@ class Clippy(Formatter):
     """
 
     SEVERITY_STR = {
-        0: click.style("advice", fg="green"),
-        1: click.style("warning", fg="yellow"),
-        2: click.style("error", fg="red"),
+        0: click.style("advice", fg=Colors.SUCCESS),
+        1: click.style("warning", fg=Colors.WARNING),
+        2: click.style("error", fg=Colors.ERROR),
     }
 
     @staticmethod
@@ -26,7 +27,7 @@ class Clippy(Formatter):
         return f"   {arrow} {path}:{line}:{col}"
 
     def __print_violation(self, violation: Violation, max_message_len: int) -> str:
-        line = click.style(f"{violation.line:>2d}", fg="blue")
+        line = click.style(f"{violation.line:>4d}", fg=Colors.STATUS)
 
         message = Clippy.ellipsis_trim(violation.message, max_message_len)
 
@@ -43,7 +44,9 @@ class Clippy(Formatter):
 
         if context:
             violation_message = (
-                f"    {pipe}{nl}" f" {line} {pipe}   {context}{nl}" f"    {pipe}{nl}"
+                f"      {pipe}{nl}"
+                f" {line} {pipe}   {context}{nl}"
+                f"      {pipe}{nl}"
             ) + violation_message
         return violation_message
 

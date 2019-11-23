@@ -105,17 +105,19 @@ def package_subclasses(tpe: Type, pkg_path: str) -> List[Type]:
 
 
 def less(
-    text: Collection[str], pager: bool = True, only_if_overrun: bool = False
+    output: Collection[Collection[str]], pager: bool = True, overrun_pages: int = 0
 ) -> None:
     """
     Possibly prints a string through less.
 
     Parameters:
         pager: If false, the string is always echoed directly to stdout
-        only_if_overrun: If true, the strings are only printed through less if their length exceeds the terminal height
+        overrun_pages: Minimum number of pages in output before paging is triggered (paging is never triggered if
+                       less than or equal to 0)
     """
     use_echo = False
-    text_len = len(text)
+    text = (line for o in output for line in o)
+    text_len = sum(len(o) for o in output)
 
     # In order to prevent an early pager exit from killing the CLI,
     # we must both ignore the resulting SIGPIPE and BrokenPipeError
@@ -124,9 +126,10 @@ def less(
 
     if not pager or not sys.stdout.isatty():
         use_echo = True
-    if only_if_overrun:
+
+    if not use_echo:
         _, height = shutil.get_terminal_size()
-        if text_len < height:
+        if text_len < height * overrun_pages:
             use_echo = True
 
     if use_echo:

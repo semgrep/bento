@@ -1,5 +1,6 @@
 formatter:
-  stylish: {}
+  - stylish: {}
+  - histo: {}
 tools:
   r2c.eslint:
     ignore:

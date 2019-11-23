@@ -1,7 +1,7 @@
 import logging
 import time
 from datetime import datetime
-from typing import Dict, Type
+from typing import Any, Dict, Iterator, List, Tuple, Type
 
 import attr
 
@@ -15,7 +15,7 @@ from bento.util import echo_error
 
 @attr.s
 class Context(BaseContext):
-    _formatter = attr.ib(type=Formatter, default=None, init=False)
+    _formatters = attr.ib(type=List[Formatter], default=None, init=False)
     _start = attr.ib(type=float, default=time.time(), init=False)
     _timestamp = attr.ib(
         type=str, default=str(datetime.utcnow().isoformat("T")), init=False
@@ -24,10 +24,10 @@ class Context(BaseContext):
     _tools = attr.ib(type=Dict[str, Tool], init=False, default=None)
 
     @property
-    def formatter(self) -> Formatter:
-        if self._formatter is None:
-            self._formatter = self._load_formatter()
-        return self._formatter
+    def formatters(self) -> List[Formatter]:
+        if self._formatters is None:
+            self._formatters = self._load_formatters()
+        return self._formatters
 
     @property
     def tools(self) -> Dict[str, Tool]:
@@ -90,12 +90,25 @@ class Context(BaseContext):
 
         return tools
 
-    def _load_formatter(self) -> Formatter:
+    def _load_formatters(self) -> List[Formatter]:
         """
         Returns this project's configured formatter
         """
         if "formatter" not in self.config:
-            return bento.formatter.stylish.Stylish()
+            return [bento.formatter.stylish.Stylish()]
         else:
-            f_class, cfg = next(iter(self.config["formatter"].items()))
-            return bento.formatter.for_name(f_class, cfg)
+            FormatterConfig = Dict[str, Any]
+            FormatterSpec = Tuple[str, FormatterConfig]
+
+            cfg = self.config["formatter"]
+
+            # Before 0.6, configuration is a simple (unordered) dictionary:
+            it: Iterator[FormatterSpec]
+            if isinstance(cfg, dict):
+                it = iter(cfg.items())
+            # After 0.6, configuration is ordered list of dictionaries,
+            # Convert to ordered list of tuples.
+            else:
+                it = (next(iter(f.items())) for f in cfg)
+
+            return [bento.formatter.for_name(f_class, cfg) for f_class, cfg in it]

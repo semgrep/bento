@@ -61,18 +61,27 @@ class Formatter(ABC):
         return untrimmed
 
     def render_link(
-        self, text: str, href: Optional[str], width: Optional[int] = None
+        self,
+        text: str,
+        href: Optional[str],
+        print_alternative: bool = True,
+        width: Optional[int] = None,
     ) -> str:
         """
         Prints a clickable hyperlink output if in a tty; otherwise just prints a text link
+
+        :param text: The link anchor text
+        :param href: The href, if exists
+        :param print_alternative: If true, only emits link if OSC8 links are supported, otherwise prints href after text
+        :param width: Minimum link width
+        :return: The rendered link
         """
         if href is not None and sys.stdout.isatty() and self._print_links:
             text = f"{Formatter.OSC_8}{href}{Formatter.BEL}{text}{Formatter.OSC_8}{Formatter.BEL}"
             if width:
                 width += Formatter.LINK_WIDTH + len(href)
-        else:
-            if href:
-                text = f"{text} {href}"
+        elif href and print_alternative:
+            text = f"{text} {href}"
 
         if width:
             return text.ljust(width)

@@ -62,7 +62,7 @@ class EslintParser(Parser[JsonR]):
             column=message["column"],
             message=message["message"],
             severity=message["severity"],
-            syntactic_context="\n".join(source),
+            syntactic_context="\n".join(source).strip(),
             link=link,
         )
 
