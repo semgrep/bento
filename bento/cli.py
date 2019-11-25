@@ -90,7 +90,7 @@ def is_running_supported_python3() -> bool:
     return python_major_v >= 3 and python_minor_v >= 6
 
 
-def confirm_tos_update(global_config: Dict[str, Any]) -> bool:
+def confirm_tos_update(context: Context, global_config: Dict[str, Any]) -> bool:
     if global_config is None or constants.TERMS_OF_SERVICE_KEY not in global_config:
         # this message is shown if the user has never agreed to the TOS
         tos_message = (
@@ -118,9 +118,11 @@ def confirm_tos_update(global_config: Dict[str, Any]) -> bool:
     # the case where the user never agreed to the TOS or agreed to an earlier version
     click.echo(f"{tos_message}:\n\n{constants.TERMS_OF_SERVICE_MESSAGE}")
 
+    context.start_user_timer()
     agreed = click.confirm(
         "Do you agree to Bento's terms of service and privacy policy?", default=True
     )
+    context.stop_user_timer()
 
     if agreed:
         global_config[
@@ -163,7 +165,9 @@ def _suggest_autocomplete() -> None:
         )
 
 
-def update_email(global_config: Dict[str, Any], email: Optional[str] = None) -> bool:
+def update_email(
+    global_config: Dict[str, Any], context: Context, email: Optional[str] = None
+) -> bool:
     if not email and "email" not in global_config:
         # import inside def for performance
         from validate_email import validate_email
@@ -174,7 +178,9 @@ def update_email(global_config: Dict[str, Any], email: Optional[str] = None) -> 
 
         email = None
         while not (email and validate_email(email)):
+            context.start_user_timer()
             email = click.prompt("Email", type=str, default=bento.git.user_email())
+            context.stop_user_timer()
 
         r = __post_email_to_mailchimp(email)
         if not r:
@@ -188,7 +194,7 @@ def update_email(global_config: Dict[str, Any], email: Optional[str] = None) -> 
     return True
 
 
-def verify_registration(agree: bool, email: Optional[str]) -> bool:
+def verify_registration(agree: bool, email: Optional[str], context: Context) -> bool:
     global_config = read_global_config()
     first_run = False
     if global_config is None:
@@ -202,11 +208,13 @@ def verify_registration(agree: bool, email: Optional[str]) -> bool:
                 f"{bolded_welcome} You're about to get a powerful suite of tailored tools.\n"
             )
 
-    if not agree and not confirm_tos_update(global_config):
+    if not agree and not confirm_tos_update(context, global_config):
         return False
 
     update_email(
-        global_config, email=(email or os.environ.get(constants.BENTO_EMAIL_VAR))
+        global_config,
+        context,
+        email=(email or os.environ.get(constants.BENTO_EMAIL_VAR)),
     )
 
     if first_run and not agree:
@@ -257,7 +265,7 @@ def cli(
             "Bento requires Python 3.6+. Please ensure you have Python 3.6+ and installed Bento via `pip3 install bento-cli`."
         )
         sys.exit(3)
-    if not verify_registration(agree, email):
+    if not verify_registration(agree, email, ctx.obj):
         logging.error("Could not verify the user's registration.")
         sys.exit(3)
     if not is_running_latest():

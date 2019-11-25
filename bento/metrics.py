@@ -77,11 +77,13 @@ def command_metric(
     exit_code: int,
     duration: float,
     exception: Optional[Exception],
+    user_duration: Optional[float] = None,
 ) -> List[Dict[str, Any]]:
     email = read_user_email()
     d = {
         "timestamp": timestamp,
         "duration": duration,
+        "user_duration": user_duration,
         "exit_code": exit_code,
         "hash_of_repository": __hash_sha256(bento.git.url()),
         "repository": __hash_sha256(bento.git.url()),

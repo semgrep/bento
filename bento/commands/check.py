@@ -196,7 +196,9 @@ You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PA
 
     if n_all_filtered > 0:
         dumped = [f.dump(filtered_findings) for f in fmts]
+        context.start_user_timer()
         bento.util.less(dumped, pager=pager, overrun_pages=OVERRUN_PAGES)
+        context.stop_user_timer()
 
         echo_warning(f"{n_all_filtered} finding(s) in {elapsed:.2f} s\n")
         suppress_str = click.style("bento archive", fg=Colors.STATUS)

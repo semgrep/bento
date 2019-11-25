@@ -1,7 +1,7 @@
 import logging
 import time
 from datetime import datetime
-from typing import Any, Dict, Iterator, List, Tuple, Type
+from typing import Any, Dict, Iterator, List, Optional, Tuple, Type
 
 import attr
 
@@ -17,6 +17,8 @@ from bento.util import echo_error
 class Context(BaseContext):
     _formatters = attr.ib(type=List[Formatter], default=None, init=False)
     _start = attr.ib(type=float, default=time.time(), init=False)
+    _user_start = attr.ib(type=float, default=None, init=False)
+    _user_duration = attr.ib(type=float, default=0.0, init=False)
     _timestamp = attr.ib(
         type=str, default=str(datetime.utcnow().isoformat("T")), init=False
     )
@@ -51,6 +53,12 @@ class Context(BaseContext):
     def elapsed(self) -> float:
         return time.time() - self._start
 
+    def user_duration(self) -> Optional[float]:
+        """
+        Returns elapsed time in seconds since formatter was opened
+        """
+        return self._user_duration
+
     def tool(self, tool_id: str) -> Tool:
         """
         Returns a specific configured tool
@@ -62,6 +70,14 @@ class Context(BaseContext):
         if tool_id not in tt:
             raise AttributeError(f"{tool_id} not one of {', '.join(tt.keys())}")
         return tt[tool_id]
+
+    def start_user_timer(self) -> None:
+        self._user_start = time.perf_counter()
+
+    def stop_user_timer(self) -> None:
+        if self._user_start is None:
+            return
+        self._user_duration += time.perf_counter() - self._user_start
 
     def _load_tool_inventory(self) -> Dict[str, Type[Tool]]:
         """

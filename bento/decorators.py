@@ -52,10 +52,11 @@ def with_metrics(f: _AnyCallable) -> _AnyCallable:
             __log_exception(e)
 
         elapsed = time.time() - before
+        user_duration = cli_context.user_duration() if cli_context else None
         logging.info(f"{command} completed in {elapsed} with exit code {exit_code}")
         bento.network.post_metrics(
             bento.metrics.command_metric(
-                command, timestamp, kwargs, exit_code, elapsed, exception
+                command, timestamp, kwargs, exit_code, elapsed, exception, user_duration
             )
         )
         if exit_code != 0:
