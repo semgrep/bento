@@ -1,4 +1,5 @@
 import logging
+import sys
 import threading
 import time
 import traceback
@@ -31,6 +32,7 @@ class Runner:
         self._setup_latch: bento.util.CountDownLatch
         self._bars: List[tqdm]
         self._run: List[bool]
+        self._show_bars = sys.stderr.isatty()
 
     def _update_bars(self, ix: int) -> None:
         bar_value = MIN_BAR_VALUE
@@ -60,27 +62,31 @@ class Runner:
         ix, tool = index_and_tool
         try:
             before = time.time()
-            bar = self._bars[ix]
+            bar = self._bars[ix] if self._show_bars else None
             self._run[ix] = True
 
             logging.debug(f"{tool.tool_id()} start")
-            with self._lock:
-                bar.set_postfix_str("🍜")
+            if bar:
+                with self._lock:
+                    bar.set_postfix_str("🍜")
 
             try:
                 tool.setup()
             finally:
                 if self._setup_latch:
                     self._setup_latch.count_down()
-            with self._lock:
-                bar.update(MIN_BAR_VALUE)
-                bar.set_postfix_str("🍤")
+            if bar:
+                with self._lock:
+                    bar.update(MIN_BAR_VALUE)
+                    bar.set_postfix_str("🍤")
             after_setup = time.time()
 
-            th = threading.Thread(
-                name=f"update_{ix}", target=partial(self._update_bars, ix)
-            )
-            th.start()
+            th = None
+            if bar:
+                th = threading.Thread(
+                    name=f"update_{ix}", target=partial(self._update_bars, ix)
+                )
+                th.start()
             if self._setup_latch:
                 self._setup_latch.wait_for()
             results = bento.result.filtered(
@@ -88,9 +94,11 @@ class Runner:
             )
             with self._lock:
                 self._run[ix] = False
-            th.join()
-            with self._lock:
-                bar.set_postfix_str("🍱")
+            if th:
+                th.join()
+            if bar:
+                with self._lock:
+                    bar.set_postfix_str("🍱")
             after = time.time()
 
             logging.debug(
@@ -126,20 +134,21 @@ class Runner:
                 f"No tools are configured in this project's .bento.yml.\nPlease contact {SUPPORT_EMAIL_ADDRESS} if this is incorrect."
             )
 
-        self._bars = [
-            tqdm(
-                total=MAX_BAR_VALUE,
-                position=ix,
-                ascii="□■",
-                mininterval=BAR_UPDATE_INTERVAL,
-                desc=tool.tool_id(),
-                ncols=40,
-                bar_format="  {desc:<10s}: "
-                + click.style("|{bar}| {elapsed}{postfix}", dim=True),
-                leave=False,
-            )
-            for ix, tool in indices_and_tools
-        ]
+        if self._show_bars:
+            self._bars = [
+                tqdm(
+                    total=MAX_BAR_VALUE,
+                    position=ix,
+                    ascii="□■",
+                    mininterval=BAR_UPDATE_INTERVAL,
+                    desc=tool.tool_id(),
+                    ncols=40,
+                    bar_format="  {desc:<14s} "
+                    + click.style("|{bar}| {elapsed}{postfix}", dim=True),
+                    leave=False,
+                )
+                for ix, tool in indices_and_tools
+            ]
         self._run = [True for _, _ in indices_and_tools]
         self._setup_latch = bento.util.CountDownLatch(n_tools)
 
@@ -148,11 +157,11 @@ class Runner:
             func = partial(Runner._run_single_tool, self, baseline, files)
             all_results = pool.map(func, indices_and_tools)
 
-        # click.echo("\x1b[1F")  # Resets line position afters bars close
-        for _ in self._bars:
-            click.echo("", err=True)
-        for b in self._bars:
-            b.close()
+        if self._show_bars:
+            for _ in self._bars:
+                click.echo("", err=True)
+            for b in self._bars:
+                b.close()
 
         click.echo("", err=True)
 
