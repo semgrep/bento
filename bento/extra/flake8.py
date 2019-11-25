@@ -37,6 +37,10 @@ class Flake8Parser(Parser[str]):
         return link
 
     @staticmethod
+    def id_to_name(check_id: str) -> str:
+        return check_id
+
+    @staticmethod
     def tool() -> Type[StrTool]:
         return Flake8Tool
 
@@ -48,7 +52,7 @@ class Flake8Parser(Parser[str]):
 
         return Violation(
             tool_id=self.tool().tool_id(),
-            check_id=check_id,
+            check_id=self.id_to_name(check_id),
             path=path,
             line=result["line_number"],
             column=result["column_number"],

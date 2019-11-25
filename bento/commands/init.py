@@ -27,6 +27,9 @@ def __install_config_if_not_exists(context: Context) -> None:
         for tid, tool in context.tool_inventory.items():
             if not tool.matches_project(context) and tid in yml["tools"]:
                 del yml["tools"][tid]
+        logging.debug(
+            f"Matching tools for this project: {', '.join(yml['tools'].keys())}"
+        )
         if yml["tools"]:
             with config_path.open("w") as config_file:
                 yaml.safe_dump(yml, stream=config_file)
@@ -34,7 +37,7 @@ def __install_config_if_not_exists(context: Context) -> None:
                 f"Created {pretty_path}. Please check this file in to source control.\n"
             )
         else:
-            logging.debug('yml["tools"] is false')
+            logging.warning("No tools match this project")
 
 
 def __install_ignore_if_not_exists(context: Context) -> None:

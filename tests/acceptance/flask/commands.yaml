@@ -27,6 +27,8 @@ steps:
       - "Installing Python packages: bandit~=1.6.0"
       - ✔ Creating virtual environment for r2c.flake8
       - "Installing Python packages: flake8~=3.7.0, flake8-json~=19.8.0, flake8-bugbear~=19.8.0, flake8-builtins~=1.4.1, flake8-debugger~=3.2.0, flake8-executable~=2.0.3"
+      - ✔ Creating virtual environment for r2c.flask
+      - "Installing Python packages: flake8~=3.7.0, flake8-json~=19.8.0, flake8-flask~=0.1.5"
       - ✔ Bento is initialized on your project.
     expected_out: ""
     returncode: 0
@@ -37,7 +39,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 11 finding(s) in"
+      - "⚠ 12 finding(s) in"
       - ◦ To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-init.out
@@ -60,7 +62,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 9 finding(s) in"
+      - "⚠ 10 finding(s) in"
       - ◦ To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-disable.out
@@ -83,7 +85,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 11 finding(s) in"
+      - "⚠ 12 finding(s) in"
       - ◦ To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-init.out
@@ -95,7 +97,7 @@ steps:
       - --agree
       - archive
     expected_err:
-      - ✔ Rewrote the whitelist with 11 findings from 2 tools (11 new, 0 previously whitelisted).
+      - ✔ Rewrote the whitelist with 12 findings from 3 tools (12 new, 0 previously whitelisted).
       - Please check '.bento-whitelist.yml' in to source control.
     expected_out: ""
     returncode: 0
@@ -107,7 +109,7 @@ steps:
       - check
     expected_err:
       - "✔ 0 findings in"
-      - "Not showing 11 archived finding(s). To view, run `bento check --show-all`"
+      - "Not showing 12 archived finding(s). To view, run `bento check --show-all`"
     expected_out: ""
     returncode: 0
   - name: install-hook

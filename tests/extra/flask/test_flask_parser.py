@@ -19,7 +19,7 @@ def test_parse() -> None:
     expectation = [
         Violation(
             tool_id="r2c.flask",
-            check_id="r2c-need-filename-or-mimetype-for-file-objects-in-send-file",
+            check_id="send-file-open",
             path="bad.py",
             line=4,
             column=1,
@@ -27,7 +27,7 @@ def test_parse() -> None:
             severity=2,
             syntactic_context='flask.send_file(open("file.txt"))',
             filtered=None,
-            link="",
+            link="https://checks.bento.dev/en/latest/flake8-flask/send-file-open",
         )
     ]
 
@@ -52,7 +52,7 @@ def test_run_flask_violations(tmp_path_factory: tmp_path_factory) -> None:
     expectation = [
         Violation(
             tool_id="r2c.flask",
-            check_id="r2c-need-filename-or-mimetype-for-file-objects-in-send-file",
+            check_id="send-file-open",
             path="bad.py",
             line=4,
             column=1,
@@ -60,7 +60,7 @@ def test_run_flask_violations(tmp_path_factory: tmp_path_factory) -> None:
             severity=2,
             syntactic_context='flask.send_file(open("file.txt"))',
             filtered=None,
-            link="",
+            link="https://checks.bento.dev/en/latest/flake8-flask/send-file-open",
         )
     ]
 

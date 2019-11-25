@@ -1,6 +1,6 @@
 formatter:
-  - stylish: {}
-  - histo: {}
+- clippy: {}
+- histo: {}
 tools:
   r2c.bandit:
     ignore:
@@ -29,9 +29,12 @@ tools:
     - B608
   r2c.eslint:
     ignore:
+    - '@typescript-eslint/camelcase'
+    - '@typescript-eslint/member-delimiter-style'
     - array-bracket-newline
     - array-bracket-spacing
     - array-element-newline
+    - arrow-parens
     - block-spacing
     - brace-style
     - camelcase
@@ -61,6 +64,7 @@ tools:
     - import/max-dependencies
     - import/newline-after-import
     - import/no-anonymous-default-export
+    - import/no-cycle
     - import/no-default-export
     - import/no-duplicates
     - import/no-named-default
@@ -260,7 +264,9 @@ tools:
     - yoda
   r2c.flake8:
     ignore:
-    - B006
+    - B001
+    - B009
+    - B010
     - E101
     - E111
     - E114
@@ -309,6 +315,7 @@ tools:
     - E303
     - E304
     - E305
+    - E306
     - E401
     - E402
     - E501

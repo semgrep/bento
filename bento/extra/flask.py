@@ -2,16 +2,25 @@ from typing import Type
 
 from semantic_version import SimpleSpec
 
-from bento.base_context import BaseContext
 from bento.extra.flake8 import Flake8Parser, Flake8Tool
 from bento.parser import Parser
 from bento.tool import StrTool
 
 
 class FlaskParser(Flake8Parser):
+    SUBSTITUTION = {
+        "need-filename-or-mimetype-for-file-objects-in-send-file": "send-file-open"
+    }
+
     @staticmethod
     def id_to_link(check_id: str) -> str:
-        return ""
+        page = FlaskParser.id_to_name(check_id)
+        return f"https://checks.bento.dev/en/latest/flake8-flask/{page}"
+
+    @staticmethod
+    def id_to_name(check_id: str) -> str:
+        trimmed = check_id[4:]
+        return FlaskParser.SUBSTITUTION.get(trimmed, trimmed)
 
     @staticmethod
     def tool() -> Type[StrTool]:
@@ -26,10 +35,6 @@ class FlaskTool(Flake8Tool):
         "flake8-json": SimpleSpec("~=19.8.0"),
         "flake8-flask": SimpleSpec("~=0.1.5"),
     }
-
-    @classmethod
-    def matches_project(cls, context: BaseContext) -> bool:
-        return False
 
     @property
     def parser_type(self) -> Type[Parser]:

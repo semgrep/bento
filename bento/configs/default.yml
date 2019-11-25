@@ -418,3 +418,5 @@ tools:
       - W504
       # ‘from module import *’ only allowed at module level
       - F406
+  r2c.flask:
+    ignore: []

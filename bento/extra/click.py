@@ -28,7 +28,7 @@ class ClickTool(Flake8Tool):
     }
 
     @classmethod
-    def matches_project(cls, context: BaseContext) -> bool:
+    def matches_project(cls, _: BaseContext) -> bool:
         return False
 
     @property
