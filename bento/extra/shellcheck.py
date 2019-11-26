@@ -69,7 +69,7 @@ class ShellcheckTool(StrTool):
 
     @classmethod
     def tool_desc(cls) -> str:
-        return "Finds bugs in shell scripts"
+        return "Finds bugs in shell scripts (requires Docker)"
 
     @property
     def file_name_filter(self) -> Pattern:

@@ -54,7 +54,7 @@ class CheckedReturnTool(StrTool):
 
     @classmethod
     def tool_desc(cls) -> str:
-        return "Finds anomalous use of return values"
+        return "Finds anomalous use of return values (experimental)"
 
     def setup(self) -> None:
         prepull_analyzers(self.ANALYZER_NAME, self.ANALYZER_VERSION)

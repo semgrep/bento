@@ -129,7 +129,7 @@ class EslintTool(JsTool, JsonTool):
 
     @classmethod
     def tool_desc(cls) -> str:
-        return "Finds a wide variety of bugs in JavaScript and TypeScript code"
+        return "Identifies and reports on patterns in JavaScript and TypeScript"
 
     @property
     def project_name(self) -> str:

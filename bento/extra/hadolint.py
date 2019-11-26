@@ -75,7 +75,7 @@ class HadolintTool(StrTool):
 
     @classmethod
     def tool_desc(cls) -> str:
-        return "Finds bugs in Docker files"
+        return "Finds bugs in Docker files (requires Docker)"
 
     @property
     def file_name_filter(self) -> Pattern:

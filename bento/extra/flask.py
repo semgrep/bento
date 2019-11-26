@@ -46,7 +46,7 @@ class FlaskTool(Flake8Tool):
 
     @classmethod
     def tool_desc(cls) -> str:
-        return "Best practices and security checks for Python's Flask framework"
+        return "Checks for the Python Flask framework"
 
     def select_clause(self) -> str:
         return "--select=r2c"

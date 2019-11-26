@@ -49,7 +49,7 @@ class GrepTool(JsonTool):
 
     @classmethod
     def tool_desc(cls) -> str:
-        return "Matches patterns in arbitrary code"
+        return "Matches user-provided regex patterns (experimental)"
 
     @property
     def project_name(self) -> str:

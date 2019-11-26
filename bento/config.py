@@ -3,6 +3,7 @@ import os
 import sys
 from typing import Any, Callable, List, Set, cast
 
+import click
 import yaml
 
 import bento.extra
@@ -55,12 +56,39 @@ def get_valid_tools(
 ) -> AutocompleteSuggestions:
     # context is not yet initialized, so just do it now
     try:
-        tool_list = [(t.tool_id(), t.tool_desc()) for t in bento.extra.TOOLS]
+        tool_list = sorted(
+            [(t.tool_id(), t.tool_desc()) for t in bento.extra.TOOLS],
+            key=(lambda td: td[0]),
+        )
         results = list(filter(lambda s: s[0].startswith(incomplete), tool_list))
         return cast(AutocompleteSuggestions, results)
     except Exception as ex:
         logging.warning(ex)
         return []
+
+
+def get_tool_help(summary: str) -> str:
+    tools = get_valid_tools(None, [], "")
+    max_width = max(len(t) for t, _ in tools)
+    lines = (f"{t:<{max_width}s} -- {d}" for t, d in tools)
+    result = "\n    ".join(lines)
+    return f"""
+  {summary}
+
+  Possible tools are:
+
+    {result}"""
+
+
+class ToolCommand(click.Command):
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
+        self.help_summary = kwargs["help_summary"]
+        del kwargs["help_summary"]
+        super().__init__(*args, **kwargs)
+
+    def format_help_text(self, _: Any, formatter: click.HelpFormatter) -> None:
+        formatter.write(get_tool_help(self.help_summary))
+        formatter.write("\n")
 
 
 def get_disabled_checks(

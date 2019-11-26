@@ -55,7 +55,7 @@ class SGrepTool(StrTool):
 
     @classmethod
     def tool_desc(cls) -> str:
-        return "Syntactically aware code search"
+        return "Matches user-provided AST patterns (experimental; requires Docker)"
 
     def setup(self) -> None:
         # import inside def for performance

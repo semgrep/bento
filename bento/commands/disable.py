@@ -2,7 +2,7 @@ from typing import Set
 
 import click
 
-from bento.config import get_valid_tools, update_ignores, update_tool_run
+from bento.config import ToolCommand, get_valid_tools, update_ignores, update_tool_run
 from bento.context import Context
 from bento.util import echo_success
 
@@ -27,7 +27,11 @@ def disable() -> None:
     """
 
 
-@disable.command(short_help="Specify tool")
+@disable.command(
+    cls=ToolCommand,
+    short_help="Specify a tool to enable.",
+    help_summary="Turn OFF a tool.",
+)
 @click.argument("tool", type=str, nargs=1, autocompletion=get_valid_tools)
 @click.pass_obj
 def tool(context: Context, tool: str) -> None:

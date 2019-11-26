@@ -3,6 +3,7 @@ from typing import Set
 import click
 
 from bento.config import (
+    ToolCommand,
     get_disabled_checks,
     get_valid_tools,
     update_ignores,
@@ -34,7 +35,11 @@ def enable() -> None:
     """
 
 
-@enable.command(short_help="Specify tool")
+@enable.command(
+    cls=ToolCommand,
+    short_help="Specify a tool to enable.",
+    help_summary="Turn ON a tool.",
+)
 @click.argument("tool", type=str, nargs=1, autocompletion=get_valid_tools)
 @click.pass_obj
 def tool(context: Context, tool: str) -> None:
