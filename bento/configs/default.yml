@@ -420,3 +420,5 @@ tools:
       - F406
   r2c.flask:
     ignore: []
+  r2c.requests:
+    ignore: []

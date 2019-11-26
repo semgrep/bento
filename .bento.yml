@@ -341,3 +341,5 @@ tools:
     - W503
     - W504
     - F406
+  r2c.requests:
+    ignore: []

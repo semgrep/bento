@@ -120,3 +120,5 @@ r2c.eslint:
       tool_id: r2c.eslint
 r2c.flake8:
   violations: {}
+r2c.requests:
+  violations: {}

@@ -96,7 +96,7 @@ steps:
       - --agree
       - archive
     expected_err:
-      - ✔ Rewrote the whitelist with 3 findings from 3 tools (3 new, 0 previously whitelisted).
+      - ✔ Rewrote the whitelist with 3 findings from 4 tools (3 new, 0 previously whitelisted).
       - Please check '.bento-whitelist.yml' in to source control.
     expected_out: ""
     returncode: 0
