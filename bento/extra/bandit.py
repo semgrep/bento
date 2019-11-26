@@ -154,6 +154,10 @@ class BanditTool(PythonTool[str], StrTool):
         return BanditTool.TOOL_ID
 
     @classmethod
+    def tool_desc(cls) -> str:
+        return "Finds common security issues in Python code"
+
+    @classmethod
     def venv_subdir_name(cls) -> str:
         return BanditTool.VENV_DIR
 

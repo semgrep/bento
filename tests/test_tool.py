@@ -64,6 +64,10 @@ class ToolFixture(StrTool):
     def project_name(self) -> str:
         return "Test"
 
+    @classmethod
+    def tool_desc(cls) -> str:
+        return "test description"
+
     @property
     def file_name_filter(self) -> Pattern:
         return re.compile(r"\btest_tool\.py\b")

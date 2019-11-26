@@ -49,6 +49,7 @@ steps:
       - bento
       - --agree
       - disable
+      - check
       - r2c.eslint
       - no-use-before-define
     expected_err: "✔ 'no-use-before-define' disabled for 'r2c.eslint'"
@@ -72,6 +73,7 @@ steps:
       - bento
       - --agree
       - enable
+      - check
       - r2c.eslint
       - no-use-before-define
     expected_err: "✔ 'no-use-before-define' enabled for 'r2c.eslint'"

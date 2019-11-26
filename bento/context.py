@@ -96,12 +96,16 @@ class Context(BaseContext):
         """
         tools: Dict[str, Tool] = {}
         inventory = self.tool_inventory
-        for tn in self.config["tools"].keys():
+        for tn, tool_config in self.config["tools"].items():
+            if "run" in tool_config and not tool_config["run"]:
+                continue
+
             ti = inventory.get(tn, None)
             if not ti:
                 # TODO: Move to display layer
                 echo_error(f"No tool named '{tn}' could be found")
                 continue
+
             tools[tn] = ti(self)
 
         return tools

@@ -50,6 +50,7 @@ steps:
       - bento
       - --agree
       - disable
+      - check
       - r2c.bandit
       - B102
     expected_err: "✔ 'B102' disabled for 'r2c.bandit'"
@@ -73,6 +74,7 @@ steps:
       - bento
       - --agree
       - enable
+      - check
       - r2c.bandit
       - B102
     expected_err: "✔ 'B102' enabled for 'r2c.bandit'"

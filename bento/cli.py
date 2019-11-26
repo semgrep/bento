@@ -13,7 +13,7 @@ import bento.git
 import bento.metrics
 import bento.tool_runner
 import bento.util
-from bento.commands import archive, check, hook, init, update_ignores
+from bento.commands import archive, check, disable, enable, hook, init
 from bento.context import Context
 from bento.network import fetch_latest_version, post_metrics
 from bento.util import (
@@ -277,5 +277,5 @@ cli.add_command(archive.archive)
 cli.add_command(check.check)
 cli.add_command(init.init)
 cli.add_command(hook.install_hook)
-cli.add_command(update_ignores.enable)
-cli.add_command(update_ignores.disable)
+cli.add_command(enable.enable)
+cli.add_command(disable.disable)

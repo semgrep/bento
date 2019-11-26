@@ -1,13 +1,38 @@
+import logging
+import os
 import sys
 from typing import Any, Callable, List, Set, cast
 
-import click
+import yaml
 
+import bento.extra
 from bento.context import Context
-from bento.util import AutocompleteSuggestions, echo_error, echo_success
+from bento.util import AutocompleteSuggestions, echo_error
 
 
-def __update_ignores(
+def update_tool_run(context: Context, tool: str, run: bool) -> None:
+    """Sets run field of tool to RUN. Default to no ignore if tool not in config
+    """
+    config = context.config
+    tool_config = config["tools"]
+    if tool not in tool_config:
+        # Read default ignore from default config file
+        with (
+            open(os.path.join(os.path.dirname(__file__), "configs/default.yml"))
+        ) as template:
+            yml = yaml.safe_load(template)
+
+        default_ignore: List[str] = []
+        if tool in yml["tools"]:
+            default_ignore = yml["tools"][tool]["ignore"]
+
+        tool_config[tool] = {"ignore": default_ignore}
+
+    tool_config[tool]["run"] = run
+    context.config = config
+
+
+def update_ignores(
     context: Context, tool: str, update_func: Callable[[Set[str]], None]
 ) -> None:
     config = context.config
@@ -25,20 +50,20 @@ def __update_ignores(
     context.config = config
 
 
-def __get_valid_tools(
+def get_valid_tools(
     ctx: Any, args: List[str], incomplete: str
 ) -> AutocompleteSuggestions:
     # context is not yet initialized, so just do it now
     try:
-        context = Context()
-        tool_config = context.config["tools"]
-        results = list(filter(lambda s: s.startswith(incomplete), tool_config))
+        tool_list = [(t.tool_id(), t.tool_desc()) for t in bento.extra.TOOLS]
+        results = list(filter(lambda s: s[0].startswith(incomplete), tool_list))
         return cast(AutocompleteSuggestions, results)
-    except Exception:
+    except Exception as ex:
+        logging.warning(ex)
         return []
 
 
-def __get_disabled_checks(
+def get_disabled_checks(
     ctx: Any, args: List[str], incomplete: str
 ) -> AutocompleteSuggestions:
     # context is not yet initialized, so just do it now
@@ -53,36 +78,3 @@ def __get_disabled_checks(
         return cast(AutocompleteSuggestions, results)
     except Exception:
         return []
-
-
-@click.command()
-@click.argument("tool", type=str, nargs=1, autocompletion=__get_valid_tools)
-@click.argument("check", type=str, nargs=1)
-@click.pass_obj
-def disable(context: Context, tool: str, check: str) -> None:
-    """
-    Disables a check.
-    """
-
-    def add(ignores: Set[str]) -> None:
-        ignores.add(check)
-
-    __update_ignores(context, tool, add)
-    echo_success(f"'{check}' disabled for '{tool}'")
-
-
-@click.command()
-@click.argument("tool", type=str, nargs=1, autocompletion=__get_valid_tools)
-@click.argument("check", type=str, nargs=1, autocompletion=__get_disabled_checks)
-@click.pass_obj
-def enable(context: Context, tool: str, check: str) -> None:
-    """
-    Enables a check.
-    """
-
-    def remove(ignores: Set[str]) -> None:
-        if check in ignores:
-            ignores.remove(check)
-
-    __update_ignores(context, tool, remove)
-    echo_success(f"'{check}' enabled for '{tool}'")

@@ -127,6 +127,10 @@ class EslintTool(JsTool, JsonTool):
     def tool_id(self) -> str:
         return EslintTool.ESLINT_TOOL_ID
 
+    @classmethod
+    def tool_desc(cls) -> str:
+        return "Finds a wide variety of bugs in JavaScript and TypeScript code"
+
     @property
     def project_name(self) -> str:
         deps = self._dependencies()

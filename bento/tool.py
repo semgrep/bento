@@ -67,6 +67,12 @@ class Tool(ABC, Generic[R]):
 
     @classmethod
     @abstractmethod
+    def tool_desc(cls) -> str:
+        """Returns a description of what this tool tests"""
+        pass
+
+    @classmethod
+    @abstractmethod
     def serialize(cls, results: R) -> str:
         """Converts a tool's output to its cache representation"""
         pass

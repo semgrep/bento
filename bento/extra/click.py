@@ -39,5 +39,9 @@ class ClickTool(Flake8Tool):
     def tool_id(cls) -> str:
         return cls.TOOL_ID
 
+    @classmethod
+    def tool_desc(cls) -> str:
+        return "Best practices and security checks for Python's click framework"
+
     def select_clause(self) -> str:
         return "--select=CLC"

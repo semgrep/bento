@@ -50,6 +50,7 @@ steps:
       - bento
       - --agree
       - disable
+      - check
       - r2c.flake8
       - F401
     expected_err: "✔ 'F401' disabled for 'r2c.flake8'"
@@ -72,6 +73,7 @@ steps:
       - bento
       - --agree
       - enable
+      - check
       - r2c.flake8
       - F401
     expected_err: "✔ 'F401' enabled for 'r2c.flake8'"

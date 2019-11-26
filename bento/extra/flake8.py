@@ -88,6 +88,10 @@ class Flake8Tool(PythonTool[str], StrTool):
     def tool_id(cls) -> str:
         return cls.TOOL_ID
 
+    @classmethod
+    def tool_desc(cls) -> str:
+        return "Finds common bugs in Python code"
+
     @property
     def project_name(self) -> str:
         return self.PROJECT_NAME

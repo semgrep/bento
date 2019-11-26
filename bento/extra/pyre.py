@@ -62,6 +62,10 @@ class PyreTool(StrTool):
     def tool_id(self) -> str:
         return PyreTool.TOOL_ID
 
+    @classmethod
+    def tool_desc(cls) -> str:
+        return "Finds type errors in Python code"
+
     @property
     def project_name(self) -> str:
         return PyreTool.PROJECT_NAME

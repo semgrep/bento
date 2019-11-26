@@ -67,6 +67,10 @@ class ShellcheckTool(StrTool):
     def tool_id(cls) -> str:
         return cls.TOOL_ID
 
+    @classmethod
+    def tool_desc(cls) -> str:
+        return "Finds bugs in shell scripts"
+
     @property
     def file_name_filter(self) -> Pattern:
         return re.compile(r".*\.sh\b")

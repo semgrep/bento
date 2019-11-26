@@ -54,6 +54,10 @@ class SGrepTool(StrTool):
     def tool_id(cls) -> str:
         return "r2c.sgrep"
 
+    @classmethod
+    def tool_desc(cls) -> str:
+        return "Syntactically aware code search"
+
     def setup(self) -> None:
         prepull_analyzers(self.ANALYZER_NAME, self.ANALYZER_VERSION)
 

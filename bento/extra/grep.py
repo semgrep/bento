@@ -47,6 +47,10 @@ class GrepTool(JsonTool):
     def tool_id(self) -> str:
         return GrepTool.TOOL_ID
 
+    @classmethod
+    def tool_desc(cls) -> str:
+        return "Matches patterns in arbitrary code"
+
     @property
     def project_name(self) -> str:
         return GrepTool.PROJECT_NAME
