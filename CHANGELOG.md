@@ -2,7 +2,50 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [0.5.0] - 2019-11-18
+## [0.6.1](https://pypi.org/project/bento-cli/0.6.1/) - 2019-11-26
+
+### Fixed
+
+- Bento no longer completes initialization if it can't identify a project; this prevents
+  confusing errors when subsequently running `bento check`.
+- Pinned versions of all 3rd-party Python tools, so that remote package upgrades do not break
+  Bento.
+- Bento no longer crashes if a project path contains a space.
+
+### Changed
+
+- Results of `bento check` are now printed
+  using the Clippy and histogram formatters (see "Added" section below) by default.
+- The APIs to enable and disable a check are now `bento enable check [check]` and
+  `bento disable check [check]`.
+- The `r2c.flask` tool is now enabled by default. It finds best-practice and security bugs in
+  code using the Python [Flask](https://www.palletsprojects.com/p/flask/) framework.
+- Multiple formatters can now be used to display results from `bento check`. For example,
+  `bento check -f stylish -f histo` will display results using the Stylish formatter,
+  followed by display using a histogram formatter.
+- Progress bars are not emitted to stderr if not a tty; this prevents progress-bar output from
+  littering CI logs.
+- Updated progress bar glyphs for readability on a wider range of terminal themes.
+- Disabled `r2c.flake8` check `B001` by default, in favor of the (also included) `E722` check.
+
+### Added
+
+- Added `r2c.requests`, which finds best-practice and security bugs in code using the Python
+  [Requests](https://2.python-requests.org/en/master/) framework. It is enabled by default.
+- Added `r2c.sgrep`, a syntactically aware code search tool. It is _not_ enabled by default.
+  To use it on a project, run `bento enable tool r2c.sgrep`. Note that Docker is required in
+  order to use `r2c.sgrep`.
+- All findings, including those previously archived, can now be viewed using
+  `bento check --show-all`.
+- Tools can now be enabled using `bento enable tool [tool_id]`. Available
+  tools can be listed by running `bento enable tool --help` or using shell autocompletion.
+  Tools can be disabled using `bento disable tool [tool_id]`.
+
+## 0.6.0
+
+Version 0.6.0 was not released.
+
+## [0.5.0](https://pypi.org/project/bento-cli/0.5.0/) - 2019-11-18
 
 ### Fixed
 
@@ -31,13 +74,13 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Added `r2c.hadolint` tool for Docker files. To enable, add `r2c.hadolint` to the
   tools section of your `.bento.yml`. Note that this tool requires `docker` to be installed in order to run.
 
-## [0.4.1] - 2019-11-14
+## [0.4.1](https://pypi.org/project/bento-cli/0.4.1/) - 2019-11-14
 
 ### Fixed
 
 - Fixes a performance regression due to changes in metrics collection.
 
-## [0.4.0] - 2019-11-11
+## [0.4.0](https://pypi.org/project/bento-cli/0.4.0/) - 2019-11-11
 
 ### Changed
 
@@ -54,7 +97,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 
   - [flake8-flask](https://pypi.org/project/flake8-flask/) will be disabled by default.
 
-## [0.3.1] - 2019-11-08
+## [0.3.1](https://pypi.org/project/bento-cli/0.3.1/) - 2019-11-08
 
 ### Fixed
 
@@ -63,7 +106,7 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - Fixed a compatibility issue for users with a pre-existing version
   of GitPython with version between 2.1.1 and 2.1.13.
 
-## [0.3.0] - 2019-11-01
+## [0.3.0](https://pypi.org/project/bento-cli/0.3.0/) - 2019-11-01
 
 ### Changed
 
@@ -100,7 +143,7 @@ error: r2c.flake8.E113
   - In `bash`, run `echo -e '\neval "$(_BENTO_COMPLETE=source bento)"' >> ~/.bashrc`.
   - In `zsh`, run `echo -e '\neval "$(_BENTO_COMPLETE=source_zsh bento)"' >> ~/.zshrc`.
 
-## [0.2.1] - 2019-10-29
+## [0.2.1](https://pypi.org/project/bento-cli/0.2.1/) - 2019-10-29
 
 ### Fixed
 
@@ -108,7 +151,7 @@ error: r2c.flake8.E113
 - Removed files properly invalidate results cache.
 - Python tools do not crawl `node_modules`.
 
-## [0.2.0] - 2019-10-23
+## [0.2.0](https://pypi.org/project/bento-cli/0.2.0/) - 2019-10-23
 
 ### Changed
 
@@ -133,4 +176,4 @@ error: r2c.flake8.E113
 - Tool does not crash if a git user does not have an email configured.
 - Fixed a regression that caused progress bars to hang after first tool completed.
 - Made fully compatible with Python 3.6.
-- Tool does not mangle .gitignore when that file lacks a trailing newline.
+- Tool does not mangle `.gitignore` when that file lacks a trailing newline.
