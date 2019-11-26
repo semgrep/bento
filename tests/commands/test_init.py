@@ -30,7 +30,11 @@ def test_install_config() -> None:
 def test_no_install_empty_project() -> None:
     """Validates that bento does not install a config on an empty project"""
     context = Context(base_path=INTEGRATION / "none")
-    __install_config_if_not_exists(context)
+    # pytest.raises() does not catch SystemExit, so use try/except here
+    try:
+        __install_config_if_not_exists(context)
+    except SystemExit as ex:
+        assert isinstance(ex, SystemExit)
     assert not context.config_path.exists()
 
 

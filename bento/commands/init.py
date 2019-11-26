@@ -38,6 +38,8 @@ def __install_config_if_not_exists(context: Context) -> None:
             )
         else:
             logging.warning("No tools match this project")
+            echo_error("Bento can't identify this project.")
+            sys.exit(3)
 
 
 def __install_ignore_if_not_exists(context: Context) -> None:
