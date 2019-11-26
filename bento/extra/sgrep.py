@@ -5,7 +5,6 @@ from typing import Iterable, List, Pattern, Type
 from semantic_version import Version
 
 from bento.base_context import BaseContext
-from bento.extra.r2c_analyzer import prepull_analyzers, run_analyzer_on_local_code
 from bento.parser import Parser
 from bento.tool import StrTool
 from bento.violation import Violation
@@ -59,9 +58,15 @@ class SGrepTool(StrTool):
         return "Syntactically aware code search"
 
     def setup(self) -> None:
+        # import inside def for performance
+        from bento.extra.r2c_analyzer import prepull_analyzers
+
         prepull_analyzers(self.ANALYZER_NAME, self.ANALYZER_VERSION)
 
     def run(self, files: Iterable[str]) -> str:
+        # import inside def for performance
+        from bento.extra.r2c_analyzer import run_analyzer_on_local_code
+
         ignore_files = {
             e.path for e in self.context.file_ignores.entries() if not e.survives
         }
