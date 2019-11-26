@@ -65,7 +65,7 @@ def __list_paths(ctx: Any, args: List[str], incomplete: str) -> AutocompleteSugg
     "-f",
     "--formatter",
     type=click.Choice(bento.formatter.FORMATTERS.keys()),
-    help="Which output format to use. Falls back to the config.",
+    help="Which output format to use. Falls back to the formatter(s) configured in `.bento.yml`.",
     multiple=True,
 )
 @click.option(

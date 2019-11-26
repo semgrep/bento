@@ -224,6 +224,7 @@ def verify_registration(agree: bool, email: Optional[str], context: Context) -> 
 
 
 @click.group(epilog="To get help for a specific command, run `bento COMMAND --help`")
+@click.help_option("-h", "--help")
 @click.option(
     "--version",
     is_flag=True,
@@ -256,6 +257,7 @@ def cli(
 ) -> None:
     __setup_logging()
     is_init = ctx.invoked_subcommand == "init"
+    ctx.help_option_names = ["-h", "--help"]
     if base_path is None:
         ctx.obj = Context(is_init=is_init)
     else:
