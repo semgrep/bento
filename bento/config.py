@@ -8,6 +8,10 @@ import yaml
 
 import bento.extra
 from bento.context import Context
+from bento.extra.click import ClickTool
+from bento.extra.grep import GrepTool
+from bento.extra.pyre import PyreTool
+from bento.extra.sgrep import SGrepTool
 from bento.util import AutocompleteSuggestions, echo_error
 
 
@@ -56,8 +60,13 @@ def get_valid_tools(
 ) -> AutocompleteSuggestions:
     # context is not yet initialized, so just do it now
     try:
+        exclude = {PyreTool, ClickTool, SGrepTool, GrepTool}
         tool_list = sorted(
-            [(t.tool_id(), t.tool_desc()) for t in bento.extra.TOOLS],
+            [
+                (t.tool_id(), t.tool_desc())
+                for t in bento.extra.TOOLS
+                if t not in exclude
+            ],
             key=(lambda td: td[0]),
         )
         results = list(filter(lambda s: s[0].startswith(incomplete), tool_list))
