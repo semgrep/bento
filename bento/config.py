@@ -18,6 +18,11 @@ from bento.util import AutocompleteSuggestions, echo_error
 def update_tool_run(context: Context, tool: str, run: bool) -> None:
     """Sets run field of tool to RUN. Default to no ignore if tool not in config
     """
+    # Check that TOOL is valid
+    if tool not in {t.tool_id() for t in bento.extra.TOOLS}:
+        echo_error(f"No tool named '{tool}'. See help text for list of available tool.")
+        sys.exit(3)
+
     config = context.config
     tool_config = config["tools"]
     if tool not in tool_config:

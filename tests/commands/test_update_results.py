@@ -90,6 +90,19 @@ def test_enable_tool() -> None:
         assert persisted_config["tools"]["r2c.eslint"]["run"]
 
 
+def test_enable_invalid_tool() -> None:
+    """Validates that enable tool exits when invalid tool is passed"""
+    runner = CliRunner()
+    context = Context(base_path=SIMPLE)
+
+    with util.mod_file(context.config_path):
+        config = context.config
+        assert "run" not in config["tools"]["r2c.eslint"]
+
+        result = runner.invoke(enable, ["tool", "nonexistent"], obj=context)
+        assert result.exit_code == 3
+
+
 def test_disable_then_enable_tool() -> None:
     """Validates that enable tool works after previously disabling"""
     runner = CliRunner()
