@@ -20,7 +20,9 @@ def update_tool_run(context: Context, tool: str, run: bool) -> None:
     """
     # Check that TOOL is valid
     if tool not in {t.tool_id() for t in bento.extra.TOOLS}:
-        echo_error(f"No tool named '{tool}'. See help text for list of available tool.")
+        echo_error(
+            f"No tool named '{tool}'. See help text for list of available tools."
+        )
         sys.exit(3)
 
     config = context.config
