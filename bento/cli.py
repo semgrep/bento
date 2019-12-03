@@ -4,7 +4,7 @@ import sys
 from typing import Any, Dict, Optional, Union
 
 import click
-from semantic_version import Version
+from packaging.version import Version
 
 import bento.constants as constants
 import bento.decorators
@@ -101,10 +101,8 @@ def confirm_tos_update(context: Context, global_config: Dict[str, Any]) -> bool:
         tos_version = global_config[constants.TERMS_OF_SERVICE_KEY]
 
         try:
-            agreed_to_version = Version(version_string=tos_version)
-            if agreed_to_version == Version(
-                version_string=constants.TERMS_OF_SERVICE_VERSION
-            ):
+            agreed_to_version = Version(tos_version)
+            if agreed_to_version == Version(constants.TERMS_OF_SERVICE_VERSION):
                 return True
         except Exception:
             bento.util.echo_error(
