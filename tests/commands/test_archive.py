@@ -40,7 +40,7 @@ def test_archive_updates_whitelist() -> None:
         "r2c.eslint": {"6daebd293be00a3d97e19de4a1a39fa5"},
         "r2c.flake8": {
             "27a91174ddbf5e932a1b2cdbd57da9e0",
-            "47e9ffd6dfd406278ca564f05117f22b",
+            "77e04010d3b0256fd3a434cd00f2c944",
         },
     }
 

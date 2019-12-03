@@ -107,7 +107,7 @@ class BanditParser(Parser[str]):
         # Remove bandit line numbers, empty lines, and leading / trailing whitespace
         bandit_source = result["code"].rstrip()  # Remove trailing whitespace
         lines = [
-            s.lstrip(BanditParser.LINE_NO_CHARS).strip()
+            s.lstrip(BanditParser.LINE_NO_CHARS).rstrip()
             for s in bandit_source.split("\n")
         ]
         nonempty = [l for l in lines if l]

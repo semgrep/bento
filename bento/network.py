@@ -52,7 +52,9 @@ def no_auth_get(
 
     """Perform a requests.get and default headers set"""
     headers = {**_get_default_headers(), **headers}
-    r = requests.get(url, headers=headers, params=params, **kwargs, timeout=TIMEOUT)
+    r = requests.get(
+        url, headers=headers, params=params, **{"timeout": TIMEOUT, **kwargs}
+    )
     return r
 
 
@@ -81,7 +83,8 @@ def fetch_latest_version() -> Tuple[Optional[str], Optional[str]]:
         r = no_auth_get(url, timeout=0.25)
         response_json = r.json()
         return response_json.get("latest", None), response_json.get("uploadTime", None)
-    except Exception:
+    except Exception as e:
+        logging.exception(e)
         return None, None
 
 

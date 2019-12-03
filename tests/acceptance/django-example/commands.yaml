@@ -189,21 +189,21 @@ steps:
       - "⚠ 3 finding(s) in"
       - |
         error: r2c.bandit.error
-           --> failure.py:0:0
-            = note: syntax error while parsing AST from file
+             --> failure.py:0:0
+              = note: syntax error while parsing AST from file
 
         error: r2c.flake8.E999
-           --> failure.py:5:13
+             --> failure.py:5:13
               |
             5 |   def broken(x)
               |
-            = note: SyntaxError: invalid syntax
+              = note: SyntaxError: invalid syntax
 
         error: r2c.flake8.E113 https://lintlyci.github.io/Flake8Rules/rules/E113.html
-           --> failure.py:6:5
+             --> failure.py:6:5
               |
-            6 |   return x
+            6 |       return x
               |
-            = note: unexpected indentation
+              = note: unexpected indentation
     expected_out: ""
     returncode: 1
