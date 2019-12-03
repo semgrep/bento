@@ -2152,10 +2152,10 @@ error: r2c.eslint.no-useless-catch https://eslint.org/docs/rules/no-useless-catc
 
 
 r2c.eslint:
-  no-var                               95▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  global-require                       49▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬               
-  error                                38▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬                     
-  no-use-before-define                 23▕▬▬▬▬▬▬▬▬▬▬▬▬                             
-  import/no-extraneous-dependencies    18▕▬▬▬▬▬▬▬▬▬                                
-  Other                                71▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬    
+  no-var                               95▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  global-require                       49▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  error                                38▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  no-use-before-define                 23▕▬▬▬▬▬▬▬▬▬
+  import/no-extraneous-dependencies    18▕▬▬▬▬▬▬▬
+  Other                                71▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 

@@ -27,29 +27,29 @@ MIN_BAR_VALUE = int(MAX_BAR_VALUE / 5)
 
 
 class Runner:
-    def __init__(self) -> None:
+    def __init__(self, show_bars: bool = True) -> None:
         self._lock = Lock()
         self._setup_latch: bento.util.CountDownLatch
         self._bars: List[tqdm]
         self._run: List[bool]
-        self._show_bars = sys.stderr.isatty()
+        self._show_bars = sys.stderr.isatty() and show_bars
 
-    def _update_bars(self, ix: int) -> None:
-        bar_value = MIN_BAR_VALUE
+    def _update_bars(self, ix: int, lower: int, upper: int) -> None:
+        bar_value = lower
         keep_going = True
         bar = self._bars[ix]
         while keep_going:
             with self._lock:
                 keep_going = self._run[ix]
-                if bar_value < MAX_BAR_VALUE - 1:
+                if bar_value < upper - 1:
                     bar_value += 1
                     bar.update(1)
                 else:
-                    bar_value = MIN_BAR_VALUE
-                    bar.update(MIN_BAR_VALUE - MAX_BAR_VALUE + 1)
+                    bar_value = lower
+                    bar.update(lower - upper + 1)
             time.sleep(BAR_UPDATE_INTERVAL)
         with self._lock:
-            bar.update(MAX_BAR_VALUE - bar_value)
+            bar.update(upper - bar_value)
 
     def _run_single_tool(
         self,
@@ -61,6 +61,7 @@ class Runner:
 
         ix, tool = index_and_tool
         try:
+            th = None
             before = time.time()
             bar = self._bars[ix] if self._show_bars else None
             self._run[ix] = True
@@ -68,23 +69,32 @@ class Runner:
             logging.debug(f"{tool.tool_id()} start")
             if bar:
                 with self._lock:
-                    bar.set_postfix_str("🍜")
+                    bar.set_postfix_str(bento.util.SETUP_TEXT)
+                th = threading.Thread(
+                    name=f"update_{ix}",
+                    target=partial(self._update_bars, ix, 0, MIN_BAR_VALUE),
+                )
+                th.start()
 
             try:
                 tool.setup()
+                self._run[ix] = False
+                if th:
+                    th.join()
             finally:
                 if self._setup_latch:
                     self._setup_latch.count_down()
             if bar:
                 with self._lock:
-                    bar.update(MIN_BAR_VALUE)
-                    bar.set_postfix_str("🍤")
+                    bar.n = MIN_BAR_VALUE
+                    bar.set_postfix_str(bento.util.PROGRESS_TEXT)
             after_setup = time.time()
 
-            th = None
+            self._run[ix] = True
             if bar:
                 th = threading.Thread(
-                    name=f"update_{ix}", target=partial(self._update_bars, ix)
+                    name=f"update_{ix}",
+                    target=partial(self._update_bars, ix, MIN_BAR_VALUE, MAX_BAR_VALUE),
                 )
                 th.start()
             if self._setup_latch:
@@ -97,17 +107,19 @@ class Runner:
             if th:
                 th.join()
             if bar:
+                bar.n = MAX_BAR_VALUE
+                bar.update(0)
                 with self._lock:
-                    bar.set_postfix_str("🍱")
+                    bar.set_postfix_str(bento.util.DONE_TEXT)
             after = time.time()
 
             logging.debug(
                 f"{tool.tool_id()} completed in {(after - before):2f} s (setup in {(after_setup - before):2f} s)"
             )  # TODO: Move to debug
-            return (tool.tool_id(), results)
+            return tool.tool_id(), results
         except Exception as e:
             logging.error(traceback.format_exc())
-            return (tool.tool_id(), e)
+            return tool.tool_id(), e
 
     def parallel_results(
         self, tools: Iterable[Tool], baseline: Baseline, files: Optional[List[str]]
@@ -141,9 +153,11 @@ class Runner:
                     position=ix,
                     ascii="□■",
                     mininterval=BAR_UPDATE_INTERVAL,
-                    desc=tool.tool_id(),
-                    ncols=40,
-                    bar_format="  {desc:<14s} "
+                    desc=tool.tool_id().ljust(
+                        bento.util.PRINT_WIDTH - 36, bento.util.LEADER_CHAR
+                    ),
+                    ncols=bento.util.PRINT_WIDTH - 2,
+                    bar_format="  {desc:s}"
                     + click.style("|{bar}| {elapsed}{postfix}", dim=True),
                     leave=False,
                 )

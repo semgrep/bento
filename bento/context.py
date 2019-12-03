@@ -13,7 +13,7 @@ from bento.tool import Tool
 from bento.util import echo_error
 
 
-@attr.s
+@attr.s(repr=False)
 class Context(BaseContext):
     _formatters = attr.ib(type=List[Formatter], default=None, init=False)
     _start = attr.ib(type=float, default=time.time(), init=False)
@@ -24,6 +24,9 @@ class Context(BaseContext):
     )
     _tool_inventory = attr.ib(type=Dict[str, Type[Tool]], init=False, default=None)
     _tools = attr.ib(type=Dict[str, Tool], init=False, default=None)
+
+    def __repr__(self) -> str:
+        return f"Context({self.base_path})"
 
     @property
     def formatters(self) -> List[Formatter]:

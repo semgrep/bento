@@ -8,12 +8,11 @@ from pathlib import Path
 from time import time
 from typing import Dict, Generic, Iterable, List, Tuple
 
-import click
 from semantic_version import SimpleSpec, Version
 
 from bento.base_context import BaseContext
 from bento.tool import R, Tool
-from bento.util import EMPTY_DICT, echo_success
+from bento.util import EMPTY_DICT
 
 
 class PythonTool(Generic[R], Tool[R]):
@@ -44,7 +43,7 @@ class PythonTool(Generic[R], Tool[R]):
         Creates a virtual environment for this tool
         """
         if not self.__venv_dir.exists():
-            echo_success(f"Creating virtual environment for {self.tool_id()}")
+            logging.info(f"Creating virtual environment for {self.tool_id()}")
             # If we are already in a virtual environment, venv.create() will fail to install pip,
             # but we probably have virtualenv in the path, so try that first.
             try:
@@ -163,6 +162,6 @@ class PythonTool(Generic[R], Tool[R]):
             return
 
         install_list = [f"{p}{s.expression}" for p, s in to_install.items()]
-        click.echo(f"Installing Python packages: {', '.join(install_list)}", err=True)
+        logging.info(f"Installing Python packages: {', '.join(install_list)}")
         cmd = f"{PythonTool.PIP_CMD} install -q {' '.join(install_list)}"
         self.venv_exec(cmd, check_output=True)

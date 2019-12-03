@@ -28,11 +28,22 @@ def match_expected(output: str, expected: Expectation, test_identifier: str) -> 
     output = remove_trailing_space(output)
 
     if isinstance(expected, str):
-        expected = remove_trailing_space(expected)
+        expected = remove_trailing_space(expected).replace("\\b", "\b")
+        if output.strip() != expected.strip():
+            print("==== EXPECTED ====")
+            print(expected)
+            print("==== ACTUAL ====")
+            print(output)
         assert output.strip() == expected.strip(), test_identifier
     else:
         for elem in expected:
-            assert remove_trailing_space(elem).strip() in output, test_identifier
+            expected = remove_trailing_space(elem).strip()
+            if expected not in output:
+                print("==== EXPECTED ====")
+                print(expected)
+                print("==== ACTUAL ====")
+                print(output)
+            assert expected in output, test_identifier
 
 
 def check_command(step: Any, pwd: str, target: str) -> None:
@@ -73,8 +84,6 @@ def check_command(step: Any, pwd: str, target: str) -> None:
 
     print(f"======= {test_identifier} ========")
     print("Command return code:", runned.returncode)
-    print("Command standard out:\n", runned.stdout)
-    print("Command standard error:\n", runned.stderr)
 
     if expected_returncode is not None:
         assert runned.returncode == expected_returncode, test_identifier

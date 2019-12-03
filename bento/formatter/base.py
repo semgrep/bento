@@ -3,6 +3,8 @@ import sys
 from abc import ABC, abstractmethod
 from typing import Any, Collection, Dict, List, Mapping, Optional
 
+import click
+
 import bento.util
 from bento.violation import Violation
 
@@ -18,6 +20,7 @@ class Formatter(ABC):
 
     OSC_8 = "\x1b]8;;"
     BEL = "\x07"
+
     LINK_WIDTH = 2 * len(OSC_8) + 2 * len(BEL)
 
     BOLD = "\033[1m"
@@ -76,14 +79,21 @@ class Formatter(ABC):
         :param width: Minimum link width
         :return: The rendered link
         """
-        if href is not None and sys.stdout.isatty() and self._print_links:
-            text = f"{Formatter.OSC_8}{href}{Formatter.BEL}{text}{Formatter.OSC_8}{Formatter.BEL}"
-            if width:
-                width += Formatter.LINK_WIDTH + len(href)
-        elif href and print_alternative:
-            text = f"{text} {href}"
+        is_rendered = False
+        if href:  # Don't render if href is None or empty
+            if sys.stdout.isatty() and self._print_links:
+                text = f"{Formatter.OSC_8}{href}{Formatter.BEL}{text}{Formatter.OSC_8}{Formatter.BEL}"
+                is_rendered = True
+                if width:
+                    width += Formatter.LINK_WIDTH + len(href)
+            elif print_alternative:
+                text = f"{text} {href}"
 
         if width:
-            return text.ljust(width)
-        else:
-            return text
+            text = text.ljust(width)
+
+        # Coloring has to occur after justification
+        if is_rendered:
+            text = click.style(text, fg=bento.util.Colors.LINK)
+
+        return text

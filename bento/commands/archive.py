@@ -7,20 +7,19 @@ import bento.result
 import bento.tool_runner
 from bento.context import Context
 from bento.decorators import with_metrics
-from bento.util import echo_error, echo_success
+from bento.util import echo_error
 
 
 @click.command()
 @click.pass_obj
 @with_metrics
-def archive(context: Context) -> None:
+def archive(context: Context, show_bars: bool = True) -> None:
     """
     Adds all current findings to the whitelist.
     """
     if not context.config_path.exists():
         echo_error("No Bento configuration found. Please run `bento init`.")
         sys.exit(3)
-        return
 
     if context.baseline_file_path.exists():
         with context.baseline_file_path.open() as json_file:
@@ -32,7 +31,9 @@ def archive(context: Context) -> None:
     new_baseline: List[str] = []
     tools = context.tools.values()
 
-    all_findings = bento.tool_runner.Runner().parallel_results(tools, {}, None)
+    all_findings = bento.tool_runner.Runner(show_bars=show_bars).parallel_results(
+        tools, {}, None
+    )
     n_found = 0
     n_existing = 0
     found_hashes: Set[str] = set()
@@ -55,11 +56,17 @@ def archive(context: Context) -> None:
     with context.baseline_file_path.open("w") as json_file:
         json_file.writelines(new_baseline)
 
-    success_str = f"Rewrote the whitelist with {n_found} findings from {len(tools)} tools ({n_new} new, {n_existing} previously whitelisted)."
-    if n_removed > 0:
-        success_str += (
-            f"\n  Also removed {n_removed} fixed findings from the whitelist."
-        )
-    success_str += f"\n  Please check '{context.pretty_path(context.baseline_file_path)}' in to source control."
+    success_str = click.style(f"Project analyzed with {len(tools)} tools.", bold=True)
+    success_str += f"\n{n_new} findings were added to your archive as a baseline."
+    if n_existing > 0:
+        success_str += f"\nBento also kept {n_existing} existing findings"
+        if n_removed > 0:
+            success_str += f" and removed {n_removed} fixed findings."
+        else:
+            success_str += "."
+    elif n_removed > 0:
+        success_str += f"\nBento also removed {n_removed} fixed findings."
+    if not context.is_init:
+        success_str += f"\nPlease check '{context.pretty_path(context.baseline_file_path)}' in to source control."
 
-    echo_success(success_str)
+    click.echo(success_str, err=True)

@@ -1990,10 +1990,10 @@ error: r2c.eslint.no-useless-catch https://eslint.org/docs/rules/no-useless-catc
 
 
 r2c.eslint:
-  no-var                               95▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  global-require                       49▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬               
-  error                                38▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬                     
-  import/no-extraneous-dependencies    18▕▬▬▬▬▬▬▬▬▬                                
-  import/no-dynamic-require            17▕▬▬▬▬▬▬▬▬▬                                
-  Other                                54▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬             
+  no-var                               95▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  global-require                       49▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  error                                38▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  import/no-extraneous-dependencies    18▕▬▬▬▬▬▬▬
+  import/no-dynamic-require            17▕▬▬▬▬▬▬▬
+  Other                                54▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 

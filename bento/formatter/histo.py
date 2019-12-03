@@ -5,6 +5,7 @@ import attr
 import click
 
 from bento.formatter.base import FindingsMap, Formatter
+from bento.util import PRINT_WIDTH
 from bento.violation import Violation
 
 
@@ -32,19 +33,21 @@ class Histo(Formatter):
     """Formats output as a histogram."""
 
     MAX_HISTO_PER_TOOL = 5
-    BAR_WIDTH = 50
     MIN_CHECK_WIDTH = 10
     MAX_CHECK_WIDTH = 35
     OTHER = "Other"
 
     @staticmethod
-    def _render_bar(count: int, max_count: int) -> str:
-        return "▕" + "".ljust(int(round(Histo.BAR_WIDTH * count / max_count)), "▬")
+    def _render_bar(count: int, max_count: int, bar_width: int) -> str:
+        return "▕" + "".ljust(int(round(bar_width * count / max_count)), "▬")
 
     def _max_bars_per_tool(self) -> int:
         return int(self.config.get("bars-per-tool", Histo.MAX_HISTO_PER_TOOL))
 
     def _render_hit(self, hit: Hit, max_count: int, check_width: int) -> str:
+        bar_width = (
+            PRINT_WIDTH - check_width - 10
+        )  # 5 for check, 5 for fixed characters
         check_str = click.style(
             self.render_link(
                 hit.check_id[:check_width],
@@ -54,8 +57,8 @@ class Histo(Formatter):
             )
         )
         count_str = click.style(f"{hit.count:>5d}", dim=True)
-        bar = click.style(Histo._render_bar(hit.count, max_count), dim=True)
-        return f"  {check_str} {count_str}{bar:<{Histo.BAR_WIDTH}s}"
+        bar = click.style(Histo._render_bar(hit.count, max_count, bar_width), dim=True)
+        return f"  {check_str} {count_str}{bar}"
 
     def _tool_hits(self, tool_id: str, violations: Collection[Violation]) -> ToolHits:
         """

@@ -13,18 +13,45 @@ import threading
 import types
 from importlib import import_module
 from pathlib import Path
-from typing import Any, Collection, Dict, List, Optional, Pattern, Tuple, Type, Union
+from textwrap import wrap as py_wrap
+from typing import (
+    Any,
+    Callable,
+    Collection,
+    Dict,
+    List,
+    Optional,
+    Pattern,
+    Tuple,
+    Type,
+    Union,
+)
 
 import psutil
 import yaml
-from click.termui import secho
+from click.termui import secho, style
 from frozendict import frozendict
 
 import bento.constants as constants
 
 EMPTY_DICT = frozendict({})
+MAX_PRINT_WIDTH = 80
+LEADER_CHAR = "․"
+SETUP_TEXT = "🍜 Setting up"
+SETUP_WIDTH = len(SETUP_TEXT)
+PROGRESS_TEXT = "🍤 Running".ljust(SETUP_WIDTH, " ")
+DONE_TEXT = "🍱 Done".ljust(SETUP_WIDTH, " ")
+RESET_TEXT = "".ljust(SETUP_WIDTH, "\b")
 
 AutocompleteSuggestions = List[Union[str, Tuple[str, str]]]
+
+
+def _calculate_print_width() -> int:
+    term_width, _ = shutil.get_terminal_size((MAX_PRINT_WIDTH, 0))
+    return min(MAX_PRINT_WIDTH, term_width)
+
+
+PRINT_WIDTH = _calculate_print_width()
 
 
 def read_global_config() -> Optional[Dict[str, Any]]:
@@ -35,7 +62,7 @@ def read_global_config() -> Optional[Dict[str, Any]]:
         try:
             return yaml.safe_load(yaml_file)
         except Exception:
-            logging.warn("Invalid global config file found")
+            logging.warning("Invalid global config file found")
             return None
 
 
@@ -166,6 +193,49 @@ def echo_success(text: str, indent: str = "") -> None:
     secho(f"{indent}✔ {text}", fg=Colors.SUCCESS, err=True)
 
 
+def echo_box(text: str) -> None:
+    """Prints text in a header box"""
+    lines = text.split("\n")
+    max_len = max(len(l) for l in lines)
+    max_len = max(PRINT_WIDTH - 4, max_len)
+    hrule = "".ljust(max_len + 2, "─")
+    secho(f"╭{hrule}╮", err=True)
+    for l in lines:
+        secho(f"│ {l:^{max_len}s} │", err=True)
+    secho(f"╰{hrule}╯", err=True)
+
+
+def wrap(text: str) -> str:
+    """Wraps text to (one character less than) the screen print width"""
+    return "\n".join(py_wrap(text, PRINT_WIDTH - 1))
+
+
+def echo_wrap(text: str) -> None:
+    """Prints a wrapped paragraph"""
+    secho(wrap(text), err=True)
+
+
+def echo_progress(text: str, extra: int = 0) -> Callable[[], None]:
+    """
+    Prints a binary in-progress / done bar
+
+    Usage example:
+      mark_done = echo_progress("Installing foo")
+      install_foo()
+      mark_done()
+
+    :param extra: Number of unprinted characters in text (each ANSI code point is 4 characters)
+    """
+    width = PRINT_WIDTH - 4 - SETUP_WIDTH + extra
+    logging.info(text)
+    secho(
+        f"{text.ljust(width, LEADER_CHAR)}{style(SETUP_TEXT, dim=True)}",
+        nl=False,
+        err=True,
+    )
+    return lambda: secho(f"{RESET_TEXT}{style(DONE_TEXT, dim=True)}", err=True)
+
+
 # Taken from http://www.madhur.co.in/blog/2015/11/02/countdownlatch-python.html
 class CountDownLatch(object):
     def __init__(self, count: int = 1):
@@ -185,7 +255,8 @@ class CountDownLatch(object):
 
 
 class Colors:
-    STATUS = "bright_blue"
+    LINK = "bright_blue"
+    STATUS = "bright_blue"  # Deprecated in favor of bold / dim
     ERROR = "red"
     WARNING = "yellow"
     SUCCESS = "green"

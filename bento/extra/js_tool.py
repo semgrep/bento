@@ -1,4 +1,5 @@
 import json
+import logging
 import subprocess
 from typing import Dict, Optional, Set
 
@@ -56,7 +57,7 @@ class JsTool(Tool):
 
     def _npm_install(self, packages: VersionDict) -> None:
         """Runs npm install $package@^$version for each package."""
-        print(f"Installing {packages}...")
+        logging.info(f"Installing {packages}...")
         uses_yarn = (self.base_path / "yarn.lock").exists()
         args = [f"{name}@^{version}" for name, version in packages.items()]
         if uses_yarn:
@@ -64,7 +65,11 @@ class JsTool(Tool):
             cmd = ["yarn", "add", "--dev", "--ignore-workspace-root-check"]
         else:
             cmd = ["npm", "install", "--save-dev"]
-        self.execute(cmd + args, check=True)
+        result = self.execute(
+            cmd + args, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        )
+        logging.info(result.stdout)
+        logging.info(result.stderr)
 
     def _ensure_packages(self, packages: VersionDict) -> Set[str]:
         """Ensures that the given packages are installed.

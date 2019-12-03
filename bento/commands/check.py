@@ -202,7 +202,8 @@ You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PA
 
         echo_warning(f"{n_all_filtered} finding(s) in {elapsed:.2f} s\n")
         suppress_str = click.style("bento archive", fg=Colors.STATUS)
-        click.echo(f"◦ To suppress all findings run `{suppress_str}`.", err=True)
+        if not context.is_init:
+            click.echo(f"◦ To suppress all findings run `{suppress_str}`.", err=True)
     else:
         echo_success(f"0 findings in {elapsed:.2f} s\n")
 

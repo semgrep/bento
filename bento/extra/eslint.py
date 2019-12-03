@@ -7,7 +7,6 @@ import subprocess
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Pattern, Type
 
-import click
 import yaml
 from semantic_version import Version
 
@@ -170,7 +169,7 @@ class EslintTool(JsTool, JsonTool):
             return yaml.safe_load(stream)
 
     def __copy_eslintrc(self, identifier: str) -> None:
-        click.secho(f"Using {identifier} .eslintrc configuration", err=True)
+        logging.info(f"Using {identifier} .eslintrc configuration")
         shutil.copy(
             os.path.join(
                 os.path.dirname(__file__), f"eslint/.eslintrc-{identifier}.yml"
@@ -208,7 +207,7 @@ class EslintTool(JsTool, JsonTool):
 
         # install .eslintrc.yml if necessary
         if not self.eslintrc_path.exists():
-            click.echo(f"Installing {EslintTool.CONFIG_FILE_NAME}...", err=True)
+            logging.info(f"Installing {EslintTool.CONFIG_FILE_NAME}...")
 
             if project_has_react and project_has_typescript:
                 self.__copy_eslintrc("react-and-typescript")
