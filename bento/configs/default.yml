@@ -34,6 +34,7 @@ tools:
       - array-bracket-newline
       - array-bracket-spacing
       - array-element-newline
+      - arrow-body-style
       - arrow-parens
       - block-spacing
       - brace-style

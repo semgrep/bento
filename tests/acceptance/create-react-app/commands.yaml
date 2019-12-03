@@ -38,7 +38,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 300 finding(s) in"
+      - "⚠ 294 finding(s) in"
       - ◦ To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-init.out
@@ -62,7 +62,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 277 finding(s) in"
+      - "⚠ 271 finding(s) in"
       - ◦ To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-disable.out
@@ -86,7 +86,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 300 finding(s) in"
+      - "⚠ 294 finding(s) in"
       - ◦ To suppress all findings run `bento archive`.
     expected_out:
       file: bento-check-with-init.out
@@ -98,7 +98,7 @@ steps:
       - --agree
       - archive
     expected_err:
-      - ✔ Rewrote the whitelist with 300 findings from 1 tools (300 new, 0 previously whitelisted).
+      - ✔ Rewrote the whitelist with 294 findings from 1 tools (294 new, 0 previously whitelisted).
       - Please check '.bento-whitelist.yml' in to source control.
     expected_out: ""
     returncode: 0
@@ -110,7 +110,7 @@ steps:
       - check
     expected_err:
       - "✔ 0 findings in"
-      - "Not showing 300 archived finding(s). To view, run `bento check --show-all`"
+      - "Not showing 294 archived finding(s). To view, run `bento check --show-all`"
     expected_out: ""
     returncode: 0
   - name: install-hook

@@ -1637,21 +1637,6 @@ error: r2c.eslint.no-shadow https://eslint.org/docs/rules/no-shadow
     = note: 'extension' is already declared in the upper scope.                                                   
 
 
-error: r2c.eslint.arrow-body-style https://eslint.org/docs/rules/arrow-body-style
-   --> packages/react-scripts/config/pnpTs.js:19:6
-      |
-   19 |   ) => {
-      |
-    = note: Unexpected block statement surrounding arrow body; move the returned value immediately after the `=>`.
-
-error: r2c.eslint.arrow-body-style https://eslint.org/docs/rules/arrow-body-style
-   --> packages/react-scripts/config/pnpTs.js:35:6
-      |
-   35 |   ) => {
-      |
-    = note: Unexpected block statement surrounding arrow body; move the returned value immediately after the `=>`.
-
-
 error: r2c.eslint.import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
    --> packages/react-scripts/config/webpack.config.js:42:24
       |
@@ -1710,13 +1695,6 @@ error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
     = note: Unexpected require().                                                                                 
 
 
-error: r2c.eslint.arrow-body-style https://eslint.org/docs/rules/arrow-body-style
-   --> packages/react-scripts/scripts/build.js:69:15
-      |
-   69 |   .then(() => {
-      |
-    = note: Unexpected block statement surrounding arrow body; move the returned value immediately after the `=>`.
-
 error: r2c.eslint.import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
    --> packages/react-scripts/scripts/build.js:112:26
       |
@@ -1739,13 +1717,6 @@ error: r2c.eslint.no-shadow https://eslint.org/docs/rules/no-shadow
       |
     = note: 'files' is already declared in the upper scope.                                                       
 
-error: r2c.eslint.arrow-body-style https://eslint.org/docs/rules/arrow-body-style
-   --> packages/react-scripts/scripts/eject.js:117:53
-      |
-  117 |   const files = folders.reduce((files, folder) => {
-      |
-    = note: Unexpected block statement surrounding arrow body; move the returned value immediately after the `=>`.
-
 error: r2c.eslint.import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
    --> packages/react-scripts/scripts/eject.js:171:24
       |
@@ -1803,20 +1774,6 @@ error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
       |
     = note: Unexpected require().                                                                                 
 
-error: r2c.eslint.arrow-body-style https://eslint.org/docs/rules/arrow-body-style
-   --> packages/react-scripts/scripts/init.js:195:52
-      |
-  195 |   Object.keys(templateDependencies).map(key => {
-      |
-    = note: Unexpected block statement surrounding arrow body; move the returned value immediately after the `=>`.
-
-
-error: r2c.eslint.arrow-body-style https://eslint.org/docs/rules/arrow-body-style
-   --> packages/react-scripts/scripts/start.js:84:15
-      |
-   84 |   .then(() => {
-      |
-    = note: Unexpected block statement surrounding arrow body; move the returned value immediately after the `=>`.
 
 error: r2c.eslint.import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
    --> packages/react-scripts/scripts/start.js:96:21
@@ -2038,5 +1995,5 @@ r2c.eslint:
   error                                38▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬                     
   import/no-extraneous-dependencies    18▕▬▬▬▬▬▬▬▬▬                                
   import/no-dynamic-require            17▕▬▬▬▬▬▬▬▬▬                                
-  Other                                60▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬         
+  Other                                54▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬             
 
