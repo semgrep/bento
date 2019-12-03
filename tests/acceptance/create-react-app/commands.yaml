@@ -163,10 +163,10 @@ steps:
       - "⚠ 1 finding(s) in"
       - |
         error: r2c.eslint.no-undef https://eslint.org/docs/rules/no-undef
-           --> bad.js:1:1
+             --> bad.js:1:1
               |
             1 |   x = "potato";
               |
-            = note: 'x' is not defined.
+              = note: 'x' is not defined.
     expected_out: ""
     returncode: 1

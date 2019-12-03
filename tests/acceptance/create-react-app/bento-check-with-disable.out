@@ -1,2042 +1,2189 @@
 ==> Bento Summary
 error: r2c.eslint.import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
-   --> docusaurus/website/src/pages/index.js:9:18
+     --> docusaurus/website/src/pages/index.js:9:18
       |
     9 |   import Link from '@docusaurus/Link';
       |
-    = note: Unable to resolve path to module '@docusaurus/Link'.                                                  
+      = note: Unable to resolve path to module '@docusaurus/Link'.
 
 error: r2c.eslint.import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
-   --> docusaurus/website/src/pages/index.js:10:34
+     --> docusaurus/website/src/pages/index.js:10:34
       |
    10 |   import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
       |
-    = note: Unable to resolve path to module '@docusaurus/useDocusaurusContext'.                                  
+      = note: Unable to resolve path to module '@docusaurus/useDocusaurusContext'.
 
 error: r2c.eslint.import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
-   --> docusaurus/website/src/pages/index.js:11:25
+     --> docusaurus/website/src/pages/index.js:11:25
       |
    11 |   import withBaseUrl from '@docusaurus/withBaseUrl';
       |
-    = note: Unable to resolve path to module '@docusaurus/withBaseUrl'.                                           
+      = note: Unable to resolve path to module '@docusaurus/withBaseUrl'.
 
 error: r2c.eslint.import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
-   --> docusaurus/website/src/pages/index.js:13:20
+     --> docusaurus/website/src/pages/index.js:13:20
       |
    13 |   import Layout from '@theme/Layout';
       |
-    = note: Unable to resolve path to module '@theme/Layout'.                                                     
+      = note: Unable to resolve path to module '@theme/Layout'.
 
 error: r2c.eslint.import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
-   --> docusaurus/website/src/pages/index.js:14:23
+     --> docusaurus/website/src/pages/index.js:14:23
       |
    14 |   import CodeBlock from '@theme/CodeBlock';
       |
-    = note: Unable to resolve path to module '@theme/CodeBlock'.                                                  
+      = note: Unable to resolve path to module '@theme/CodeBlock'.
 
 error: r2c.eslint.import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
-   --> docusaurus/website/src/pages/index.js:16:24
+     --> docusaurus/website/src/pages/index.js:16:24
       |
    16 |   import classnames from 'classnames';
       |
-    = note: Unable to resolve path to module 'classnames'.                                                        
+      = note: Unable to resolve path to module 'classnames'.
 
 error: r2c.eslint.react/no-array-index-key https://eslint.org/docs/rules/react/no-array-index-key
-   --> docusaurus/website/src/pages/index.js:71:24
+     --> docusaurus/website/src/pages/index.js:71:24
       |
    71 |   key={idx}
       |
-    = note: Do not use Array index in keys                                                                        
+      = note: Do not use Array index in keys
 
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/babel-preset-react-app/create.js:28:3
+     --> packages/babel-preset-react-app/create.js:28:3
       |
    28 |   var isEnvDevelopment = env === 'development';
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/babel-preset-react-app/create.js:29:3
+     --> packages/babel-preset-react-app/create.js:29:3
       |
    29 |   var isEnvProduction = env === 'production';
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/babel-preset-react-app/create.js:30:3
+     --> packages/babel-preset-react-app/create.js:30:3
       |
    30 |   var isEnvTest = env === 'test';
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/babel-preset-react-app/create.js:32:3
+     --> packages/babel-preset-react-app/create.js:32:3
       |
-   32 |   var useESModules = validateBoolOption(    'useESModules',    opts.useESModules,    isEnvDevelopment || isEnvProduction  );
+   32 |   var useESModules = validateBoolOption(
+   33 |       'useESModules',
+   34 |       opts.useESModules,
+   35 |       isEnvDevelopment || isEnvProduction
+   36 |     );
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/babel-preset-react-app/create.js:37:3
+     --> packages/babel-preset-react-app/create.js:37:3
       |
    37 |   var isFlowEnabled = validateBoolOption('flow', opts.flow, true);
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/babel-preset-react-app/create.js:38:3
+     --> packages/babel-preset-react-app/create.js:38:3
       |
-   38 |   var isTypeScriptEnabled = validateBoolOption(    'typescript',    opts.typescript,    true  );
+   38 |   var isTypeScriptEnabled = validateBoolOption(
+   39 |       'typescript',
+   40 |       opts.typescript,
+   41 |       true
+   42 |     );
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/babel-preset-react-app/create.js:43:3
+     --> packages/babel-preset-react-app/create.js:43:3
       |
    43 |   var areHelpersEnabled = validateBoolOption('helpers', opts.helpers, true);
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/babel-preset-react-app/create.js:44:3
+     --> packages/babel-preset-react-app/create.js:44:3
       |
-   44 |   var useAbsoluteRuntime = validateBoolOption(    'absoluteRuntime',    opts.absoluteRuntime,    true  );
+   44 |   var useAbsoluteRuntime = validateBoolOption(
+   45 |       'absoluteRuntime',
+   46 |       opts.absoluteRuntime,
+   47 |       true
+   48 |     );
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/babel-preset-react-app/create.js:50:3
+     --> packages/babel-preset-react-app/create.js:50:3
       |
    50 |   var absoluteRuntimePath = undefined;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-undef-init https://eslint.org/docs/rules/no-undef-init
-   --> packages/babel-preset-react-app/create.js:50:7
+     --> packages/babel-preset-react-app/create.js:50:7
       |
    50 |   var absoluteRuntimePath = undefined;
       |
-    = note: It's not necessary to initialize 'absoluteRuntimePath' to undefined.                                  
+      = note: It's not necessary to initialize 'absoluteRuntimePath' to undefined.
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/create.js:71:9
+     --> packages/babel-preset-react-app/create.js:71:9
       |
    71 |   require('@babel/preset-env').default,
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/create.js:80:9
+     --> packages/babel-preset-react-app/create.js:80:9
       |
    80 |   require('@babel/preset-env').default,
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/create.js:94:9
+     --> packages/babel-preset-react-app/create.js:94:9
       |
    94 |   require('@babel/preset-react').default,
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/create.js:104:31
+     --> packages/babel-preset-react-app/create.js:104:31
       |
   104 |   isTypeScriptEnabled && [require('@babel/preset-typescript').default],
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/create.js:114:9
+     --> packages/babel-preset-react-app/create.js:114:9
       |
   114 |   require('@babel/plugin-transform-flow-strip-types').default,
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/create.js:119:7
+     --> packages/babel-preset-react-app/create.js:119:7
       |
   119 |   require('babel-plugin-macros'),
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/create.js:124:9
+     --> packages/babel-preset-react-app/create.js:124:9
       |
   124 |   require('@babel/plugin-transform-destructuring').default,
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/create.js:145:9
+     --> packages/babel-preset-react-app/create.js:145:9
       |
   145 |   require('@babel/plugin-proposal-decorators').default,
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/create.js:152:9
+     --> packages/babel-preset-react-app/create.js:152:9
       |
   152 |   require('@babel/plugin-proposal-class-properties').default,
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/create.js:161:9
+     --> packages/babel-preset-react-app/create.js:161:9
       |
   161 |   require('@babel/plugin-proposal-object-rest-spread').default,
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/create.js:169:9
+     --> packages/babel-preset-react-app/create.js:169:9
       |
   169 |   require('@babel/plugin-transform-runtime').default,
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/create.js:176:20
+     --> packages/babel-preset-react-app/create.js:176:20
       |
   176 |   version: require('@babel/runtime/package.json').version,
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/create.js:190:9
+     --> packages/babel-preset-react-app/create.js:190:9
       |
   190 |   require('babel-plugin-transform-react-remove-prop-types').default,
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/create.js:196:7
+     --> packages/babel-preset-react-app/create.js:196:7
       |
   196 |   require('@babel/plugin-syntax-dynamic-import').default,
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/create.js:199:9
+     --> packages/babel-preset-react-app/create.js:199:9
       |
   199 |   require('babel-plugin-dynamic-import-node'),
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/create.js:204:19
+     --> packages/babel-preset-react-app/create.js:204:19
       |
   204 |   plugins: [require('@babel/plugin-transform-flow-strip-types').default],
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/create.js:210:13
+     --> packages/babel-preset-react-app/create.js:210:13
       |
   210 |   require('@babel/plugin-proposal-decorators').default,
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/babel-preset-react-app/dependencies.js:34:3
+     --> packages/babel-preset-react-app/dependencies.js:34:3
       |
    34 |   var env = process.env.BABEL_ENV || process.env.NODE_ENV;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/babel-preset-react-app/dependencies.js:35:3
+     --> packages/babel-preset-react-app/dependencies.js:35:3
       |
    35 |   var isEnvDevelopment = env === 'development';
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/babel-preset-react-app/dependencies.js:36:3
+     --> packages/babel-preset-react-app/dependencies.js:36:3
       |
    36 |   var isEnvProduction = env === 'production';
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/babel-preset-react-app/dependencies.js:37:3
+     --> packages/babel-preset-react-app/dependencies.js:37:3
       |
    37 |   var isEnvTest = env === 'test';
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/babel-preset-react-app/dependencies.js:39:3
+     --> packages/babel-preset-react-app/dependencies.js:39:3
       |
    39 |   var areHelpersEnabled = validateBoolOption('helpers', opts.helpers, false);
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/babel-preset-react-app/dependencies.js:40:3
+     --> packages/babel-preset-react-app/dependencies.js:40:3
       |
-   40 |   var useAbsoluteRuntime = validateBoolOption(    'absoluteRuntime',    opts.absoluteRuntime,    true  );
+   40 |   var useAbsoluteRuntime = validateBoolOption(
+   41 |       'absoluteRuntime',
+   42 |       opts.absoluteRuntime,
+   43 |       true
+   44 |     );
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/babel-preset-react-app/dependencies.js:46:3
+     --> packages/babel-preset-react-app/dependencies.js:46:3
       |
    46 |   var absoluteRuntimePath = undefined;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-undef-init https://eslint.org/docs/rules/no-undef-init
-   --> packages/babel-preset-react-app/dependencies.js:46:7
+     --> packages/babel-preset-react-app/dependencies.js:46:7
       |
    46 |   var absoluteRuntimePath = undefined;
       |
-    = note: It's not necessary to initialize 'absoluteRuntimePath' to undefined.                                  
+      = note: It's not necessary to initialize 'absoluteRuntimePath' to undefined.
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/dependencies.js:72:9
+     --> packages/babel-preset-react-app/dependencies.js:72:9
       |
    72 |   require('@babel/preset-env').default,
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/dependencies.js:85:9
+     --> packages/babel-preset-react-app/dependencies.js:85:9
       |
    85 |   require('@babel/preset-env').default,
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/dependencies.js:104:9
+     --> packages/babel-preset-react-app/dependencies.js:104:9
       |
   104 |   require('@babel/plugin-transform-destructuring').default,
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/dependencies.js:126:9
+     --> packages/babel-preset-react-app/dependencies.js:126:9
       |
   126 |   require('@babel/plugin-transform-runtime').default,
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/dependencies.js:142:7
+     --> packages/babel-preset-react-app/dependencies.js:142:7
       |
   142 |   require('@babel/plugin-syntax-dynamic-import').default,
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/babel-preset-react-app/dependencies.js:145:9
+     --> packages/babel-preset-react-app/dependencies.js:145:9
       |
   145 |   require('babel-plugin-dynamic-import-node'),
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 
 error: r2c.eslint.error
-   --> packages/create-react-app/createReactApp.js:129:3
+     --> packages/create-react-app/createReactApp.js:129:3
       |
   129 |   return envinfo
       |
-    = note: Parsing error: 'return' outside of function                                                           
+      = note: Parsing error: 'return' outside of function
 
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/create-react-app/index.js:39:1
+     --> packages/create-react-app/index.js:39:1
       |
    39 |   var currentNodeVersion = process.versions.node;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/create-react-app/index.js:40:1
+     --> packages/create-react-app/index.js:40:1
       |
    40 |   var semver = currentNodeVersion.split('.');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/create-react-app/index.js:41:1
+     --> packages/create-react-app/index.js:41:1
       |
    41 |   var major = semver[0];
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-app-polyfill/ie11.js:13:3
+     --> packages/react-app-polyfill/ie11.js:13:3
       |
    13 |   require('promise/lib/rejection-tracking').enable();
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.no-restricted-globals https://eslint.org/docs/rules/no-restricted-globals
-   --> packages/react-app-polyfill/ie11.js:14:3
+     --> packages/react-app-polyfill/ie11.js:14:3
       |
    14 |   self.Promise = require('promise/lib/es6-extensions.js');
       |
-    = note: Unexpected use of 'self'.                                                                             
+      = note: Unexpected use of 'self'.
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-app-polyfill/ie11.js:14:18
+     --> packages/react-app-polyfill/ie11.js:14:18
       |
    14 |   self.Promise = require('promise/lib/es6-extensions.js');
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-app-polyfill/ie11.js:21:3
+     --> packages/react-app-polyfill/ie11.js:21:3
       |
    21 |   require('whatwg-fetch');
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-app-polyfill/jsdom.js:13:3
+     --> packages/react-app-polyfill/jsdom.js:13:3
       |
    13 |   require('whatwg-fetch');
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:10:1
+     --> packages/react-dev-utils/FileSizeReporter.js:10:1
       |
    10 |   var fs = require('fs');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:11:1
+     --> packages/react-dev-utils/FileSizeReporter.js:11:1
       |
    11 |   var path = require('path');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:12:1
+     --> packages/react-dev-utils/FileSizeReporter.js:12:1
       |
    12 |   var chalk = require('chalk');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:13:1
+     --> packages/react-dev-utils/FileSizeReporter.js:13:1
       |
    13 |   var filesize = require('filesize');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:14:1
+     --> packages/react-dev-utils/FileSizeReporter.js:14:1
       |
    14 |   var recursive = require('recursive-readdir');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:15:1
+     --> packages/react-dev-utils/FileSizeReporter.js:15:1
       |
    15 |   var stripAnsi = require('strip-ansi');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:16:1
+     --> packages/react-dev-utils/FileSizeReporter.js:16:1
       |
    16 |   var gzipSize = require('gzip-size').sync;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:34:3
+     --> packages/react-dev-utils/FileSizeReporter.js:34:3
       |
    34 |   var root = previousSizeMap.root;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:35:3
+     --> packages/react-dev-utils/FileSizeReporter.js:35:3
       |
    35 |   var sizes = previousSizeMap.sizes;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:36:3
+     --> packages/react-dev-utils/FileSizeReporter.js:36:3
       |
-   36 |   var assets = (webpackStats.stats || [webpackStats])    .map(stats =>      stats        .toJson({ all: false, assets: true })        .assets.filter(asset => canReadAsset(asset.name))        .map(asset => {          var fileContents = fs.readFileSync(path.join(root, asset.name));          var size = gzipSize(fileContents);          var previousSize = sizes[removeFileNameHash(root, asset.name)];          var difference = getDifferenceLabel(size, previousSize);          return {            folder: path.join(              path.basename(buildFolder),              path.dirname(asset.name)            ),            name: path.basename(asset.name),            size: size,            sizeLabel:              filesize(size) + (difference ? ' (' + difference + ')' : ''),          };        })    )    .reduce((single, all) => all.concat(single), []);
+   36 |   var assets = (webpackStats.stats || [webpackStats])
+   37 |       .map(stats =>
+   38 |         stats
+   39 |           .toJson({ all: false, assets: true })
+   40 |           .assets.filter(asset => canReadAsset(asset.name))
+   41 |           .map(asset => {
+   42 |             var fileContents = fs.readFileSync(path.join(root, asset.name));
+   43 |             var size = gzipSize(fileContents);
+   44 |             var previousSize = sizes[removeFileNameHash(root, asset.name)];
+   45 |             var difference = getDifferenceLabel(size, previousSize);
+   46 |             return {
+   47 |               folder: path.join(
+   48 |                 path.basename(buildFolder),
+   49 |                 path.dirname(asset.name)
+   50 |               ),
+   51 |               name: path.basename(asset.name),
+   52 |               size: size,
+   53 |               sizeLabel:
+   54 |                 filesize(size) + (difference ? ' (' + difference + ')' : ''),
+   55 |             };
+   56 |           })
+   57 |       )
+   58 |       .reduce((single, all) => all.concat(single), []);
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:42:11
+     --> packages/react-dev-utils/FileSizeReporter.js:42:11
       |
    42 |   var fileContents = fs.readFileSync(path.join(root, asset.name));
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:43:11
+     --> packages/react-dev-utils/FileSizeReporter.js:43:11
       |
    43 |   var size = gzipSize(fileContents);
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:44:11
+     --> packages/react-dev-utils/FileSizeReporter.js:44:11
       |
    44 |   var previousSize = sizes[removeFileNameHash(root, asset.name)];
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:45:11
+     --> packages/react-dev-utils/FileSizeReporter.js:45:11
       |
    45 |   var difference = getDifferenceLabel(size, previousSize);
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.object-shorthand https://eslint.org/docs/rules/object-shorthand
-   --> packages/react-dev-utils/FileSizeReporter.js:52:13
+     --> packages/react-dev-utils/FileSizeReporter.js:52:13
       |
    52 |   size: size,
       |
-    = note: Expected property shorthand.                                                                          
+      = note: Expected property shorthand.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:60:3
+     --> packages/react-dev-utils/FileSizeReporter.js:60:3
       |
-   60 |   var longestSizeLabelLength = Math.max.apply(    null,    assets.map(a => stripAnsi(a.sizeLabel).length)  );
+   60 |   var longestSizeLabelLength = Math.max.apply(
+   61 |       null,
+   62 |       assets.map(a => stripAnsi(a.sizeLabel).length)
+   63 |     );
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:64:3
+     --> packages/react-dev-utils/FileSizeReporter.js:64:3
       |
    64 |   var suggestBundleSplitting = false;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:66:5
+     --> packages/react-dev-utils/FileSizeReporter.js:66:5
       |
    66 |   var sizeLabel = asset.sizeLabel;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:67:5
+     --> packages/react-dev-utils/FileSizeReporter.js:67:5
       |
    67 |   var sizeLength = stripAnsi(sizeLabel).length;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:69:7
+     --> packages/react-dev-utils/FileSizeReporter.js:69:7
       |
    69 |   var rightPadding = ' '.repeat(longestSizeLabelLength - sizeLength);
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:72:5
+     --> packages/react-dev-utils/FileSizeReporter.js:72:5
       |
    72 |   var isMainBundle = asset.name.indexOf('main.') === 0;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:73:5
+     --> packages/react-dev-utils/FileSizeReporter.js:73:5
       |
-   73 |   var maxRecommendedSize = isMainBundle      ? maxBundleGzipSize      : maxChunkGzipSize;
+   73 |   var maxRecommendedSize = isMainBundle
+   74 |         ? maxBundleGzipSize
+   75 |         : maxChunkGzipSize;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:76:5
+     --> packages/react-dev-utils/FileSizeReporter.js:76:5
       |
    76 |   var isLarge = maxRecommendedSize && asset.size > maxRecommendedSize;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:119:3
+     --> packages/react-dev-utils/FileSizeReporter.js:119:3
       |
   119 |   var FIFTY_KILOBYTES = 1024 * 50;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:120:3
+     --> packages/react-dev-utils/FileSizeReporter.js:120:3
       |
   120 |   var difference = currentSize - previousSize;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:121:3
+     --> packages/react-dev-utils/FileSizeReporter.js:121:3
       |
   121 |   var fileSize = !Number.isNaN(difference) ? filesize(difference) : 0;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:136:7
+     --> packages/react-dev-utils/FileSizeReporter.js:136:7
       |
   136 |   var sizes;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:139:11
+     --> packages/react-dev-utils/FileSizeReporter.js:139:11
       |
   139 |   var contents = fs.readFileSync(fileName);
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/FileSizeReporter.js:140:11
+     --> packages/react-dev-utils/FileSizeReporter.js:140:11
       |
   140 |   var key = removeFileNameHash(buildFolder, fileName);
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.object-shorthand https://eslint.org/docs/rules/object-shorthand
-   --> packages/react-dev-utils/FileSizeReporter.js:154:3
+     --> packages/react-dev-utils/FileSizeReporter.js:154:3
       |
   154 |   measureFileSizesBeforeBuild: measureFileSizesBeforeBuild,
       |
-    = note: Expected property shorthand.                                                                          
+      = note: Expected property shorthand.
 
 error: r2c.eslint.object-shorthand https://eslint.org/docs/rules/object-shorthand
-   --> packages/react-dev-utils/FileSizeReporter.js:155:3
+     --> packages/react-dev-utils/FileSizeReporter.js:155:3
       |
   155 |   printFileSizesAfterBuild: printFileSizesAfterBuild,
       |
-    = note: Expected property shorthand.                                                                          
+      = note: Expected property shorthand.
 
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/ForkTsCheckerWebpackPlugin.js:10:1
+     --> packages/react-dev-utils/ForkTsCheckerWebpackPlugin.js:10:1
       |
    10 |   var ForkTsCheckerWebpackPlugin = require('fork-ts-checker-webpack-plugin');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/WatchMissingNodeModulesPlugin.js:21:7
+     --> packages/react-dev-utils/WatchMissingNodeModulesPlugin.js:21:7
       |
    21 |   var missingDeps = Array.from(compilation.missingDependencies);
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/WatchMissingNodeModulesPlugin.js:22:7
+     --> packages/react-dev-utils/WatchMissingNodeModulesPlugin.js:22:7
       |
    22 |   var nodeModulesPath = this.nodeModulesPath;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 
 error: r2c.eslint.object-shorthand https://eslint.org/docs/rules/object-shorthand
-   --> packages/react-dev-utils/WebpackDevServerUtils.js:416:7
+     --> packages/react-dev-utils/WebpackDevServerUtils.js:416:7
       |
-  416 |   context: function(pathname, req) {        return (          req.method !== 'GET' ||          (mayProxy(pathname) &&            req.headers.accept &&            req.headers.accept.indexOf('text/html') === -1)        );      },
+  416 |   context: function(pathname, req) {
+  417 |           return (
+  418 |             req.method !== 'GET' ||
+  419 |             (mayProxy(pathname) &&
+  420 |               req.headers.accept &&
+  421 |               req.headers.accept.indexOf('text/html') === -1)
+  422 |           );
+  423 |         },
       |
-    = note: Expected method shorthand.                                                                            
+      = note: Expected method shorthand.
 
 
 error: r2c.eslint.no-shadow https://eslint.org/docs/rules/no-shadow
-   --> packages/react-dev-utils/browsersHelper.js:64:48
+     --> packages/react-dev-utils/browsersHelper.js:64:48
       |
    64 |   return shouldSetBrowsers(isInteractive).then(shouldSetBrowsers => {
       |
-    = note: 'shouldSetBrowsers' is already declared in the upper scope.                                           
+      = note: 'shouldSetBrowsers' is already declared in the upper scope.
 
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/chalk.js:10:1
+     --> packages/react-dev-utils/chalk.js:10:1
       |
    10 |   var chalk = require('chalk');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/checkRequiredFiles.js:10:1
+     --> packages/react-dev-utils/checkRequiredFiles.js:10:1
       |
    10 |   var fs = require('fs');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/checkRequiredFiles.js:11:1
+     --> packages/react-dev-utils/checkRequiredFiles.js:11:1
       |
    11 |   var path = require('path');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/checkRequiredFiles.js:12:1
+     --> packages/react-dev-utils/checkRequiredFiles.js:12:1
       |
    12 |   var chalk = require('chalk');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/checkRequiredFiles.js:15:3
+     --> packages/react-dev-utils/checkRequiredFiles.js:15:3
       |
    15 |   var currentFilePath;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/checkRequiredFiles.js:23:5
+     --> packages/react-dev-utils/checkRequiredFiles.js:23:5
       |
    23 |   var dirName = path.dirname(currentFilePath);
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/checkRequiredFiles.js:24:5
+     --> packages/react-dev-utils/checkRequiredFiles.js:24:5
       |
    24 |   var fileName = path.basename(currentFilePath);
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/crossSpawn.js:10:1
+     --> packages/react-dev-utils/crossSpawn.js:10:1
       |
    10 |   var crossSpawn = require('cross-spawn');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 
 error: r2c.eslint.eqeqeq https://eslint.org/docs/rules/eqeqeq
-   --> packages/react-dev-utils/evalSourceMapMiddleware.js:17:67
+     --> packages/react-dev-utils/evalSourceMapMiddleware.js:17:67
       |
    17 |   const module = server._stats.compilation.modules.find(m => m.id == id);
       |
-    = note: Expected '===' and instead saw '=='.                                                                  
+      = note: Expected '===' and instead saw '=='.
 
 
 error: r2c.eslint.import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
-   --> packages/react-dev-utils/getCacheIdentifier.js:15:26
+     --> packages/react-dev-utils/getCacheIdentifier.js:15:26
       |
    15 |   cacheIdentifier += require(`${packageName}/package.json`).version;
       |
-    = note: Calls to require() should use string literals                                                         
+      = note: Calls to require() should use string literals
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-dev-utils/getCacheIdentifier.js:15:26
+     --> packages/react-dev-utils/getCacheIdentifier.js:15:26
       |
    15 |   cacheIdentifier += require(`${packageName}/package.json`).version;
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/getProcessForPort.js:10:1
+     --> packages/react-dev-utils/getProcessForPort.js:10:1
       |
    10 |   var chalk = require('chalk');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/getProcessForPort.js:11:1
+     --> packages/react-dev-utils/getProcessForPort.js:11:1
       |
    11 |   var execSync = require('child_process').execSync;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/getProcessForPort.js:12:1
+     --> packages/react-dev-utils/getProcessForPort.js:12:1
       |
    12 |   var path = require('path');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/getProcessForPort.js:14:1
+     --> packages/react-dev-utils/getProcessForPort.js:14:1
       |
-   14 |   var execOptions = {  encoding: 'utf8',  stdio: [    'pipe', // stdin (default)    'pipe', // stdout (default)    'ignore', //stderr  ],};
+   14 |   var execOptions = {
+   15 |     encoding: 'utf8',
+   16 |     stdio: [
+   17 |       'pipe', // stdin (default)
+   18 |       'pipe', // stdout (default)
+   19 |       'ignore', //stderr
+   20 |     ],
+   21 |   };
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/getProcessForPort.js:34:3
+     --> packages/react-dev-utils/getProcessForPort.js:34:3
       |
    34 |   var packagePath = path.join(directory.trim(), 'package.json');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
-   --> packages/react-dev-utils/getProcessForPort.js:37:12
+     --> packages/react-dev-utils/getProcessForPort.js:37:12
       |
    37 |   return require(packagePath).name;
       |
-    = note: Calls to require() should use string literals                                                         
+      = note: Calls to require() should use string literals
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-dev-utils/getProcessForPort.js:37:12
+     --> packages/react-dev-utils/getProcessForPort.js:37:12
       |
    37 |   return require(packagePath).name;
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/getProcessForPort.js:44:3
+     --> packages/react-dev-utils/getProcessForPort.js:44:3
       |
-   44 |   var command = execSync(    'ps -o command -p ' + processId + ' | sed -n 2p',    execOptions  );
+   44 |   var command = execSync(
+   45 |       'ps -o command -p ' + processId + ' | sed -n 2p',
+   46 |       execOptions
+   47 |     );
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/getProcessForPort.js:70:5
+     --> packages/react-dev-utils/getProcessForPort.js:70:5
       |
    70 |   var processId = getProcessIdOnPort(port);
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/getProcessForPort.js:71:5
+     --> packages/react-dev-utils/getProcessForPort.js:71:5
       |
    71 |   var directory = getDirectoryOfProcessById(processId);
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/getProcessForPort.js:72:5
+     --> packages/react-dev-utils/getProcessForPort.js:72:5
       |
    72 |   var command = getProcessCommand(processId, directory);
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/globby.js:10:1
+     --> packages/react-dev-utils/globby.js:10:1
       |
    10 |   var globby = require('globby');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/immer.js:10:1
+     --> packages/react-dev-utils/immer.js:10:1
       |
    10 |   var immer = require('immer');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/inquirer.js:10:1
+     --> packages/react-dev-utils/inquirer.js:10:1
       |
    10 |   var inquirer = require('inquirer');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 
 error: r2c.eslint.default-case https://eslint.org/docs/rules/default-case
-   --> packages/react-dev-utils/launchEditor.js:17:3
+     --> packages/react-dev-utils/launchEditor.js:17:3
       |
-   17 |   switch (editor) {    case 'vim':    case 'emacs':    case 'nano':      return true;  }
+   17 |   switch (editor) {
+   18 |       case 'vim':
+   19 |       case 'emacs':
+   20 |       case 'nano':
+   21 |         return true;
+   22 |     }
       |
-    = note: Expected a default case.                                                                              
+      = note: Expected a default case.
 
 error: r2c.eslint.default-case https://eslint.org/docs/rules/default-case
-   --> packages/react-dev-utils/launchEditor.js:127:3
+     --> packages/react-dev-utils/launchEditor.js:127:3
       |
-  127 |   switch (editorBasename) {    case 'atom':    case 'Atom':    case 'Atom Beta':    case 'subl':    case 'sublime':    case 'sublime_text':      return [fileName + ':' + lineNumber + ':' + colNumber];    case 'wstorm':    case 'charm':      return [fileName + ':' + lineNumber];    case 'notepad++':      return ['-n' + lineNumber, '-c' + colNumber, fileName];    case 'vim':    case 'mvim':    case 'joe':    case 'gvim':      return ['+' + lineNumber, fileName];    case 'emacs':    case 'emacsclient':      return ['+' + lineNumber + ':' + colNumber, fileName];    case 'rmate':    case 'mate':    case 'mine':      return ['--line', lineNumber, fileName];    case 'code':    case 'Code':    case 'code-insiders':    case 'Code - Insiders':    case 'vscodium':    case 'VSCodium':      return addWorkspaceToArgumentsIfExists(        ['-g', fileName + ':' + lineNumber + ':' + colNumber],        workspace      );    case 'appcode':    case 'clion':    case 'clion64':    case 'idea':    case 'idea64':    case 'phpstorm':    case 'phpstorm64':    case 'pycharm':    case 'pycharm64':    case 'rubymine':    case 'rubymine64':    case 'webstorm':    case 'webstorm64':    case 'goland':    case 'goland64':      return addWorkspaceToArgumentsIfExists(        ['--line', lineNumber, fileName],        workspace      );  }
+  127 |   switch (editorBasename) {
+  128 |       case 'atom':
+  129 |       case 'Atom':
+  130 |       case 'Atom Beta':
+  131 |       case 'subl':
+  132 |       case 'sublime':
+  133 |       case 'sublime_text':
+  134 |         return [fileName + ':' + lineNumber + ':' + colNumber];
+  135 |       case 'wstorm':
+  136 |       case 'charm':
+  137 |         return [fileName + ':' + lineNumber];
+  138 |       case 'notepad++':
+  139 |         return ['-n' + lineNumber, '-c' + colNumber, fileName];
+  140 |       case 'vim':
+  141 |       case 'mvim':
+  142 |       case 'joe':
+  143 |       case 'gvim':
+  144 |         return ['+' + lineNumber, fileName];
+  145 |       case 'emacs':
+  146 |       case 'emacsclient':
+  147 |         return ['+' + lineNumber + ':' + colNumber, fileName];
+  148 |       case 'rmate':
+  149 |       case 'mate':
+  150 |       case 'mine':
+  151 |         return ['--line', lineNumber, fileName];
+  152 |       case 'code':
+  153 |       case 'Code':
+  154 |       case 'code-insiders':
+  155 |       case 'Code - Insiders':
+  156 |       case 'vscodium':
+  157 |       case 'VSCodium':
+  158 |         return addWorkspaceToArgumentsIfExists(
+  159 |           ['-g', fileName + ':' + lineNumber + ':' + colNumber],
+  160 |           workspace
+  161 |         );
+  162 |       case 'appcode':
+  163 |       case 'clion':
+  164 |       case 'clion64':
+  165 |       case 'idea':
+  166 |       case 'idea64':
+  167 |       case 'phpstorm':
+  168 |       case 'phpstorm64':
+  169 |       case 'pycharm':
+  170 |       case 'pycharm64':
+  171 |       case 'rubymine':
+  172 |       case 'rubymine64':
+  173 |       case 'webstorm':
+  174 |       case 'webstorm64':
+  175 |       case 'goland':
+  176 |       case 'goland64':
+  177 |         return addWorkspaceToArgumentsIfExists(
+  178 |           ['--line', lineNumber, fileName],
+  179 |           workspace
+  180 |         );
+  181 |     }
       |
-    = note: Expected a default case.                                                                              
+      = note: Expected a default case.
 
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/openBrowser.js:10:1
+     --> packages/react-dev-utils/openBrowser.js:10:1
       |
    10 |   var chalk = require('chalk');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/openBrowser.js:11:1
+     --> packages/react-dev-utils/openBrowser.js:11:1
       |
    11 |   var execSync = require('child_process').execSync;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/openBrowser.js:12:1
+     --> packages/react-dev-utils/openBrowser.js:12:1
       |
    12 |   var spawn = require('cross-spawn');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/openBrowser.js:13:1
+     --> packages/react-dev-utils/openBrowser.js:13:1
       |
    13 |   var open = require('open');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/openBrowser.js:16:1
+     --> packages/react-dev-utils/openBrowser.js:16:1
       |
    16 |   var OSX_CHROME = 'google chrome';
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-useless-return https://eslint.org/docs/rules/no-useless-return
-   --> packages/react-dev-utils/openBrowser.js:61:7
+     --> packages/react-dev-utils/openBrowser.js:61:7
       |
    61 |   return;
       |
-    = note: Unnecessary return statement.                                                                         
+      = note: Unnecessary return statement.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/openBrowser.js:107:5
+     --> packages/react-dev-utils/openBrowser.js:107:5
       |
   107 |   var options = { app: browser, wait: false };
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 
 error: r2c.eslint.object-shorthand https://eslint.org/docs/rules/object-shorthand
-   --> packages/react-dev-utils/typescriptFormatter.js:39:20
+     --> packages/react-dev-utils/typescriptFormatter.js:39:20
       |
    39 |   { start: { line: line, column: character } },
       |
-    = note: Expected property shorthand.                                                                          
+      = note: Expected property shorthand.
 
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/webpackHotDevClient.js:19:1
+     --> packages/react-dev-utils/webpackHotDevClient.js:19:1
       |
    19 |   var SockJS = require('sockjs-client');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/webpackHotDevClient.js:20:1
+     --> packages/react-dev-utils/webpackHotDevClient.js:20:1
       |
    20 |   var stripAnsi = require('strip-ansi');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/webpackHotDevClient.js:21:1
+     --> packages/react-dev-utils/webpackHotDevClient.js:21:1
       |
    21 |   var url = require('url');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/webpackHotDevClient.js:22:1
+     --> packages/react-dev-utils/webpackHotDevClient.js:22:1
       |
    22 |   var launchEditorEndpoint = require('./launchEditorEndpoint');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/webpackHotDevClient.js:23:1
+     --> packages/react-dev-utils/webpackHotDevClient.js:23:1
       |
    23 |   var formatWebpackMessages = require('./formatWebpackMessages');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/webpackHotDevClient.js:24:1
+     --> packages/react-dev-utils/webpackHotDevClient.js:24:1
       |
    24 |   var ErrorOverlay = require('react-error-overlay');
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/webpackHotDevClient.js:45:1
+     --> packages/react-dev-utils/webpackHotDevClient.js:45:1
       |
    45 |   var hadRuntimeError = false;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.object-shorthand https://eslint.org/docs/rules/object-shorthand
-   --> packages/react-dev-utils/webpackHotDevClient.js:47:3
+     --> packages/react-dev-utils/webpackHotDevClient.js:47:3
       |
-   47 |   onError: function() {    hadRuntimeError = true;  },
+   47 |   onError: function() {
+   48 |       hadRuntimeError = true;
+   49 |     },
       |
-    = note: Expected method shorthand.                                                                            
+      = note: Expected method shorthand.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/webpackHotDevClient.js:61:1
+     --> packages/react-dev-utils/webpackHotDevClient.js:61:1
       |
-   61 |   var connection = new SockJS(  url.format({    protocol: window.location.protocol,    hostname: window.location.hostname,    port: window.location.port,    // Hardcoded in WebpackDevServer    pathname: '/sockjs-node',  }));
+   61 |   var connection = new SockJS(
+   62 |     url.format({
+   63 |       protocol: window.location.protocol,
+   64 |       hostname: window.location.hostname,
+   65 |       port: window.location.port,
+   66 |       // Hardcoded in WebpackDevServer
+   67 |       pathname: '/sockjs-node',
+   68 |     })
+   69 |   );
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/webpackHotDevClient.js:83:1
+     --> packages/react-dev-utils/webpackHotDevClient.js:83:1
       |
    83 |   var isFirstCompilation = true;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/webpackHotDevClient.js:84:1
+     --> packages/react-dev-utils/webpackHotDevClient.js:84:1
       |
    84 |   var mostRecentCompilationHash = null;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/webpackHotDevClient.js:85:1
+     --> packages/react-dev-utils/webpackHotDevClient.js:85:1
       |
    85 |   var hasCompileErrors = false;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/webpackHotDevClient.js:100:3
+     --> packages/react-dev-utils/webpackHotDevClient.js:100:3
       |
   100 |   var isHotUpdate = !isFirstCompilation;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/webpackHotDevClient.js:118:3
+     --> packages/react-dev-utils/webpackHotDevClient.js:118:3
       |
   118 |   var isHotUpdate = !isFirstCompilation;
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/webpackHotDevClient.js:124:5
+     --> packages/react-dev-utils/webpackHotDevClient.js:124:5
       |
-  124 |   var formatted = formatWebpackMessages({      warnings: warnings,      errors: [],    });
+  124 |   var formatted = formatWebpackMessages({
+  125 |         warnings: warnings,
+  126 |         errors: [],
+  127 |       });
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.object-shorthand https://eslint.org/docs/rules/object-shorthand
-   --> packages/react-dev-utils/webpackHotDevClient.js:125:7
+     --> packages/react-dev-utils/webpackHotDevClient.js:125:7
       |
   125 |   warnings: warnings,
       |
-    = note: Expected property shorthand.                                                                          
+      = note: Expected property shorthand.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/webpackHotDevClient.js:130:12
+     --> packages/react-dev-utils/webpackHotDevClient.js:130:12
       |
   130 |   for (var i = 0; i < formatted.warnings.length; i++) {
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/webpackHotDevClient.js:163:3
+     --> packages/react-dev-utils/webpackHotDevClient.js:163:3
       |
-  163 |   var formatted = formatWebpackMessages({    errors: errors,    warnings: [],  });
+  163 |   var formatted = formatWebpackMessages({
+  164 |       errors: errors,
+  165 |       warnings: [],
+  166 |     });
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.object-shorthand https://eslint.org/docs/rules/object-shorthand
-   --> packages/react-dev-utils/webpackHotDevClient.js:164:5
+     --> packages/react-dev-utils/webpackHotDevClient.js:164:5
       |
   164 |   errors: errors,
       |
-    = note: Expected property shorthand.                                                                          
+      = note: Expected property shorthand.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/webpackHotDevClient.js:173:10
+     --> packages/react-dev-utils/webpackHotDevClient.js:173:10
       |
   173 |   for (var i = 0; i < formatted.errors.length; i++) {
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/webpackHotDevClient.js:196:3
+     --> packages/react-dev-utils/webpackHotDevClient.js:196:3
       |
   196 |   var message = JSON.parse(e.data);
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 error: r2c.eslint.no-var https://eslint.org/docs/rules/no-var
-   --> packages/react-dev-utils/webpackHotDevClient.js:263:3
+     --> packages/react-dev-utils/webpackHotDevClient.js:263:3
       |
   263 |   var result = module.hot.check(/* autoApply */ true, handleApplyUpdates);
       |
-    = note: Unexpected var, use let or const instead.                                                             
+      = note: Unexpected var, use let or const instead.
 
 
 error: r2c.eslint.import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
-   --> packages/react-error-overlay/build.js:7:17
+     --> packages/react-error-overlay/build.js:7:17
       |
     7 |   const webpack = require('webpack');
       |
-    = note: 'webpack' should be listed in the project's dependencies, not devDependencies.                        
+      = note: 'webpack' should be listed in the project's dependencies, not devDependencies.
 
 error: r2c.eslint.import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
-   --> packages/react-error-overlay/build.js:8:15
+     --> packages/react-error-overlay/build.js:8:15
       |
     8 |   const chalk = require('chalk');
       |
-    = note: 'chalk' should be listed in the project's dependencies, not devDependencies.                          
+      = note: 'chalk' should be listed in the project's dependencies, not devDependencies.
 
 error: r2c.eslint.import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
-   --> packages/react-error-overlay/build.js:11:16
+     --> packages/react-error-overlay/build.js:11:16
       |
    11 |   const rimraf = require('rimraf');
       |
-    = note: 'rimraf' should be listed in the project's dependencies, not devDependencies.                         
+      = note: 'rimraf' should be listed in the project's dependencies, not devDependencies.
 
 error: r2c.eslint.import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
-   --> packages/react-error-overlay/build.js:12:18
+     --> packages/react-error-overlay/build.js:12:18
       |
    12 |   const chokidar = require('chokidar');
       |
-    = note: 'chokidar' should be listed in the project's dependencies, not devDependencies.                       
+      = note: 'chokidar' should be listed in the project's dependencies, not devDependencies.
 
 error: r2c.eslint.no-unused-expressions https://eslint.org/docs/rules/no-unused-expressions
-   --> packages/react-error-overlay/build.js:47:7
+     --> packages/react-error-overlay/build.js:47:7
       |
    47 |   isCI && process.exit(1);
       |
-    = note: Expected an assignment or function call and instead saw an expression.                                
+      = note: Expected an assignment or function call and instead saw an expression.
 
 error: r2c.eslint.no-unused-expressions https://eslint.org/docs/rules/no-unused-expressions
-   --> packages/react-error-overlay/build.js:94:3
+     --> packages/react-error-overlay/build.js:94:3
       |
    94 |   watchMode ? setupWatch() : runBuildSteps();
       |
-    = note: Expected an assignment or function call and instead saw an expression.                                
+      = note: Expected an assignment or function call and instead saw an expression.
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/flow/env.js:1:9
+     --> packages/react-error-overlay/flow/env.js:1:9
       |
     1 |   declare module 'anser' {
       |
-    = note: Parsing error: Unexpected token module                                                                
+      = note: Parsing error: Unexpected token module
 
 
 error: r2c.eslint.import/named https://eslint.org/docs/rules/import/named
-   --> packages/react-error-overlay/src/__tests__/extract-source-map.js:8:37
+     --> packages/react-error-overlay/src/__tests__/extract-source-map.js:8:37
       |
     8 |   import { extractSourceMapUrl } from '../utils/getSourceMap';
       |
-    = note: Parse errors in imported module '../utils/getSourceMap': Unexpected token : (17:15)                   
+      = note: Parse errors in imported module '../utils/getSourceMap': Unexpected token : (17:15)
 
 
 error: r2c.eslint.import/named https://eslint.org/docs/rules/import/named
-   --> packages/react-error-overlay/src/__tests__/get-source-map.js:8:30
+     --> packages/react-error-overlay/src/__tests__/get-source-map.js:8:30
       |
     8 |   import { getSourceMap } from '../utils/getSourceMap';
       |
-    = note: Parse errors in imported module '../utils/getSourceMap': Unexpected token : (17:15)                   
+      = note: Parse errors in imported module '../utils/getSourceMap': Unexpected token : (17:15)
 
 
 error: r2c.eslint.import/named https://eslint.org/docs/rules/import/named
-   --> packages/react-error-overlay/src/__tests__/lines-around.js:8:32
+     --> packages/react-error-overlay/src/__tests__/lines-around.js:8:32
       |
     8 |   import { getLinesAround } from '../utils/getLinesAround';
       |
-    = note: Parse errors in imported module '../utils/getLinesAround': Unexpected token : (18:7)                  
+      = note: Parse errors in imported module '../utils/getLinesAround': Unexpected token : (18:7)
 
 
 error: r2c.eslint.import/named https://eslint.org/docs/rules/import/named
-   --> packages/react-error-overlay/src/__tests__/mapper.js:8:21
+     --> packages/react-error-overlay/src/__tests__/mapper.js:8:21
       |
     8 |   import { map } from '../utils/mapper';
       |
-    = note: Parse errors in imported module '../utils/mapper': Unexpected token : (20:9)                          
+      = note: Parse errors in imported module '../utils/mapper': Unexpected token : (20:9)
 
 error: r2c.eslint.import/named https://eslint.org/docs/rules/import/named
-   --> packages/react-error-overlay/src/__tests__/mapper.js:9:23
+     --> packages/react-error-overlay/src/__tests__/mapper.js:9:23
       |
     9 |   import { parse } from '../utils/parser';
       |
-    = note: Parse errors in imported module '../utils/parser': Unexpected token : (13:31)                         
+      = note: Parse errors in imported module '../utils/parser': Unexpected token : (13:31)
 
 
 error: r2c.eslint.import/named https://eslint.org/docs/rules/import/named
-   --> packages/react-error-overlay/src/__tests__/parser/chrome.js:8:23
+     --> packages/react-error-overlay/src/__tests__/parser/chrome.js:8:23
       |
     8 |   import { parse } from '../../utils/parser';
       |
-    = note: Parse errors in imported module '../../utils/parser': Unexpected token : (13:31)                      
+      = note: Parse errors in imported module '../../utils/parser': Unexpected token : (13:31)
 
 
 error: r2c.eslint.import/named https://eslint.org/docs/rules/import/named
-   --> packages/react-error-overlay/src/__tests__/parser/firefox.js:8:23
+     --> packages/react-error-overlay/src/__tests__/parser/firefox.js:8:23
       |
     8 |   import { parse } from '../../utils/parser';
       |
-    = note: Parse errors in imported module '../../utils/parser': Unexpected token : (13:31)                      
+      = note: Parse errors in imported module '../../utils/parser': Unexpected token : (13:31)
 
 
 error: r2c.eslint.import/named https://eslint.org/docs/rules/import/named
-   --> packages/react-error-overlay/src/__tests__/parser/generic.js:8:23
+     --> packages/react-error-overlay/src/__tests__/parser/generic.js:8:23
       |
     8 |   import { parse } from '../../utils/parser';
       |
-    = note: Parse errors in imported module '../../utils/parser': Unexpected token : (13:31)                      
+      = note: Parse errors in imported module '../../utils/parser': Unexpected token : (13:31)
 
 
 error: r2c.eslint.import/named https://eslint.org/docs/rules/import/named
-   --> packages/react-error-overlay/src/__tests__/parser/react.js:8:23
+     --> packages/react-error-overlay/src/__tests__/parser/react.js:8:23
       |
     8 |   import { parse } from '../../utils/parser';
       |
-    = note: Parse errors in imported module '../../utils/parser': Unexpected token : (13:31)                      
+      = note: Parse errors in imported module '../../utils/parser': Unexpected token : (13:31)
 
 
 error: r2c.eslint.import/named https://eslint.org/docs/rules/import/named
-   --> packages/react-error-overlay/src/__tests__/parser/safari.js:8:23
+     --> packages/react-error-overlay/src/__tests__/parser/safari.js:8:23
       |
     8 |   import { parse } from '../../utils/parser';
       |
-    = note: Parse errors in imported module '../../utils/parser': Unexpected token : (13:31)                      
+      = note: Parse errors in imported module '../../utils/parser': Unexpected token : (13:31)
 
 
 error: r2c.eslint.import/named https://eslint.org/docs/rules/import/named
-   --> packages/react-error-overlay/src/__tests__/script-lines.js:8:28
+     --> packages/react-error-overlay/src/__tests__/script-lines.js:8:28
       |
     8 |   import { ScriptLine } from '../utils/stack-frame';
       |
-    = note: Parse errors in imported module '../utils/stack-frame': Unexpected token : (13:13)                    
+      = note: Parse errors in imported module '../utils/stack-frame': Unexpected token : (13:13)
 
 
 error: r2c.eslint.import/named https://eslint.org/docs/rules/import/named
-   --> packages/react-error-overlay/src/__tests__/stack-frame.js:8:28
+     --> packages/react-error-overlay/src/__tests__/stack-frame.js:8:28
       |
     8 |   import { StackFrame } from '../utils/stack-frame';
       |
-    = note: Parse errors in imported module '../utils/stack-frame': Unexpected token : (13:13)                    
+      = note: Parse errors in imported module '../utils/stack-frame': Unexpected token : (13:13)
 
 
 error: r2c.eslint.import/named https://eslint.org/docs/rules/import/named
-   --> packages/react-error-overlay/src/__tests__/unmapper.js:8:23
+     --> packages/react-error-overlay/src/__tests__/unmapper.js:8:23
       |
     8 |   import { unmap } from '../utils/unmapper';
       |
-    = note: Parse errors in imported module '../utils/unmapper': Unexpected token : (14:22)                       
+      = note: Parse errors in imported module '../utils/unmapper': Unexpected token : (14:22)
 
 error: r2c.eslint.import/named https://eslint.org/docs/rules/import/named
-   --> packages/react-error-overlay/src/__tests__/unmapper.js:9:23
+     --> packages/react-error-overlay/src/__tests__/unmapper.js:9:23
       |
     9 |   import { parse } from '../utils/parser';
       |
-    = note: Parse errors in imported module '../utils/parser': Unexpected token : (13:31)                         
+      = note: Parse errors in imported module '../utils/parser': Unexpected token : (13:31)
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/components/CloseButton.js:23:6
+     --> packages/react-error-overlay/src/components/CloseButton.js:23:6
       |
    23 |   type CloseCallback = () => void;
       |
-    = note: Parsing error: Unexpected token CloseCallback                                                         
+      = note: Parsing error: Unexpected token CloseCallback
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/components/CodeBlock.js:37:6
+     --> packages/react-error-overlay/src/components/CodeBlock.js:37:6
       |
    37 |   type CodeBlockPropsType = {|
       |
-    = note: Parsing error: Unexpected token CodeBlockPropsType                                                    
+      = note: Parsing error: Unexpected token CodeBlockPropsType
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/components/Collapsible.js:12:13
+     --> packages/react-error-overlay/src/components/Collapsible.js:12:13
       |
    12 |   import type { Element as ReactElement } from 'react';
       |
-    = note: Parsing error: Unexpected token {                                                                     
+      = note: Parsing error: Unexpected token {
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/components/ErrorOverlay.js:12:13
+     --> packages/react-error-overlay/src/components/ErrorOverlay.js:12:13
       |
    12 |   import type { Node as ReactNode } from 'react';
       |
-    = note: Parsing error: Unexpected token {                                                                     
+      = note: Parsing error: Unexpected token {
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/components/Footer.js:19:6
+     --> packages/react-error-overlay/src/components/Footer.js:19:6
       |
    19 |   type FooterPropsType = {|
       |
-    = note: Parsing error: Unexpected token FooterPropsType                                                       
+      = note: Parsing error: Unexpected token FooterPropsType
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/components/Header.js:25:6
+     --> packages/react-error-overlay/src/components/Header.js:25:6
       |
    25 |   type HeaderPropType = {|
       |
-    = note: Parsing error: Unexpected token HeaderPropType                                                        
+      = note: Parsing error: Unexpected token HeaderPropType
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/components/NavigationBar.js:42:6
+     --> packages/react-error-overlay/src/components/NavigationBar.js:42:6
       |
    42 |   type Callback = () => void;
       |
-    = note: Parsing error: Unexpected token Callback                                                              
+      = note: Parsing error: Unexpected token Callback
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/containers/CompileErrorContainer.js:16:13
+     --> packages/react-error-overlay/src/containers/CompileErrorContainer.js:16:13
       |
    16 |   import type { ErrorLocation } from '../utils/parseCompileError';
       |
-    = note: Parsing error: Unexpected token {                                                                     
+      = note: Parsing error: Unexpected token {
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/containers/RuntimeError.js:13:13
+     --> packages/react-error-overlay/src/containers/RuntimeError.js:13:13
       |
    13 |   import type { StackFrame } from '../utils/stack-frame';
       |
-    = note: Parsing error: Unexpected token {                                                                     
+      = note: Parsing error: Unexpected token {
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/containers/RuntimeErrorContainer.js:16:13
+     --> packages/react-error-overlay/src/containers/RuntimeErrorContainer.js:16:13
       |
    16 |   import type { ErrorRecord } from './RuntimeError';
       |
-    = note: Parsing error: Unexpected token {                                                                     
+      = note: Parsing error: Unexpected token {
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/containers/StackFrame.js:14:13
+     --> packages/react-error-overlay/src/containers/StackFrame.js:14:13
       |
    14 |   import type { StackFrame as StackFrameType } from '../utils/stack-frame';
       |
-    = note: Parsing error: Unexpected token {                                                                     
+      = note: Parsing error: Unexpected token {
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/containers/StackFrameCodeBlock.js:13:13
+     --> packages/react-error-overlay/src/containers/StackFrameCodeBlock.js:13:13
       |
    13 |   import type { ScriptLine } from '../utils/stack-frame';
       |
-    = note: Parsing error: Unexpected token {                                                                     
+      = note: Parsing error: Unexpected token {
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/containers/StackTrace.js:15:13
+     --> packages/react-error-overlay/src/containers/StackTrace.js:15:13
       |
    15 |   import type { StackFrame as StackFrameType } from '../utils/stack-frame';
       |
-    = note: Parsing error: Unexpected token {                                                                     
+      = note: Parsing error: Unexpected token {
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/effects/proxyConsole.js:10:6
+     --> packages/react-error-overlay/src/effects/proxyConsole.js:10:6
       |
    10 |   type ReactFrame = {
       |
-    = note: Parsing error: Unexpected token ReactFrame                                                            
+      = note: Parsing error: Unexpected token ReactFrame
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/effects/stackTraceLimit.js:9:25
+     --> packages/react-error-overlay/src/effects/stackTraceLimit.js:9:25
       |
     9 |   let stackTraceRegistered: boolean = false;
       |
-    = note: Parsing error: Unexpected token :                                                                     
+      = note: Parsing error: Unexpected token :
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/effects/unhandledError.js:11:6
+     --> packages/react-error-overlay/src/effects/unhandledError.js:11:6
       |
    11 |   type ErrorCallback = (error: Error) => void;
       |
-    = note: Parsing error: Unexpected token ErrorCallback                                                         
+      = note: Parsing error: Unexpected token ErrorCallback
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/effects/unhandledRejection.js:11:6
+     --> packages/react-error-overlay/src/effects/unhandledRejection.js:11:6
       |
    11 |   type ErrorCallback = (error: Error) => void;
       |
-    = note: Parsing error: Unexpected token ErrorCallback                                                         
+      = note: Parsing error: Unexpected token ErrorCallback
 
 
 error: r2c.eslint.import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
-   --> packages/react-error-overlay/src/iframeScript.js:8:1
+     --> packages/react-error-overlay/src/iframeScript.js:8:1
       |
     8 |   import 'react-app-polyfill/ie9';
       |
-    = note: 'react-app-polyfill' should be listed in the project's dependencies, not devDependencies.             
+      = note: 'react-app-polyfill' should be listed in the project's dependencies, not devDependencies.
 
 error: r2c.eslint.import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
-   --> packages/react-error-overlay/src/iframeScript.js:9:1
+     --> packages/react-error-overlay/src/iframeScript.js:9:1
       |
     9 |   import React from 'react';
       |
-    = note: 'react' should be listed in the project's dependencies, not devDependencies.                          
+      = note: 'react' should be listed in the project's dependencies, not devDependencies.
 
 error: r2c.eslint.import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
-   --> packages/react-error-overlay/src/iframeScript.js:10:1
+     --> packages/react-error-overlay/src/iframeScript.js:10:1
       |
    10 |   import ReactDOM from 'react-dom';
       |
-    = note: 'react-dom' should be listed in the project's dependencies, not devDependencies.                      
+      = note: 'react-dom' should be listed in the project's dependencies, not devDependencies.
 
 error: r2c.eslint.import/no-named-as-default https://eslint.org/docs/rules/import/no-named-as-default
-   --> packages/react-error-overlay/src/iframeScript.js:11:35
+     --> packages/react-error-overlay/src/iframeScript.js:11:35
       |
    11 |   import CompileErrorContainer from './containers/CompileErrorContainer';
       |
-    = note: Parse errors in imported module './containers/CompileErrorContainer': Unexpected token { (16:13)      
+      = note: Parse errors in imported module './containers/CompileErrorContainer': Unexpected token { (16:13)
 
 error: r2c.eslint.import/no-named-as-default-member https://eslint.org/docs/rules/import/no-named-as-default-member
-   --> packages/react-error-overlay/src/iframeScript.js:11:35
+     --> packages/react-error-overlay/src/iframeScript.js:11:35
       |
    11 |   import CompileErrorContainer from './containers/CompileErrorContainer';
       |
-    = note: Parse errors in imported module './containers/CompileErrorContainer': Unexpected token { (16:13)      
+      = note: Parse errors in imported module './containers/CompileErrorContainer': Unexpected token { (16:13)
 
 error: r2c.eslint.import/no-named-as-default https://eslint.org/docs/rules/import/no-named-as-default
-   --> packages/react-error-overlay/src/iframeScript.js:12:35
+     --> packages/react-error-overlay/src/iframeScript.js:12:35
       |
    12 |   import RuntimeErrorContainer from './containers/RuntimeErrorContainer';
       |
-    = note: Parse errors in imported module './containers/RuntimeErrorContainer': Unexpected token { (16:13)      
+      = note: Parse errors in imported module './containers/RuntimeErrorContainer': Unexpected token { (16:13)
 
 error: r2c.eslint.import/no-named-as-default-member https://eslint.org/docs/rules/import/no-named-as-default-member
-   --> packages/react-error-overlay/src/iframeScript.js:12:35
+     --> packages/react-error-overlay/src/iframeScript.js:12:35
       |
    12 |   import RuntimeErrorContainer from './containers/RuntimeErrorContainer';
       |
-    = note: Parse errors in imported module './containers/RuntimeErrorContainer': Unexpected token { (16:13)      
+      = note: Parse errors in imported module './containers/RuntimeErrorContainer': Unexpected token { (16:13)
 
 error: r2c.eslint.import/named https://eslint.org/docs/rules/import/named
-   --> packages/react-error-overlay/src/iframeScript.js:14:29
+     --> packages/react-error-overlay/src/iframeScript.js:14:29
       |
    14 |   import { applyStyles } from './utils/dom/css';
       |
-    = note: Parse errors in imported module './utils/dom/css': Unexpected token : (12:26)                         
+      = note: Parse errors in imported module './utils/dom/css': Unexpected token : (12:26)
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/index.js:20:13
+     --> packages/react-error-overlay/src/index.js:20:13
       |
    20 |   import type { ErrorRecord } from './listenToRuntimeErrors';
       |
-    = note: Parsing error: Unexpected token {                                                                     
+      = note: Parsing error: Unexpected token {
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/listenToRuntimeErrors.js:28:13
+     --> packages/react-error-overlay/src/listenToRuntimeErrors.js:28:13
       |
    28 |   import type { StackFrame } from './utils/stack-frame';
       |
-    = note: Parsing error: Unexpected token {                                                                     
+      = note: Parsing error: Unexpected token {
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/utils/dom/absolutifyCaret.js:9:40
+     --> packages/react-error-overlay/src/utils/dom/absolutifyCaret.js:9:40
       |
     9 |   function removeNextBr(parent, component: ?Element) {
       |
-    = note: Parsing error: Unexpected token :                                                                     
+      = note: Parsing error: Unexpected token :
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/utils/dom/css.js:12:26
+     --> packages/react-error-overlay/src/utils/dom/css.js:12:26
       |
    12 |   function getHead(document: Document) {
       |
-    = note: Parsing error: Unexpected token :                                                                     
+      = note: Parsing error: Unexpected token :
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/utils/generateAnsiHTML.js:64:30
+     --> packages/react-error-overlay/src/utils/generateAnsiHTML.js:64:30
       |
    64 |   function generateAnsiHTML(txt: string): string {
       |
-    = note: Parsing error: Unexpected token :                                                                     
+      = note: Parsing error: Unexpected token :
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/utils/getLinesAround.js:18:7
+     --> packages/react-error-overlay/src/utils/getLinesAround.js:18:7
       |
    18 |   line: number,
       |
-    = note: Parsing error: Unexpected token :                                                                     
+      = note: Parsing error: Unexpected token :
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/utils/getPrettyURL.js:10:17
+     --> packages/react-error-overlay/src/utils/getPrettyURL.js:10:17
       |
    10 |   sourceFileName: ?string,
       |
-    = note: Parsing error: Unexpected token :                                                                     
+      = note: Parsing error: Unexpected token :
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/utils/getSourceMap.js:17:15
+     --> packages/react-error-overlay/src/utils/getSourceMap.js:17:15
       |
    17 |   __source_map: SourceMapConsumer;
       |
-    = note: Parsing error: Unexpected token :                                                                     
+      = note: Parsing error: Unexpected token :
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/utils/getStackFrames.js:9:13
+     --> packages/react-error-overlay/src/utils/getStackFrames.js:9:13
       |
     9 |   import type { StackFrame } from './stack-frame';
       |
-    = note: Parsing error: Unexpected token {                                                                     
+      = note: Parsing error: Unexpected token {
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/utils/isBultinErrorName.js:9:37
+     --> packages/react-error-overlay/src/utils/isBultinErrorName.js:9:37
       |
     9 |   function isBultinErrorName(errorName: ?string) {
       |
-    = note: Parsing error: Unexpected token :                                                                     
+      = note: Parsing error: Unexpected token :
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/utils/isInternalFile.js:9:39
+     --> packages/react-error-overlay/src/utils/isInternalFile.js:9:39
       |
     9 |   function isInternalFile(sourceFileName: ?string, fileName: ?string) {
       |
-    = note: Parsing error: Unexpected token :                                                                     
+      = note: Parsing error: Unexpected token :
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/utils/mapper.js:20:9
+     --> packages/react-error-overlay/src/utils/mapper.js:20:9
       |
    20 |   frames: StackFrame[],
       |
-    = note: Parsing error: Unexpected token :                                                                     
+      = note: Parsing error: Unexpected token :
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/utils/parseCompileError.js:4:8
+     --> packages/react-error-overlay/src/utils/parseCompileError.js:4:8
       |
     4 |   export type ErrorLocation = {|
       |
-    = note: Parsing error: Unexpected token type                                                                  
+      = note: Parsing error: Unexpected token type
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/utils/parser.js:13:31
+     --> packages/react-error-overlay/src/utils/parser.js:13:31
       |
    13 |   function extractLocation(token: string): [string, number, number] {
       |
-    = note: Parsing error: Unexpected token :                                                                     
+      = note: Parsing error: Unexpected token :
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/utils/stack-frame.js:13:13
+     --> packages/react-error-overlay/src/utils/stack-frame.js:13:13
       |
    13 |   lineNumber: number;
       |
-    = note: Parsing error: Unexpected token :                                                                     
+      = note: Parsing error: Unexpected token :
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/utils/unmapper.js:14:22
+     --> packages/react-error-overlay/src/utils/unmapper.js:14:22
       |
    14 |   function count(search: string, string: string): number {
       |
-    = note: Parsing error: Unexpected token :                                                                     
+      = note: Parsing error: Unexpected token :
 
 
 error: r2c.eslint.error
-   --> packages/react-error-overlay/src/utils/warnings.js:9:13
+     --> packages/react-error-overlay/src/utils/warnings.js:9:13
       |
     9 |   import type { ReactFrame } from '../effects/proxyConsole';
       |
-    = note: Parsing error: Unexpected token {                                                                     
+      = note: Parsing error: Unexpected token {
 
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-scripts/config/env.js:43:5
+     --> packages/react-scripts/config/env.js:43:5
       |
    43 |   require('dotenv-expand')(
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-scripts/config/env.js:44:7
+     --> packages/react-scripts/config/env.js:44:7
       |
    44 |   require('dotenv').config({
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 
 error: r2c.eslint.import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
-   --> packages/react-scripts/config/modules.js:126:16
+     --> packages/react-scripts/config/modules.js:126:16
       |
-  126 |   const ts = require(resolve.sync('typescript', {      basedir: paths.appNodeModules,    }));
+  126 |   const ts = require(resolve.sync('typescript', {
+  127 |         basedir: paths.appNodeModules,
+  128 |       }));
       |
-    = note: Calls to require() should use string literals                                                         
+      = note: Calls to require() should use string literals
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-scripts/config/modules.js:126:16
+     --> packages/react-scripts/config/modules.js:126:16
       |
-  126 |   const ts = require(resolve.sync('typescript', {      basedir: paths.appNodeModules,    }));
+  126 |   const ts = require(resolve.sync('typescript', {
+  127 |         basedir: paths.appNodeModules,
+  128 |       }));
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
-   --> packages/react-scripts/config/modules.js:133:14
+     --> packages/react-scripts/config/modules.js:133:14
       |
   133 |   config = require(paths.appJsConfig);
       |
-    = note: Calls to require() should use string literals                                                         
+      = note: Calls to require() should use string literals
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-scripts/config/modules.js:133:14
+     --> packages/react-scripts/config/modules.js:133:14
       |
   133 |   config = require(paths.appJsConfig);
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.object-shorthand https://eslint.org/docs/rules/object-shorthand
-   --> packages/react-scripts/config/modules.js:142:5
+     --> packages/react-scripts/config/modules.js:142:5
       |
   142 |   additionalModulePaths: additionalModulePaths,
       |
-    = note: Expected property shorthand.                                                                          
+      = note: Expected property shorthand.
 
 
 error: r2c.eslint.import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
-   --> packages/react-scripts/config/paths.js:34:19
+     --> packages/react-scripts/config/paths.js:34:19
       |
    34 |   envPublicUrl || require(appPackageJson).homepage;
       |
-    = note: Calls to require() should use string literals                                                         
+      = note: Calls to require() should use string literals
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-scripts/config/paths.js:34:19
+     --> packages/react-scripts/config/paths.js:34:19
       |
    34 |   envPublicUrl || require(appPackageJson).homepage;
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.no-shadow https://eslint.org/docs/rules/no-shadow
-   --> packages/react-scripts/config/paths.js:65:47
+     --> packages/react-scripts/config/paths.js:65:47
       |
    65 |   const extension = moduleFileExtensions.find(extension =>
       |
-    = note: 'extension' is already declared in the upper scope.                                                   
+      = note: 'extension' is already declared in the upper scope.
 
 
 error: r2c.eslint.arrow-body-style https://eslint.org/docs/rules/arrow-body-style
-   --> packages/react-scripts/config/pnpTs.js:19:6
+     --> packages/react-scripts/config/pnpTs.js:19:6
       |
    19 |   ) => {
       |
-    = note: Unexpected block statement surrounding arrow body; move the returned value immediately after the `=>`.
+      = note: Unexpected block statement surrounding arrow body; move the returned value immediately after the `=>`.
 
 error: r2c.eslint.arrow-body-style https://eslint.org/docs/rules/arrow-body-style
-   --> packages/react-scripts/config/pnpTs.js:35:6
+     --> packages/react-scripts/config/pnpTs.js:35:6
       |
    35 |   ) => {
       |
-    = note: Unexpected block statement surrounding arrow body; move the returned value immediately after the `=>`.
+      = note: Unexpected block statement surrounding arrow body; move the returned value immediately after the `=>`.
 
 
 error: r2c.eslint.import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
-   --> packages/react-scripts/config/webpack.config.js:42:24
+     --> packages/react-scripts/config/webpack.config.js:42:24
       |
    42 |   const appPackageJson = require(paths.appPackageJson);
       |
-    = note: Calls to require() should use string literals                                                         
+      = note: Calls to require() should use string literals
 
 error: r2c.eslint.radix https://eslint.org/docs/rules/radix
-   --> packages/react-scripts/config/webpack.config.js:50:30
+     --> packages/react-scripts/config/webpack.config.js:50:30
       |
-   50 |   const imageInlineSizeLimit = parseInt(  process.env.IMAGE_INLINE_SIZE_LIMIT || '10000');
+   50 |   const imageInlineSizeLimit = parseInt(
+   51 |     process.env.IMAGE_INLINE_SIZE_LIMIT || '10000'
+   52 |   );
       |
-    = note: Missing radix parameter.                                                                              
+      = note: Missing radix parameter.
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-scripts/config/webpack.config.js:115:13
+     --> packages/react-scripts/config/webpack.config.js:115:13
       |
   115 |   require('postcss-flexbugs-fixes'),
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-scripts/config/webpack.config.js:116:13
+     --> packages/react-scripts/config/webpack.config.js:116:13
       |
   116 |   require('postcss-preset-env')({
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.object-shorthand https://eslint.org/docs/rules/object-shorthand
-   --> packages/react-scripts/config/webpack.config.js:198:7
+     --> packages/react-scripts/config/webpack.config.js:198:7
       |
   198 |   publicPath: publicPath,
       |
-    = note: Expected property shorthand.                                                                          
+      = note: Expected property shorthand.
 
 error: r2c.eslint.object-shorthand https://eslint.org/docs/rules/object-shorthand
-   --> packages/react-scripts/config/webpack.config.js:661:9
+     --> packages/react-scripts/config/webpack.config.js:661:9
       |
   661 |   publicPath: publicPath,
       |
-    = note: Expected property shorthand.                                                                          
+      = note: Expected property shorthand.
 
 
 error: r2c.eslint.import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
-   --> packages/react-scripts/config/webpackDevServer.config.js:96:9
+     --> packages/react-scripts/config/webpackDevServer.config.js:96:9
       |
    96 |   require(paths.proxySetup)(app);
       |
-    = note: Calls to require() should use string literals                                                         
+      = note: Calls to require() should use string literals
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-scripts/config/webpackDevServer.config.js:96:9
+     --> packages/react-scripts/config/webpackDevServer.config.js:96:9
       |
    96 |   require(paths.proxySetup)(app);
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 
 error: r2c.eslint.arrow-body-style https://eslint.org/docs/rules/arrow-body-style
-   --> packages/react-scripts/scripts/build.js:69:15
+     --> packages/react-scripts/scripts/build.js:69:15
       |
    69 |   .then(() => {
       |
-    = note: Unexpected block statement surrounding arrow body; move the returned value immediately after the `=>`.
+      = note: Unexpected block statement surrounding arrow body; move the returned value immediately after the `=>`.
 
 error: r2c.eslint.import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
-   --> packages/react-scripts/scripts/build.js:112:26
+     --> packages/react-scripts/scripts/build.js:112:26
       |
   112 |   const appPackage = require(paths.appPackageJson);
       |
-    = note: Calls to require() should use string literals                                                         
+      = note: Calls to require() should use string literals
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-scripts/scripts/build.js:112:26
+     --> packages/react-scripts/scripts/build.js:112:26
       |
   112 |   const appPackage = require(paths.appPackageJson);
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 
 error: r2c.eslint.no-shadow https://eslint.org/docs/rules/no-shadow
-   --> packages/react-scripts/scripts/eject.js:117:35
+     --> packages/react-scripts/scripts/eject.js:117:35
       |
   117 |   const files = folders.reduce((files, folder) => {
       |
-    = note: 'files' is already declared in the upper scope.                                                       
+      = note: 'files' is already declared in the upper scope.
 
 error: r2c.eslint.arrow-body-style https://eslint.org/docs/rules/arrow-body-style
-   --> packages/react-scripts/scripts/eject.js:117:53
+     --> packages/react-scripts/scripts/eject.js:117:53
       |
   117 |   const files = folders.reduce((files, folder) => {
       |
-    = note: Unexpected block statement surrounding arrow body; move the returned value immediately after the `=>`.
+      = note: Unexpected block statement surrounding arrow body; move the returned value immediately after the `=>`.
 
 error: r2c.eslint.import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
-   --> packages/react-scripts/scripts/eject.js:171:24
+     --> packages/react-scripts/scripts/eject.js:171:24
       |
   171 |   const ownPackage = require(path.join(ownPath, 'package.json'));
       |
-    = note: Calls to require() should use string literals                                                         
+      = note: Calls to require() should use string literals
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-scripts/scripts/eject.js:171:24
+     --> packages/react-scripts/scripts/eject.js:171:24
       |
   171 |   const ownPackage = require(path.join(ownPath, 'package.json'));
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
-   --> packages/react-scripts/scripts/eject.js:172:24
+     --> packages/react-scripts/scripts/eject.js:172:24
       |
   172 |   const appPackage = require(path.join(appPath, 'package.json'));
       |
-    = note: Calls to require() should use string literals                                                         
+      = note: Calls to require() should use string literals
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-scripts/scripts/eject.js:172:24
+     --> packages/react-scripts/scripts/eject.js:172:24
       |
   172 |   const appPackage = require(path.join(appPath, 'package.json'));
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 
 error: r2c.eslint.import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
-   --> packages/react-scripts/scripts/init.js:88:22
+     --> packages/react-scripts/scripts/init.js:88:22
       |
    88 |   const appPackage = require(path.join(appPath, 'package.json'));
       |
-    = note: Calls to require() should use string literals                                                         
+      = note: Calls to require() should use string literals
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-scripts/scripts/init.js:88:22
+     --> packages/react-scripts/scripts/init.js:88:22
       |
    88 |   const appPackage = require(path.join(appPath, 'package.json'));
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
-   --> packages/react-scripts/scripts/init.js:193:34
+     --> packages/react-scripts/scripts/init.js:193:34
       |
   193 |   const templateDependencies = require(templateDependenciesPath).dependencies;
       |
-    = note: Calls to require() should use string literals                                                         
+      = note: Calls to require() should use string literals
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-scripts/scripts/init.js:193:34
+     --> packages/react-scripts/scripts/init.js:193:34
       |
   193 |   const templateDependencies = require(templateDependenciesPath).dependencies;
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.arrow-body-style https://eslint.org/docs/rules/arrow-body-style
-   --> packages/react-scripts/scripts/init.js:195:52
+     --> packages/react-scripts/scripts/init.js:195:52
       |
   195 |   Object.keys(templateDependencies).map(key => {
       |
-    = note: Unexpected block statement surrounding arrow body; move the returned value immediately after the `=>`.
+      = note: Unexpected block statement surrounding arrow body; move the returned value immediately after the `=>`.
 
 
 error: r2c.eslint.arrow-body-style https://eslint.org/docs/rules/arrow-body-style
-   --> packages/react-scripts/scripts/start.js:84:15
+     --> packages/react-scripts/scripts/start.js:84:15
       |
    84 |   .then(() => {
       |
-    = note: Unexpected block statement surrounding arrow body; move the returned value immediately after the `=>`.
+      = note: Unexpected block statement surrounding arrow body; move the returned value immediately after the `=>`.
 
 error: r2c.eslint.import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
-   --> packages/react-scripts/scripts/start.js:96:21
+     --> packages/react-scripts/scripts/start.js:96:21
       |
    96 |   const appName = require(paths.appPackageJson).name;
       |
-    = note: Calls to require() should use string literals                                                         
+      = note: Calls to require() should use string literals
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-scripts/scripts/start.js:96:21
+     --> packages/react-scripts/scripts/start.js:96:21
       |
    96 |   const appName = require(paths.appPackageJson).name;
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
-   --> packages/react-scripts/scripts/start.js:118:26
+     --> packages/react-scripts/scripts/start.js:118:26
       |
   118 |   const proxySetting = require(paths.appPackageJson).proxy;
       |
-    = note: Calls to require() should use string literals                                                         
+      = note: Calls to require() should use string literals
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-scripts/scripts/start.js:118:26
+     --> packages/react-scripts/scripts/start.js:118:26
       |
   118 |   const proxySetting = require(paths.appPackageJson).proxy;
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 
 error: r2c.eslint.import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
-   --> packages/react-scripts/scripts/utils/createJestConfig.js:72:39
+     --> packages/react-scripts/scripts/utils/createJestConfig.js:72:39
       |
    72 |   const overrides = Object.assign({}, require(paths.appPackageJson).jest);
       |
-    = note: Calls to require() should use string literals                                                         
+      = note: Calls to require() should use string literals
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-scripts/scripts/utils/createJestConfig.js:72:39
+     --> packages/react-scripts/scripts/utils/createJestConfig.js:72:39
       |
    72 |   const overrides = Object.assign({}, require(paths.appPackageJson).jest);
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-scripts/scripts/utils/verifyPackageTree.js:36:26
+     --> packages/react-scripts/scripts/utils/verifyPackageTree.js:36:26
       |
    36 |   const ownPackageJson = require('../../package.json');
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 
 error: r2c.eslint.import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
-   --> packages/react-scripts/scripts/utils/verifyTypeScriptSetup.js:62:10
+     --> packages/react-scripts/scripts/utils/verifyTypeScriptSetup.js:62:10
       |
-   62 |   ts = require(resolve.sync('typescript', {      basedir: paths.appNodeModules,    }));
+   62 |   ts = require(resolve.sync('typescript', {
+   63 |         basedir: paths.appNodeModules,
+   64 |       }));
       |
-    = note: Calls to require() should use string literals                                                         
+      = note: Calls to require() should use string literals
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> packages/react-scripts/scripts/utils/verifyTypeScriptSetup.js:62:10
+     --> packages/react-scripts/scripts/utils/verifyTypeScriptSetup.js:62:10
       |
-   62 |   ts = require(resolve.sync('typescript', {      basedir: paths.appNodeModules,    }));
+   62 |   ts = require(resolve.sync('typescript', {
+   63 |         basedir: paths.appNodeModules,
+   64 |       }));
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 
 error: r2c.eslint.import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
-   --> packages/react-scripts/template-typescript/src/App.test.tsx:1:1
+     --> packages/react-scripts/template-typescript/src/App.test.tsx:1:1
       |
     1 |   import React from 'react';
       |
-    = note: 'react' should be listed in the project's dependencies, not devDependencies.                          
+      = note: 'react' should be listed in the project's dependencies, not devDependencies.
 
 error: r2c.eslint.import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
-   --> packages/react-scripts/template-typescript/src/App.test.tsx:2:1
+     --> packages/react-scripts/template-typescript/src/App.test.tsx:2:1
       |
     2 |   import ReactDOM from 'react-dom';
       |
-    = note: 'react-dom' should be listed in the project's dependencies, not devDependencies.                      
+      = note: 'react-dom' should be listed in the project's dependencies, not devDependencies.
 
 error: r2c.eslint.import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
-   --> packages/react-scripts/template-typescript/src/App.test.tsx:3:17
+     --> packages/react-scripts/template-typescript/src/App.test.tsx:3:17
       |
     3 |   import App from './App';
       |
-    = note: Unable to resolve path to module './App'.                                                             
+      = note: Unable to resolve path to module './App'.
 
 
 error: r2c.eslint.error
-   --> packages/react-scripts/template-typescript/src/App.tsx:5:10
+     --> packages/react-scripts/template-typescript/src/App.tsx:5:10
       |
     5 |   const App: React.FC = () => {
       |
-    = note: Parsing error: Unexpected token :                                                                     
+      = note: Parsing error: Unexpected token :
 
 
 error: r2c.eslint.import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
-   --> packages/react-scripts/template-typescript/src/index.tsx:1:1
+     --> packages/react-scripts/template-typescript/src/index.tsx:1:1
       |
     1 |   import React from 'react';
       |
-    = note: 'react' should be listed in the project's dependencies, not devDependencies.                          
+      = note: 'react' should be listed in the project's dependencies, not devDependencies.
 
 error: r2c.eslint.import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
-   --> packages/react-scripts/template-typescript/src/index.tsx:2:1
+     --> packages/react-scripts/template-typescript/src/index.tsx:2:1
       |
     2 |   import ReactDOM from 'react-dom';
       |
-    = note: 'react-dom' should be listed in the project's dependencies, not devDependencies.                      
+      = note: 'react-dom' should be listed in the project's dependencies, not devDependencies.
 
 error: r2c.eslint.import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
-   --> packages/react-scripts/template-typescript/src/index.tsx:4:17
+     --> packages/react-scripts/template-typescript/src/index.tsx:4:17
       |
     4 |   import App from './App';
       |
-    = note: Unable to resolve path to module './App'.                                                             
+      = note: Unable to resolve path to module './App'.
 
 error: r2c.eslint.import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
-   --> packages/react-scripts/template-typescript/src/index.tsx:5:32
+     --> packages/react-scripts/template-typescript/src/index.tsx:5:32
       |
     5 |   import * as serviceWorker from './serviceWorker';
       |
-    = note: Unable to resolve path to module './serviceWorker'.                                                   
+      = note: Unable to resolve path to module './serviceWorker'.
 
 
 error: r2c.eslint.error
-   --> packages/react-scripts/template-typescript/src/serviceWorker.ts:23:6
+     --> packages/react-scripts/template-typescript/src/serviceWorker.ts:23:6
       |
    23 |   type Config = {
       |
-    = note: Parsing error: Unexpected token Config                                                                
+      = note: Parsing error: Unexpected token Config
 
 
 error: r2c.eslint.import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
-   --> tasks/compile-lockfile.js:12:13
+     --> tasks/compile-lockfile.js:12:13
       |
    12 |   const fse = require('fs-extra');
       |
-    = note: 'fs-extra' should be listed in the project's dependencies, not devDependencies.                       
+      = note: 'fs-extra' should be listed in the project's dependencies, not devDependencies.
 
 error: r2c.eslint.import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
-   --> tasks/compile-lockfile.js:27:24
+     --> tasks/compile-lockfile.js:27:24
       |
    27 |   const dependencies = require('react-scripts/package.json').dependencies;
       |
-    = note: 'react-scripts' should be listed in the project's dependencies. Run 'npm i -S react-scripts' to add it
+      = note: 'react-scripts' should be listed in the project's dependencies. Run 'npm i -S react-scripts' to add it
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> tasks/compile-lockfile.js:27:24
+     --> tasks/compile-lockfile.js:27:24
       |
    27 |   const dependencies = require('react-scripts/package.json').dependencies;
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 
 error: r2c.eslint.import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
-   --> tasks/screencast-start.js:12:15
+     --> tasks/screencast-start.js:12:15
       |
    12 |   const execa = require('execa');
       |
-    = note: 'execa' should be listed in the project's dependencies, not devDependencies.                          
+      = note: 'execa' should be listed in the project's dependencies, not devDependencies.
 
 error: r2c.eslint.import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
-   --> tasks/screencast-start.js:13:14
+     --> tasks/screencast-start.js:13:14
       |
    13 |   const meow = require('meow');
       |
-    = note: 'meow' should be listed in the project's dependencies, not devDependencies.                           
+      = note: 'meow' should be listed in the project's dependencies, not devDependencies.
 
 error: r2c.eslint.import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
-   --> tasks/screencast-start.js:14:20
+     --> tasks/screencast-start.js:14:20
       |
    14 |   const multimatch = require('multimatch');
       |
-    = note: 'multimatch' should be listed in the project's dependencies, not devDependencies.                     
+      = note: 'multimatch' should be listed in the project's dependencies, not devDependencies.
 
 
 error: r2c.eslint.import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
-   --> tasks/screencast.js:14:15
+     --> tasks/screencast.js:14:15
       |
    14 |   const execa = require('execa');
       |
-    = note: 'execa' should be listed in the project's dependencies, not devDependencies.                          
+      = note: 'execa' should be listed in the project's dependencies, not devDependencies.
 
 error: r2c.eslint.import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
-   --> tasks/screencast.js:15:15
+     --> tasks/screencast.js:15:15
       |
    15 |   const tempy = require('tempy');
       |
-    = note: 'tempy' should be listed in the project's dependencies, not devDependencies.                          
+      = note: 'tempy' should be listed in the project's dependencies, not devDependencies.
 
 error: r2c.eslint.import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
-   --> tasks/screencast.js:41:18
+     --> tasks/screencast.js:41:18
       |
    41 |   const data = require(cast);
       |
-    = note: Calls to require() should use string literals                                                         
+      = note: Calls to require() should use string literals
 
 error: r2c.eslint.global-require https://eslint.org/docs/rules/global-require
-   --> tasks/screencast.js:41:18
+     --> tasks/screencast.js:41:18
       |
    41 |   const data = require(cast);
       |
-    = note: Unexpected require().                                                                                 
+      = note: Unexpected require().
 
 error: r2c.eslint.no-useless-catch https://eslint.org/docs/rules/no-useless-catch
-   --> tasks/screencast.js:54:5
+     --> tasks/screencast.js:54:5
       |
-   54 |   } catch (err) {    throw err;  } finally {
+   54 |   } catch (err) {
+   55 |       throw err;
+   56 |     } finally {
       |
-    = note: Unnecessary catch clause.                                                                             
+      = note: Unnecessary catch clause.
 
 
 r2c.eslint:
   no-var                               95▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  global-require                       49▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬               
-  error                                38▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬                     
-  import/no-extraneous-dependencies    18▕▬▬▬▬▬▬▬▬▬                                
-  import/no-dynamic-require            17▕▬▬▬▬▬▬▬▬▬                                
-  Other                                60▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬         
+  global-require                       49▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  error                                38▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  import/no-extraneous-dependencies    18▕▬▬▬▬▬▬▬▬▬
+  import/no-dynamic-require            17▕▬▬▬▬▬▬▬▬▬
+  Other                                60▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 

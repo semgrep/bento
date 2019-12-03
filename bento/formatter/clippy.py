@@ -24,29 +24,32 @@ class Clippy(Formatter):
     @staticmethod
     def __print_path(path: str, line: int, col: int) -> str:
         arrow = click.style("-->", fg="blue")
-        return f"   {arrow} {path}:{line}:{col}"
+        return f"     {arrow} {path}:{line}:{col}"
 
     def __print_violation(self, violation: Violation, max_message_len: int) -> str:
-        line = click.style(f"{violation.line:>4d}", fg=Colors.STATUS)
-
         message = Clippy.ellipsis_trim(violation.message, max_message_len)
 
         # save some space for what comes next
         message = f"{message:<{max_message_len}s}"
 
         nl = "\n"
-
-        context = violation.syntactic_context.rstrip("\n\r").strip()
-        context = context.replace("\n", "")
-
-        violation_message = f"    = {Clippy.BOLD}note:{Clippy.END} {message}{nl}"
         pipe = click.style("|", fg="blue")
+        violation_message = f"      = {Clippy.BOLD}note:{Clippy.END} {message}{nl}"
+
+        # Strip so trailing newlines are not printed out
+        context = violation.syntactic_context.rstrip()
 
         if context:
+            formatted_context = ""
+            for offset, line in enumerate(context.split("\n")):
+                line = line.rstrip()
+                line_no = click.style(
+                    f"{violation.line + offset:>4d}", fg=Colors.STATUS
+                )
+                formatted_context += f" {line_no} {pipe}   {line}{nl}"
+
             violation_message = (
-                f"      {pipe}{nl}"
-                f" {line} {pipe}   {context}{nl}"
-                f"      {pipe}{nl}"
+                f"      {pipe}{nl}" f"{formatted_context}" f"      {pipe}{nl}"
             ) + violation_message
         return violation_message
 
@@ -84,7 +87,10 @@ class Clippy(Formatter):
             for v in sorted(vv, key=lambda v: (v.line, v.column, v.message)):
                 lines.append(self.__print_error_message(v))
                 lines.append(Clippy.__print_path(path, v.line, v.column))
-                lines.append(self.__print_violation(v, max_message_len))
+
+                violation_message = self.__print_violation(v, max_message_len)
+                for l in violation_message.split("\n"):
+                    lines.append(l)
             lines.append("")
 
         return lines

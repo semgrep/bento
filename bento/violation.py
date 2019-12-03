@@ -29,7 +29,11 @@ class Violation(object):
     def syntactic_identifier_int(self) -> int:
         # todo: move to library
         # Use murmur3 hash to minimize collisions
-        str_id = str((self.check_id, self.path, self.syntactic_context))
+        clean_syntactic_context = "\n".join(
+            (s.strip() for s in self.syntactic_context.split("\n"))
+        )
+
+        str_id = str((self.check_id, self.path, clean_syntactic_context))
         return mmh3.hash128(str_id)
 
     def syntactic_identifier_str(self) -> str:
