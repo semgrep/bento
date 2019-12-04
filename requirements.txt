@@ -15,6 +15,7 @@ click~=7.0
 docker~=3.7
 frozendict~=1.2
 gitpython~=2.1
+packaging>=14.0
 pre-commit>=1.0.0,<=1.18.3
 psutil~=5.6.3
 pymmh3~=0.0.5
