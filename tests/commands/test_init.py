@@ -65,43 +65,40 @@ def test_init_already_setup() -> None:
     context = Context(base_path=SIMPLE)
     result = CliRunner(mix_stderr=False).invoke(init, obj=context)
 
-    expectation = """╭──────────────────────────────────────────────────────────────────────────────╮
+    expectation = """
+╭──────────────────────────────────────────────────────────────────────────────╮
 │                             Bento Initialization                             │
 ╰──────────────────────────────────────────────────────────────────────────────╯
-
-╭──────────────────────────────────────────────────────────────────────────────╮
-│                            Project Identification                            │
-╰──────────────────────────────────────────────────────────────────────────────╯
+Creating default ignore file at .bentoignore․․․․․․․․․․․․․․․․․․․․․ 👋 Skipped   
+Creating default configuration at .bento.yml․․․․․․․․․․․․․․․․․․․․․ 👋 Skipped   
+Updating .gitignore․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․ 👋 Skipped   
 
 Detected project with Python and node-js (with react)
 
 Bento archive is already configured on this project.
 
 To use Bento:
-  view archived results                    $ bento check --show-all
-  check a specific path                    $ bento check [PATH]
-  disable a check                          $ bento disable check [TOOL] [CHECK]
-  get help about a command                 $ bento [COMMAND] --help
+  view archived results․․․․․․․․․․․․․․․․․․․ $ bento check --show-all
+  check a specific path․․․․․․․․․․․․․․․․․․․ $ bento check [PATH]
+  disable a check․․․․․․․․․․․․․․․․․․․․․․․․․ $ bento disable check [TOOL] [CHECK]
+  get help about a command․․․․․․․․․․․․․․․․ $ bento [COMMAND] --help
+
 
 ╭──────────────────────────────────────────────────────────────────────────────╮
 │                                  Thank You                                   │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Bento is initialized!
 
-Please add Bento to version control:
+Help and feedback: Reach out to us at support@r2c.dev or file an issue on
+GitHub. We’d love to hear from you!
 
-  $ git add .gitignore .bento?* && git commit -m 'Add Bento to project'
-
-Need help or want to share feedback? Reach out to us at support@r2c.dev or file
-an issue on GitHub. We’d love to hear from you!
-
-Join #bento in our community Slack for support, to talk with other users, and
-share feedback.
+Community: Join #bento on our community Slack. Get support, talk with other
+users, and share feedback.
 
 From all of us at r2c, thank you for trying Bento! We can’t wait to hear what
 you think.
 
-"""
+"""  # noqa - above string purposely contains trailing whitespace
 
     assert result.stderr == expectation
 

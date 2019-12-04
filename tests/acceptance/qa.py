@@ -28,13 +28,13 @@ def match_expected(output: str, expected: Expectation, test_identifier: str) -> 
     output = remove_trailing_space(output)
 
     if isinstance(expected, str):
-        expected = remove_trailing_space(expected).replace("\\b", "\b")
-        if output.strip() != expected.strip():
+        escaped = remove_trailing_space(expected).replace("\\b", "\b")
+        if output.strip() != escaped.strip():
             print("==== EXPECTED ====")
             print(expected)
             print("==== ACTUAL ====")
-            print(output)
-        assert output.strip() == expected.strip(), test_identifier
+            print(output.replace("\b", "\\b"))
+        assert output.strip() == escaped.strip(), test_identifier
     else:
         for elem in expected:
             expected = remove_trailing_space(elem).strip()

@@ -154,11 +154,12 @@ class Runner:
                     ascii="□■",
                     mininterval=BAR_UPDATE_INTERVAL,
                     desc=tool.tool_id().ljust(
-                        bento.util.PRINT_WIDTH - 36, bento.util.LEADER_CHAR
+                        bento.util.PRINT_WIDTH - 34, bento.util.LEADER_CHAR
                     ),
                     ncols=bento.util.PRINT_WIDTH - 2,
-                    bar_format="  {desc:s}"
-                    + click.style("|{bar}| {elapsed}{postfix}", dim=True),
+                    bar_format=click.style(
+                        "{desc:s}|{bar}| {elapsed}{postfix}", dim=True
+                    ),
                     leave=False,
                 )
                 for ix, tool in indices_and_tools
@@ -176,7 +177,5 @@ class Runner:
                 click.echo("", err=True)
             for b in self._bars:
                 b.close()
-
-        click.echo("", err=True)
 
         return all_results

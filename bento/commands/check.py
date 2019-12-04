@@ -24,6 +24,7 @@ from bento.util import (
     AutocompleteSuggestions,
     Colors,
     echo_error,
+    echo_newline,
     echo_success,
     echo_warning,
 )
@@ -123,7 +124,7 @@ def check(
     fmts = context.formatters
     findings_to_log: List[Any] = []
 
-    click.echo("Running Bento checks...", err=True)
+    click.echo("Running Bento checks...\n", err=True)
 
     ctx = noop_context()
     if paths and len(paths) > 0:
@@ -143,6 +144,9 @@ def check(
         tools = context.tools.values()
         all_results = runner.parallel_results(tools, baseline, paths)
         elapsed = time.time() - before
+
+    # Progress bars terminate on whitespace
+    echo_newline()
 
     is_error = False
 

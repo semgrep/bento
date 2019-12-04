@@ -7,7 +7,7 @@ import bento.result
 import bento.tool_runner
 from bento.context import Context
 from bento.decorators import with_metrics
-from bento.util import echo_error
+from bento.util import echo_error, echo_newline
 
 
 @click.command()
@@ -17,6 +17,8 @@ def archive(context: Context, show_bars: bool = True) -> None:
     """
     Adds all current findings to the whitelist.
     """
+    click.secho("Running Bento archive...\n" "", err=True)
+
     if not context.config_path.exists():
         echo_error("No Bento configuration found. Please run `bento init`.")
         sys.exit(3)
@@ -37,6 +39,8 @@ def archive(context: Context, show_bars: bool = True) -> None:
     n_found = 0
     n_existing = 0
     found_hashes: Set[str] = set()
+    if show_bars:
+        echo_newline()
 
     for tool_id, vv in all_findings:
         if isinstance(vv, Exception):
@@ -56,7 +60,7 @@ def archive(context: Context, show_bars: bool = True) -> None:
     with context.baseline_file_path.open("w") as json_file:
         json_file.writelines(new_baseline)
 
-    success_str = click.style(f"Project analyzed with {len(tools)} tools.", bold=True)
+    success_str = click.style(f"Project analyzed with {len(tools)} tool(s).", bold=True)
     success_str += f"\n{n_new} findings were added to your archive as a baseline."
     if n_existing > 0:
         success_str += f"\nBento also kept {n_existing} existing findings"

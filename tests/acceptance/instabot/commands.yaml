@@ -21,22 +21,20 @@ steps:
       ╭──────────────────────────────────────────────────────────────────────────────╮
       │                             Bento Initialization                             │
       ╰──────────────────────────────────────────────────────────────────────────────╯
-      Creating default ignore file at .bentoignore․․․․․․․․․․․․․․․․․․․․🍜 Setting up\b\b\b\b\b\b\b\b\b\b\b\b🍱 Done
-      Creating default configuration at .bento.yml․․․․․․․․․․․․․․․․․․․․🍜 Setting up\b\b\b\b\b\b\b\b\b\b\b\b🍱 Done
-
-      ╭──────────────────────────────────────────────────────────────────────────────╮
-      │                            Project Identification                            │
-      ╰──────────────────────────────────────────────────────────────────────────────╯
+      Creating default ignore file at .bentoignore․․․․․․․․․․․․․․․․․․․․․ 🍜 Setting up\b\b\b\b\b\b\b\b\b\b\b\b\b\b 🍱 Done
+      Creating default configuration at .bento.yml․․․․․․․․․․․․․․․․․․․․․ 🍜 Setting up\b\b\b\b\b\b\b\b\b\b\b\b\b\b 🍱 Done
+      Updating .gitignore․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․ 👋 Skipped
 
       Detected project with Python
 
       ⚠ Skipping project analysis due to noninteractive terminal.
 
       To use Bento:
-        view archived results                    $ bento check --show-all
-        check a specific path                    $ bento check [PATH]
-        disable a check                          $ bento disable check [TOOL] [CHECK]
-        get help about a command                 $ bento [COMMAND] --help
+        view archived results․․․․․․․․․․․․․․․․․․․ $ bento check --show-all
+        check a specific path․․․․․․․․․․․․․․․․․․․ $ bento check [PATH]
+        disable a check․․․․․․․․․․․․․․․․․․․․․․․․․ $ bento disable check [TOOL] [CHECK]
+        get help about a command․․․․․․․․․․․․․․․․ $ bento [COMMAND] --help
+
 
       ╭──────────────────────────────────────────────────────────────────────────────╮
       │                                  Thank You                                   │
@@ -47,11 +45,11 @@ steps:
 
         $ git add .gitignore .bento?* && git commit -m 'Add Bento to project'
 
-      Need help or want to share feedback? Reach out to us at support@r2c.dev or file
-      an issue on GitHub. We’d love to hear from you!
+      Help and feedback: Reach out to us at support@r2c.dev or file an issue on
+      GitHub. We’d love to hear from you!
 
-      Join #bento in our community Slack for support, to talk with other users, and
-      share feedback.
+      Community: Join #bento on our community Slack. Get support, talk with other
+      users, and share feedback.
 
       From all of us at r2c, thank you for trying Bento! We can’t wait to hear what
       you think.
@@ -124,7 +122,10 @@ steps:
       - --agree
       - archive
     expected_err: |
-      Project analyzed with 4 tools.
+      Running Bento archive...
+
+
+      Project analyzed with 4 tool(s).
       66 findings were added to your archive as a baseline.
       Please check '.bento-whitelist.yml' in to source control.
     expected_out: ""

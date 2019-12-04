@@ -36,12 +36,14 @@ import bento.constants as constants
 
 EMPTY_DICT = frozendict({})
 MAX_PRINT_WIDTH = 80
+ANSI_WIDTH = 4  # number of characters to emit an ANSI control code
 LEADER_CHAR = "․"
-SETUP_TEXT = "🍜 Setting up"
+SETUP_TEXT = " 🍜 Setting up"
 SETUP_WIDTH = len(SETUP_TEXT)
-PROGRESS_TEXT = "🍤 Running".ljust(SETUP_WIDTH, " ")
-DONE_TEXT = "🍱 Done".ljust(SETUP_WIDTH, " ")
-RESET_TEXT = "".ljust(SETUP_WIDTH, "\b")
+PROGRESS_TEXT = " 🍤 Running".ljust(SETUP_WIDTH, " ")
+DONE_TEXT = " 🍱 Done".ljust(SETUP_WIDTH, " ")
+SKIP_TEXT = " 👋 Skipped".ljust(SETUP_WIDTH, " ")
+RESET_TEXT = "".ljust(SETUP_WIDTH + 1, "\b")  # +1 for emoji width
 
 AutocompleteSuggestions = List[Union[str, Tuple[str, str]]]
 
@@ -194,15 +196,29 @@ def echo_success(text: str, indent: str = "") -> None:
 
 
 def echo_box(text: str) -> None:
-    """Prints text in a header box"""
+    """
+    Prints text bold, in a header box
+
+    By default, the box is PRINT_WIDTH characters wide, unless the text is too
+    long for the box, in which case the box is extended to fit.
+    """
     lines = text.split("\n")
     max_len = max(len(l) for l in lines)
     max_len = max(PRINT_WIDTH - 4, max_len)
     hrule = "".ljust(max_len + 2, "─")
+    echo_newline()
     secho(f"╭{hrule}╮", err=True)
     for l in lines:
-        secho(f"│ {l:^{max_len}s} │", err=True)
+        p = style(f"{l:^{max_len}s}", bold=True)
+        secho(f"│ {p} │", err=True)
     secho(f"╰{hrule}╯", err=True)
+
+
+def echo_newline() -> None:
+    """
+    Prints an informational newline (printed to stderr)
+    """
+    secho("", err=True)
 
 
 def wrap(text: str) -> str:
@@ -210,12 +226,12 @@ def wrap(text: str) -> str:
     return "\n".join(py_wrap(text, PRINT_WIDTH - 1))
 
 
-def echo_wrap(text: str) -> None:
+def echo_wrap(text: str, **kwargs: Any) -> None:
     """Prints a wrapped paragraph"""
-    secho(wrap(text), err=True)
+    secho(wrap(text), err=True, **kwargs)
 
 
-def echo_progress(text: str, extra: int = 0) -> Callable[[], None]:
+def echo_progress(text: str, extra: int = 0, skip: bool = False) -> Callable[[], None]:
     """
     Prints a binary in-progress / done bar
 
@@ -225,15 +241,18 @@ def echo_progress(text: str, extra: int = 0) -> Callable[[], None]:
       mark_done()
 
     :param extra: Number of unprinted characters in text (each ANSI code point is 4 characters)
+    :param skip: If true, "Skipped" is printed instead, and callback is a no-op
     """
-    width = PRINT_WIDTH - 4 - SETUP_WIDTH + extra
+    width = PRINT_WIDTH - 2 - SETUP_WIDTH + ANSI_WIDTH + extra
     logging.info(text)
-    secho(
-        f"{text.ljust(width, LEADER_CHAR)}{style(SETUP_TEXT, dim=True)}",
-        nl=False,
-        err=True,
-    )
-    return lambda: secho(f"{RESET_TEXT}{style(DONE_TEXT, dim=True)}", err=True)
+    leader = style("".ljust(width - len(text), LEADER_CHAR), dim=True)
+
+    if skip:
+        secho(f"{text}{leader}{style(SKIP_TEXT, dim=True)}", err=True, dim=True)
+        return lambda: None
+    else:
+        secho(f"{text}{leader}{SETUP_TEXT}", nl=False, err=True, dim=True)
+        return lambda: secho(f"{RESET_TEXT}{DONE_TEXT}", err=True, dim=True)
 
 
 # Taken from http://www.madhur.co.in/blog/2015/11/02/countdownlatch-python.html
