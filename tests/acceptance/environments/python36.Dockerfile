@@ -6,6 +6,8 @@ COPY . bento/
 
 WORKDIR /bento
 RUN pip install requests
+RUN pip install pipenv
+RUN pipenv install --dev
 RUN make package
 
 #######################################

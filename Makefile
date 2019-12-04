@@ -22,6 +22,7 @@ clean:
 .PHONY: package
 package:
 	@echo "Building Bento"
+	PIPENV_IGNORE_VIRTUALENVS=1 pipenv run pipenv_to_requirements
 	python3 setup.py sdist bdist_wheel
 
 .PHONY: release
