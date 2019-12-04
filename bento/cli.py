@@ -1,7 +1,7 @@
 import logging
 import os
 import sys
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Optional
 
 import click
 from packaging.version import Version
@@ -50,16 +50,6 @@ def get_version() -> str:
     from bento import __version__
 
     return __version__
-
-
-def _print_version(
-    ctx: click.Context, param: Union[click.Option, click.Parameter], value: Any
-) -> None:
-    """Print the current r2c-cli version based on setuptools runtime"""
-    if not value or ctx.resilient_parsing:
-        return
-    click.echo(f"bento/{get_version()}")
-    ctx.exit()
 
 
 def __post_email_to_mailchimp(email: str) -> bool:
@@ -223,13 +213,8 @@ def verify_registration(agree: bool, email: Optional[str], context: Context) -> 
 
 @click.group(epilog="To get help for a specific command, run `bento COMMAND --help`")
 @click.help_option("-h", "--help")
-@click.option(
-    "--version",
-    is_flag=True,
-    help="Show current version bento.",
-    callback=_print_version,
-    expose_value=False,
-    is_eager=True,
+@click.version_option(
+    prog_name="bento", version=get_version(), message="%(prog)s/%(version)s"
 )
 @click.option(
     "--base-path",
