@@ -5,7 +5,7 @@ import attr
 import click
 
 from bento.formatter.base import FindingsMap, Formatter
-from bento.util import PRINT_WIDTH
+from bento.util import PRINT_WIDTH, render_link
 from bento.violation import Violation
 
 
@@ -49,7 +49,7 @@ class Histo(Formatter):
             PRINT_WIDTH - check_width - 10
         )  # 5 for check, 5 for fixed characters
         check_str = click.style(
-            self.render_link(
+            render_link(
                 hit.check_id[:check_width],
                 href=hit.link,
                 print_alternative=False,

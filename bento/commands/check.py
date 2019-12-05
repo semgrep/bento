@@ -24,8 +24,9 @@ from bento.error import NodeError
 from bento.tool import Tool
 from bento.util import (
     AutocompleteSuggestions,
-    Colors,
     echo_error,
+    echo_newline,
+    echo_next_step,
     echo_success,
     echo_warning,
 )
@@ -137,7 +138,7 @@ def check(
     fmts = context.formatters
     findings_to_log: List[Any] = []
 
-    click.echo("Running Bento checks...", err=True)
+    click.echo("Running Bento checks...\n", err=True)
 
     ctx = noop_context()
     if paths and len(paths) > 0:
@@ -161,6 +162,9 @@ def check(
 
         all_results = runner.parallel_results(tools, baseline, paths)
         elapsed = time.time() - before
+
+    # Progress bars terminate on whitespace
+    echo_newline()
 
     is_error = False
 
@@ -219,18 +223,16 @@ You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PA
         context.stop_user_timer()
 
         echo_warning(f"{n_all_filtered} finding(s) in {elapsed:.2f} s\n")
-        suppress_str = click.style("bento archive", fg=Colors.STATUS)
         if not context.is_init:
-            click.echo(f"◦ To suppress all findings run `{suppress_str}`.", err=True)
+            echo_next_step("To suppress all findings", "bento archive")
     else:
         echo_success(f"0 findings in {elapsed:.2f} s\n")
 
     n_archived = n_all - n_all_filtered
     if n_archived > 0 and not show_all:
-        show_cmd = click.style(f"bento check {SHOW_ALL}", fg=Colors.STATUS)
-        click.echo(
-            f"◦ Not showing {n_archived} archived finding(s). To view, run `{show_cmd}`.",
-            err=True,
+        echo_next_step(
+            f"Not showing {n_archived} archived finding(s). To view",
+            f"bento check {SHOW_ALL}",
         )
 
     if is_error:

@@ -7,7 +7,7 @@ import bento.result
 import bento.tool_runner
 from bento.context import Context
 from bento.decorators import with_metrics
-from bento.util import echo_error
+from bento.util import echo_error, echo_newline, echo_next_step
 
 
 @click.command()
@@ -17,6 +17,9 @@ def archive(context: Context, show_bars: bool = True) -> None:
     """
     Adds all current findings to the whitelist.
     """
+    if not context.is_init:
+        click.secho("Running Bento archive...\n" "", err=True)
+
     if not context.config_path.exists():
         echo_error("No Bento configuration found. Please run `bento init`.")
         sys.exit(3)
@@ -37,6 +40,8 @@ def archive(context: Context, show_bars: bool = True) -> None:
     n_found = 0
     n_existing = 0
     found_hashes: Set[str] = set()
+    if show_bars:
+        echo_newline()
 
     for tool_id, vv in all_findings:
         if isinstance(vv, Exception):
@@ -56,8 +61,10 @@ def archive(context: Context, show_bars: bool = True) -> None:
     with context.baseline_file_path.open("w") as json_file:
         json_file.writelines(new_baseline)
 
-    success_str = click.style(f"Project analyzed with {len(tools)} tools.", bold=True)
-    success_str += f"\n{n_new} findings were added to your archive as a baseline."
+    success_str = click.style(f"Project analyzed with {len(tools)} tool(s).", bold=True)
+    success_str += (
+        f"\n{n_new} finding(s) were archived, and will be hidden in future Bento runs."
+    )
     if n_existing > 0:
         success_str += f"\nBento also kept {n_existing} existing findings"
         if n_removed > 0:
@@ -66,7 +73,13 @@ def archive(context: Context, show_bars: bool = True) -> None:
             success_str += "."
     elif n_removed > 0:
         success_str += f"\nBento also removed {n_removed} fixed findings."
-    if not context.is_init:
-        success_str += f"\nPlease check '{context.pretty_path(context.baseline_file_path)}' in to source control."
 
     click.echo(success_str, err=True)
+
+    if not context.is_init:
+        echo_newline()
+        echo_next_step("To view archived results", "bento check --show-all")
+        click.echo(
+            f"\nPlease check '{context.pretty_path(context.baseline_file_path)}' in to source control.",
+            err=True,
+        )
