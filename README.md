@@ -88,17 +88,23 @@ $ bento --help
 Usage: bento [OPTIONS] COMMAND [ARGS]...
 
 Options:
-  --version  Show current Bento version.
-  --agree    Automatically agree to terms of service.
-  --help     Show this message and exit.
+  -h, --help             Show this message and exit.
+  --version              Show current version bento.
+  --base-path DIRECTORY  Path to the directory containing the code, as well as
+                         the .bento.yml file.
+  --agree                Automatically agree to terms of service.
+  --email TEXT           Email address to use while running this command
+                         without global configs e.g. in CI
 
 Commands:
   archive       Adds all current findings to the whitelist.
   check         Checks for new findings.
-  disable       Disables a check.
-  enable        Enables a check.
+  disable       Turn OFF a tool or check.
+  enable        Turn ON a tool or check.
   init          Autodetects and installs tools.
   install-hook  Installs Bento as a git pre-commit hook.
+
+  To get help for a specific command, run `bento COMMAND --help`
 ```
 
 ### Exit Codes
