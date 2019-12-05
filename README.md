@@ -35,6 +35,8 @@ Install, configure, and adopt Bento in seconds. Runs 100% locally.
   <span> · </span>
   <a href="#running-bento-in-ci">CI/CD</a>
   <span> · </span>
+  <a href="#running-bento-as-a-git-hook">Git Hook</a>
+  <span> · </span>
   <a href="#help-and-community">Help & Community</a>
 </h3>
 
@@ -80,7 +82,7 @@ $ bento archive
 Bento is at its best when run automatically as a Git pre-commit hook (i.e. `bento install-hook`) or as part of CI.
 
 ### Command Line Options
-```bash
+```
 $ bento --help
 
 Usage: bento [OPTIONS] COMMAND [ARGS]...
@@ -134,6 +136,23 @@ bento --agree --email <YOUR_EMAIL> check
 `bento check` will exit with a non-zero exit code if it finds issues in your code (see [Exit Codes](#exit-codes)). You can run `bento --agree --email <YOUR_EMAIL> check || true` if you'd like to prevent Bento from blocking your build. Otherwise, address the issues or unblock yourself by running `bento archive`.
 
 Please [open an issue](https://github.com/returntocorp/bento/issues/new?template=feature_request.md) if you need help setting up Bento with another CI provider. If you set up Bento with your provider of choice, we’d appreciate a PR to add instructions here! 
+
+### Running Bento as a Git Hook
+Bento can automatically analyze your staged files when `git commit` is run. Configured as a Git hook, Bento ensures every commit to your project is vetted and that no new issues have been introduced to the codebase.
+
+To install Bento as Git hook:
+
+```bash
+$ bento install-hook
+```
+
+If Git hooks ever incorrectly block your commit you can always skip them by passing the `--no-verify` flag at commit-time (use this sparingly):
+
+```bash
+$ git commit --no-verify
+```
+
+Bento's Git hook can save the round-trip time involved with fixing a failed build if you're using [Bento in CI](#running-bento-in-ci). 
 
 ## Help and Community
 Need help or want to share feedback? We’d love to hear from you!
