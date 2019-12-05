@@ -34,8 +34,8 @@ def test_archive_updates_whitelist() -> None:
 
     expectation = {
         "r2c.bandit": {
-            "d546320ff6d704181f23ed6653971025",
             "6f77d9d773cc5248ae20b83f80a7b26a",
+            "822c79186b1678f5173e166028576865",
         },
         "r2c.eslint": {"6daebd293be00a3d97e19de4a1a39fa5"},
         "r2c.flake8": {

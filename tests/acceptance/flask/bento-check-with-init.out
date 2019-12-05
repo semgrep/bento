@@ -10,8 +10,7 @@ warning: r2c.bandit.B102 https://bandit.readthedocs.io/en/latest/plugins/b102_ex
 warning: r2c.bandit.B307 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b307-eval
      --> src/flask/cli.py:892:0
       |
-  892 |            with open(startup, "r") as f:
-  893 |                eval(compile(f.read(), startup, "exec"), ctx)
+  892 |                eval(compile(f.read(), startup, "exec"), ctx)
       |
       = note: Use of possibly insecure function - consider using safer ast.literal_eval.                                                                                                                              
 
@@ -19,9 +18,7 @@ warning: r2c.bandit.B307 https://bandit.readthedocs.io/en/latest/blacklists/blac
 warning: r2c.bandit.B102 https://bandit.readthedocs.io/en/latest/plugins/b102_exec_used.html
      --> src/flask/config.py:132:0
       |
-  132 |                with open(filename, mode="rb") as config_file:
-  133 |                    exec(compile(config_file.read(), filename, "exec"), d.__dict__)
-  134 |            except IOError as e:
+  132 |                    exec(compile(config_file.read(), filename, "exec"), d.__dict__)
       |
       = note: Use of exec detected.                                                                                                                                                                                   
 
@@ -29,18 +26,14 @@ warning: r2c.bandit.B102 https://bandit.readthedocs.io/en/latest/plugins/b102_ex
 advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
      --> tests/test_appctx.py:74:0
       |
-   74 |            raise Exception("dummy")
-   75 |        except Exception:
-   76 |            pass
+   74 |        except Exception:
       |
       = note: Try, Except, Pass detected.                                                                                                                                                                             
 
 advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
      --> tests/test_appctx.py:93:0
       |
-   93 |                raise Exception("dummy")
-   94 |            except Exception:
-   95 |                pass
+   93 |            except Exception:
       |
       = note: Try, Except, Pass detected.                                                                                                                                                                             
 
@@ -48,27 +41,21 @@ advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try
 advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
      --> tests/test_basic.py:784:0
       |
-  784 |                raise TypeError()
-  785 |            except Exception:
-  786 |                pass
+  784 |            except Exception:
       |
       = note: Try, Except, Pass detected.                                                                                                                                                                             
 
 advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
      --> tests/test_basic.py:796:0
       |
-  796 |                raise TypeError()
-  797 |            except Exception:
-  798 |                pass
+  796 |            except Exception:
       |
       = note: Try, Except, Pass detected.                                                                                                                                                                             
 
 error: r2c.bandit.B201 https://bandit.readthedocs.io/en/latest/plugins/b201_flask_debug_true.html
      --> tests/test_basic.py:1912:0
       |
- 1912 |        hostname, port = "localhost", 8000
- 1913 |        app.run(hostname, port, debug=True)
- 1914 |        assert rv["result"] == "running on %s:%s ..." % (hostname, port)
+ 1912 |        app.run(hostname, port, debug=True)
       |
       = note: A Flask app appears to be run with debug=True, which exposes the Werkzeug debugger and allows the execution of arbitrary code.                                                                          
 
@@ -83,18 +70,14 @@ error: r2c.flask.secure-set-cookie https://checks.bento.dev/en/latest/flake8-fla
 advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
      --> tests/test_reqctx.py:45:0
       |
-   45 |            raise Exception("dummy")
-   46 |        except Exception:
-   47 |            pass
+   45 |        except Exception:
       |
       = note: Try, Except, Pass detected.                                                                                                                                                                             
 
 advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
      --> tests/test_reqctx.py:64:0
       |
-   64 |                raise Exception("dummy")
-   65 |            except Exception:
-   66 |                pass
+   64 |            except Exception:
       |
       = note: Try, Except, Pass detected.                                                                                                                                                                             
 
@@ -103,7 +86,6 @@ error: r2c.bandit.B201 https://bandit.readthedocs.io/en/latest/plugins/b201_flas
      --> tests/test_templating.py:404:0
       |
   404 |        app.run(debug=True)
-  405 |        assert app.templates_auto_reload
       |
       = note: A Flask app appears to be run with debug=True, which exposes the Werkzeug debugger and allows the execution of arbitrary code.                                                                          
 
