@@ -158,7 +158,7 @@ To install Bento as a Git hook:
 $ bento install-hook
 ```
 
-If Git hooks ever incorrectly block your commit you can always skip them by passing the `--no-verify` flag at commit-time (use this sparingly):
+If Git hooks ever incorrectly block your commit, you can skip them by passing the `--no-verify` flag at commit-time (use this sparingly):
 
 ```bash
 $ git commit --no-verify
