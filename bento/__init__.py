@@ -2,5 +2,5 @@
 
 __name__ = "bento-cli"
 __author__ = "Return To Corporation"
-__version__ = "0.6.2b3"
+__version__ = "0.6.2b4"
 R2C_SUPPORT_EMAIL = "bento@r2c.dev"
