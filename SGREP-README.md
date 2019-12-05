@@ -23,7 +23,7 @@ On macOS and Ubuntu:
 
 ```
 $ pip3 install bento-cli==0.7.0b6
-# now change direction to a project of interest
+# now change directory to a project of interest
 $ bento init
 ```
 
