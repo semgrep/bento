@@ -22,7 +22,7 @@ System requirements:
 On macOS and Ubuntu:
 
 ```
-$ pip3 install bento-cli
+$ pip3 install bento-cli==0.7.0b5
 $ bento init
 ```
 
