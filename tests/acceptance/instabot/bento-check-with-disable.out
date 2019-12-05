@@ -26,8 +26,7 @@ error: r2c.flake8.A001 https://lintlyci.github.io/Flake8Rules/rules/A001.html
 advice: r2c.bandit.B605 https://bandit.readthedocs.io/en/latest/plugins/b605_start_process_with_a_shell.html
      --> examples/multi_script_CLI.py:42:0
       |
-   42 |            time.sleep(5)
-   43 |            os.system("cls")
+   42 |            os.system("cls")
       |
       = note: Starting a process with a shell: Seems safe, but may be changed in the future, consider rewriting without shell
 
@@ -42,9 +41,7 @@ error: r2c.flake8.A001 https://lintlyci.github.io/Flake8Rules/rules/A001.html
 advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
      --> instabot/api/api.py:538:0
       |
-  538 |                    self.last_json = json.loads(response.text)
-  539 |                except Exception:
-  540 |                    pass
+  538 |                except Exception:
       |
       = note: Try, Except, Pass detected.
 
@@ -158,18 +155,14 @@ error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
 warning: r2c.bandit.B301 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b301-pickle
      --> instabot/bot/bot_checkpoint.py:66:0
       |
-   66 |            with open(fname, "rb") as f:
-   67 |                checkpoint = pickle.load(f)
-   68 |            if isinstance(checkpoint, Checkpoint):
+   66 |                checkpoint = pickle.load(f)
       |
       = note: Pickle and modules that wrap it can be unsafe when used to deserialize untrusted data, possible security issue.
 
 advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
      --> instabot/bot/bot_checkpoint.py:71:0
       |
-   71 |                os.remove(fname)
-   72 |        except Exception:
-   73 |            pass
+   71 |        except Exception:
       |
       = note: Try, Except, Pass detected.
 

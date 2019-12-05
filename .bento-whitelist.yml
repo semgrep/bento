@@ -1,34 +1,6 @@
 r2c.bandit:
   violations:
-    20abcea1b24eb8ff1e6aed1c33f47fb2:
-      check_id: B602
-      message: subprocess call with shell=True identified, security issue.
-      path: bento/extra/python_tool.py
-      severity: 2
-      syntactic_context: "             wrapped,\n             shell=True,\n      \
-        \       cwd=str(self.base_path),\n             encoding=\"utf8\",\n      \
-        \       executable=\"/bin/bash\",\n             env=env,\n             stdout=subprocess.PIPE,\n\
-        \             stderr=subprocess.PIPE,\n         )\n         stdout, stderr\
-        \ = v.communicate()\n         after = time()"
-      tool_id: r2c.bandit
-    30fad05838897b7ff4f15ffc8e194660:
-      check_id: B602
-      message: subprocess call with shell=True identified, security issue.
-      path: tests/extra/test_python_tool.py
-      severity: 2
-      syntactic_context: "     proc = subprocess.Popen(\n         cmd, shell=True,\
-        \ stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding=\"utf8\"\n    \
-        \ )\n     stdout, stderr = proc.communicate()"
-      tool_id: r2c.bandit
-    5a4c9f7287dcc63f65ede98ac81ee151:
-      check_id: B602
-      message: subprocess call with shell=True identified, security issue.
-      path: tests/extra/test_python_tool.py
-      severity: 2
-      syntactic_context: "     proc = subprocess.Popen(\n         cmd, env=env, shell=True,\
-        \ stdout=subprocess.PIPE, encoding=\"utf8\"\n     )\n     res, _ = proc.communicate()"
-      tool_id: r2c.bandit
-    c0441bba86cc9ce3775cbadde6f3fe06:
+    1062d649612b2a6f2873bfff0e7c7067:
       check_id: B602
       message: subprocess call with shell=True identified, security issue.
       path: bento/extra/hadolint.py
@@ -36,27 +8,49 @@ r2c.bandit:
       syntactic_context: "                 f\"docker run --network none --rm -i {self.DOCKER_IMAGE}\
         \ hadolint --format json - < {file}\",\n                 shell=True,\n   \
         \              cwd=self.base_path,\n                 encoding=\"utf8\",\n\
-        \                 stdout=subprocess.PIPE,\n                 stderr=subprocess.PIPE,\n\
-        \             )\n             hadolint_output = res.stdout\n             hadolint_json\
-        \ = json.loads(hadolint_output)"
+        \                 stdout=subprocess.PIPE,\n                 stderr=subprocess.PIPE,"
       tool_id: r2c.bandit
-    cb09ff7333a5a433b189c697bfa69116:
+    5f54c7b612ae91017088f36ea409faa5:
+      check_id: B602
+      message: subprocess call with shell=True identified, security issue.
+      path: tests/extra/test_python_tool.py
+      severity: 2
+      syntactic_context: "     proc = subprocess.Popen(\n         cmd, shell=True,\
+        \ stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding=\"utf8\""
+      tool_id: r2c.bandit
+    8cb303211d02994d804e5ddc995ccc38:
+      check_id: B602
+      message: subprocess call with shell=True identified, security issue.
+      path: tests/extra/test_python_tool.py
+      severity: 2
+      syntactic_context: "     proc = subprocess.Popen(\n         cmd, env=env, shell=True,\
+        \ stdout=subprocess.PIPE, encoding=\"utf8\""
+      tool_id: r2c.bandit
+    a2c4503e8a1358b4e417754b97c28048:
       check_id: B602
       message: subprocess call with shell=True identified, security issue.
       path: tests/extra/test_python_tool.py
       severity: 2
       syntactic_context: "         env=env,\n         shell=True,\n         stdout=subprocess.PIPE,\n\
-        \         stderr=subprocess.PIPE,\n         encoding=\"utf8\",\n     )\n \
-        \    stdout, stderr = proc.communicate()\n     assert not stdout"
+        \         stderr=subprocess.PIPE,\n         encoding=\"utf8\","
       tool_id: r2c.bandit
-    f8ea89cbc1237d72dcb7ac244658cee3:
+    a75a4820e9cfb8fe9324dc0f1671bbc8:
+      check_id: B602
+      message: subprocess call with shell=True identified, security issue.
+      path: bento/extra/python_tool.py
+      severity: 2
+      syntactic_context: "             wrapped,\n             shell=True,\n      \
+        \       cwd=str(self.base_path),\n             encoding=\"utf8\",\n      \
+        \       executable=\"/bin/bash\",\n             env=env,\n             stdout=subprocess.PIPE,\n\
+        \             stderr=subprocess.PIPE,"
+      tool_id: r2c.bandit
+    c6b42c4f58df6ae2e1d6a0dc31c8a355:
       check_id: B602
       message: subprocess call with shell=True identified, security issue.
       path: tests/extra/test_python_tool.py
       severity: 2
-      syntactic_context: "     # NOTE: This is a deliberate demonstration of a shell\
-        \ injection\n     proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,\
-        \ encoding=\"utf8\")\n     res, _ = proc.communicate()"
+      syntactic_context: '     proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE,
+        encoding="utf8")'
       tool_id: r2c.bandit
 r2c.eslint:
   violations:
@@ -68,8 +62,13 @@ r2c.eslint:
       syntactic_context: x = "potato";
       tool_id: r2c.eslint
 r2c.flake8:
-  violations: {}
+  violations:
+    b0f635f6ec3c1ea48b57915726c320c2:
+      check_id: F841
+      message: local variable 'expected_returncode' is assigned to but never used
+      path: tests/acceptance/qa.py
+      severity: 2
+      syntactic_context: '    expected_returncode = step.get("returncode")'
+      tool_id: r2c.flake8
 r2c.requests:
-  violations: {}
-r2c.sgrep:
   violations: {}
