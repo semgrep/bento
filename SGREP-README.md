@@ -1,18 +1,20 @@
-# sgrep Readme
+# sgrep README
 
-The goal of sgrep is to allow programmers to express complex code *patterns* with a familiar syntax. The idea is to mix the convenience of grep with the correctness and precision of a compiler frontend. We integrated sgrep into Bento to allow developers and security engineers to easily develop and run custom checks on every commit.
+The goal of `sgrep` is to allow programmers to express complex code *patterns* with a familiar syntax. The idea is to mix the convenience of grep with the correctness and precision of a compiler frontend. Using sgrep via [Bento](http://bento.dev/) to allow developers and security engineers to easily develop and run custom checks on every commit.
 
 ## Principles
 
 sgrep’s design follows 3 principles:
- 
-1. Use **metavariables **to support finding generalized patterns.
-2. Provide an **ellipses operator** **‘...’ **to support pattern matching code sequences.
-3. Leverage **code equivalences **in the language so one pattern can match variations of code.
+
+1. **Precision:** `sgrep` works at the **abstract syntax tree level**, not character or line-level. sgrep does not care about differences in spacing, indentation, or comments
+2. **Grep-like syntax: **`sgrep` queries look very similar to the original language and use familiar grep-like syntax
+3. **Support pattern matching:** `sgrep` provides operators like metavariables (for generic matching) and ellipses (for sequence expansion).** **
 
 ## Installation
 
-Requirements:
+`sgrep` has good support for Python and JavaScript, with some support for Java and C, and more languages on the way! 
+
+System requirements:
 
 * Python 3.6+
 * Docker
@@ -26,9 +28,9 @@ $ bento init
 
 
 
-## Usage
+## Usage in Bento
 
-Bento, r2c’s program analysis toolkit, has a suite of tools and checks it runs by default: **sgrep is not enabled by default**. You can run sgrep independently with the following command:
+[Bento](http://bento.dev/) has a suite of tools and checks it runs by default: **sgrep is not currently enabled by default**. You can run sgrep independently with the following command:
 
 ```
 `$ bento check -t r2c.sgrep`
@@ -52,7 +54,7 @@ Custom checks in Bento are defined in `.bento-sgrep.yml`. Note that the order of
 rules:
   - id: is_equal_to_self
     pattern: $X == $X
-    message: This may be a comparator typo (e.g., `>=`, `!=`). X == X will always be true, unless X is NaN.
+    message: "This may be a comparator typo (e.g., `>=`, `!=`). X == X will always be true, unless X is NaN."
     languages: [python, javascript]
     severity: WARNING
 ```
@@ -67,7 +69,11 @@ Each rule object has these fields:
 |languages	|array<string>	|Languages the check is relevant for. Can be python or javascript.	|Y	|
 |severity	|string	|Case sensitive string equal to WARNING, ERROR, OK	|Y	|
 
+## Get in Touch!
 
+Have suggestions, feature requests, or bug reports? Send us a note at [support@r2c.dev](mailto:support@r2c.dev). You can also [file an issue](https://github.com/returntocorp/bento/issues/new?assignees=&labels=bug&template=bug_report.md&title=), [submit a feature request](https://github.com/returntocorp/bento/issues/new?assignees=&labels=feature-request&template=feature_request.md&title=), or [join our community Slack](https://join.slack.com/t/r2c-community/shared_invite/enQtNjU0NDYzMjAwODY4LWE3NTg1MGNhYTAwMzk5ZGRhMjQ2MzVhNGJiZjI1ZWQ0NjQ2YWI4ZGY3OGViMGJjNzA4ODQ3MjEzOWExNjZlNTA).
+
+sgrep’s primary author started development of the tool at Facebook. For information about the old version of sgrep, see the archive at https://github.com/facebookarchive/pfff/wiki/Sgrep.
 
 ## Example Patterns
 
@@ -81,8 +87,6 @@ pattern: 1 + foo(42)
 foobar(1 + foo(42)) + whatever()
 ```
 
-
-
 ### metavariables
 
 ```
@@ -93,9 +97,17 @@ pattern: $X + $Y
 foo() + bar()
 ```
 
+**Matching Identifiers**
 
+```
+pattern: import $X
 
-### reusING metavariableS
+# CODE EXAMPLES
+
+import random
+```
+
+**Reusing Metavariables**
 
 ```
 pattern: ￼$X == $X
@@ -108,6 +120,16 @@ pattern: ￼$X == $X
 
 
 ### Function Calls
+
+```
+pattern: foo(...)
+
+# CODE EXAMPLES
+
+foo(1,2)
+```
+
+The above will not match patterns like `obj.foo(1,2)` because the AST for a function differs from a method call internally.
 
 **With Arguments After a Match**
 
@@ -148,17 +170,17 @@ json_data.get('success', None)
 **Keyword Arguments in Any Order **
 
 ```
-pattern: foo(kwd1=$X, color=$Y) 
+pattern: foo(kwd1=$X, err=$Y) 
 
 # CODE EXAMPLES (keyword arguments in arbitrary order)
 
-foo(color=2, kwd1=True)
+foo(err=False, kwd1=True)
 
 ```
 
+### String Matching
 
-
-### match any string by reusing again the ‘...’ operator
+**Using the ‘...’ Operator**
 
 ```
 pattern: foo("...")
@@ -169,9 +191,7 @@ foo("this is a specific string")
 
 ```
 
-
-
-### match Special strings using regexps
+**Using [OCaml regular expression](https://caml.inria.fr/pub/docs/manual-ocaml/libref/Str.html) Patterns**
 
 ```
 pattern: foo("=~/.*a.*/")
@@ -181,39 +201,11 @@ pattern: foo("=~/.*a.*/")
 foo("this has an a")
 ```
 
-Current limitation: the regexp syntax is the one used in OCaml, see https://caml.inria.fr/pub/docs/manual-ocaml/libref/Str.html. We are considering switching to a Perl-style regexp by using PCRE library.
-
-
-### Match ANY statement
+### conditionals
 
 ```
-pattern: if $E:
-           return $E
-
-# CODE EXAMPLES
-
-if test_env:
-    return test_env
-```
-
-### Match ANY identifiers using metavariables
-
-```
-￼'import $X'
-
-# CODE EXAMPLES
-
-import random
-```
-
-
-
-### match conditionals
-
-```
-'if $X:
-     $Y
-'
+pattern: if $X:
+           $Y
 
 # CODE EXAMPLES
 
@@ -221,18 +213,9 @@ if __name__ == "__main__":
     print('hello world')
 ```
 
-Note that for multiline patterns, you need to use the `-f` option and store the pattern in a file, e.g., 
-`sgrep -f cond-stmt.sgrep foo.py`
-
-Note you can’t match a half statement because that is not a valid AST element. See the limitations section below.
-
-
-### match a sequence of statements with ‘...’
-
 ```
-'if $X:
-     ...
-'
+pattern: if $X:
+           ...
 
 # CODE EXAMPLES
 
@@ -242,14 +225,13 @@ if __name__ == "__main__":
     bar()
 ```
 
-
+Note you can’t match a half statement; both of the examples above must specify the contents of the condition’s body (e.g. `$Y` and `...`),  otherwise they are not valid AST elements.
 
 ### In a statement context, a Metavariable can also match any statement
 
 ```
-'if $X:
-   $Y
-'
+pattern: if $X:
+           $Y
 
 # CODE EXAMPLES
 if 1:
@@ -263,8 +245,7 @@ if 3:     # matches a “block” (a single statement containing multiple statem
   bar()
 ```
 
-Because in Python there is usually no terminator (e.g., `;`), there is an ambiguity about ‘$Y’ in the above, which could match a statement and also an expression that is then matched later.
-
+Because in Python there is usually no terminator (e.g., `;`), there is an ambiguity about `$Y` in the above, which could match a statement and also an expression that is then matched later.
 
 ### Match on import types
 
@@ -298,32 +279,8 @@ because in the above, foo is not an expression, but rather a name part of an imp
 
 
 
-### Method calls and calls are parsed differently
-
-```
-'foo(...)'
-should match code like
-foo(1,2)
-but will not match code like
-obj.foo(1,2)
-because the AST for a Call and a method Call is different internally.
-to match method calls use
-'$X.foo(...)'
-```
-
-
-
 ### YOU can not use a half expression or half statement pattern
 
 ```
-'1+'  or 'if $X:' are not valid patterns, because they are not full AST elements.
+'1+'  or 'if $X:' are not valid patterns because they are not full AST elements.
 ```
-
-### 
-
-## More info
-
-Have suggestions, feature requests, or bug reports? Send us a note at hello@r2c.dev
-
-See the archive at [https://github.com/facebookarchive/pfff/wiki/Sgrep](https://github.com/facebookarchive/pfff/wiki/Sgrep) for an introduction to sgrep, its motivations, and its basic interface.
-
