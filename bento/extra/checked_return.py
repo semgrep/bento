@@ -1,4 +1,5 @@
 import json
+import os
 import re
 from typing import Iterable, List, Pattern, Type
 
@@ -63,8 +64,13 @@ class CheckedReturnTool(StrTool):
         ignore_files = {
             e.path for e in self.context.file_ignores.entries() if not e.survives
         }
+        targets = [os.path.realpath(p) for p in files]
         return run_analyzer_on_local_code(
-            self.ANALYZER_NAME, self.ANALYZER_VERSION, self.base_path, ignore_files
+            self.ANALYZER_NAME,
+            self.ANALYZER_VERSION,
+            self.base_path,
+            ignore_files,
+            targets,
         )
 
     @classmethod

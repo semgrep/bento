@@ -80,7 +80,11 @@ def test_run_analyzer_on_local_code(tmp_path: Path) -> None:
     )
     file.write_text(input_json)
     output_json = run_analyzer_on_local_code(
-        "r2c/testonly-cat-output-json", Version("1.0.2"), tmp_path, set()
+        "r2c/testonly-cat-output-json",
+        Version("1.0.2"),
+        tmp_path,
+        set(),
+        {str(tmp_path)},
     )
     assert input_json == output_json
 
@@ -125,7 +129,9 @@ def test_ignore_files_factory(tmp_path: Path) -> None:
     shutil.copytree(
         source,
         destination,
-        ignore=_ignore_files_factory({str(ignored_dir), str(ignored_file)}),
+        ignore=_ignore_files_factory(
+            {str(ignored_dir), str(ignored_file)}, {str(source)}
+        ),
     )
 
     # Delete source and move back destination for easy comparion
@@ -133,6 +139,66 @@ def test_ignore_files_factory(tmp_path: Path) -> None:
     shutil.copytree(destination, source)
     expect_copy = {unignored_file, file_in_unignored_dir}
 
+    copied = set()
     for root, _, files in os.walk(source):
         for file in files:
-            assert Path(f"{root}/{file}") in expect_copy
+            copied.add(Path(f"{root}/{file}"))
+
+    assert expect_copy == copied
+
+
+def test_ignore_files_factory_path(tmp_path: Path) -> None:
+    """
+        Test that the function used for shutil.copytree ignore is correct
+
+        Creates the following directory tree:
+        - unignore_dir
+            - file.txt
+        - ignored_dir
+            - file.txt
+        - ignored_file.txt
+        - unignored_file.txt
+
+        And expects the following directory tree to be copied:
+        - unignored_dir
+            - file.txt
+    """
+    source = tmp_path / "source"
+    source.mkdir()
+    # destination.mkdir()
+
+    unignored_dir = source / "unignored_dir"
+    unignored_dir.mkdir()
+    ignored_dir = source / "ignored_dir"
+    ignored_dir.mkdir()
+    other_file = ignored_dir / "file.txt"
+    other_file.touch()
+
+    unignored_file = source / "unignored_file.txt"
+    unignored_file.touch()
+    ignored_file = source / "ignored_file.txt"
+    ignored_file.touch()
+    file_in_unignored_dir = unignored_dir / "file.txt"
+    file_in_unignored_dir.touch()
+
+    destination = tmp_path / "destination"
+    # Copy tree using ignores
+    shutil.copytree(
+        source,
+        destination,
+        ignore=_ignore_files_factory(
+            {str(ignored_dir), str(ignored_file)}, {str(unignored_dir)}
+        ),
+    )
+
+    # Delete source and move back destination for easy comparion
+    shutil.rmtree(source)
+    shutil.copytree(destination, source)
+    expect_copy = {file_in_unignored_dir}
+
+    copied = set()
+    for root, _, files in os.walk(source):
+        for file in files:
+            copied.add(Path(f"{root}/{file}"))
+
+    assert expect_copy == copied

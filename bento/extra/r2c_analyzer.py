@@ -9,7 +9,7 @@ import os
 import pathlib
 import shutil
 import tempfile
-from typing import Callable, Dict, List, Set
+from typing import Callable, Dict, List, Set, Iterable
 from pathlib import Path
 
 from semantic_version import Version
@@ -195,11 +195,48 @@ def prepull_analyzers(analyzer_name: str, version: Version) -> None:
 
 
 def _ignore_files_factory(
-    ignore_files: Set[str]
+    ignore_files: Set[str], target_files: Set[str]
 ) -> Callable[[str, List[str]], List[str]]:
     """
         Takes list of absolute paths of files to ignore and returns
         a function compatible with what shutil.copytree's ignore_file expects.
+
+        Assumes all elements of IGNORE_FILES and TARGET_FILES are absolute paths
+
+        Said function used with copytree will copy all files under TARGET_FILES
+        (i.e. if elem in target file is a file will include that file, if subdir
+        then will include all dirs/files in said subdir) that are not in IGNORE_FILES
+
+        Given the following directory tree:
+        - root
+            - unignore_dir
+                - file.txt
+            - ignored_dir
+                - file.txt
+            - ignored_file.txt
+            - unignored_file.txt
+
+        ----------------------------------------------------------------
+
+        shutil.copytree called with
+        ignore_files = set("root/ingored_dir", "root/ignored_file.txt")
+        target_files = set("root/unignored_dir")
+
+        will result in the following directory tree:
+        - root
+            - unignored_dir
+                - file.txt
+
+        ----------------------------------------------------------------
+
+        shutil.copytree called with
+        ignore_files = set("root/ingored_dir", "root/ignored_file.txt")
+        target_files = set("root")
+        will result in the following directory tree:
+        - root
+            - unignored_dir
+                - file.txt
+            - unignored_file.txt
     """
 
     def ignore_files_function(root: str, members: List[str]) -> List[str]:
@@ -207,9 +244,20 @@ def _ignore_files_factory(
             shutil.copytree ignore_file expects a function that takes
             as argument the full path to a directory and a list
             of files/dirs in the directory and returns a list of files/dirs
-            to ignore (a subset of the second argument)
+            to ignore (a subset of the second argument).
         """
-        return [path for path in members if f"{root}/{path}" in ignore_files]
+        return [
+            path
+            for path in members
+            if f"{root}/{path}" in ignore_files
+            or not any(
+                # Suppose there is a file in a/b/c/d.py
+                # LHS: If the target path is a/b/c/d.py we still want a/b to not be ignored to we keep traversing the tree.
+                # RHS: If the target path is a we want a/b to be analyzed (so not ignored)
+                r.startswith(f"{root}/{path}") or f"{root}/{path}".startswith(r)
+                for r in target_files
+            )
+        ]
 
     return ignore_files_function
 
@@ -219,6 +267,7 @@ def _copy_local_input(
     va: VersionedAnalyzer,
     analyzer_input: LocalCode,
     ignore_files: Set[str],
+    target_files: Set[str],
 ) -> None:
     """'Uploads' the local input as the output of the given analyzer.
     """
@@ -238,7 +287,7 @@ def _copy_local_input(
             output_fs_path,
             symlinks=True,
             ignore_dangling_symlinks=True,
-            ignore=_ignore_files_factory(ignore_files),
+            ignore=_ignore_files_factory(ignore_files, target_files),
         )
 
         # "upload" output using our LocalDir infra (actually just a copy)
@@ -246,7 +295,11 @@ def _copy_local_input(
 
 
 def run_analyzer_on_local_code(
-    analyzer_name: str, version: Version, target: Path, ignore_files: Set[str]
+    analyzer_name: str,
+    version: Version,
+    base: Path,
+    ignore_files: Set[str],
+    target_files: Iterable[str],
 ) -> str:
     """Run an analyzer on a local folder.
     """
@@ -287,10 +340,14 @@ def run_analyzer_on_local_code(
         if sa.versioned_analyzer.name in SPECIAL_ANALYZERS
     ]
 
-    analyzer_input = LocalCode(str(target))
+    analyzer_input = LocalCode(str(base))
     for fetcher in fetchers:
         _copy_local_input(
-            analyzer, fetcher.versioned_analyzer, analyzer_input, ignore_files
+            analyzer,
+            fetcher.versioned_analyzer,
+            analyzer_input,
+            ignore_files,
+            set(target_files),
         )
 
     analyzer.full_analyze_request(
