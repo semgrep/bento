@@ -1,4 +1,12 @@
 ==> Bento Summary
+warning: r2c.bandit.B102 https://bandit.readthedocs.io/en/latest/plugins/b102_exec_used.html
+     --> src/flask/_compat.py:52:0
+      |
+   52 |        exec("def reraise(tp, value, tb=None):\n raise tp, value, tb")
+      |
+      = note: Use of exec detected.
+
+
 warning: r2c.bandit.B307 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b307-eval
      --> src/flask/cli.py:892:0
       |
@@ -6,6 +14,16 @@ warning: r2c.bandit.B307 https://bandit.readthedocs.io/en/latest/blacklists/blac
   893 |                eval(compile(f.read(), startup, "exec"), ctx)
       |
       = note: Use of possibly insecure function - consider using safer ast.literal_eval.
+
+
+warning: r2c.bandit.B102 https://bandit.readthedocs.io/en/latest/plugins/b102_exec_used.html
+     --> src/flask/config.py:132:0
+      |
+  132 |                with open(filename, mode="rb") as config_file:
+  133 |                    exec(compile(config_file.read(), filename, "exec"), d.__dict__)
+  134 |            except IOError as e:
+      |
+      = note: Use of exec detected.
 
 
 advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
@@ -54,13 +72,6 @@ error: r2c.bandit.B201 https://bandit.readthedocs.io/en/latest/plugins/b201_flas
       |
       = note: A Flask app appears to be run with debug=True, which exposes the Werkzeug debugger and allows the execution of arbitrary code.
 
-error: r2c.flask.secure-set-cookie https://checks.bento.dev/en/latest/flake8-flask/secure-set-cookie
-     --> tests/test_basic.py:1956:9
-      |
- 1956 |           r.set_cookie("foo", "bar" * 100)
-      |
-      = note: Flask cookies should be handled securely by setting secure=True, httponly=True, and samesite='Lax' in set_cookie(...).  If your situation calls for different settings, explicitly disable the settin...
-
 
 advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
      --> tests/test_reqctx.py:45:0
@@ -91,10 +102,8 @@ error: r2c.bandit.B201 https://bandit.readthedocs.io/en/latest/plugins/b201_flas
 
 
 r2c.bandit:
-  B110                  6▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  B201                  2▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  B307                  1▕▬▬▬▬▬▬▬▬▬
-
-r2c.flask:
-  secure-set-cookie     1▕▬▬▬▬▬▬▬▬▬
+  B110           6▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  B102           2▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  B201           2▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  B307           1▕▬▬▬▬▬▬▬▬▬▬
 
