@@ -79,7 +79,7 @@ To set aside preexisting results so you only see issues in new code:
 $ bento archive
 ```
 
-Bento is at its best when run automatically as a Git pre-commit hook (i.e. `bento install-hook`) or as part of CI.
+Bento is at its best when run automatically. See [Running Bento in CI](#running-bento-in-ci) and [Running Bento as a Git Hook](#running-bento-as-a-git-hook) for details.
 
 ### Command Line Options
 ```
@@ -144,9 +144,9 @@ bento --agree --email <YOUR_EMAIL> check
 Please [open an issue](https://github.com/returntocorp/bento/issues/new?template=feature_request.md) if you need help setting up Bento with another CI provider. If you set up Bento with your provider of choice, we’d appreciate a PR to add instructions here! 
 
 ### Running Bento as a Git Hook
-Bento can automatically analyze your staged files when `git commit` is run. Configured as a Git hook, Bento ensures every commit to your project is vetted and that no new issues have been introduced to the codebase.
+Bento can automatically analyze your staged files when `git commit` is run. Configured as a Git pre-commit hook, Bento ensures every commit to your project is vetted and that no new issues have been introduced to the codebase.
 
-To install Bento as Git hook:
+To install Bento as a a Git hook:
 
 ```bash
 $ bento install-hook
