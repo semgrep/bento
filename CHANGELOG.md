@@ -2,6 +2,14 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.6.2](https://pypi.org/project/bento-cli/0.6.2/) - 2019-12-05
+
+### Fixed
+
+- Fixed an issue where upgrade notifications were not shown to users.
+- Fix an issue where certain `.gitignore` patterns would cause an error or be skipped by Bento
+- Properly render multi-line context in the Clippy formatter.
+
 ## [0.6.1](https://pypi.org/project/bento-cli/0.6.1/) - 2019-11-26
 
 ### Fixed
