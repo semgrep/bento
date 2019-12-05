@@ -135,13 +135,19 @@ jobs:
 Otherwise, you can simply install and run Bento in CI with the following commands:
 
 ```bash
-pip3 install bento-cli && bento --version
-bento --agree --email <YOUR_EMAIL> check
+$ pip3 install bento-cli && bento --version
+$ bento --agree --email <YOUR_EMAIL> check
 ```
 
-`bento check` will exit with a non-zero exit code if it finds issues in your code (see [Exit Codes](#exit-codes)). You can run `bento --agree --email <YOUR_EMAIL> check || true` if you'd like to prevent Bento from blocking your build. Otherwise, address the issues or unblock yourself by running `bento archive`.
+`bento check` will exit with a non-zero exit code if it finds issues in your code (see [Exit Codes](#exit-codes)). To suppress this behaviour you can pipe its output to `true`:
 
-Please [open an issue](https://github.com/returntocorp/bento/issues/new?template=feature_request.md) if you need help setting up Bento with another CI provider. If you set up Bento with your provider of choice, we’d appreciate a PR to add instructions here! 
+ ```bash
+ $ bento --agree --email <YOUR_EMAIL> check || true
+ ```
+ 
+Otherwise, address the issues or archive them with `bento archive`.
+
+If you need help setting up Bento with another CI provider please [open an issue](https://github.com/returntocorp/bento/issues/new?template=feature_request.md). Documentation PRs welcome if you set up Bento with a CI provider that isn't documented here!
 
 ### Running Bento as a Git Hook
 Bento can automatically analyze your staged files when `git commit` is run. Configured as a Git pre-commit hook, Bento ensures every commit to your project is vetted and that no new issues have been introduced to the codebase.
