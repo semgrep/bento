@@ -33,9 +33,7 @@ Install, configure, and adopt Bento in seconds. Runs 100% locally.
   <span> · </span>
   <a href="#usage">Usage</a>
   <span> · </span>
-  <a href="#running-bento-in-ci">CI/CD</a>
-  <span> · </span>
-  <a href="#running-bento-as-a-git-hook">Git Hook</a>
+  <a href="#integrations">Integrations</a>
   <span> · </span>
   <a href="#help-and-community">Help & Community</a>
 </h3>
@@ -79,7 +77,7 @@ To set aside preexisting results so you only see issues in new code:
 $ bento archive
 ```
 
-Bento is at its best when run automatically. See [Running Bento in CI](#running-bento-in-ci) and [Running Bento as a Git Hook](#running-bento-as-a-git-hook) for details.
+Bento is at its best when run automatically. See [Integrations](#integrations) for details.
 
 ### Command Line Options
 ```
@@ -112,6 +110,8 @@ Commands:
 - `0`: Bento ran successfully and found no errors
 - `2`: Bento ran successfully and found issues in your code
 - `3`: Bento or one of its underlying tools failed to run
+
+## Integrations
 
 ### Running Bento in CI
 If you use CircleCI, add the following job:
