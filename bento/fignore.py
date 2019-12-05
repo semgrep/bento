@@ -14,6 +14,7 @@ CONTROL_REGEX = re.compile(r"(?!<\\):")  # Matches unescaped colons
 MULTI_CHAR_REGEX = re.compile(
     r"(?!<\\)\[.*(?!<\\)\]"
 )  # Matches anything in unescaped brackets
+COMMENT_START_REGEX = re.compile(r"(?P<ignore_pattern>.*?)(?:\s+|^)#.*")
 
 
 @attr.s
@@ -133,12 +134,15 @@ class Parser(object):
 
     @staticmethod
     def remove_comments(line: str) -> Iterator[str]:
-        """Removes comments from a line, as well as trailing whitespace"""
-        cleaned = line
-        ix = line.find("#")
-        if ix >= 0:
-            cleaned = line[0:ix]
-        yield cleaned.rstrip()
+        """If a line has a comment, remove the comment and just return the ignore pattern
+        """
+        m = COMMENT_START_REGEX.match(line)
+        if m:
+            yield m.groupdict().get(
+                "ignore_pattern", ""
+            )  # return empty string if entire line is a comment
+        else:
+            yield line.rstrip()
 
     @staticmethod
     def filter_supported(line: str) -> Iterator[str]:

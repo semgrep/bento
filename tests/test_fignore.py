@@ -105,6 +105,18 @@ def test_escape_random_character() -> None:
     assert r"**/#" in processor.process([r"\#"])
 
 
+def test_include_emacs_swap() -> None:
+    assert r"*#" in __parse(r"*#")
+
+
+def test_strip_comments() -> None:
+    assert "foo" in __parse(r"foo # this is a comment")
+
+
+def test_comment_line() -> None:
+    assert not __parse(r"# this is a comment at the start of the line")
+
+
 def test_load_git_include() -> None:
     assert not __parse(r"!foo")
 
