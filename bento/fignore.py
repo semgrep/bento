@@ -10,7 +10,6 @@ import attr
 
 from bento.util import echo_warning
 
-IGNORE_ESCAPE_CHARACTERS = {":", "\\", "[", "]", "!"}
 CONTROL_REGEX = re.compile(r"(?!<\\):")  # Matches unescaped colons
 MULTI_CHAR_REGEX = re.compile(
     r"(?!<\\)\[.*(?!<\\)\]"
@@ -199,13 +198,8 @@ class Processor(object):
         is_escape = False
         for c in line:
             if is_escape:
-                if c in IGNORE_ESCAPE_CHARACTERS:
-                    out += c
-                    is_escape = False
-                else:
-                    raise ValueError(
-                        f"Unknown escape sequence '\\{c}' in ignore pattern '{line}'"
-                    )
+                out += c
+                is_escape = False
             elif c == "\\":
                 is_escape = True
             else:
