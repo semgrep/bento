@@ -24,6 +24,7 @@ class Context(BaseContext):
     )
     _tool_inventory = attr.ib(type=Dict[str, Type[Tool]], init=False, default=None)
     _tools = attr.ib(type=Dict[str, Tool], init=False, default=None)
+    _configured_tools = attr.ib(type=Dict[str, Tool], init=False, default=None)
 
     def __repr__(self) -> str:
         return f"Context({self.base_path})"
@@ -37,11 +38,20 @@ class Context(BaseContext):
     @property
     def tools(self) -> Dict[str, Tool]:
         """
-        Returns all configured tools
+        Returns all enabled tools
         """
         if self._tools is None:
-            self._tools = self._load_configured_tools()
+            self._tools = self._load_enabled_tools()
         return self._tools
+
+    @property
+    def configured_tools(self) -> Dict[str, Tool]:
+        """
+        Returns all configured tools (whether or not they are disabled)
+        """
+        if self._configured_tools is None:
+            self._configured_tools = self._load_configured_tools()
+        return self._configured_tools
 
     @property
     def tool_inventory(self) -> Dict[str, Type[Tool]]:
@@ -93,9 +103,11 @@ class Context(BaseContext):
         logging.debug(f"Known tool IDs are {', '.join(all_tools.keys())}")
         return all_tools
 
-    def _load_configured_tools(self) -> Dict[str, Tool]:
+    def _load_enabled_tools(self) -> Dict[str, Tool]:
         """
-        Returns a list of this project's configured tools
+        Returns a list of this project's enabled tools
+        These are the tools in the configuration file that do
+        not have "run" option set to False
         """
         tools: Dict[str, Tool] = {}
         inventory = self.tool_inventory
@@ -103,6 +115,23 @@ class Context(BaseContext):
             if "run" in tool_config and not tool_config["run"]:
                 continue
 
+            ti = inventory.get(tn, None)
+            if not ti:
+                # TODO: Move to display layer
+                echo_error(f"No tool named '{tn}' could be found")
+                continue
+
+            tools[tn] = ti(self)
+
+        return tools
+
+    def _load_configured_tools(self) -> Dict[str, Tool]:
+        """
+        Returns list of this project's configured tools (disabled and enabled)
+        """
+        tools: Dict[str, Tool] = {}
+        inventory = self.tool_inventory
+        for tn in self.config["tools"].keys():
             ti = inventory.get(tn, None)
             if not ti:
                 # TODO: Move to display layer

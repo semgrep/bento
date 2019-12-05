@@ -4,7 +4,7 @@ import subprocess
 import sys
 import threading
 import time
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 import click
 from pre_commit.git import get_staged_files
@@ -17,9 +17,11 @@ import bento.metrics
 import bento.network
 import bento.result
 import bento.tool_runner
+from bento.config import get_valid_tools, update_tool_run
 from bento.context import Context
 from bento.decorators import with_metrics
 from bento.error import NodeError
+from bento.tool import Tool
 from bento.util import (
     AutocompleteSuggestions,
     Colors,
@@ -85,6 +87,12 @@ def __list_paths(ctx: Any, args: List[str], incomplete: str) -> AutocompleteSugg
     is_flag=True,
     help="Only runs over files staged in git. This should not be used with explicit paths.",
 )
+@click.option(
+    "-t",
+    "--tool",
+    help="Specify a previously configured tool to run",
+    autocompletion=get_valid_tools,
+)
 @click.argument("paths", nargs=-1, type=str, autocompletion=__list_paths)
 @click.pass_obj
 @with_metrics
@@ -94,6 +102,7 @@ def check(
     pager: bool = True,
     show_all: bool = False,
     staged_only: bool = False,
+    tool: Optional[str] = None,
     paths: Optional[List[str]] = None,
 ) -> None:
     """
@@ -107,6 +116,11 @@ def check(
 
       bento check path1 path2 ...
     """
+    if tool and tool not in context.configured_tools:
+        click.echo(
+            f"{tool} has not been configured. Adding default configuration for tool to .bento.yml"
+        )
+        update_tool_run(context, tool, False)
 
     if not context.config_path.exists():
         echo_error("No Bento configuration found. Please run `bento init`.")
@@ -141,7 +155,11 @@ def check(
     with ctx:
         before = time.time()
         runner = bento.tool_runner.Runner()
-        tools = context.tools.values()
+        tools: Iterable[Tool[Any]] = context.tools.values()
+
+        if tool:
+            tools = [context.tools[tool]]
+
         all_results = runner.parallel_results(tools, baseline, paths)
         elapsed = time.time() - before
 

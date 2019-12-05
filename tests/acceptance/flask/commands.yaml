@@ -67,6 +67,20 @@ steps:
     expected_out:
       file: bento-check-with-init.out
     returncode: 2
+  - name: run-single-tool-bandit
+    description: try running a single tool
+    command:
+      - bento
+      - --agree
+      - check
+      - -t
+      - r2c.bandit
+    expected_err:
+      - "⚠ 11 finding(s) in"
+      - ◦ To suppress all findings run `bento archive`.
+    expected_out:
+      file: bento-check-bandit.out
+    returncode: 2
   - name: disable-finding
     description: try disabling a finding
     command:
@@ -79,6 +93,20 @@ steps:
     expected_err: "✔ 'B102' disabled for 'r2c.bandit'"
     expected_out: ""
     returncode: 0
+  - name: run-single-tool-bandit-after-disable
+    description: try running a single tool with a check disabled
+    command:
+      - bento
+      - --agree
+      - check
+      - -t
+      - r2c.bandit
+    expected_err:
+      - "⚠ 9 finding(s) in"
+      - ◦ To suppress all findings run `bento archive`.
+    expected_out:
+      file: bento-check-bandit-disable.out
+    returncode: 2
   - name: bento-check-with-disable
     description: bento check should hide disabled finding
     command:

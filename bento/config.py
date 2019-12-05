@@ -65,6 +65,11 @@ def update_ignores(
 def get_valid_tools(
     ctx: Any, args: List[str], incomplete: str
 ) -> AutocompleteSuggestions:
+    """
+        Return list of tools supported by bento
+
+        Hides experimental tools
+    """
     # context is not yet initialized, so just do it now
     try:
         exclude = {PyreTool, ClickTool, SGrepTool, GrepTool}
