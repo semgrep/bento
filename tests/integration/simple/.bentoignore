@@ -26,6 +26,6 @@
 .bento/
 
 # Ignore git items
-.gitignore
+.gitignore # this is a test comment in a .bentoignore 😅
 .git/
 :include ../../../.gitignore
