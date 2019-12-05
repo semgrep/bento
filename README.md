@@ -152,7 +152,7 @@ If you need help setting up Bento with another CI provider please [open an issue
 ### Running Bento as a Git Hook
 Bento can automatically analyze your staged files when `git commit` is run. Configured as a Git pre-commit hook, Bento ensures every commit to your project is vetted and that no new issues have been introduced to the codebase.
 
-To install Bento as a a Git hook:
+To install Bento as a Git hook:
 
 ```bash
 $ bento install-hook
