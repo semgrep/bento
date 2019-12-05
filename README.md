@@ -164,7 +164,7 @@ If Git hooks ever incorrectly block your commit, you can skip them by passing th
 $ git commit --no-verify
 ```
 
-Bento's Git hook can save the round-trip time involved with fixing a failed build if you're using [Bento in CI](#running-bento-in-ci). 
+Bento’s Git hook can save the round-trip time involved with fixing a failed build if you’re using [Bento in CI](#running-bento-in-ci). 
 
 ## Help and Community
 Need help or want to share feedback? We’d love to hear from you!
