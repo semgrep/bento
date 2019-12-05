@@ -121,6 +121,9 @@ def check(
             f"{tool} has not been configured. Adding default configuration for tool to .bento.yml"
         )
         update_tool_run(context, tool, False)
+        # Set configured_tools to None so that future calls will
+        # update and include newly added tool
+        context._configured_tools = None
 
     if not context.config_path.exists():
         echo_error("No Bento configuration found. Please run `bento init`.")
@@ -158,7 +161,7 @@ def check(
         tools: Iterable[Tool[Any]] = context.tools.values()
 
         if tool:
-            tools = [context.tools[tool]]
+            tools = [context.configured_tools[tool]]
 
         all_results = runner.parallel_results(tools, baseline, paths)
         elapsed = time.time() - before
