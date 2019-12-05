@@ -5,6 +5,7 @@ import logging
 import os
 import os.path
 import pkgutil
+import re
 import shutil
 import signal
 import subprocess
@@ -45,6 +46,12 @@ DONE_TEXT = " 🍱 Done".ljust(SETUP_WIDTH, " ")
 SKIP_TEXT = " 👋 Skipped".ljust(SETUP_WIDTH, " ")
 RESET_TEXT = "".ljust(SETUP_WIDTH + 1, "\b")  # +1 for emoji width
 
+OSC_8 = "\x1b]8;;"
+BEL = "\x07"
+
+LINK_PRINTER_PATTERN = re.compile("(iterm2|gnome-terminal)", re.IGNORECASE)
+LINK_WIDTH = 2 * len(OSC_8) + 2 * len(BEL)
+
 AutocompleteSuggestions = List[Union[str, Tuple[str, str]]]
 
 
@@ -73,7 +80,7 @@ def persist_global_config(global_config: Dict[str, Any]) -> None:
     with open(constants.GLOBAL_CONFIG_PATH, "w+") as yaml_file:
         yaml.safe_dump(global_config, yaml_file)
 
-    secho(f"\nUpdated user configs at {constants.GLOBAL_CONFIG_PATH}.")
+    logging.info(f"Updated user configs at {constants.GLOBAL_CONFIG_PATH}.")
 
 
 def fetch_line_in_file(path: Path, line_number: int) -> Optional[str]:
@@ -110,6 +117,9 @@ def is_child_process_of(pattern: Pattern) -> bool:
     parents = me.parents()
     matches = iter(0 for p in parents if pattern.search(p.name()))
     return next(matches, None) is not None
+
+
+DO_PRINT_LINKS = is_child_process_of(LINK_PRINTER_PATTERN)
 
 
 def package_subclasses(tpe: Type, pkg_path: str) -> List[Type]:
@@ -221,9 +231,64 @@ def echo_newline() -> None:
     secho("", err=True)
 
 
-def wrap(text: str) -> str:
-    """Wraps text to (one character less than) the screen print width"""
-    return "\n".join(py_wrap(text, PRINT_WIDTH - 1))
+def echo_styles(*parts: str) -> None:
+    """
+    Echoes concatenated styled parts to stderr
+
+    :param parts: List of strings to print
+    """
+    for p in parts:
+        if isinstance(p, str):
+            secho(p, nl=False, err=True)
+    echo_newline()
+
+
+def echo_next_step(desc: str, cmd: str) -> None:
+    """
+    Echoes a 'next step' to perform, with styling.
+
+    E.g.
+
+      ◦ To archive results, run $ bento archive
+
+    :param desc: The step description
+    :param cmd: The command that the user should run
+    """
+    echo_styles("◦ ", style(f"{desc}, run $ ", dim=True), cmd, style(".", dim=True))
+
+
+def wrap(text: str, extra: int = 0) -> str:
+    """
+    Wraps text to (one character less than) the screen print width
+
+    :param text: The text to wrap
+    :param extra: Any extra width to apply
+    """
+    return "\n".join(py_wrap(text, PRINT_WIDTH - 1 + extra))
+
+
+def wrap_link(text: str, extra: int, *links: Tuple[str, str], **kwargs: Any) -> str:
+    """
+    Wraps text. Text may include one or more links.
+
+    :param text: Unlinked text
+    :param links: Tuples of (anchor text, target)
+    :param extra: Any extra width to apply
+    :param kwargs: Styling rules passed to text
+    """
+    wrapped = wrap(text, extra)
+    with_locs = sorted(
+        [(wrapped.find(anchor), anchor, href) for anchor, href in links],
+        key=(lambda t: t[0]),
+    )
+    out = ""
+    current = 0
+    for loc, anchor, href in with_locs:
+        out += style(wrapped[current:loc], **kwargs)
+        out += render_link(anchor, href, print_alternative=False)
+        current = loc + len(anchor)
+    out += style(wrapped[current:], **kwargs)
+    return out
 
 
 def echo_wrap(text: str, **kwargs: Any) -> None:
@@ -253,6 +318,41 @@ def echo_progress(text: str, extra: int = 0, skip: bool = False) -> Callable[[],
     else:
         secho(f"{text}{leader}{SETUP_TEXT}", nl=False, err=True, dim=True)
         return lambda: secho(f"{RESET_TEXT}{DONE_TEXT}", err=True, dim=True)
+
+
+def render_link(
+    text: str,
+    href: Optional[str],
+    print_alternative: bool = True,
+    width: Optional[int] = None,
+) -> str:
+    """
+    Prints a clickable hyperlink output if in a tty; otherwise just prints a text link
+
+    :param text: The link anchor text
+    :param href: The href, if exists
+    :param print_alternative: If true, only emits link if OSC8 links are supported, otherwise prints href after text
+    :param width: Minimum link width
+    :return: The rendered link
+    """
+    is_rendered = False
+    if href:  # Don't render if href is None or empty
+        if sys.stdout.isatty() and DO_PRINT_LINKS:
+            text = f"{OSC_8}{href}{BEL}{text}{OSC_8}{BEL}"
+            is_rendered = True
+            if width:
+                width += LINK_WIDTH + len(href)
+        elif print_alternative:
+            text = f"{text} {href}"
+
+    if width:
+        text = text.ljust(width)
+
+    # Coloring has to occur after justification
+    if is_rendered:
+        text = style(text, fg=Colors.LINK)
+
+    return text
 
 
 # Taken from http://www.madhur.co.in/blog/2015/11/02/countdownlatch-python.html

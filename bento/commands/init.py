@@ -9,6 +9,7 @@ from typing import Optional, Union
 import click
 import yaml
 
+import bento.constants as constants
 import bento.git
 import bento.tool_runner
 from bento.commands.archive import archive
@@ -26,6 +27,7 @@ from bento.util import (
     echo_warning,
     echo_wrap,
     wrap,
+    wrap_link,
 )
 
 FNAME_STATUS_EXTRA = (
@@ -200,6 +202,7 @@ def _run_check(ctx: click.Context, clean: bool, pager: bool) -> bool:
 
     if context.baseline_file_path.exists():
         click.secho("Bento archive is already configured on this project.", err=True)
+        echo_newline()
     else:
         if sys.stderr.isatty() and sys.stdin.isatty():
             if click.confirm(
@@ -219,21 +222,58 @@ def _run_check(ctx: click.Context, clean: bool, pager: bool) -> bool:
 
 
 def _next_steps(diffs_created: bool) -> None:
+    if sys.stdin.isatty() and sys.stderr.isatty():
+        click.prompt(
+            click.style("Press ENTER to view next steps"),
+            default="",
+            hide_input=True,
+            show_default=False,
+            err=True,
+        )
+
     fill_width = PRINT_WIDTH - 40
+    echo_box("Next Steps")
+
+    click.echo(
+        wrap_link(
+            "Bento is at its best when it runs automatically, either in CI or as a git hook. To learn more about these, see Bento in CI or Bento as a Git Hook in our README.",
+            0,
+            (
+                "Bento in CI",
+                "https://github.com/returntocorp/bento#running-bento-in-ci",
+            ),
+            (
+                "Bento as a Git Hook",
+                "https://github.com/returntocorp/bento#running-bento-as-a-git-hook",
+            ),
+            dim=True,
+        ),
+        err=True,
+    )
+    echo_newline()
+
     click.secho(
-        f"""
-To use Bento:
+        f"""To use Bento:
+  {click.style('check project'.ljust(fill_width, LEADER_CHAR)+ " $", dim=True)} {click.style('bento check')}
   {click.style('view archived results'.ljust(fill_width, LEADER_CHAR) + " $", dim=True)} {click.style('bento check --show-all')}
-  {click.style('check a specific path'.ljust(fill_width, LEADER_CHAR)+ " $", dim=True)} {click.style('bento check [PATH]')}
   {click.style('disable a check'.ljust(fill_width, LEADER_CHAR)+ " $", dim=True)} {click.style('bento disable check [TOOL] [CHECK]')}
-  {click.style('get help about a command'.ljust(fill_width, LEADER_CHAR)+ " $", dim=True)} {click.style('bento [COMMAND] --help')}
+  {click.style('enable a tool'.ljust(fill_width, LEADER_CHAR)+ " $", dim=True)} {click.style('bento enable tool [TOOL]')}
+  {click.style('install commit hook'.ljust(fill_width, LEADER_CHAR)+ " $", dim=True)} {click.style('bento install-hook')}
+  {click.style('get help for a command'.ljust(fill_width, LEADER_CHAR)+ " $", dim=True)} {click.style('bento [COMMAND] --help')}
 """,
         err=True,
     )
 
+    git_commit_cmd = click.style(
+        "git add .gitignore .bento?* && git commit -m 'Add Bento to project'", bold=True
+    )
+    if diffs_created:
+        click.secho(f"Please add Bento to version control:\n", err=True)
+        click.secho(f"  $ {git_commit_cmd}\n", err=True)
+
     if sys.stdin.isatty() and sys.stderr.isatty():
         click.prompt(
-            click.style("Press ENTER to finalize installation"),
+            click.style("Press ENTER to finish initialization"),
             default="",
             hide_input=True,
             show_default=False,
@@ -241,25 +281,41 @@ To use Bento:
         )
 
     echo_box("Thank You")
-    git_commit_cmd = click.style(
-        "git add .gitignore .bento?* && git commit -m 'Add Bento to project'", bold=True
-    )
-    click.secho("Bento is initialized!\n", err=True)
-
-    if diffs_created:
-        click.secho(f"Please add Bento to version control:\n", err=True, dim=True)
-        click.secho(f"  $ {git_commit_cmd}\n", err=True)
-
-    echo_wrap(
-        f"Help and feedback: {click.style('Reach out to us at support@r2c.dev or file an issue on GitHub. We’d love to hear from you!', dim=True)}"
-    )
-    click.secho("", err=True)
-    echo_wrap(
-        f"Community: {click.style('Join #bento on our community Slack. Get support, talk with other users, and share feedback.', dim=True)}"
-    )
-    click.secho("", err=True)
     echo_wrap(
         f"From all of us at r2c, thank you for trying Bento! We can’t wait to hear what you think."
+    )
+    echo_newline()
+
+    support_link_text = "support@r2c.dev"
+    gh_text = "GitHub"
+    help_block_a = click.style(f"Reach out to us at ", dim=True)
+    help_block_b = click.style(" or file an issue on ", dim=True)
+    help_block_c = click.style(". We’d love to hear from you!", dim=True)
+    click.secho(
+        wrap_link(
+            f"Help and feedback: {help_block_a}{support_link_text}{help_block_b}{gh_text}{help_block_c}",
+            (2 * ANSI_WIDTH),
+            (support_link_text, "mailto:support@r2c.dev"),
+            (gh_text, "https://github.com/returntocorp/bento/issues"),
+        ),
+        err=True,
+    )
+
+    echo_newline()
+
+    slack_link_text = "#bento"
+    fb_block_a = click.style("Join ", dim=True)
+    fb_block_b = click.style(
+        " on our community Slack. Get support, talk with other users, and share feedback.",
+        dim=True,
+    )
+    click.secho(
+        wrap_link(
+            f"Community: {fb_block_a}{slack_link_text}{fb_block_b}",
+            (2 * ANSI_WIDTH),
+            (slack_link_text, constants.SLACK_SIGNUP_LINK),
+        ),
+        err=True,
     )
     echo_newline()
 
@@ -270,8 +326,8 @@ def _run_archive(ctx: click.Context) -> None:
 
     :return:
     """
-    echo_box("Bento Archive")
     ctx.invoke(archive, show_bars=False)
+    echo_newline()
 
 
 @click.command()

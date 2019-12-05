@@ -6,7 +6,7 @@ from typing import Collection, List
 import click
 
 from bento.formatter.base import FindingsMap, Formatter
-from bento.util import Colors
+from bento.util import Colors, render_link
 from bento.violation import Violation
 
 
@@ -62,7 +62,7 @@ class Clippy(Formatter):
         if not violation.link:
             link = full_rule
         else:
-            link = self.render_link(full_rule, violation.link)
+            link = render_link(full_rule, violation.link)
 
         sev_str = Clippy.SEVERITY_STR.get(violation.severity, "unknown")
         sev = f"{sev_str}".strip()

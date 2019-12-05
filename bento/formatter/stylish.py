@@ -6,6 +6,7 @@ from typing import Collection, List
 import click
 
 from bento.formatter.base import FindingsMap, Formatter
+from bento.util import render_link
 from bento.violation import Violation
 
 
@@ -39,7 +40,7 @@ class Stylish(Formatter):
         if not violation.link:
             link = rule
         else:
-            link = self.render_link(rule, violation.link)
+            link = render_link(rule, violation.link)
 
         sev_str = Stylish.SEVERITY_STR.get(violation.severity, "unknown")
         sev = f"{sev_str:<7s}"

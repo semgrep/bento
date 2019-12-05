@@ -1,16 +1,9 @@
-import re
-import sys
 from abc import ABC, abstractmethod
 from typing import Any, Collection, Dict, List, Mapping, Optional
 
-import click
-
-import bento.util
 from bento.violation import Violation
 
 FindingsMap = Mapping[str, Collection[Violation]]
-
-LINK_PRINTER_PATTERN = re.compile("(iterm2|gnome-terminal)", re.IGNORECASE)
 
 
 class Formatter(ABC):
@@ -18,17 +11,11 @@ class Formatter(ABC):
     Converts tool violations into printable output
     """
 
-    OSC_8 = "\x1b]8;;"
-    BEL = "\x07"
-
-    LINK_WIDTH = 2 * len(OSC_8) + 2 * len(BEL)
-
     BOLD = "\033[1m"
     END = "\033[0m"
 
     def __init__(self) -> None:
         self._config: Optional[Dict[str, Any]] = None
-        self._print_links = bento.util.is_child_process_of(LINK_PRINTER_PATTERN)
 
     @abstractmethod
     def dump(self, findings: FindingsMap) -> Collection[str]:
@@ -62,38 +49,3 @@ class Formatter(ABC):
         if len(untrimmed) > max_length:
             return untrimmed[0 : max_length - 3] + "..."
         return untrimmed
-
-    def render_link(
-        self,
-        text: str,
-        href: Optional[str],
-        print_alternative: bool = True,
-        width: Optional[int] = None,
-    ) -> str:
-        """
-        Prints a clickable hyperlink output if in a tty; otherwise just prints a text link
-
-        :param text: The link anchor text
-        :param href: The href, if exists
-        :param print_alternative: If true, only emits link if OSC8 links are supported, otherwise prints href after text
-        :param width: Minimum link width
-        :return: The rendered link
-        """
-        is_rendered = False
-        if href:  # Don't render if href is None or empty
-            if sys.stdout.isatty() and self._print_links:
-                text = f"{Formatter.OSC_8}{href}{Formatter.BEL}{text}{Formatter.OSC_8}{Formatter.BEL}"
-                is_rendered = True
-                if width:
-                    width += Formatter.LINK_WIDTH + len(href)
-            elif print_alternative:
-                text = f"{text} {href}"
-
-        if width:
-            text = text.ljust(width)
-
-        # Coloring has to occur after justification
-        if is_rendered:
-            text = click.style(text, fg=bento.util.Colors.LINK)
-
-        return text

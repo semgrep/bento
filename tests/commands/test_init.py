@@ -77,17 +77,28 @@ Detected project with Python and node-js (with react)
 
 Bento archive is already configured on this project.
 
+
+╭──────────────────────────────────────────────────────────────────────────────╮
+│                                  Next Steps                                  │
+╰──────────────────────────────────────────────────────────────────────────────╯
+Bento is at its best when it runs automatically, either in CI or as a git hook.
+To learn more about these, see Bento in CI or Bento as a Git Hook in our
+README.
+
 To use Bento:
+  check project․․․․․․․․․․․․․․․․․․․․․․․․․․․ $ bento check
   view archived results․․․․․․․․․․․․․․․․․․․ $ bento check --show-all
-  check a specific path․․․․․․․․․․․․․․․․․․․ $ bento check [PATH]
   disable a check․․․․․․․․․․․․․․․․․․․․․․․․․ $ bento disable check [TOOL] [CHECK]
-  get help about a command․․․․․․․․․․․․․․․․ $ bento [COMMAND] --help
+  enable a tool․․․․․․․․․․․․․․․․․․․․․․․․․․․ $ bento enable tool [TOOL]
+  install commit hook․․․․․․․․․․․․․․․․․․․․․ $ bento install-hook
+  get help for a command․․․․․․․․․․․․․․․․․․ $ bento [COMMAND] --help
 
 
 ╭──────────────────────────────────────────────────────────────────────────────╮
 │                                  Thank You                                   │
 ╰──────────────────────────────────────────────────────────────────────────────╯
-Bento is initialized!
+From all of us at r2c, thank you for trying Bento! We can’t wait to hear what
+you think.
 
 Help and feedback: Reach out to us at support@r2c.dev or file an issue on
 GitHub. We’d love to hear from you!
@@ -95,11 +106,9 @@ GitHub. We’d love to hear from you!
 Community: Join #bento on our community Slack. Get support, talk with other
 users, and share feedback.
 
-From all of us at r2c, thank you for trying Bento! We can’t wait to hear what
-you think.
-
 """  # noqa - above string purposely contains trailing whitespace
 
+    print(result.stderr)
     assert result.stderr == expectation
 
 

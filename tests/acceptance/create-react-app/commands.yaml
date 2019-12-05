@@ -34,30 +34,37 @@ steps:
 
       ⚠ Skipping project analysis due to noninteractive terminal.
 
+      ╭──────────────────────────────────────────────────────────────────────────────╮
+      │                                  Next Steps                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+      Bento is at its best when it runs automatically, either in CI or as a git hook.
+      To learn more about these, see Bento in CI or Bento as a Git Hook in our
+      README.
+
       To use Bento:
+        check project․․․․․․․․․․․․․․․․․․․․․․․․․․․ $ bento check
         view archived results․․․․․․․․․․․․․․․․․․․ $ bento check --show-all
-        check a specific path․․․․․․․․․․․․․․․․․․․ $ bento check [PATH]
         disable a check․․․․․․․․․․․․․․․․․․․․․․․․․ $ bento disable check [TOOL] [CHECK]
-        get help about a command․․․․․․․․․․․․․․․․ $ bento [COMMAND] --help
+        enable a tool․․․․․․․․․․․․․․․․․․․․․․․․․․․ $ bento enable tool [TOOL]
+        install commit hook․․․․․․․․․․․․․․․․․․․․․ $ bento install-hook
+        get help for a command․․․․․․․․․․․․․․․․․․ $ bento [COMMAND] --help
+
+      Please add Bento to version control:
+
+        $ git add .gitignore .bento?* && git commit -m 'Add Bento to project'
 
 
       ╭──────────────────────────────────────────────────────────────────────────────╮
       │                                  Thank You                                   │
       ╰──────────────────────────────────────────────────────────────────────────────╯
-      Bento is initialized!
-
-      Please add Bento to version control:
-
-        $ git add .gitignore .bento?* && git commit -m 'Add Bento to project'
+      From all of us at r2c, thank you for trying Bento! We can’t wait to hear what
+      you think.
 
       Help and feedback: Reach out to us at support@r2c.dev or file an issue on
       GitHub. We’d love to hear from you!
 
       Community: Join #bento on our community Slack. Get support, talk with other
       users, and share feedback.
-
-      From all of us at r2c, thank you for trying Bento! We can’t wait to hear what
-      you think.
     expected_out: []
     returncode: 0
   - name: bento-check-with-init
@@ -68,7 +75,7 @@ steps:
       - check
     expected_err:
       - "⚠ 294 finding(s) in"
-      - ◦ To suppress all findings run `bento archive`.
+      - ◦ To suppress all findings, run $ bento archive.
     expected_out:
       file: bento-check-with-init.out
     returncode: 2
@@ -92,7 +99,7 @@ steps:
       - check
     expected_err:
       - "⚠ 271 finding(s) in"
-      - ◦ To suppress all findings run `bento archive`.
+      - ◦ To suppress all findings, run $ bento archive.
     expected_out:
       file: bento-check-with-disable.out
     returncode: 2
@@ -116,7 +123,7 @@ steps:
       - check
     expected_err:
       - "⚠ 294 finding(s) in"
-      - ◦ To suppress all findings run `bento archive`.
+      - ◦ To suppress all findings, run $ bento archive.
     expected_out:
       file: bento-check-with-init.out
     returncode: 2
@@ -131,7 +138,10 @@ steps:
 
 
       Project analyzed with 1 tool(s).
-      294 findings were added to your archive as a baseline.
+      294 finding(s) were archived, and will be hidden in future Bento runs.
+
+      ◦ To view archived results, run $ bento check --show-all.
+
       Please check '.bento-whitelist.yml' in to source control.
     expected_out: ""
     returncode: 0
@@ -142,8 +152,8 @@ steps:
       - --agree
       - check
     expected_err:
-      - "✔ 0 findings in"
-      - "Not showing 294 archived finding(s). To view, run `bento check --show-all`"
+      - ✔ 0 findings in
+      - ◦ Not showing 294 archived finding(s). To view, run $ bento check --show-all.
     expected_out: ""
     returncode: 0
   - name: install-hook
