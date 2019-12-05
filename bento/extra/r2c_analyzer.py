@@ -137,12 +137,12 @@ REGISTRY: Dict[str, AnalyzerDataJson] = {
     },
     "r2c/sgrep-lint": {
         "versions": {
-            "0.1.10": {
+            "0.1.12": {
                 "manifest": {
                     "analyzer_name": "r2c/sgrep-lint",
                     "author_name": "pad",
                     "author_email": "pad@returntocorp.com",
-                    "version": "0.1.10",
+                    "version": "0.1.12",
                     "spec_version": "1.2.0",
                     "dependencies": {"public/source-code": "*"},
                     "type": "commit",

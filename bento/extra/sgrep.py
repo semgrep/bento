@@ -39,7 +39,7 @@ class SGrepParser(Parser):
 
 class SGrepTool(StrTool):
     ANALYZER_NAME = "r2c/sgrep-lint"
-    ANALYZER_VERSION = Version("0.1.10")
+    ANALYZER_VERSION = Version("0.1.12")
     FILE_NAME_FILTER = re.compile(r".*")
 
     @property
