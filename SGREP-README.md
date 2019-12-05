@@ -7,8 +7,8 @@ The goal of `sgrep` is to allow programmers to express complex code *patterns* w
 sgrep’s design follows 3 principles:
 
 1. **Precision:** `sgrep` works at the **abstract syntax tree level**, not character or line-level. sgrep does not care about differences in spacing, indentation, or comments
-2. **Grep-like syntax: **`sgrep` queries look very similar to the original language and use familiar grep-like syntax
-3. **Support pattern matching:** `sgrep` provides operators like metavariables (for generic matching) and ellipses (for sequence expansion).** **
+2. **Grep-like syntax:** `sgrep` queries look very similar to the original language and use familiar grep-like syntax
+3. **Support pattern matching:** `sgrep` provides operators like metavariables (for generic matching) and ellipses (for sequence expansion).
 
 ## Installation
 
@@ -22,7 +22,8 @@ System requirements:
 On macOS and Ubuntu:
 
 ```
-$ pip3 install bento-cli==0.7.0b5
+$ pip3 install bento-cli==0.7.0b6
+# now change direction to a project of interest
 $ bento init
 ```
 
@@ -33,7 +34,7 @@ $ bento init
 [Bento](http://bento.dev/) has a suite of tools and checks it runs by default: **sgrep is not currently enabled by default**. You can run sgrep independently with the following command:
 
 ```
-`$ bento check -t r2c.sgrep`
+$ bento check -t r2c.sgrep
 ```
 
 To enable it to run alongside of Bento’s default tools:
@@ -279,7 +280,7 @@ because in the above, foo is not an expression, but rather a name part of an imp
 
 
 
-### YOU can not use a half expression or half statement pattern
+### You can not use a half expression or half statement pattern
 
 ```
 '1+'  or 'if $X:' are not valid patterns because they are not full AST elements.
