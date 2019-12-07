@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from click.termui import style
 
@@ -18,8 +19,6 @@ BENTO_EMAIL_VAR = "BENTO_EMAIL"
 QA_TEST_EMAIL_ADDRESS = "test@returntocorp.com"
 SUPPORT_EMAIL_ADDRESS = "support@r2c.dev"
 
-SLACK_SIGNUP_LINK = "https://join.slack.com/t/r2c-community/shared_invite/enQtNjU0NDYzMjAwODY4LWE3NTg1MGNhYTAwMzk5ZGRhMjQ2MzVhNGJiZjI1ZWQ0NjQ2YWI4ZGY3OGViMGJjNzA4ODQ3MjEzOWExNjZlNTA"
-
 ### messages ###
 
 UPGRADE_WARNING_OUTPUT = f"""
@@ -32,7 +31,10 @@ UPGRADE_WARNING_OUTPUT = f"""
 ╰─────────────────────────────────────────────╯
 """
 
-TERMS_OF_SERVICE_ERROR = (
-    "Bento did NOT install. Bento beta users must agree to the terms of service to continue. "
-    "Please reach out to us at support@r2c.dev with questions or concerns. "
+### Content ###
+
+REGISTRATION_CONTENT_PATH = (
+    Path(os.path.dirname(__file__)) / "resources" / "register-content.yml"
 )
+
+INIT_CONTENT_PATH = Path(os.path.dirname(__file__)) / "resources" / "init-content.yml"
