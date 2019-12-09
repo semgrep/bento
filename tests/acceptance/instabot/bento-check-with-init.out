@@ -1,11 +1,4 @@
 ==> Bento Summary
-error: r2c.flake8.A001 https://lintlyci.github.io/Flake8Rules/rules/A001.html
-     --> examples/comment_medias_by_location.py:24:5
-      |
-   24 |       input = raw_input
-      |
-      = note: "input" is a python builtin and is being shadowed, consider renaming the variable                                                                                                                       
-
 error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
      --> examples/comment_medias_by_location.py:78:0
       |
@@ -51,13 +44,6 @@ error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blackl
       = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
 
 
-error: r2c.flake8.A001 https://lintlyci.github.io/Flake8Rules/rules/A001.html
-     --> examples/interact_DM.py:17:5
-      |
-   17 |       input = raw_input
-      |
-      = note: "input" is a python builtin and is being shadowed, consider renaming the variable                                                                                                                       
-
 error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
      --> examples/interact_DM.py:29:0
       |
@@ -72,13 +58,6 @@ error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blackl
       |
       = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
 
-
-error: r2c.flake8.A001 https://lintlyci.github.io/Flake8Rules/rules/A001.html
-     --> examples/like_medias_by_location.py:24:5
-      |
-   24 |       input = raw_input
-      |
-      = note: "input" is a python builtin and is being shadowed, consider renaming the variable                                                                                                                       
 
 error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
      --> examples/like_medias_by_location.py:76:0
@@ -251,13 +230,6 @@ error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blackl
   580 |                change = input("Want to change it? y/n\n").strip()
       |
       = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
-
-error: r2c.flake8.A001 https://lintlyci.github.io/Flake8Rules/rules/A001.html
-     --> examples/multi_script_CLI.py:618:5
-      |
-  618 |       input = raw_input
-      |
-      = note: "input" is a python builtin and is being shadowed, consider renaming the variable                                                                                                                       
 
 
 error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
@@ -467,21 +439,6 @@ error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
       = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
 
 
-error: r2c.flake8.A003 https://lintlyci.github.io/Flake8Rules/rules/A003.html
-     --> instabot/utils.py:13:5
-      |
-   13 |       @property
-      |
-      = note: "list" is a python builtin, consider renaming the class attribute                                                                                                                                       
-
-error: r2c.flake8.A003 https://lintlyci.github.io/Flake8Rules/rules/A003.html
-     --> instabot/utils.py:19:5
-      |
-   19 |       @property
-      |
-      = note: "set" is a python builtin, consider renaming the class attribute                                                                                                                                        
-
-
 r2c.bandit:
   B322          36▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
   B110           2▕▬▬▬
@@ -490,9 +447,7 @@ r2c.bandit:
 
 r2c.flake8:
   B006          12▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  A001           4▕▬▬▬▬▬▬▬
   EXE002         4▕▬▬▬▬▬▬▬
   B007           3▕▬▬▬▬▬
-  A003           2▕▬▬▬
-  Other          1▕▬▬
+  EXE001         1▕▬▬
 

@@ -75,7 +75,6 @@ class Flake8Tool(PythonTool[str], StrTool):
         "flake8": SimpleSpec("~=3.7.0"),
         "flake8-json": SimpleSpec("~=19.8.0"),
         "flake8-bugbear": SimpleSpec("~=19.8.0"),
-        "flake8-builtins": SimpleSpec("~=1.4.1"),
         "flake8-debugger": SimpleSpec("~=3.2.0"),
         "flake8-executable": SimpleSpec("~=2.0.3"),
     }

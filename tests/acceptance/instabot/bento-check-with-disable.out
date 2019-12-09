@@ -1,41 +1,10 @@
 ==> Bento Summary
-error: r2c.flake8.A001 https://lintlyci.github.io/Flake8Rules/rules/A001.html
-     --> examples/comment_medias_by_location.py:24:5
-      |
-   24 |       input = raw_input
-      |
-      = note: "input" is a python builtin and is being shadowed, consider renaming the variable                                                                                                                       
-
-
-error: r2c.flake8.A001 https://lintlyci.github.io/Flake8Rules/rules/A001.html
-     --> examples/interact_DM.py:17:5
-      |
-   17 |       input = raw_input
-      |
-      = note: "input" is a python builtin and is being shadowed, consider renaming the variable                                                                                                                       
-
-
-error: r2c.flake8.A001 https://lintlyci.github.io/Flake8Rules/rules/A001.html
-     --> examples/like_medias_by_location.py:24:5
-      |
-   24 |       input = raw_input
-      |
-      = note: "input" is a python builtin and is being shadowed, consider renaming the variable                                                                                                                       
-
-
 advice: r2c.bandit.B605 https://bandit.readthedocs.io/en/latest/plugins/b605_start_process_with_a_shell.html
      --> examples/multi_script_CLI.py:42:0
       |
    42 |            os.system("cls")
       |
       = note: Starting a process with a shell: Seems safe, but may be changed in the future, consider rewriting without shell                                                                                         
-
-error: r2c.flake8.A001 https://lintlyci.github.io/Flake8Rules/rules/A001.html
-     --> examples/multi_script_CLI.py:618:5
-      |
-  618 |       input = raw_input
-      |
-      = note: "input" is a python builtin and is being shadowed, consider renaming the variable                                                                                                                       
 
 
 advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
@@ -198,28 +167,11 @@ error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
       = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
 
 
-error: r2c.flake8.A003 https://lintlyci.github.io/Flake8Rules/rules/A003.html
-     --> instabot/utils.py:13:5
-      |
-   13 |       @property
-      |
-      = note: "list" is a python builtin, consider renaming the class attribute                                                                                                                                       
-
-error: r2c.flake8.A003 https://lintlyci.github.io/Flake8Rules/rules/A003.html
-     --> instabot/utils.py:19:5
-      |
-   19 |       @property
-      |
-      = note: "set" is a python builtin, consider renaming the class attribute                                                                                                                                        
-
-
 r2c.flake8:
   B006          12▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  A001           4▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
   EXE002         4▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
   B007           3▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  A003           2▕▬▬▬▬▬▬▬▬▬▬
-  Other          1▕▬▬▬▬▬
+  EXE001         1▕▬▬▬▬▬
 
 r2c.bandit:
   B110           2▕▬▬▬▬▬▬▬▬▬▬
