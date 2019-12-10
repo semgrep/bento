@@ -24,7 +24,7 @@ class ClickTool(Flake8Tool):
     PACKAGES = {
         "flake8": SimpleSpec("~=3.7.0"),
         "flake8-json": SimpleSpec("~=19.8.0"),
-        "flake8-click": SimpleSpec("~=0.2.0"),
+        "flake8-click": SimpleSpec("~=0.2.3"),
     }
 
     @classmethod
@@ -44,4 +44,4 @@ class ClickTool(Flake8Tool):
         return "Checks for the Python Click framework"
 
     def select_clause(self) -> str:
-        return "--select=CLC"
+        return "--select=r2c-click"
