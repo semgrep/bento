@@ -155,6 +155,26 @@ REGISTRY: Dict[str, AnalyzerDataJson] = {
         },
         "public": False,
     },
+    "r2c/pyre-taint": {
+        "versions": {
+            "0.0.9": {
+                "manifest": {
+                    "analyzer_name": "r2c/pyre-taint",
+                    "author_name": "pad",
+                    "author_email": "pad@returntocorp.com",
+                    "version": "0.0.9",
+                    "spec_version": "1.2.0",
+                    "dependencies": {"public/source-code": "*"},
+                    "type": "commit",
+                    "output": {"type": "json"},
+                    "deterministic": True,
+                    "readme": "# TODO\n",
+                },
+                "pending": False,
+            }
+        },
+        "public": False,
+    },
 }
 
 
