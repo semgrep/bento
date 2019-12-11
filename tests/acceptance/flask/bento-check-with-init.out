@@ -12,7 +12,7 @@ error: r2c.click.r2c-click-option-function-argument-check
       |
   779 |   @click.command("run", short_help="Run a development server.")
       |
-      = note: function `run_command` missing parameter `key,reload/__no_reload,debugger/__no_debugger,eager_loading/__lazy_loader,with_threads/__without_threads` for `@click.option`                                 
+      = note: function `run_command` missing parameter `key,reload/__no_reload,debugger/__no_debugger,eager_loading/__lazy_loader,with_threads/__without_threads` for `@click.option`
 
 warning: r2c.bandit.B307 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b307-eval
      --> src/flask/cli.py:892:0

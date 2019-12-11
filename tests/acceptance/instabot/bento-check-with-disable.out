@@ -4,7 +4,7 @@ advice: r2c.bandit.B605 https://bandit.readthedocs.io/en/latest/plugins/b605_sta
       |
    42 |            os.system("cls")
       |
-      = note: Starting a process with a shell: Seems safe, but may be changed in the future, consider rewriting without shell                                                                                         
+      = note: Starting a process with a shell: Seems safe, but may be changed in the future, consider rewriting without shell
 
 
 advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
@@ -12,7 +12,7 @@ advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try
       |
   538 |                except Exception:
       |
-      = note: Try, Except, Pass detected.                                                                                                                                                                             
+      = note: Try, Except, Pass detected.
 
 error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
      --> instabot/api/api.py:673:41
@@ -55,7 +55,7 @@ error: r2c.flake8.B007 https://lintlyci.github.io/Flake8Rules/rules/B007.html
       |
   179 |           for attempt in range(4):
       |
-      = note: Loop control variable 'attempt' not used within the loop body. If this is intended, start the name with an underscore.                                                                                  
+      = note: Loop control variable 'attempt' not used within the loop body. If this is intended, start the name with an underscore.
 
 
 error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
@@ -70,7 +70,7 @@ error: r2c.flake8.B007 https://lintlyci.github.io/Flake8Rules/rules/B007.html
       |
   202 |               for attempt in range(4):
       |
-      = note: Loop control variable 'attempt' not used within the loop body. If this is intended, start the name with an underscore.                                                                                  
+      = note: Loop control variable 'attempt' not used within the loop body. If this is intended, start the name with an underscore.
 
 error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
      --> instabot/api/api_video.py:234:13
@@ -85,19 +85,19 @@ error: r2c.flake8.EXE001 https://lintlyci.github.io/Flake8Rules/rules/EXE001.htm
       |
     1 |   #!/usr/bin/env python
       |
-      = note: Shebang is present but the file is not executable.                                                                                                                                                      
+      = note: Shebang is present but the file is not executable.
 
 error: r2c.flake8.B007 https://lintlyci.github.io/Flake8Rules/rules/B007.html
      --> instabot/api/prepare.py:37:26
       |
    37 |           for ind, (login, password) in enumerate(lines):
       |
-      = note: Loop control variable 'password' not used within the loop body. If this is intended, start the name with an underscore.                                                                                 
+      = note: Loop control variable 'password' not used within the loop body. If this is intended, start the name with an underscore.
 
 
 error: r2c.flake8.EXE002 https://lintlyci.github.io/Flake8Rules/rules/EXE002.html
      --> instabot/bot/bot.py:0:1
-      = note: The file is executable but no shebang is present.                                                                                                                                                       
+      = note: The file is executable but no shebang is present.
 
 error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
      --> instabot/bot/bot.py:170:28
@@ -126,29 +126,29 @@ warning: r2c.bandit.B301 https://bandit.readthedocs.io/en/latest/blacklists/blac
       |
    66 |                checkpoint = pickle.load(f)
       |
-      = note: Pickle and modules that wrap it can be unsafe when used to deserialize untrusted data, possible security issue.                                                                                         
+      = note: Pickle and modules that wrap it can be unsafe when used to deserialize untrusted data, possible security issue.
 
 advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
      --> instabot/bot/bot_checkpoint.py:71:0
       |
    71 |        except Exception:
       |
-      = note: Try, Except, Pass detected.                                                                                                                                                                             
+      = note: Try, Except, Pass detected.
 
 
 error: r2c.flake8.EXE002 https://lintlyci.github.io/Flake8Rules/rules/EXE002.html
      --> instabot/bot/bot_filter.py:0:1
-      = note: The file is executable but no shebang is present.                                                                                                                                                       
+      = note: The file is executable but no shebang is present.
 
 
 error: r2c.flake8.EXE002 https://lintlyci.github.io/Flake8Rules/rules/EXE002.html
      --> instabot/bot/bot_follow.py:0:1
-      = note: The file is executable but no shebang is present.                                                                                                                                                       
+      = note: The file is executable but no shebang is present.
 
 
 error: r2c.flake8.EXE002 https://lintlyci.github.io/Flake8Rules/rules/EXE002.html
      --> instabot/bot/bot_like.py:0:1
-      = note: The file is executable but no shebang is present.                                                                                                                                                       
+      = note: The file is executable but no shebang is present.
 
 
 error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
