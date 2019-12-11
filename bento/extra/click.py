@@ -2,7 +2,6 @@ from typing import Type
 
 from semantic_version import SimpleSpec
 
-from bento.base_context import BaseContext
 from bento.extra.flake8 import Flake8Parser, Flake8Tool
 from bento.parser import Parser
 from bento.tool import StrTool
@@ -26,10 +25,6 @@ class ClickTool(Flake8Tool):
         "flake8-json": SimpleSpec("~=19.8.0"),
         "flake8-click": SimpleSpec("~=0.2.3"),
     }
-
-    @classmethod
-    def matches_project(cls, _: BaseContext) -> bool:
-        return False
 
     @property
     def parser_type(self) -> Type[Parser]:
