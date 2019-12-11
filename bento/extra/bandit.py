@@ -106,9 +106,25 @@ class BanditParser(Parser[str]):
 
         # Remove bandit line numbers, empty lines, and leading / trailing whitespace
         bandit_source = result["code"].rstrip()  # Remove trailing whitespace
+
+        line_range = result["line_range"]
+
+        def in_line_range(bandit_code_line: str) -> bool:
+            # Check if string with format `3 def do_it(cmd: str) -> None:`
+            # starts with line number that is within reported line_range
+            # of finding
+            for idx, ch in enumerate(bandit_code_line):
+                if not ch.isdigit():
+                    num = int(bandit_code_line[:idx])
+                    return num in line_range
+            return False
+
+        # bandit might include extra lines before and after
+        # a finding. Filter those out and filter out line numbers
         lines = [
             s.lstrip(BanditParser.LINE_NO_CHARS).rstrip()
             for s in bandit_source.split("\n")
+            if in_line_range(s)
         ]
         nonempty = [l for l in lines if l]
         source = "\n".join(nonempty)
@@ -143,7 +159,7 @@ class BanditTool(PythonTool[str], StrTool):
     VENV_DIR = "bandit"
     PROJECT_NAME = "Python"
     FILE_NAME_FILTER = re.compile(r".*\.py\b")
-    PACKAGES = {"bandit": SimpleSpec("~=1.6.0")}
+    PACKAGES = {"bandit": SimpleSpec("~=1.6.2")}
 
     @property
     def parser_type(self) -> Type[Parser]:

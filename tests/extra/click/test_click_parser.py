@@ -12,25 +12,61 @@ BASE_PATH = THIS_PATH / ".." / ".." / ".."
 EXPECTATIONS = [
     Violation(
         tool_id="r2c.click",
-        check_id="CLC100:",
-        path="cli.py",
-        line=3,
+        check_id="r2c-click-option-function-argument-check",
+        path="bad_examples.py",
+        line=12,
         column=1,
-        message="function `cli` missing parameter `version` for `@click.option`",
+        message="function `bad_option_one` missing parameter `d` for `@click.option`",
         severity=2,
-        syntactic_context='@click.option("--version")',
+        syntactic_context="@click.command()",
         filtered=None,
         link="",
     ),
     Violation(
         tool_id="r2c.click",
-        check_id="CLC001",
-        path="cli.py",
-        line=3,
-        column=2,
-        message="@click.option should have `help` text",
+        check_id="r2c-click-names-are-well-formed",
+        path="bad_examples.py",
+        line=19,
+        column=1,
+        message="option 'd' should begin with a '-'",
         severity=2,
-        syntactic_context='@click.option("--version")',
+        syntactic_context="@click.command()",
+        filtered=None,
+        link="",
+    ),
+    Violation(
+        tool_id="r2c.click",
+        check_id="r2c-click-names-are-well-formed",
+        line=26,
+        path="bad_examples.py",
+        column=1,
+        message="argument '-a' should not begin with a '-'",
+        severity=2,
+        syntactic_context="@click.command()",
+        filtered=None,
+        link="",
+    ),
+    Violation(
+        tool_id="r2c.click",
+        check_id="r2c-click-names-are-well-formed",
+        path="bad_examples.py",
+        line=33,
+        column=1,
+        message="missing parameter name",
+        severity=2,
+        syntactic_context="@click.command()",
+        filtered=None,
+        link="",
+    ),
+    Violation(
+        tool_id="r2c.click",
+        check_id="r2c-click-launch-uses-literal",
+        path="bad_examples.py",
+        line=41,
+        column=5,
+        message="calls to click.launch() should use literal urls to prevent arbitrary site redirects",
+        severity=2,
+        syntactic_context="    click.launch(x)",
         filtered=None,
         link="",
     ),
@@ -42,7 +78,6 @@ def test_parse() -> None:
         json = json_file.read()
 
     result = ClickParser(BASE_PATH).parse(json)
-
     assert result == EXPECTATIONS
 
 
@@ -55,10 +90,9 @@ def test_run_no_base_violations(tmp_path_factory: tmp_path_factory) -> None:
     assert not violations
 
 
-def test_run_Click_violations(tmp_path_factory: tmp_path_factory) -> None:
+def test_run_click_violations(tmp_path_factory: tmp_path_factory) -> None:
     base_path = BASE_PATH / "tests/integration/click"
     tool = ClickTool(context_for(tmp_path_factory, ClickTool.TOOL_ID, base_path))
     tool.setup()
     violations = tool.results()
-
     assert violations == EXPECTATIONS

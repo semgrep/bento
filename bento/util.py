@@ -23,6 +23,7 @@ from typing import (
     List,
     Optional,
     Pattern,
+    TextIO,
     Tuple,
     Type,
     Union,
@@ -37,13 +38,14 @@ import bento.constants as constants
 
 EMPTY_DICT = frozendict({})
 MAX_PRINT_WIDTH = 80
+MIN_PRINT_WIDTH = 45
 ANSI_WIDTH = 4  # number of characters to emit an ANSI control code
 LEADER_CHAR = "․"
-SETUP_TEXT = " 🍜 Setting up"
+SETUP_TEXT = "🍜 Setting up"
 SETUP_WIDTH = len(SETUP_TEXT)
-PROGRESS_TEXT = " 🍤 Running".ljust(SETUP_WIDTH, " ")
-DONE_TEXT = " 🍱 Done".ljust(SETUP_WIDTH, " ")
-SKIP_TEXT = " 👋 Skipped".ljust(SETUP_WIDTH, " ")
+PROGRESS_TEXT = "🍤 Running".ljust(SETUP_WIDTH, " ")
+DONE_TEXT = "🍱 Done".ljust(SETUP_WIDTH, " ")
+SKIP_TEXT = "👋 Skipped".ljust(SETUP_WIDTH, " ")
 RESET_TEXT = "".ljust(SETUP_WIDTH + 1, "\b")  # +1 for emoji width
 
 OSC_8 = "\x1b]8;;"
@@ -57,7 +59,7 @@ AutocompleteSuggestions = List[Union[str, Tuple[str, str]]]
 
 def _calculate_print_width() -> int:
     term_width, _ = shutil.get_terminal_size((MAX_PRINT_WIDTH, 0))
-    return min(MAX_PRINT_WIDTH, term_width)
+    return max(min(MAX_PRINT_WIDTH, term_width), MIN_PRINT_WIDTH)
 
 
 PRINT_WIDTH = _calculate_print_width()
@@ -190,19 +192,29 @@ def less(
             signal.signal(signal.SIGPIPE, signal.SIG_DFL)
 
 
+def wrap(text: str, extra: int = 0) -> str:
+    """
+    Wraps text to (one character less than) the screen print width
+
+    :param text: The text to wrap
+    :param extra: Any extra width to apply
+    """
+    return "\n".join(py_wrap(text, PRINT_WIDTH - 1 + extra))
+
+
 def echo_error(text: str, indent: str = "") -> None:
     logging.error(text)
-    secho(f"{indent}✘ {text}", fg=Colors.ERROR, err=True)
+    secho(wrap(f"{indent}✘ {text}"), fg=Colors.ERROR, err=True)
 
 
 def echo_warning(text: str, indent: str = "") -> None:
     logging.warning(text)
-    secho(f"{indent}⚠ {text}", fg=Colors.WARNING, err=True)
+    secho(wrap(f"{indent}⚠ {text}"), fg=Colors.WARNING, err=True)
 
 
 def echo_success(text: str, indent: str = "") -> None:
     logging.info(text)
-    secho(f"{indent}✔ {text}", fg=Colors.SUCCESS, err=True)
+    secho(wrap(f"{indent}✔ {text}"), fg=Colors.SUCCESS, err=True)
 
 
 def echo_box(text: str) -> None:
@@ -257,16 +269,6 @@ def echo_next_step(desc: str, cmd: str) -> None:
     echo_styles("◦ ", style(f"{desc}, run $ ", dim=True), cmd, style(".", dim=True))
 
 
-def wrap(text: str, extra: int = 0) -> str:
-    """
-    Wraps text to (one character less than) the screen print width
-
-    :param text: The text to wrap
-    :param extra: Any extra width to apply
-    """
-    return "\n".join(py_wrap(text, PRINT_WIDTH - 1 + extra))
-
-
 def wrap_link(text: str, extra: int, *links: Tuple[str, str], **kwargs: Any) -> str:
     """
     Wraps text. Text may include one or more links.
@@ -276,16 +278,37 @@ def wrap_link(text: str, extra: int, *links: Tuple[str, str], **kwargs: Any) -> 
     :param extra: Any extra width to apply
     :param kwargs: Styling rules passed to text
     """
+
     wrapped = wrap(text, extra)
+
+    def find_loc(anchor: str) -> Tuple[int, str]:
+        """
+        Finds the position of the anchor string in the wrapped text
+
+        Note that the anchor string itself may be wrapped, so we return
+        both the position, and the value of the (possibly wrapped) anchor string.
+        """
+        pos = wrapped.find(anchor)
+        if pos < 0:
+            # Text was likely wrapped
+            anchor_it = [
+                f"{anchor[:ix].rstrip()}\n{anchor[ix:]}" for ix in range(len(anchor))
+            ]
+            pos_it = ((wrapped.find(a), a) for a in anchor_it)
+            pos, anchor = next(((p, a) for p, a in pos_it if p > 0), (-1, anchor))
+            if pos < 0:
+                raise ValueError(f"'{anchor}' does not appear in '{text}'")
+        return pos, anchor
+
     with_locs = sorted(
-        [(wrapped.find(anchor), anchor, href) for anchor, href in links],
-        key=(lambda t: t[0]),
+        [(find_loc(anchor), href) for anchor, href in links], key=(lambda t: t[0][0])
     )
     out = ""
     current = 0
-    for loc, anchor, href in with_locs:
+    for loc_anchor, href in with_locs:
+        loc, anchor = loc_anchor
         out += style(wrapped[current:loc], **kwargs)
-        out += render_link(anchor, href, print_alternative=False)
+        out += render_link(anchor, href, print_alternative=False, pipe=sys.stderr)
         current = loc + len(anchor)
     out += style(wrapped[current:], **kwargs)
     return out
@@ -308,15 +331,15 @@ def echo_progress(text: str, extra: int = 0, skip: bool = False) -> Callable[[],
     :param extra: Number of unprinted characters in text (each ANSI code point is 4 characters)
     :param skip: If true, "Skipped" is printed instead, and callback is a no-op
     """
-    width = PRINT_WIDTH - 2 - SETUP_WIDTH + ANSI_WIDTH + extra
+    width = PRINT_WIDTH - 3 - SETUP_WIDTH + ANSI_WIDTH + extra
     logging.info(text)
     leader = style("".ljust(width - len(text), LEADER_CHAR), dim=True)
 
     if skip:
-        secho(f"{text}{leader}{style(SKIP_TEXT, dim=True)}", err=True, dim=True)
+        secho(f"{text}{leader} {style(SKIP_TEXT, dim=True)}", err=True, dim=True)
         return lambda: None
     else:
-        secho(f"{text}{leader}{SETUP_TEXT}", nl=False, err=True, dim=True)
+        secho(f"{text}{leader} {SETUP_TEXT}", nl=False, err=True, dim=True)
         return lambda: secho(f"{RESET_TEXT}{DONE_TEXT}", err=True, dim=True)
 
 
@@ -325,6 +348,7 @@ def render_link(
     href: Optional[str],
     print_alternative: bool = True,
     width: Optional[int] = None,
+    pipe: TextIO = sys.stdout,
 ) -> str:
     """
     Prints a clickable hyperlink output if in a tty; otherwise just prints a text link
@@ -333,11 +357,12 @@ def render_link(
     :param href: The href, if exists
     :param print_alternative: If true, only emits link if OSC8 links are supported, otherwise prints href after text
     :param width: Minimum link width
+    :param pipe: The text IO via which this link will be emitted
     :return: The rendered link
     """
     is_rendered = False
     if href:  # Don't render if href is None or empty
-        if sys.stdout.isatty() and DO_PRINT_LINKS:
+        if pipe.isatty() and DO_PRINT_LINKS:
             text = f"{OSC_8}{href}{BEL}{text}{OSC_8}{BEL}"
             is_rendered = True
             if width:

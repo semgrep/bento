@@ -75,10 +75,10 @@ class Flake8Tool(PythonTool[str], StrTool):
         "flake8": SimpleSpec("~=3.7.0"),
         "flake8-json": SimpleSpec("~=19.8.0"),
         "flake8-bugbear": SimpleSpec("~=19.8.0"),
-        "flake8-builtins": SimpleSpec("~=1.4.1"),
         "flake8-debugger": SimpleSpec("~=3.2.0"),
         "flake8-executable": SimpleSpec("~=2.0.3"),
     }
+    PYTHON_EXT_REGEX = re.compile(r".*\.py\b")
 
     @property
     def parser_type(self) -> Type[Parser]:
@@ -98,7 +98,7 @@ class Flake8Tool(PythonTool[str], StrTool):
 
     @property
     def file_name_filter(self) -> Pattern:
-        return re.compile(r".*\.py\b")
+        return self.PYTHON_EXT_REGEX
 
     @classmethod
     def venv_subdir_name(self) -> str:

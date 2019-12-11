@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 
 from click.termui import style
 
@@ -32,7 +33,10 @@ UPGRADE_WARNING_OUTPUT = f"""
 ╰─────────────────────────────────────────────╯
 """
 
-TERMS_OF_SERVICE_ERROR = (
-    "Bento did NOT install. Bento beta users must agree to the terms of service to continue. "
-    "Please reach out to us at support@r2c.dev with questions or concerns. "
+### Content ###
+
+REGISTRATION_CONTENT_PATH = (
+    Path(os.path.dirname(__file__)) / "resources" / "register-content.yml"
 )
+
+INIT_CONTENT_PATH = Path(os.path.dirname(__file__)) / "resources" / "init-content.yml"

@@ -24,7 +24,9 @@ class Context(BaseContext):
     )
     _tool_inventory = attr.ib(type=Dict[str, Type[Tool]], init=False, default=None)
     _tools = attr.ib(type=Dict[str, Tool], init=False, default=None)
-    _configured_tools = attr.ib(type=Dict[str, Tool], init=False, default=None)
+    _configured_tools = attr.ib(
+        type=Optional[Dict[str, Tool]], init=False, default=None
+    )
 
     def __repr__(self) -> str:
         return f"Context({self.base_path})"

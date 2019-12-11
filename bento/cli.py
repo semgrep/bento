@@ -97,7 +97,9 @@ def cli(
             "Bento requires Python 3.6+. Please ensure you have Python 3.6+ and installed Bento via `pip3 install bento-cli`."
         )
         sys.exit(3)
-    if not register.verify_registration(agree, email, ctx.obj):
+
+    registrar = register.Registrar(ctx.obj, agree, email=email)
+    if not registrar.verify():
         logging.error("Could not verify the user's registration.")
         sys.exit(3)
     if not is_running_latest():

@@ -1,0 +1,96 @@
+not-registered:
+  - content: This installation of Bento is not registered.
+    render: error
+  - content: |
+      Please either:
+      ◦ Register Bento by running it in an interactive terminal
+      ◦ Run Bento with `--agree --email [EMAIL]`
+welcome:
+  - content: Global Bento Configuration
+    render: box
+  - content: |
+      Thanks for installing Bento, a free and opinionated toolkit for gradually adopting linters and program analysis
+      in your codebase!
+    processor: wrap
+  - render: newline
+update-email:
+  leader:
+    - content:
+        - content: "Registration: "
+        - content: We’ll use your email to provide support and share product updates. You can unsubscribe at any time.
+          style:
+            dim: true
+      processor: wrap
+      extra_width: 8
+    - render: newline
+  prompt:
+    - content: What is your email address?
+  failure:
+    - render: newline
+    - content: |
+        We were unable to subscribe you to the Bento mailing list (which means you may miss out on announcements!).
+        Bento will continue running. Please shoot us a note via support@r2c.dev to debug.
+      render: warning
+confirm-tos:
+  fresh:
+    - content:
+        - content: "Privacy: "
+        - content: We take privacy seriously. Bento runs exclusively on your computer. It will never send your code anywhere.
+          style:
+            dim: true
+      processor: wrap
+      extra-width: 8
+    - render: newline
+    - content: |
+        We’re constantly looking to make Bento better. To that end, we collect limited usage and results data.
+        To learn more, see bento.dev/privacy.
+      processor: wrap-link
+      style:
+        dim: true
+      links:
+        - anchor: bento.dev/privacy
+          href: https://bento.dev/privacy
+    - render: newline
+  invalid-version:
+    - content: "~/.bento/config.yml is malformed. Please remove this file and re-run Bento. "
+      render: error
+  upgrade:
+    - content: |
+        We've made changes to our terms of service. Please review the new terms. If you have any questions or
+        concerns please reach out via support@r2c.dev.
+      processor: wrap-link
+      style:
+        dim: true
+      links:
+        - anchor: support@r2c.dev
+          href: mailto:support@r2c.dev
+    - render: newline
+  prompt:
+    - content: Continue and agree to Bento's terms of service and privacy policy?
+      render: confirm
+      options:
+        default: true
+  error:
+    - content: |
+        Bento did NOT install. Bento beta users must agree to the terms of service to continue. Please reach out
+        to us at support@r2c.dev with questions or concerns.
+      render: error
+suggest-autocomplete:
+  bash:
+    - content: |
+        Bento supports tab autocompletion. To enable, run:
+
+    - content: "  $ "
+      newline: false
+    - content: echo -e '\neval "$(_BENTO_COMPLETE=source bento)"' >> ~/.bashrc
+      style:
+        bold: true
+  zsh:
+    - content: |
+        Bento supports tab autocompletion. To enable, run:
+
+    - content: "  $ "
+      newline: false
+    - content: echo -e '\neval "$(_BENTO_COMPLETE=source_zsh bento)"' >> ~/.zshrc
+      style:
+        bold: true

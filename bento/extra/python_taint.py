@@ -71,7 +71,11 @@ class PythonTaintTool(StrTool):
             e.path for e in self.context.file_ignores.entries() if not e.survives
         }
         return run_analyzer_on_local_code(
-            self.ANALYZER_NAME, self.ANALYZER_VERSION, self.base_path, ignore_files
+            self.ANALYZER_NAME,
+            self.ANALYZER_VERSION,
+            self.base_path,
+            ignore_files,
+            files,
         )
 
     @classmethod

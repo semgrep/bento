@@ -202,6 +202,8 @@ def prepull_analyzers(analyzer_name: str, version: Version) -> None:
     # import inside def for performance
     import docker
 
+    check_docker_is_running()
+
     specified_analyzer = SpecifiedAnalyzer(
         VersionedAnalyzer(AnalyzerName(analyzer_name), version)
     )
@@ -314,6 +316,21 @@ def _copy_local_input(
         analyzer.upload_output(SpecifiedAnalyzer(va), analyzer_input, mount_folder)
 
 
+def check_docker_is_running() -> None:
+    """Checks that docker client is reachable"""
+    # import inside def for performance
+    import docker
+
+    try:
+        client = docker.from_env()
+        client.info()
+    except Exception as e:
+        logging.debug(e)
+        raise Exception(
+            "Failed to run docker. Please confirm docker is installed and its daemon is running in user mode."
+        )
+
+
 def run_analyzer_on_local_code(
     analyzer_name: str,
     version: Version,
@@ -323,6 +340,8 @@ def run_analyzer_on_local_code(
 ) -> str:
     """Run an analyzer on a local folder.
     """
+    check_docker_is_running()
+
     specified_analyzer = SpecifiedAnalyzer(
         VersionedAnalyzer(AnalyzerName(analyzer_name), version)
     )

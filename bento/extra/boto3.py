@@ -6,14 +6,14 @@ from bento.extra.flake8 import Flake8Parser, Flake8Tool
 from bento.parser import Parser
 from bento.tool import StrTool
 
-PREFIX = "r2c-flask-"
+PREFIX = "r2c-boto3-"
 
 
-class FlaskParser(Flake8Parser):
+class Boto3Parser(Flake8Parser):
     @staticmethod
     def id_to_link(check_id: str) -> str:
-        page = FlaskParser.id_to_name(check_id)
-        return f"https://checks.bento.dev/en/latest/flake8-flask/{page}"
+        page = Boto3Parser.id_to_name(check_id)
+        return f"https://checks.bento.dev/en/latest/flake8-boto3/{page}"
 
     @staticmethod
     def id_to_name(check_id: str) -> str:
@@ -21,21 +21,21 @@ class FlaskParser(Flake8Parser):
 
     @staticmethod
     def tool() -> Type[StrTool]:
-        return FlaskTool
+        return Boto3Tool
 
 
-class FlaskTool(Flake8Tool):
-    TOOL_ID = "r2c.flask"  # to-do: versioning?
-    VENV_DIR = "flask"
+class Boto3Tool(Flake8Tool):
+    TOOL_ID = "r2c.boto3"
+    VENV_DIR = "boto3"
     PACKAGES = {
         "flake8": SimpleSpec("~=3.7.0"),
         "flake8-json": SimpleSpec("~=19.8.0"),
-        "flake8-flask": SimpleSpec("~=0.6.3"),
+        "flake8-boto3": SimpleSpec("~=0.2.3"),
     }
 
     @property
     def parser_type(self) -> Type[Parser]:
-        return FlaskParser
+        return Boto3Parser
 
     @classmethod
     def tool_id(cls) -> str:
@@ -43,7 +43,7 @@ class FlaskTool(Flake8Tool):
 
     @classmethod
     def tool_desc(cls) -> str:
-        return "Checks for the Python Flask framework"
+        return "Checks for the AWS boto3 library in Python"
 
     def select_clause(self) -> str:
-        return "--select=r2c"
+        return "--select={}".format(PREFIX)

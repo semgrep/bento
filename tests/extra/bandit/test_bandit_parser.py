@@ -36,7 +36,7 @@ def test_run(tmp_path_factory: tmp_path_factory) -> None:
             column=0,
             message="Consider possible security implications associated with subprocess module.",
             severity=1,
-            syntactic_context=' import subprocess\n def do_it(cmd: str) -> None:\n     subprocess.run(f"bash -c {cmd}", shell=True)',
+            syntactic_context=" import subprocess",
             link="https://bandit.readthedocs.io/en/latest/blacklists/blacklist_imports.html#b404-import-subprocess",
         ),
         Violation(
@@ -47,7 +47,7 @@ def test_run(tmp_path_factory: tmp_path_factory) -> None:
             column=0,
             message="subprocess call with shell=True identified, security issue.",
             severity=3,
-            syntactic_context=' def do_it(cmd: str) -> None:\n     subprocess.run(f"bash -c {cmd}", shell=True)',
+            syntactic_context='     subprocess.run(f"bash -c {cmd}", shell=True)',
             link="https://bandit.readthedocs.io/en/latest/plugins/b602_subprocess_popen_with_shell_equals_true.html",
         ),
     ]

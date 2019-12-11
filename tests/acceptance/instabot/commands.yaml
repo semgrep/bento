@@ -21,8 +21,8 @@ steps:
       ╭──────────────────────────────────────────────────────────────────────────────╮
       │                             Bento Initialization                             │
       ╰──────────────────────────────────────────────────────────────────────────────╯
-      Creating default ignore file at .bentoignore․․․․․․․․․․․․․․․․․․․․․ 🍜 Setting up\b\b\b\b\b\b\b\b\b\b\b\b\b\b 🍱 Done
-      Creating default configuration at .bento.yml․․․․․․․․․․․․․․․․․․․․․ 🍜 Setting up\b\b\b\b\b\b\b\b\b\b\b\b\b\b 🍱 Done
+      Creating default ignore file at .bentoignore․․․․․․․․․․․․․․․․․․․․․ 🍜 Setting up\b\b\b\b\b\b\b\b\b\b\b\b\b🍱 Done
+      Creating default configuration at .bento.yml․․․․․․․․․․․․․․․․․․․․․ 🍜 Setting up\b\b\b\b\b\b\b\b\b\b\b\b\b🍱 Done
       Updating .gitignore․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․ 👋 Skipped
 
       Detected project with Python
@@ -48,7 +48,6 @@ steps:
 
         $ git add .gitignore .bento?* && git commit -m 'Add Bento to project'
 
-
       ╭──────────────────────────────────────────────────────────────────────────────╮
       │                                  Thank You                                   │
       ╰──────────────────────────────────────────────────────────────────────────────╯
@@ -69,7 +68,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 66 finding(s) in"
+      - "⚠ 60 finding(s) in"
       - ◦ To suppress all findings, run $ bento archive.
     expected_out:
       file: bento-check-with-init.out
@@ -93,7 +92,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 30 finding(s) in"
+      - "⚠ 24 finding(s) in"
       - ◦ To suppress all findings, run $ bento archive.
     expected_out:
       file: bento-check-with-disable.out
@@ -117,7 +116,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 66 finding(s) in"
+      - "⚠ 60 finding(s) in"
       - ◦ To suppress all findings, run $ bento archive.
     expected_out:
       file: bento-check-with-init.out
@@ -132,8 +131,8 @@ steps:
       Running Bento archive...
 
 
-      Project analyzed with 4 tool(s).
-      66 finding(s) were archived, and will be hidden in future Bento runs.
+      Project analyzed with 5 tool(s).
+      60 finding(s) were archived, and will be hidden in future Bento runs.
 
       ◦ To view archived results, run $ bento check --show-all.
 
@@ -148,7 +147,7 @@ steps:
       - check
     expected_err:
       - ✔ 0 findings in
-      - ◦ Not showing 66 archived finding(s). To view, run $ bento check --show-all.
+      - ◦ Not showing 60 archived finding(s). To view, run $ bento check --show-all.
     expected_out: ""
     returncode: 0
   - name: install-hook

@@ -1,7 +1,7 @@
 {
   "./bad.py": [
     {
-      "code": "r2c-need-filename-or-mimetype-for-file-objects-in-send-file",
+      "code": "r2c-flask-send-file-open",
       "filename": "./bad.py",
       "line_number": 4,
       "column_number": 1,

@@ -100,6 +100,23 @@ def test_load_escape_colon() -> None:
     assert r"\:foo" in __parse(r"\:foo")
 
 
+def test_escape_random_character() -> None:
+    processor = Processor(BASE_PATH)
+    assert r"**/#" in processor.process([r"\#"])
+
+
+def test_include_emacs_swap() -> None:
+    assert r"*#" in __parse(r"*#")
+
+
+def test_strip_comments() -> None:
+    assert "foo" in __parse(r"foo # this is a comment")
+
+
+def test_comment_line() -> None:
+    assert not __parse(r"# this is a comment at the start of the line")
+
+
 def test_load_git_include() -> None:
     assert not __parse(r"!foo")
 
@@ -111,12 +128,6 @@ def test_load_git_multi_char() -> None:
 def test_load_unknown_command() -> None:
     with pytest.raises(ValueError) as ex:
         __parse(":unknown")
-    assert ex
-
-
-def test_load_invalid_escape() -> None:
-    with pytest.raises(ValueError) as ex:
-        Processor(BASE_PATH).process(__parse("\\r"))
     assert ex
 
 
