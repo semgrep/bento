@@ -1,29 +1,11 @@
 ==> Bento Summary
-error: r2c.flake8.F401 https://lintlyci.github.io/Flake8Rules/rules/F401.html
-     --> app/models.py:5:1
-      |
-    5 |   from django.db import models
-      |
-      = note: 'django.db.models' imported but unused              
-
-
-error: r2c.flake8.F401 https://lintlyci.github.io/Flake8Rules/rules/F401.html
-     --> app/views.py:7:1
-      |
-    7 |   from django.template import RequestContext
-      |
-      = note: 'django.template.RequestContext' imported but unused
-
-
 error: r2c.flake8.EXE001 https://lintlyci.github.io/Flake8Rules/rules/EXE001.html
      --> manage.py:1:1
       |
     1 |   #!/usr/bin/env python
       |
-      = note: Shebang is present but the file is not executable.  
+      = note: Shebang is present but the file is not executable.
 
 
 r2c.flake8:
-  F401           2▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  EXE001         1▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-
+  EXE001         1▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬

@@ -73,7 +73,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 294 finding(s) in"
+      - "⚠ 199 finding(s) in"
       - ◦ To suppress all findings, run $ bento archive.
     expected_out:
       file: bento-check-with-init.out
@@ -97,7 +97,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 271 finding(s) in"
+      - "⚠ 176 finding(s) in"
       - ◦ To suppress all findings, run $ bento archive.
     expected_out:
       file: bento-check-with-disable.out
@@ -121,7 +121,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 294 finding(s) in"
+      - "⚠ 199 finding(s) in"
       - ◦ To suppress all findings, run $ bento archive.
     expected_out:
       file: bento-check-with-init.out
@@ -137,7 +137,7 @@ steps:
 
 
       Project analyzed with 1 tool(s).
-      294 finding(s) were archived, and will be hidden in future Bento runs.
+      199 finding(s) were archived, and will be hidden in future Bento runs.
 
       ◦ To view archived results, run $ bento check --show-all.
 
@@ -152,7 +152,7 @@ steps:
       - check
     expected_err:
       - ✔ 0 findings in
-      - ◦ Not showing 294 archived finding(s). To view, run $ bento check --show-all.
+      - ◦ Not showing 199 archived finding(s). To view, run $ bento check --show-all.
     expected_out: ""
     returncode: 0
   - name: install-hook

@@ -68,7 +68,7 @@ steps:
       - --agree
       - check
     expected_err:
-      - "⚠ 3 finding(s) in"
+      - "⚠ 1 finding(s) in"
       - ◦ To suppress all findings, run $ bento archive.
     expected_out:
       file: bento-check-with-init.out
@@ -96,30 +96,6 @@ steps:
     expected_out:
       file: bento-check-with-disable.out
     returncode: 2
-  - name: reenable-check
-    description: enable a finding that was previously disabled
-    command:
-      - bento
-      - --agree
-      - enable
-      - check
-      - r2c.flake8
-      - F401
-    expected_err: "✔ 'F401' enabled for 'r2c.flake8'"
-    expected_out: ""
-    returncode: 0
-  - name: bento-check-reenable
-    description: bento check should show finding that was reenabled
-    command:
-      - bento
-      - --agree
-      - check
-    expected_err:
-      - "⚠ 3 finding(s) in"
-      - ◦ To suppress all findings, run $ bento archive.
-    expected_out:
-      file: bento-check-with-init.out
-    returncode: 2
   - name: bento-archive
     description: should archive all existing findings
     command:
@@ -131,7 +107,7 @@ steps:
 
 
       Project analyzed with 5 tool(s).
-      3 finding(s) were archived, and will be hidden in future Bento runs.
+      1 finding(s) were archived, and will be hidden in future Bento runs.
 
       ◦ To view archived results, run $ bento check --show-all.
 
@@ -146,7 +122,7 @@ steps:
       - check
     expected_err:
       - ✔ 0 findings in
-      - ◦ Not showing 3 archived finding(s). To view, run $ bento check --show-all.
+      - ◦ Not showing 1 archived finding(s). To view, run $ bento check --show-all.
     expected_out: ""
     returncode: 0
   - name: install-hook
