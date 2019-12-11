@@ -159,7 +159,7 @@ class BanditTool(PythonTool[str], StrTool):
     VENV_DIR = "bandit"
     PROJECT_NAME = "Python"
     FILE_NAME_FILTER = re.compile(r".*\.py\b")
-    PACKAGES = {"bandit": SimpleSpec("~=1.6.0")}
+    PACKAGES = {"bandit": SimpleSpec("~=1.6.2")}
 
     @property
     def parser_type(self) -> Type[Parser]:
