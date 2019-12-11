@@ -64,6 +64,7 @@ class HadolintParser(Parser[str]):
 class HadolintTool(StrTool):
     TOOL_ID = "r2c.hadolint"
     DOCKER_IMAGE = "hadolint/hadolint:v1.17.2-8-g65736cb"
+    DOCKERFILE_FILTER = re.compile(".*Dockerfile.*", re.IGNORECASE)
 
     @property
     def parser_type(self) -> Type[Parser]:
@@ -79,7 +80,7 @@ class HadolintTool(StrTool):
 
     @property
     def file_name_filter(self) -> Pattern:
-        return re.compile("Dockerfile")
+        return self.DOCKERFILE_FILTER
 
     def filter_paths(self, paths: Iterable[str]) -> Set[str]:
         """
