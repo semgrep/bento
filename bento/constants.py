@@ -19,6 +19,8 @@ BENTO_EMAIL_VAR = "BENTO_EMAIL"
 QA_TEST_EMAIL_ADDRESS = "test@returntocorp.com"
 SUPPORT_EMAIL_ADDRESS = "support@r2c.dev"
 
+ARGS_TO_EXCLUDE_FROM_METRICS = {"check": ["paths"]}
+
 ### messages ###
 
 UPGRADE_WARNING_OUTPUT = f"""
