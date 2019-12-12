@@ -65,6 +65,7 @@ r2c is on a quest to make world-class security and bugfinding available to all d
 We’re also big proponents of opinionated tools like Black and Prettier. This has two implications: Bento ignores style-related issues and the bikeshedding that comes with them, and it ships with a curated set of checks that we believe are high signal and bug-worthy. See [Three things your linter shouldn’t tell you](https://blog.r2c.dev/posts/three-things-your-linter-shouldnt-tell-you/) for more details on our decision making process.
 
 ## Usage
+### Getting Started
 To get started right away with sensible defaults:
 
 ```bash
@@ -78,6 +79,16 @@ $ bento archive
 ```
 
 Bento is at its best when run automatically. See [Integrations](#integrations) for details.
+
+### Upgrading
+Run the following commands to upgrade Bento:
+
+```bash
+$ pip3 install --upgrade bento-cli
+$ cd <PROJECT DIRECTORY>
+$ rm -r .bento* && bento init
+$ git add .bento* && git commit -m "Upgrade Bento configs"
+```
 
 ### Command Line Options
 ```
