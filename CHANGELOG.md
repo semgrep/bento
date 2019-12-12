@@ -2,6 +2,31 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.7.0](https://pypi.org/project/bento-cli/0.7.0/) - 2019-12-11
+
+### Fixed
+
+- Fixed `r2c.hadolint` issue where it failed to detect files with `.dockerfile` suffixes.
+- Fixed `r2c.sgrep` to respect file path when running on specific files with `bento check /path/to/file`
+
+### Changed
+
+- Redesigned `bento init`
+  - It now runs `bento check` and `bento archive` itself; these were almost always run manually by users immediately after `bento init`
+  - Displays histogram of results
+- `bento check` supports running a single tool with the `-t` flag: `bento check -t r2c.flask`
+- Reworked user registration flow
+- Removed [flake8-builtins](https://github.com/gforcada/flake8-builtins) plugin from `r2c.flask` based on user feedback: codebases with SQLAlchemy models (common in Flask apps) regularly shadow the `id` builtin, causing false positives.
+- Added eslint arrow-body-style as a default ignore because it is a style issue.
+- Added unused variable/import related checks (eslint no-unused-vars and no-var, flake8 F401 and F841)to default ignore. While useful they are very noisy and are often non-issues.
+
+### Added
+
+- Added `r2c.boto3` tool for [Boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/index.html) framework. To use it on a project, run `bento enable tool r2c.boto3`
+- Added additional checks for `r2c.flake8`
+  - [unescaped-file-extension](https://checks.bento.dev/en/latest/flake8-flask/unescaped-file-extension)
+  - [use-jsonify](https://checks.bento.dev/en/latest/flake8-flask/use-jsonify/)
+
 ## [0.6.2](https://pypi.org/project/bento-cli/0.6.2/) - 2019-12-05
 
 ### Fixed

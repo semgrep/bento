@@ -70,10 +70,13 @@ class Registrar(object):
 
         If the user has passed an email on the command line, this logic is skipped.
         """
-        if not self.email and "email" not in self.global_config:
-            # import inside def for performance
-            from validate_email import validate_email
+        # import inside def for performance
+        from validate_email import validate_email
 
+        if not self.email:
+            self.email = self.global_config.get("email")
+
+        if not self.email or not validate_email(self.email):
             content.UpdateEmail.leader.echo()
 
             email = None

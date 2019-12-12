@@ -9,7 +9,7 @@ test:
 
 .PHONY: qa-test
 qa-test: build
-	pipenv run pytest tests/acceptance/qa.py
+	pipenv run pytest -s tests/acceptance/qa.py
 
 .PHONY: env-test
 env-test:

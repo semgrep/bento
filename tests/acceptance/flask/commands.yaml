@@ -61,6 +61,17 @@ steps:
       users, and share feedback.
     expected_out: ""
     returncode: 0
+  - name: enable-click
+    description: enable click tool (Hack for now so no need to rewrite tests)
+    command:
+      - bento
+      - --agree
+      - enable
+      - tool
+      - r2c.click
+    expected_err: "✔ r2c.click enabled"
+    expected_out: ""
+    returncode: 0
   - name: bento-check-with-init
     description: bento check after init has findings
     command:

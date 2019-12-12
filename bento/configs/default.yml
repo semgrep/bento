@@ -426,9 +426,7 @@ tools:
       # ‘from module import *’ only allowed at module level
       - F406
   r2c.flask:
-    ignore: []
+    ignore:
+      - r2c-flask-use-blueprint-for-modularity
   r2c.requests:
     ignore: []
-  r2c.click:
-    ignore:
-      - r2c-click-names-are-well-formed
