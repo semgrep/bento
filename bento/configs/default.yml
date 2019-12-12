@@ -429,6 +429,3 @@ tools:
     ignore: []
   r2c.requests:
     ignore: []
-  r2c.click:
-    ignore:
-      - r2c-click-names-are-well-formed
