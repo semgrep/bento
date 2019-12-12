@@ -4,7 +4,7 @@ import sys
 import time
 from datetime import datetime
 from functools import update_wrapper
-from typing import Any, Callable, Optional
+from typing import Any, Callable
 
 import click
 
@@ -31,7 +31,6 @@ def __log_exception(e: Exception) -> None:
 def with_metrics(f: _AnyCallable) -> _AnyCallable:
     def new_func(*args: Any, **kwargs: Any) -> Any:
         exit_code = 0
-        exception: Optional[Exception] = None
         before = time.time()
 
         context = click.get_current_context()
@@ -47,7 +46,6 @@ def with_metrics(f: _AnyCallable) -> _AnyCallable:
         except SystemExit as e:
             exit_code = e.code
         except Exception as e:
-            exception = e
             exit_code = 3
             __log_exception(e)
 
@@ -56,7 +54,7 @@ def with_metrics(f: _AnyCallable) -> _AnyCallable:
         logging.info(f"{command} completed in {elapsed} with exit code {exit_code}")
         bento.network.post_metrics(
             bento.metrics.command_metric(
-                command, timestamp, kwargs, exit_code, elapsed, exception, user_duration
+                command, timestamp, kwargs, exit_code, elapsed, user_duration
             )
         )
         if exit_code != 0:
