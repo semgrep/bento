@@ -44,7 +44,7 @@ Bento is a free and opinionated toolkit for gradually adopting linters[¹](https
 - **Get started immediately.** Bento doesn’t force you to fix all your preexisting issues today. Instead, you can archive them and address them incrementally when it makes sense for your project.
 - **Go fast.** Bento installs in 5 seconds and self-configures in less than 30. Its tools check your code in parallel, not sequentially.
 
-Bento includes checks written by [r2c](https://r2c.dev/) and curated from [Bandit](https://pypi.org/project/bandit/), [ESLint](https://eslint.org/), [Flake8](https://pypi.org/project/flake8/), and their plugins. It runs on your local machine and never sends your code anywhere or to anyone.
+Bento includes [checks written by r2c](#bento-checks) and curated from [Bandit](https://pypi.org/project/bandit/), [ESLint](https://eslint.org/), [Flake8](https://pypi.org/project/flake8/), and their plugins. It runs on your local machine and never sends your code anywhere or to anyone.
 
 <p align="center">
     <img src="https://web-assets.r2c.dev/bento-demo.gif" width="100%" alt="Demonstrating Bento running in a terminal"/>
@@ -64,16 +64,17 @@ r2c is on a quest to make world-class security and bugfinding available to all d
 
 We’re also big proponents of opinionated tools like Black and Prettier. This has two implications: Bento ignores style-related issues and the bikeshedding that comes with them, and it ships with a curated set of checks that we believe are high signal and bug-worthy. See [Three things your linter shouldn’t tell you](https://blog.r2c.dev/posts/three-things-your-linter-shouldnt-tell-you/) for more details on our decision making process.
 
-## Custom Checks
+## Bento Checks
+> Visit [checks.bento.dev](https://checks.bento.dev) for detailed documentation.
 
-We also write custom checks. Checks for languages are well-represented, but frameworks are under-represented in code analysis. ESLint plugins exist for React, so why not other frameworks? We are currently writing checks for Flask in Python. Have a framework you want checks for? Email us at support@r2c.dev.
+Bento's check approach is to target popular frameworks (Flask), rather than an entire languages (Python). We've found that program analysis tends to tackle language issues rather than framework issues, and we want to see more work done in the community like the React plugin for ESLint.
 
-Some highlights from our Flask checks are:
+We're currently focused on checks for Flask and it's sister libraries. These checks include ones like:
 
-* `r2c-flask-unescaped-file-extensions` - Flask doesn’t automatically escape Jinja templates unless they have `.html`, `.htm`, `.xml`, or `.xhtml` extensions. This check fires if templates without these extensions are used and if their context variables aren’t manually escaped, which could leave your application vulnerable to DOM based XSS attacks (https://www.owasp.org/index.php/DOM_Based_XSS).
-* `r2c-flask-send-file-open` - This check will detect the use of `open(...)` passed in to `flask.send_file` without the appropriate keyword args -- either `mimetype` or `attachment_filename`. `open(...)` without these keywords throws a `ValueError` at runtime.
+* `unescaped-file-extensions`: Flask doesn’t automatically escape Jinja templates unless they have `.html`, `.htm`, `.xml`, or `.xhtml` extensions. This check fires if templates without these extensions are used and if their context variables aren’t manually escaped, which could leave your application vulnerable to [DOM based XSS attacks](https://www.owasp.org/index.php/DOM_Based_XSS).
+* `send-file-open`: This check will detect the use of `open(...)` passed in to `flask.send_file` without the appropriate keyword args — either `mimetype` or `attachment_filename`. `open(...)` without these keywords throws a `ValueError` at runtime.
 
-You can find out about all of our checks at https://checks.bento.dev (https://checks.bento.dev/).
+You can find out about all of our checks at [https://checks.bento.dev](https://checks.bento.dev/).
 
 ## Usage
 ### Getting Started
