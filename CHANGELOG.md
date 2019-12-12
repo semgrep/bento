@@ -17,6 +17,8 @@ This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html
 - `bento check` supports running a single tool with the `-t` flag: `bento check -t r2c.flask`
 - Reworked user registration flow
 - Removed [flake8-builtins](https://github.com/gforcada/flake8-builtins) plugin from `r2c.flask` based on user feedback: codebases with SQLAlchemy models (common in Flask apps) regularly shadow the `id` builtin, causing false positives.
+- Added eslint arrow-body-style as a default ignore because it is a style issue.
+- Added unused variable/import related checks (eslint no-unused-vars and no-var, flake8 F401 and F841)to default ignore. While useful they are very noisy and are often non-issues.
 
 ### Added
 
