@@ -4,20 +4,19 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import Callable, Optional, Union
+from typing import Optional, Union
 
 import attr
 import click
 import yaml
 
-import bento.constants as constants
+import bento.content.init as content
 import bento.git
 import bento.tool_runner
 from bento.commands.archive import archive
 from bento.commands.check import check
 from bento.context import Context
 from bento.decorators import with_metrics
-from bento.renderer import Renderer
 
 
 def _dim_filename(path: Union[Path, str]) -> str:
@@ -26,7 +25,6 @@ def _dim_filename(path: Union[Path, str]) -> str:
 
 @attr.s(auto_attribs=True)
 class InitCommand(object):
-    renderer = Renderer(constants.INIT_CONTENT_PATH)
     context: Context
 
     def _query_gitignore_update(self) -> Optional[Path]:
@@ -52,11 +50,11 @@ class InitCommand(object):
                         filter(lambda l: l.rstrip() == ".bento/", fd), None
                     )
             if has_ignore is None:
-                if self.renderer.echo("update-gitignore", "confirm"):
-                    self.renderer.echo("update-gitignore", "confirm-yes")
+                if content.UpdateGitignore.confirm.echo():
+                    content.UpdateGitignore.confirm_yes.echo()
                     return ignore_file
                 else:
-                    self.renderer.echo("update-gitignore", "confirm-no")
+                    content.UpdateGitignore.confirm_no.echo()
         return None
 
     def _install_config_if_not_exists(self) -> bool:
@@ -68,9 +66,7 @@ class InitCommand(object):
         config_path = self.context.config_path
         pretty_path = self.context.pretty_path(config_path)
         if not config_path.exists():
-            on_done: Callable[[], None] = self.renderer.echo(
-                "install-config", "install", args=[pretty_path]
-            )
+            on_done = content.InstallConfig.install.echo(pretty_path)
             with (
                 open(os.path.join(os.path.dirname(__file__), "../configs/default.yml"))
             ) as template:
@@ -89,12 +85,10 @@ class InitCommand(object):
                 return True
             else:
                 logging.warning("No tools match this project")
-                self.renderer.echo("install-config", "error")
+                content.InstallConfig.error.echo()
                 sys.exit(3)
         else:
-            self.renderer.echo(
-                "install-config", "install", args=[pretty_path], skip=True
-            )
+            content.InstallConfig.install.echo(pretty_path, skip=True)
             return False
 
     def _install_ignore_if_not_exists(self) -> bool:
@@ -105,9 +99,7 @@ class InitCommand(object):
         """
         pretty_path = self.context.pretty_path(self.context.ignore_file_path)
         if not self.context.ignore_file_path.exists():
-            on_done = self.renderer.echo(
-                "install-ignore", "install", args=[pretty_path]
-            )
+            on_done = content.InstallIgnore.install.echo(pretty_path)
             templates_path = Path(os.path.dirname(__file__)) / ".." / "configs"
             shutil.copy(templates_path / ".bentoignore", self.context.ignore_file_path)
 
@@ -136,15 +128,13 @@ class InitCommand(object):
             logging.info(f"Created {pretty_path}.")
             return True
         else:
-            self.renderer.echo(
-                "install-ignore", "install", args=[pretty_path], skip=True
-            )
+            content.InstallIgnore.install.echo(pretty_path, skip=True)
             return False
 
     def _update_gitignore_if_necessary(self, ignore_path: Optional[Path]) -> None:
         """Adds bento patterns to project .gitignore if _query_gitignore_update returned a Path"""
         if ignore_path:
-            on_done = self.renderer.echo("update-gitignore", "update")
+            on_done = content.UpdateGitignore.update.echo()
             with ignore_path.open("a") as fd:
                 fd.write(
                     "\n# Ignore bento tool run paths (this line added by `bento init`)\n.bento/\n"
@@ -152,12 +142,12 @@ class InitCommand(object):
             on_done()
             logging.info("Added '.bento/' to your .gitignore.")
         else:
-            self.renderer.echo("update-gitignore", "update", skip=True)
+            content.UpdateGitignore.update.echo(skip=True)
 
     def _maybe_clean_tools(self, clean: bool) -> None:
         """If clean flag is passed, cleans tool installation"""
         if clean:
-            self.renderer.echo("clean", "tools")
+            content.Clean.tools.echo()
             subprocess.run(["rm", "-r", self.context.resource_path], check=True)
 
     def _identify_project(self) -> None:
@@ -170,9 +160,9 @@ class InitCommand(object):
         elif project_names:
             projects = " and ".join(project_names)
         else:
-            self.renderer.echo("identify", "failure")
+            content.Identify.failure.echo()
             sys.exit(3)
-        self.renderer.echo("identify", "success", args=[projects])
+        content.Identify.success.echo(projects)
 
     def _run_check(self, ctx: click.Context, clean: bool, pager: bool) -> bool:
         """
@@ -181,39 +171,39 @@ class InitCommand(object):
         :return: If there were findings
         """
         if clean and self.context.baseline_file_path.exists():
-            self.renderer.echo("clean", "check")
+            content.Clean.check.echo()
             self.context.baseline_file_path.unlink()
 
         if self.context.baseline_file_path.exists():
-            self.renderer.echo("check", "unnecessary")
+            content.Check.unnecessary.echo()
         else:
             if sys.stderr.isatty() and sys.stdin.isatty():
-                if self.renderer.echo("check", "prompt"):
+                if content.Check.prompt.echo():
                     try:
-                        self.renderer.echo("check", "header")
+                        content.Check.header.echo()
                         ctx.invoke(check, formatter=("histo",), pager=pager)
                     except SystemExit as ex:
                         if ex.code >= 3:
                             raise ex
                         return True
             else:
-                self.renderer.echo("check", "noninteractive")
+                content.Check.noninteractive.echo()
 
         return False
 
     def _next_steps(self, diffs_created: bool) -> None:
         if sys.stdin.isatty() and sys.stderr.isatty():
-            self.renderer.echo("next-steps", "prompt")
+            content.NextSteps.prompt.echo()
 
-        self.renderer.echo("next-steps", "body")
+        content.NextSteps.body.echo()
 
         if diffs_created:
-            self.renderer.echo("diffs-added")
+            content.NextSteps.diffs_added.echo()
 
         if sys.stdin.isatty() and sys.stderr.isatty():
-            self.renderer.echo("finish-init")
+            content.NextSteps.finish_init.echo()
 
-        self.renderer.echo("thank-you")
+        content.NextSteps.thank_you.echo()
 
     def _run_archive(self, ctx: click.Context) -> None:
         """
@@ -221,12 +211,12 @@ class InitCommand(object):
 
         :return:
         """
-        self.renderer.echo("run-archive", "pre")
+        content.RunArchive.pre.echo()
         ctx.invoke(archive, show_bars=False)
-        self.renderer.echo("run-archive", "post")
+        content.RunArchive.post.echo()
 
     def run(self, ctx: click.Context, clean: bool, pager: bool = True) -> None:
-        self.renderer.echo("run-all")
+        content.run_all.echo()
 
         # Ask any necessary pre-install questions
         gitignore_path = self._query_gitignore_update()

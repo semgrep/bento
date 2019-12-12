@@ -1,5 +1,4 @@
 import os
-from pathlib import Path
 
 from click.termui import style
 
@@ -32,11 +31,3 @@ UPGRADE_WARNING_OUTPUT = f"""
 │                                             │
 ╰─────────────────────────────────────────────╯
 """
-
-### Content ###
-
-REGISTRATION_CONTENT_PATH = (
-    Path(os.path.dirname(__file__)) / "resources" / "register-content.yml"
-)
-
-INIT_CONTENT_PATH = Path(os.path.dirname(__file__)) / "resources" / "init-content.yml"

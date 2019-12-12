@@ -4,10 +4,10 @@ import sys
 from typing import Any, Dict, Optional
 
 import attr
-import click
 from packaging.version import InvalidVersion, Version
 
 import bento.constants as constants
+import bento.content.register as content
 import bento.decorators
 import bento.extra
 import bento.git
@@ -16,7 +16,6 @@ import bento.tool_runner
 import bento.util
 from bento.context import Context
 from bento.network import post_metrics
-from bento.renderer import Renderer
 from bento.util import echo_newline, persist_global_config, read_global_config
 
 
@@ -27,7 +26,6 @@ class Registrar(object):
     is_first_run: bool = False
     global_config: Dict[str, Any] = attr.ib(default=read_global_config(), init=False)
     email: Optional[str] = attr.ib()
-    renderer: Renderer = Renderer(constants.REGISTRATION_CONTENT_PATH)
 
     @email.default
     def _get_email_from_environ(self) -> Optional[str]:
@@ -46,7 +44,7 @@ class Registrar(object):
         """
         is_interactive = sys.stdin.isatty() and sys.stderr.isatty()
         if not is_interactive:
-            self.renderer.echo("not-registered")
+            content.not_registered.echo()
             sys.exit(3)
 
     def _show_welcome_message(self) -> None:
@@ -64,7 +62,7 @@ class Registrar(object):
             or not self.agree
             and constants.TERMS_OF_SERVICE_KEY not in self.global_config
         ):
-            self.renderer.echo("welcome")
+            content.welcome.echo()
 
     def _update_email(self) -> None:
         """
@@ -76,23 +74,21 @@ class Registrar(object):
             # import inside def for performance
             from validate_email import validate_email
 
-            self.renderer.echo("update-email", "leader")
+            content.UpdateEmail.leader.echo()
 
             email = None
             while not (email and validate_email(email)):
                 self.context.start_user_timer()
                 self._validate_interactivity()
-                email = click.prompt(
-                    self.renderer.text_at("update-email", "prompt"),
-                    type=str,
-                    default=bento.git.user_email(),
+                email = content.UpdateEmail.prompt.echo(
+                    type=str, default=bento.git.user_email()
                 )
                 self.context.stop_user_timer()
                 echo_newline()
 
             r = self._post_email_to_mailchimp(email)
             if not r:
-                self.renderer.echo("update-email", "failure")
+                content.UpdateEmail.failure.echo()
 
             self.global_config["email"] = email
             persist_global_config(self.global_config)
@@ -130,7 +126,7 @@ class Registrar(object):
         :return: If the user has agreed to the updated ToS
         """
         if constants.TERMS_OF_SERVICE_KEY not in self.global_config:
-            self.renderer.echo("confirm-tos", "fresh")
+            content.ConfirmTos.fresh.echo()
         else:
             # We care that the user has agreed to the current terms of service
             tos_version = self.global_config[constants.TERMS_OF_SERVICE_KEY]
@@ -141,17 +137,14 @@ class Registrar(object):
                     logging.info("User ToS agreement is current")
                     return True
             except InvalidVersion:
-                self.renderer.echo("confirm-tos", "invalid-version")
+                content.ConfirmTos.invalid_version.echo()
                 sys.exit(3)
 
-            self.renderer.echo("confirm-tos", "upgrade")
+            content.ConfirmTos.upgrade.echo()
 
         self.context.start_user_timer()
         self._validate_interactivity()
-        agreed = click.confirm(
-            "Continue and agree to Bento's terms of service and privacy policy?",
-            default=True,
-        )
+        agreed = content.ConfirmTos.prompt.echo()
         echo_newline()
         self.context.stop_user_timer()
 
@@ -163,7 +156,7 @@ class Registrar(object):
             persist_global_config(self.global_config)
             return True
         else:
-            self.renderer.echo("confirm-tos", "error")
+            content.ConfirmTos.error.echo()
             return False
 
     def _suggest_autocomplete(self) -> None:
@@ -176,9 +169,9 @@ class Registrar(object):
         shell = os.environ["SHELL"]
 
         if shell.endswith("/zsh"):
-            self.renderer.echo("suggest-autocomplete", "zsh")
+            content.SuggestAutocomplete.zsh.echo()
         elif shell.endswith("/bash"):
-            self.renderer.echo("suggest-autocomplete", "bash")
+            content.SuggestAutocomplete.bash.echo()
         else:
             return
 

@@ -269,51 +269,6 @@ def echo_next_step(desc: str, cmd: str) -> None:
     echo_styles("◦ ", style(f"{desc}, run $ ", dim=True), cmd, style(".", dim=True))
 
 
-def wrap_link(text: str, extra: int, *links: Tuple[str, str], **kwargs: Any) -> str:
-    """
-    Wraps text. Text may include one or more links.
-
-    :param text: Unlinked text
-    :param links: Tuples of (anchor text, target)
-    :param extra: Any extra width to apply
-    :param kwargs: Styling rules passed to text
-    """
-
-    wrapped = wrap(text, extra)
-
-    def find_loc(anchor: str) -> Tuple[int, str]:
-        """
-        Finds the position of the anchor string in the wrapped text
-
-        Note that the anchor string itself may be wrapped, so we return
-        both the position, and the value of the (possibly wrapped) anchor string.
-        """
-        pos = wrapped.find(anchor)
-        if pos < 0:
-            # Text was likely wrapped
-            anchor_it = [
-                f"{anchor[:ix].rstrip()}\n{anchor[ix:]}" for ix in range(len(anchor))
-            ]
-            pos_it = ((wrapped.find(a), a) for a in anchor_it)
-            pos, anchor = next(((p, a) for p, a in pos_it if p > 0), (-1, anchor))
-            if pos < 0:
-                raise ValueError(f"'{anchor}' does not appear in '{text}'")
-        return pos, anchor
-
-    with_locs = sorted(
-        [(find_loc(anchor), href) for anchor, href in links], key=(lambda t: t[0][0])
-    )
-    out = ""
-    current = 0
-    for loc_anchor, href in with_locs:
-        loc, anchor = loc_anchor
-        out += style(wrapped[current:loc], **kwargs)
-        out += render_link(anchor, href, print_alternative=False, pipe=sys.stderr)
-        current = loc + len(anchor)
-    out += style(wrapped[current:], **kwargs)
-    return out
-
-
 def echo_wrap(text: str, **kwargs: Any) -> None:
     """Prints a wrapped paragraph"""
     secho(wrap(text), err=True, **kwargs)
