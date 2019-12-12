@@ -24,7 +24,7 @@ class Registrar(object):
     context: Context
     agree: bool
     is_first_run: bool = False
-    global_config: Dict[str, Any] = attr.ib(default=read_global_config(), init=False)
+    global_config: Dict[str, Any] = attr.ib(factory=read_global_config, init=False)
     email: Optional[str] = attr.ib()
 
     @email.default
@@ -86,9 +86,10 @@ class Registrar(object):
                 self.context.stop_user_timer()
                 echo_newline()
 
-            r = self._post_email_to_mailchimp(email)
-            if not r:
-                content.UpdateEmail.failure.echo()
+            if email != constants.QA_TEST_EMAIL_ADDRESS:
+                r = self._post_email_to_mailchimp(email)
+                if not r:
+                    content.UpdateEmail.failure.echo()
 
             self.global_config["email"] = email
             persist_global_config(self.global_config)
