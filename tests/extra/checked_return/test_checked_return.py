@@ -19,7 +19,7 @@ def test_run(tmp_path_factory: tmp_path_factory) -> None:
     violations = tool.results()
     expectation = [
         Violation(
-            tool_id="CheckedReturn",
+            tool_id="r2c.checked_return",
             check_id="checked_return",
             path="checkedreturn.js",
             line=25,

@@ -65,20 +65,19 @@ def test_run_analyzer_on_local_code(tmp_path: Path) -> None:
         to output and we verify that output matches
     """
     file = tmp_path / "output.json"
-    input_json = json.dumps(
-        {
-            "results": [
-                {
-                    "check_id": "checked_return",
-                    "path": "./checkedreturn.js",
-                    "start": {"line": 25, "col": 3},
-                    "end": {"line": 25, "col": 15},
-                    "extra": {},
-                }
-            ]
-        }
-    )
-    file.write_text(input_json)
+    input_json = {
+        "results": [
+            {
+                "check_id": "checked_return",
+                "path": "./checkedreturn.js",
+                "start": {"line": 25, "col": 3},
+                "end": {"line": 25, "col": 15},
+                "extra": {},
+            }
+        ]
+    }
+
+    file.write_text(json.dumps(input_json))
     output_json = run_analyzer_on_local_code(
         "r2c/testonly-cat-output-json",
         Version("1.0.2"),
@@ -86,7 +85,7 @@ def test_run_analyzer_on_local_code(tmp_path: Path) -> None:
         set(),
         {str(tmp_path)},
     )
-    assert input_json == output_json
+    assert input_json["results"] == output_json
 
 
 def test_ignore_files_factory(tmp_path: Path) -> None:

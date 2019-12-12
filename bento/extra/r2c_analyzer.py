@@ -5,6 +5,7 @@
 """
 
 import logging
+import json
 import os
 import pathlib
 import shutil
@@ -14,6 +15,8 @@ from pathlib import Path
 
 from semantic_version import Version
 import r2c.lib.versioned_analyzer
+
+from bento.tool import JsonR
 
 
 class MonkeyPatchVersionedAnalyzer(r2c.lib.versioned_analyzer.VersionedAnalyzer):
@@ -337,7 +340,7 @@ def run_analyzer_on_local_code(
     base: Path,
     ignore_files: Set[str],
     target_files: Iterable[str],
-) -> str:
+) -> JsonR:
     """Run an analyzer on a local folder.
     """
     check_docker_is_running()
@@ -399,6 +402,7 @@ def run_analyzer_on_local_code(
     output = json_output_store.read(analyzer_input, specified_analyzer)
     if output is None:
         output = ""
+    output_json = json.loads(output).get("results", [])
 
     # Cleanup state
     json_output_store.delete_all()  # type: ignore
@@ -406,4 +410,4 @@ def run_analyzer_on_local_code(
     log_store.delete_all()  # type: ignore
     stats_store.delete_all()  # type: ignore
 
-    return output
+    return output_json

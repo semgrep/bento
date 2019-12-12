@@ -1,4 +1,3 @@
-import json
 import os
 import re
 from typing import Iterable, List, Pattern, Type
@@ -7,16 +6,15 @@ from semantic_version import Version
 
 from bento.base_context import BaseContext
 from bento.parser import Parser
-from bento.tool import StrTool
+from bento.tool import JsonR, JsonTool
 from bento.util import fetch_line_in_file
 from bento.violation import Violation
 
 
-class PythonTaintParser(Parser[str]):
-    def parse(self, results: str) -> List[Violation]:
+class PythonTaintParser(Parser[JsonR]):
+    def parse(self, results: JsonR) -> List[Violation]:
         violations: List[Violation] = []
-        checks = json.loads(results).get("results", [])
-        for check in checks:
+        for check in results:
             path = self.trim_base(check["path"])
             start_line = check["start"]["line"]
             start_col = check["start"]["col"]
@@ -42,7 +40,7 @@ class PythonTaintParser(Parser[str]):
         return violations
 
 
-class PythonTaintTool(StrTool):
+class PythonTaintTool(JsonTool):
     ANALYZER_NAME = "r2c/pyre-taint"
     ANALYZER_VERSION = Version("0.0.9")
     FILENAME_PATTERN = re.compile(".*py")
@@ -69,7 +67,7 @@ class PythonTaintTool(StrTool):
 
         prepull_analyzers(self.ANALYZER_NAME, self.ANALYZER_VERSION)
 
-    def run(self, files: Iterable[str]) -> str:
+    def run(self, files: Iterable[str]) -> JsonR:
         # import inside def for performance
         from bento.extra.r2c_analyzer import run_analyzer_on_local_code
 

@@ -1,4 +1,3 @@
-import json
 import os
 import re
 from typing import Iterable, List, Pattern, Type
@@ -8,15 +7,14 @@ from semantic_version import Version
 from bento.base_context import BaseContext
 from bento.extra.r2c_analyzer import prepull_analyzers, run_analyzer_on_local_code
 from bento.parser import Parser
-from bento.tool import StrTool
+from bento.tool import JsonR, JsonTool
 from bento.violation import Violation
 
 
-class CheckedReturnParser(Parser[str]):
-    def parse(self, results: str) -> List[Violation]:
+class CheckedReturnParser(Parser[JsonR]):
+    def parse(self, results: JsonR) -> List[Violation]:
         violations: List[Violation] = []
-        checks = json.loads(results).get("results", [])
-        for check in checks:
+        for check in results:
             path = self.trim_base(check["path"])
             start_line = check["start"]["line"]
             start_col = check["start"]["col"]
@@ -37,7 +35,7 @@ class CheckedReturnParser(Parser[str]):
         return violations
 
 
-class CheckedReturnTool(StrTool):
+class CheckedReturnTool(JsonTool):
     ANALYZER_NAME = "r2c/checked-return"
     ANALYZER_VERSION = Version("0.1.11")
 
@@ -51,7 +49,7 @@ class CheckedReturnTool(StrTool):
 
     @classmethod
     def tool_id(cls) -> str:
-        return "CheckedReturn"
+        return "r2c.checked_return"
 
     @classmethod
     def tool_desc(cls) -> str:
@@ -60,7 +58,7 @@ class CheckedReturnTool(StrTool):
     def setup(self) -> None:
         prepull_analyzers(self.ANALYZER_NAME, self.ANALYZER_VERSION)
 
-    def run(self, files: Iterable[str]) -> str:
+    def run(self, files: Iterable[str]) -> JsonR:
         ignore_files = {
             e.path for e in self.context.file_ignores.entries() if not e.survives
         }
