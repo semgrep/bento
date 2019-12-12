@@ -67,9 +67,9 @@ We’re also big proponents of opinionated tools like Black and Prettier. This h
 ## Bento Checks
 > Visit [checks.bento.dev](https://checks.bento.dev) for detailed documentation.
 
-Bento's check approach is to target popular frameworks (Flask), rather than an entire languages (Python). We've found that program analysis tends to tackle language issues rather than framework issues, and we want to see more work done in the community like the React plugin for ESLint.
+Bento's check approach is to target popular frameworks (Flask, Requests, Boto3), rather than entire languages (Python, JavaScript). We've found that program analysis tends to tackle language issues rather than framework issues, and we want to see more work done in the community like [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react).
 
-We're currently focused on checks for Flask and it's sister libraries. These checks include ones like:
+We're currently focused on checks for Flask and its sister libraries. These checks include:
 
 * `unescaped-file-extensions`: Flask doesn’t automatically escape Jinja templates unless they have `.html`, `.htm`, `.xml`, or `.xhtml` extensions. This check fires if templates without these extensions are used and if their context variables aren’t manually escaped, which could leave your application vulnerable to [DOM based XSS attacks](https://www.owasp.org/index.php/DOM_Based_XSS).
 * `send-file-open`: This check will detect the use of `open(...)` passed in to `flask.send_file` without the appropriate keyword args — either `mimetype` or `attachment_filename`. `open(...)` without these keywords throws a `ValueError` at runtime.
