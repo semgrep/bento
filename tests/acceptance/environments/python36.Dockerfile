@@ -26,4 +26,4 @@ RUN bento --version
 
 COPY ./tests /tests
 
-RUN pytest tests/acceptance/qa.py
+RUN pytest -s tests/acceptance/qa.py

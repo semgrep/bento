@@ -86,6 +86,9 @@ def check_command(step: Any, pwd: str, target: str) -> None:
     print("Command return code:", runned.returncode)
 
     if expected_returncode is not None:
+        if runned.returncode != expected_returncode:
+            print(f"Run stdout: {runned.stdout}")
+            print(f"Run stderr: {runned.stderr}")
         assert runned.returncode == expected_returncode, test_identifier
     if expected_out is not None:
         match_expected(runned.stdout, expected_out, f"{test_identifier}: stdout")
