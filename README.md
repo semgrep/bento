@@ -5,11 +5,8 @@
 
 <br/>
 <h3 align="center">
-    Free program analysis focused on bugs that matter to you.
+  Bento finds bugs delightfully fast without changing your workflow
 </h3>
-<p align="center">
-Install, configure, and adopt Bento in seconds. Runs 100% locally.
-</p>
 
 <p align="center">
   <a href="https://pypi.org/project/bento-cli/">
@@ -35,16 +32,16 @@ Install, configure, and adopt Bento in seconds. Runs 100% locally.
   <span> · </span>
   <a href="#integrations">Integrations</a>
   <span> · </span>
+  <a href="#bento-checks">Bento Checks</a>
+  <span> · </span>
   <a href="#help-and-community">Help & Community</a>
 </h3>
 
-Bento is a free and opinionated toolkit for gradually adopting linters[¹](https://en.wikipedia.org/wiki/Lint_(software)) and program analysis[²](https://en.wikipedia.org/wiki/Program_analysis) in your codebase. Be the bug-squashing advocate your team needs but (maybe) doesn’t deserve.
+Bento is a free command-line tool to find meaningful bugs in your Python 3 web app.
 
-- **Find bugs that matter.** Bento automatically enables and configures relevant analysis based on your dependencies and frameworks, and it will [never report style-related issues](https://blog.r2c.dev/posts/three-things-your-linter-shouldnt-tell-you/). You won’t painstakingly configure your tooling.
-- **Get started immediately.** Bento doesn’t force you to fix all your preexisting issues today. Instead, you can archive them and address them incrementally when it makes sense for your project.
-- **Go fast.** Bento installs in 5 seconds and self-configures in less than 30. Its tools check your code in parallel, not sequentially.
-
-Bento includes checks written by [r2c](https://r2c.dev/) and curated from [Bandit](https://pypi.org/project/bandit/), [ESLint](https://eslint.org/), [Flake8](https://pypi.org/project/flake8/), and their plugins. It runs on your local machine and never sends your code anywhere or to anyone.
+- **Find bugs that matter.** Bento runs its [own checks](#bento-checks) and OSS tools to catch actual bugs. It never reports style-related issues and its checks are chosen based on performance across the PyPI and npm ecosystems.
+- **Keep your workflow.** Unlike other tools you won’t have to fix existing bugs to adopt Bento. It takes 30 seconds to get started and coding again.
+- **Go delightfully fast.** Bento runs its tools in parallel, not sequentially, on the code you’ve changed. Its jobs run entirely locally when you commit your code.
 
 <p align="center">
     <img src="https://web-assets.r2c.dev/bento-demo.gif" width="100%" alt="Demonstrating Bento running in a terminal"/>
@@ -55,7 +52,7 @@ Bento includes checks written by [r2c](https://r2c.dev/) and curated from [Bandi
 $ pip3 install bento-cli
 ```
 
-Bento is for JavaScript, TypeScript, and Python 3 projects. It requires Python 3.6+ and works on macOS Mojave (10.14) and Ubuntu 18.04+.
+Bento is primarily for Python 3 projects and has some support for JavaScript, TypeScript, Docker, and shell files. It requires Python 3.6+ and works on macOS Mojave (10.14) and Ubuntu 18.04+.
 
 ## Motivations
 > See our [Bento introductory blog post](https://medium.com/@ievans/our-quest-to-make-world-class-security-and-bugfinding-available-to-all-developers-for-free-dce9eb7b06d0) to learn the full story.
@@ -176,6 +173,11 @@ $ git commit --no-verify
 ```
 
 Bento’s Git hook can save the round-trip time involved with fixing a failed build if you’re using [Bento in CI](#running-bento-in-ci). 
+
+## Bento Checks
+Bento targets popular frameworks (Flask, Requests, Boto 3), rather than entire languages (Python, JavaScript). Our work is inspired by framework-specific tools like [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react).
+
+Learn more about our custom checks at [checks.bento.dev](https://checks.bento.dev/).
 
 ## Help and Community
 Need help or want to share feedback? We’d love to hear from you!
