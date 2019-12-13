@@ -43,6 +43,9 @@ class HadolintParser(Parser[str]):
             fetch_line_in_file(self.base_path / path, start_line) or "<no source found>"
         )
 
+        if check_id == "DL1000":
+            message = "Dockerfile parse error. Invalid docker instruction."
+
         return Violation(
             tool_id=HadolintTool.TOOL_ID,
             check_id=check_id,
