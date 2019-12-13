@@ -34,7 +34,7 @@
   </a>
 </p>
 
-Bento is a locally run tool that automatically checks your commits to find meaningful bugs. It's a free and opionated program analysis toolkit for Python 3 web apps.
+Bento is a locally run tool that auto-checks for meaningful bugs when you commit code. It's a free and opionated program analysis toolkit for Python 3 web apps.
 
 - **Find bugs that matter.** Bento runs its [own checks](#bento-checks) and OSS tools to catch actual bugs. It never reports style-related issues and its checks are chosen based on performance across the PyPI and npm ecosystems.
 - **Keep your workflow.** Unlike other tools you won’t have to fix existing bugs to adopt Bento. It takes 30 seconds to get started and coding again.
