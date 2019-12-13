@@ -1,12 +1,23 @@
 <p align="center">
     <img src="https://raw.githubusercontent.com/returntocorp/bento/master/bento-logo.png" height="100" alt="Bento logo"/>
 </p>
-<h1 align="center" style="margin-top:0;"></h1>
-
-<br/>
 <h3 align="center">
   Bento finds bugs delightfully fast without changing your workflow
 </h3>
+
+<p align="center">
+  <a href="#installation">Installation</a>
+  <span> · </span>
+  <a href="#motivations">Motivations</a>
+  <span> · </span>
+  <a href="#usage">Usage</a>
+  <span> · </span>
+  <a href="#integrations">Integrations</a>
+  <span> · </span>
+  <a href="#bento-checks">Bento Checks</a>
+  <span> · </span>
+  <a href="#help-and-community">Help & Community</a>
+</p>
 
 <p align="center">
   <a href="https://pypi.org/project/bento-cli/">
@@ -22,20 +33,6 @@
     <img src="https://img.shields.io/twitter/follow/r2cdev?label=Follow%20r2cdev&style=social&color=blue" alt="Follow @r2cdev" />
   </a>
 </p>
-
-<h3 align="center">
-  <a href="#installation">Installation</a>
-  <span> · </span>
-  <a href="#motivations">Motivations</a>
-  <span> · </span>
-  <a href="#usage">Usage</a>
-  <span> · </span>
-  <a href="#integrations">Integrations</a>
-  <span> · </span>
-  <a href="#bento-checks">Bento Checks</a>
-  <span> · </span>
-  <a href="#help-and-community">Help & Community</a>
-</h3>
 
 Bento is a free command-line tool to find meaningful bugs in your Python 3 web app.
 
