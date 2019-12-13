@@ -1,7 +1,7 @@
 import logging
 import os
 import sys
-from typing import Any, Optional, Union
+from typing import Optional
 
 import click
 from packaging.version import Version
@@ -39,16 +39,6 @@ def get_version() -> str:
     from bento import __version__
 
     return __version__
-
-
-def _print_version(
-    ctx: click.Context, param: Union[click.Option, click.Parameter], value: Any
-) -> None:
-    """Print the current r2c-cli version based on setuptools runtime"""
-    if not value or ctx.resilient_parsing:
-        return
-    click.echo(f"bento/{get_version()}")
-    ctx.exit()
 
 
 def is_running_supported_python3() -> bool:
