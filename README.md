@@ -60,16 +60,10 @@ We’re also big proponents of opinionated tools like Black and Prettier. This h
 
 ## Usage
 ### Getting Started
-To get started right away with sensible defaults:
+From the root directory of a project:
 
 ```bash
-$ bento init && bento check
-```
-
-To set aside preexisting results so you only see issues in new code:
-
-```bash
-$ bento archive
+$ bento init
 ```
 
 Bento is at its best when run automatically. See [Integrations](#integrations) for details.
