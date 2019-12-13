@@ -42,9 +42,9 @@ Install, configure, and adopt Bento in seconds. Runs 100% locally.
 
 Bento is a free and opinionated toolkit for gradually adopting linters[¹](https://en.wikipedia.org/wiki/Lint_(software)) and program analysis[²](https://en.wikipedia.org/wiki/Program_analysis) in your codebase. Be the bug-squashing advocate your team needs but (maybe) doesn’t deserve.
 
-- **Finds bugs that matter.** Bento runs its [own checks](#bento-checks) and OSS tools to catch actual bugs. It never reports style-related issues and its checks are chosen based on performance across the PyPI and npm ecosystems.
-- **Doesn't disrupt your workflow.** Unlike other tools you won’t have to fix existing bugs to adopt Bento. It takes 30 seconds to get started and coding again. 
-- **Delightfully fast.** Bento runs its tools in parallel, not sequentially, on the code you’ve changed. Its jobs run entirely locally when you commit your code.
+- **Find bugs that matter.** Bento runs its [own checks](#bento-checks) and OSS tools to catch actual bugs. It never reports style-related issues and its checks are chosen based on performance across the PyPI and npm ecosystems.
+- **Keep your workflow.** Unlike other tools you won’t have to fix existing bugs to adopt Bento. It takes 30 seconds to get started and coding again.
+- **Go delightfully fast.** Bento runs its tools in parallel, not sequentially, on the code you’ve changed. Its jobs run entirely locally when you commit your code.
 
 <p align="center">
     <img src="https://web-assets.r2c.dev/bento-demo.gif" width="100%" alt="Demonstrating Bento running in a terminal"/>
@@ -65,16 +65,9 @@ r2c is on a quest to make world-class security and bugfinding available to all d
 We’re also big proponents of opinionated tools like Black and Prettier. This has two implications: Bento ignores style-related issues and the bikeshedding that comes with them, and it ships with a curated set of checks that we believe are high signal and bug-worthy. See [Three things your linter shouldn’t tell you](https://blog.r2c.dev/posts/three-things-your-linter-shouldnt-tell-you/) for more details on our decision making process.
 
 ## Bento Checks
-> Visit [checks.bento.dev](https://checks.bento.dev) for detailed check documentation.
+Bento targets popular frameworks (Flask, Requests, Boto 3), rather than entire languages (Python, JavaScript). Our work is inspired by framework-specific tools like [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react).
 
-Bento’s approach targets popular frameworks (Flask, Requests, Boto 3), rather than entire languages (Python, JavaScript). We’ve found that program analysis tends to tackle language issues rather than framework issues, and we want to see more work done in the community like [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react).
-
-We're currently adding checks for Flask and its sister libraries. These checks include:
-
-* `unescaped-file-extensions`: Flask doesn’t automatically escape Jinja templates unless they have `.html`, `.htm`, `.xml`, or `.xhtml` extensions. This check fires if templates without these extensions are used and if their context variables aren’t manually escaped, which could leave your application vulnerable to [DOM based XSS attacks](https://www.owasp.org/index.php/DOM_Based_XSS).
-* `send-file-open`: This check will detect the use of `open(...)` passed in to `flask.send_file` without the appropriate keyword args — either `mimetype` or `attachment_filename`. `open(...)` without these keywords throws a `ValueError` at runtime.
-
-You can find out about all of our custom checks at [checks.bento.dev](https://checks.bento.dev/).
+Learn more about our custom checks at [checks.bento.dev](https://checks.bento.dev/).
 
 ## Usage
 ### Getting Started
