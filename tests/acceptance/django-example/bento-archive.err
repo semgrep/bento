@@ -1,0 +1,9 @@
+Running Bento archive...
+
+
+Project analyzed with 5 tool(s).
+1 finding(s) were archived, and will be hidden in future Bento runs.
+
+◦ To view archived results, run $ bento check --show-all.
+
+Please check '.bento-whitelist.yml' in to source control.
