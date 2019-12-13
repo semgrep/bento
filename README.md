@@ -67,7 +67,7 @@ We’re also big proponents of opinionated tools like Black and Prettier. This h
 ## Bento Checks
 > Visit [checks.bento.dev](https://checks.bento.dev) for detailed check documentation.
 
-Bento's check approach is to target popular frameworks (Flask, Requests, Boto3), rather than entire languages (Python, JavaScript). We've found that program analysis tends to tackle language issues rather than framework issues, and we want to see more work done in the community like [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react).
+Bento’s approach targets popular frameworks (Flask, Requests, Boto 3), rather than entire languages (Python, JavaScript). We’ve found that program analysis tends to tackle language issues rather than framework issues, and we want to see more work done in the community like [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react).
 
 We're currently adding checks for Flask and its sister libraries. These checks include:
 
