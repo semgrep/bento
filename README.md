@@ -5,7 +5,7 @@
   Bento finds bugs delightfully fast without changing your workflow
 </h3>
 
-<h1 align="center" style="margin-top:0;"></h1>
+---
 
 <p align="center">
   <a href="https://pypi.org/project/bento-cli/">
