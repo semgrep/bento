@@ -34,7 +34,7 @@
   </a>
 </p>
 
-Bento is a locally run tool that auto-checks for meaningful bugs when you commit code. It's a free and opionated program analysis toolkit for Python 3 web apps.
+Bento is a free bug-finding tool that runs locally when you commit code. It has speciality checks for common Python 3 web frameworks and OSS checks for JavaScript, TypeScript, Docker, and shell files.
 
 - **Find bugs that matter.** Bento runs its [own checks](#bento-checks) and OSS tools to catch actual bugs. It never reports style-related issues and its checks are chosen based on performance across the PyPI and npm ecosystems.
 - **Keep your workflow.** Unlike other tools you won’t have to fix existing bugs to adopt Bento. It takes 30 seconds to get started and coding again.
@@ -49,7 +49,7 @@ Bento is a locally run tool that auto-checks for meaningful bugs when you commit
 $ pip3 install bento-cli
 ```
 
-Bento is primarily for Python 3 projects and has some support for JavaScript, TypeScript, Docker, and shell files. It requires Python 3.6+ and works on macOS Mojave (10.14) and Ubuntu 18.04+.
+Bento requires Python 3.6+ and works on macOS Mojave (10.14) and Ubuntu 18.04+.
 
 ## Motivations
 > See our [Bento introductory blog post](https://medium.com/@ievans/our-quest-to-make-world-class-security-and-bugfinding-available-to-all-developers-for-free-dce9eb7b06d0) to learn the full story.
@@ -166,9 +166,7 @@ $ git commit --no-verify
 Bento’s Git hook can save the round-trip time involved with fixing a failed build if you’re using [Bento in CI](#running-bento-in-ci). 
 
 ## Bento Checks
-Bento targets popular frameworks (Flask, Requests, Boto 3), rather than entire languages (Python, JavaScript). Our work is inspired by framework-specific tools like [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react).
-
-Learn more about our custom checks at [checks.bento.dev](https://checks.bento.dev/).
+Bento focuses on finding common security, correctness, and performance mistakes in projects containing Flask, Requests, and Boto 3. We're inspired by tools like [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react) that help ensure correct and safe framework use. Learn more about our custom checks at [checks.bento.dev](https://checks.bento.dev/).
 
 ## Help and Community
 Need help or want to share feedback? We’d love to hear from you!
