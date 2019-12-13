@@ -9,9 +9,9 @@ import bento.extra.eslint
 import bento.result
 import bento.tool_runner
 import pytest
-import util
 from bento.commands.check import check
 from bento.context import Context
+from tests.util import mod_file
 
 INTEGRATION = Path(__file__).parent.parent / "integration"
 SIMPLE = Path(__file__).parent.parent / "integration/simple"
@@ -82,7 +82,7 @@ def test_check_no_archive() -> None:
     context = Context(base_path=SIMPLE)
     context.cache.wipe()
 
-    with util.mod_file(context.baseline_file_path):
+    with mod_file(context.baseline_file_path):
         context.baseline_file_path.unlink()
         result = runner.invoke(
             check, ["--formatter", "json"], obj=Context(base_path=SIMPLE)

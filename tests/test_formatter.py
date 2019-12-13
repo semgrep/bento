@@ -4,6 +4,7 @@ import click
 
 import bento.formatter
 from bento.violation import Violation
+from tests.util import strip_ansi
 
 VIOLATIONS = {
     "r2c.eslint": [
@@ -94,3 +95,15 @@ def test_json_formatter() -> None:
             "message": "Missing semicolon.",
         },
     ]
+
+
+def test_histo_formatter() -> None:
+    expectation = """r2c.eslint:
+  no-console     1▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  semi           1▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+"""
+
+    histo_formatter = bento.formatter.for_name("histo", {})
+    output = "\n".join(histo_formatter.dump(VIOLATIONS))
+
+    assert strip_ansi(output) == expectation

@@ -2,11 +2,11 @@ from pathlib import Path
 
 from click.testing import CliRunner
 
-import util
 from _pytest.monkeypatch import MonkeyPatch
 from bento.commands.check import check
 from bento.commands.init import InitCommand, init
 from bento.context import Context
+from tests.util import mod_file
 
 INTEGRATION = Path(__file__).parent.parent / "integration"
 SIMPLE = INTEGRATION / "simple"
@@ -16,7 +16,7 @@ def test_install_config() -> None:
     """Validates that bento installs a config file if none exists"""
     context = Context(base_path=SIMPLE)
     command = InitCommand(context)
-    with util.mod_file(context.config_path):
+    with mod_file(context.config_path):
         context.config_path.unlink()
         command._install_config_if_not_exists()
         cfg = context.config
@@ -41,7 +41,7 @@ def test_install_ignore_in_repo() -> None:
     """Validates that bento installs an ignore file if none exists"""
     context = Context(base_path=SIMPLE, is_init=True)
     command = InitCommand(context)
-    with util.mod_file(context.ignore_file_path):
+    with mod_file(context.ignore_file_path):
         context.ignore_file_path.unlink()
         command._install_ignore_if_not_exists()
         context = Context(base_path=SIMPLE, is_init=True)
@@ -114,7 +114,7 @@ users, and share feedback.
 
 def test_init_js_only() -> None:
     context = Context(base_path=INTEGRATION / "js-and-ts")
-    with util.mod_file(context.config_path):
+    with mod_file(context.config_path):
         context.config_path.unlink()
         CliRunner(mix_stderr=False).invoke(init, obj=context)
         config = context.config
@@ -126,7 +126,7 @@ def test_init_js_only() -> None:
 
 def test_init_py_only() -> None:
     context = Context(base_path=INTEGRATION / "py-only")
-    with util.mod_file(context.config_path):
+    with mod_file(context.config_path):
         context.config_path.unlink()
         CliRunner(mix_stderr=False).invoke(init, obj=context)
         config = context.config

@@ -5,9 +5,9 @@ from click.testing import CliRunner
 import bento.extra.eslint
 import bento.result
 import bento.tool_runner
-import util
 from bento.commands.archive import archive
 from bento.context import Context
+from tests.util import mod_file
 
 INTEGRATION = Path(__file__).parent.parent / "integration"
 
@@ -28,7 +28,7 @@ def test_archive_updates_whitelist() -> None:
 
     context = Context(INTEGRATION / "simple")
 
-    with util.mod_file(context.baseline_file_path) as whitelist:
+    with mod_file(context.baseline_file_path) as whitelist:
         runner.invoke(archive, obj=context)
         yml = bento.result.yml_to_violation_hashes(whitelist)
 
