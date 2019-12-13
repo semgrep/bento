@@ -341,5 +341,8 @@ tools:
     - W503
     - W504
     - F406
+  r2c.hadolint:
+    ignore: []
+    run: true
   r2c.requests:
     ignore: []

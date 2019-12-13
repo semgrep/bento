@@ -99,6 +99,7 @@ jobs:
     working_directory: ~/circleci
     executor: python-build
     steps:
+      - setup_remote_docker
       - checkout
       - run:
           name: "Configure pipenv"

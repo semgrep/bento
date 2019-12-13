@@ -63,5 +63,18 @@ r2c.eslint:
       tool_id: r2c.eslint
 r2c.flake8:
   violations: {}
+r2c.hadolint:
+  violations:
+    8228d6515361106e8f40a51d558d6545:
+      check_id: DL3013
+      message: Pin versions in pip. Instead of `pip install <package>` use `pip install
+        <package>==<version>`
+      path: tests/acceptance/environments/python36.Dockerfile
+      severity: 1
+      syntactic_context: 'RUN pip install ./*.whl
+
+        '
+      tool_id: r2c.hadolint
+      notes: "false positive"
 r2c.requests:
   violations: {}
