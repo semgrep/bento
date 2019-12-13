@@ -1,12 +1,11 @@
 <p align="center">
     <img src="https://raw.githubusercontent.com/returntocorp/bento/master/bento-logo.png" height="100" alt="Bento logo"/>
 </p>
-<h1 align="center" style="margin-top:0;"></h1>
-
-<br/>
 <h3 align="center">
   Bento finds bugs delightfully fast without changing your workflow
 </h3>
+
+<h1 align="center" style="margin-top:0;"></h1>
 
 <p align="center">
   <a href="https://pypi.org/project/bento-cli/">
