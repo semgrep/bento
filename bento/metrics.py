@@ -4,6 +4,7 @@ from hashlib import sha256
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 import bento.git
+from bento.constants import ARGS_TO_EXCLUDE_FROM_METRICS
 from bento.util import read_global_config
 from bento.violation import Violation
 
@@ -83,6 +84,13 @@ def command_metric(
     duration: float,
     user_duration: Optional[float] = None,
 ) -> List[Dict[str, Any]]:
+
+    # remove kwargs that contain sensitive data from metrics
+    kwargs_to_exclude = ARGS_TO_EXCLUDE_FROM_METRICS.get(command, set())
+    command_kwargs = dict(
+        (k, v) for k, v in command_kwargs.items() if k not in kwargs_to_exclude
+    )
+
     email = read_user_email()
     d = {
         "timestamp": timestamp,

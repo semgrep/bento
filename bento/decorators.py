@@ -10,7 +10,6 @@ import click
 
 import bento.metrics
 import bento.network
-from bento.constants import ARGS_TO_EXCLUDE_FROM_METRICS
 from bento.util import echo_error, echo_warning
 
 _AnyCallable = Callable[..., Any]
@@ -53,13 +52,6 @@ def with_metrics(f: _AnyCallable) -> _AnyCallable:
         elapsed = time.time() - before
         user_duration = cli_context.user_duration() if cli_context else None
         logging.info(f"{command} completed in {elapsed} with exit code {exit_code}")
-
-        # remove kwargs that contain sensitive data from metrics
-        if command in ARGS_TO_EXCLUDE_FROM_METRICS:
-            kwargs_to_exclude = ARGS_TO_EXCLUDE_FROM_METRICS[command]
-            for arg_name in kwargs_to_exclude:
-                if arg_name in kwargs:
-                    del kwargs[arg_name]
 
         bento.network.post_metrics(
             bento.metrics.command_metric(
