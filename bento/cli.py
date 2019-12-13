@@ -1,6 +1,7 @@
 import logging
 import os
 import sys
+from distutils.util import strtobool
 from typing import Optional
 
 import click
@@ -13,7 +14,7 @@ from bento.network import fetch_latest_version
 from bento.util import echo_error
 
 
-def __setup_logging() -> None:
+def _setup_logging() -> None:
     os.makedirs(os.path.dirname(constants.DEFAULT_LOG_PATH), exist_ok=True)
     logging.basicConfig(
         filename=constants.DEFAULT_LOG_PATH,
@@ -23,9 +24,17 @@ def __setup_logging() -> None:
     )
 
 
-def is_running_latest() -> bool:
+def _is_test() -> bool:
+    test_var = os.getenv(constants.BENTO_TEST_VAR, "0")
+    try:
+        return strtobool(test_var) == 1
+    except ValueError:
+        return False
+
+
+def _is_running_latest() -> bool:
     latest_version, _ = fetch_latest_version()
-    current_version = get_version()
+    current_version = _get_version()
     logging.info(
         f"Current bento version is {current_version}, latest is {latest_version}"
     )
@@ -34,14 +43,14 @@ def is_running_latest() -> bool:
     return True
 
 
-def get_version() -> str:
+def _get_version() -> str:
     """Get the current r2c-cli version based on __init__"""
     from bento import __version__
 
     return __version__
 
 
-def is_running_supported_python3() -> bool:
+def _is_running_supported_python3() -> bool:
     python_major_v = sys.version_info.major
     python_minor_v = sys.version_info.minor
     logging.info(f"Python version is ({python_major_v}.{python_minor_v})")
@@ -51,7 +60,7 @@ def is_running_supported_python3() -> bool:
 @click.group(epilog="To get help for a specific command, run `bento COMMAND --help`")
 @click.help_option("-h", "--help")
 @click.version_option(
-    prog_name="bento", version=get_version(), message="%(prog)s/%(version)s"
+    prog_name="bento", version=_get_version(), message="%(prog)s/%(version)s"
 )
 @click.option(
     "--base-path",
@@ -75,14 +84,14 @@ def is_running_supported_python3() -> bool:
 def cli(
     ctx: click.Context, base_path: Optional[str], agree: bool, email: Optional[str]
 ) -> None:
-    __setup_logging()
+    _setup_logging()
     is_init = ctx.invoked_subcommand == "init"
     ctx.help_option_names = ["-h", "--help"]
     if base_path is None:
         ctx.obj = Context(is_init=is_init)
     else:
         ctx.obj = Context(base_path=base_path, is_init=is_init)
-    if not is_running_supported_python3():
+    if not _is_running_supported_python3():
         echo_error(
             "Bento requires Python 3.6+. Please ensure you have Python 3.6+ and installed Bento via `pip3 install bento-cli`."
         )
@@ -92,7 +101,7 @@ def cli(
     if not registrar.verify():
         logging.error("Could not verify the user's registration.")
         sys.exit(3)
-    if not is_running_latest():
+    if not _is_running_latest() and not _is_test():
         logging.warning("Bento client is outdated")
         click.echo(constants.UPGRADE_WARNING_OUTPUT)
 
