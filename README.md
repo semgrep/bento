@@ -2,7 +2,7 @@
     <img src="https://raw.githubusercontent.com/returntocorp/bento/master/bento-logo.png" height="100" alt="Bento logo"/>
 </p>
 <h3 align="center">
-  Bento finds bugs delightfully fast without changing your workflow
+  Find bugs delightfully fast without changing your workflow
 </h3>
 
 <p align="center">
