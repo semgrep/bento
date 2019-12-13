@@ -1,0 +1,7 @@
+formatter:
+  - clippy:
+  - histo:
+tools:
+  r2c.hadolint:
+    ignores: []
+    run: true
