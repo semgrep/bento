@@ -166,7 +166,7 @@ $ git commit --no-verify
 Bento’s Git hook can save the round-trip time involved with fixing a failed build if you’re using [Bento in CI](#running-bento-in-ci). 
 
 ## Bento Checks
-Bento focuses on finding common security, correctness, and performance mistakes in projects containing Flask, Requests, and Boto 3. We're inspired by tools like [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react) that help ensure correct and safe framework use. Learn more about our custom checks at [checks.bento.dev](https://checks.bento.dev/).
+Bento finds common security, correctness, and performance mistakes in projects containing Flask, Requests, and Boto 3. We’re inspired by tools that help ensure correct and safe framework use, like [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react). Learn more about Bento’s speciality checks at [checks.bento.dev](https://checks.bento.dev/).
 
 ## Help and Community
 Need help or want to share feedback? We’d love to hear from you!
