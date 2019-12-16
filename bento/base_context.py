@@ -6,6 +6,7 @@ from typing import Any, ClassVar, Dict, Union
 import attr
 import yaml
 
+import bento.constants as constants
 from bento.fignore import FileIgnore, open_ignores
 from bento.run_cache import RunCache
 
@@ -33,7 +34,6 @@ class BaseContext:
     RESOURCE_DIR: ClassVar[str] = ".bento"
     LOCAL_RUN_CACHE: ClassVar[str] = ".bento/cache"
     BASELINE_FILE_PATH: ClassVar[str] = ".bento-whitelist.yml"
-    IGNORE_FILE_PATH: ClassVar[str] = ".bentoignore"
 
     @base_path.default
     def _find_base_path(self) -> Path:
@@ -73,7 +73,7 @@ class BaseContext:
 
     @property
     def ignore_file_path(self) -> Path:
-        return self.base_path / self.IGNORE_FILE_PATH
+        return self.base_path / constants.IGNORE_FILE_NAME
 
     def pretty_path(self, path: Path) -> Path:
         try:

@@ -8,6 +8,7 @@ from typing import Collection, Iterable, Iterator, Set, TextIO
 
 import attr
 
+import bento.constants as constants
 from bento.util import echo_warning
 
 CONTROL_REGEX = re.compile(r"(?!<\\):")  # Matches unescaped colons
@@ -250,10 +251,12 @@ def open_ignores(
         if not is_init:
             echo_warning(
                 f"""'{os.path.relpath(ignore_path, os.getcwd())}' not found; using default ignore patterns.
-Please run 'bento init' to configure a .bentoignore for your project.
+Please run 'bento init' to configure a {constants.IGNORE_FILE_NAME} for your project.
 """
             )
-        ignore_path = Path(os.path.dirname(__file__)) / "configs" / ".bentoignore"
+        ignore_path = (
+            Path(os.path.dirname(__file__)) / "configs" / constants.IGNORE_FILE_NAME
+        )
 
     logging.info(f"Loading bento file ignores from {os.path.abspath(ignore_path)}")
 

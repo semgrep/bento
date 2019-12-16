@@ -23,7 +23,7 @@ jobs:
       - run:
           name: "PyTest"
           command: |
-            PYTHONPATH=. pipenv run coverage run --source . -m pytest
+            PYTHONPATH=. pipenv run coverage run --source . -m pytest -vv
             PYTHONPATH=. pipenv run coverage report
             PYTHONPATH=. pipenv run coverage html
       - store_test_results:
@@ -113,6 +113,8 @@ jobs:
       - run:
           name: "Running bento check"
           command: pipenv run bento --agree --email test@returntocorp.com check --no-pager
+      - store_artifacts:
+          path: "/home/circleci/.bento/last.log"
 
 workflows:
   build-and-deploy:

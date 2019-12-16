@@ -7,6 +7,8 @@ GLOBAL_CONFIG_PATH = os.path.join(GLOBAL_CONFIG_DIR, "config.yml")
 
 DEFAULT_LOG_PATH = os.path.join(GLOBAL_CONFIG_DIR, "last.log")
 
+IGNORE_FILE_NAME = ".bentoignore"
+
 TERMS_OF_SERVICE_KEY = "terms_of_service"
 TERMS_OF_SERVICE_VERSION = "0.3.0"
 

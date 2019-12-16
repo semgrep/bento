@@ -22,6 +22,9 @@ def _setup_logging() -> None:
         filemode="w",
         format="[%(levelname)s] %(relativeCreated)s %(name)s:%(module)s - %(message)s",
     )
+    logging.info(
+        f"Environment: stdout.isatty={sys.stdout.isatty()} stderr.isatty={sys.stderr.isatty()} stdin.isatty={sys.stdin.isatty()}"
+    )
 
 
 def _is_test() -> bool:

@@ -10,6 +10,7 @@ import attr
 import click
 import yaml
 
+import bento.constants as constants
 import bento.content.init as content
 import bento.git
 import bento.tool_runner
@@ -101,7 +102,10 @@ class InitCommand(object):
         if not self.context.ignore_file_path.exists():
             on_done = content.InstallIgnore.install.echo(pretty_path)
             templates_path = Path(os.path.dirname(__file__)) / ".." / "configs"
-            shutil.copy(templates_path / ".bentoignore", self.context.ignore_file_path)
+            shutil.copy(
+                templates_path / constants.IGNORE_FILE_NAME,
+                self.context.ignore_file_path,
+            )
 
             gitignore_added = False
 

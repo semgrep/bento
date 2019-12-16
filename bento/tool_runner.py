@@ -1,4 +1,5 @@
 import logging
+import multiprocessing.synchronize
 import sys
 import threading
 import time
@@ -8,6 +9,7 @@ from multiprocessing import Lock
 from multiprocessing.pool import ThreadPool
 from typing import Collection, Iterable, List, Optional, Tuple, Union
 
+import attr
 import click
 from tqdm import tqdm
 
@@ -20,21 +22,30 @@ from bento.tool import Tool
 MAX_BAR_VALUE = 30
 BAR_UPDATE_INTERVAL = 0.1
 
+SLOW_RUN_SECONDS = 60  # Number of seconds before which a "slow run" warning is printed
+
 ToolResults = Union[List[Violation], Exception]
 RunResults = Tuple[str, ToolResults]
 
 MIN_BAR_VALUE = int(MAX_BAR_VALUE / 5)
 
 
+@attr.s
 class Runner:
-    def __init__(self, show_bars: bool = True) -> None:
-        self._lock = Lock()
-        self._setup_latch: bento.util.CountDownLatch
-        self._bars: List[tqdm]
-        self._run: List[bool]
-        self._show_bars = sys.stderr.isatty() and show_bars
+    show_bars = attr.ib(type=bool, default=True)
+    _lock = attr.ib(type=multiprocessing.synchronize.Lock, factory=Lock, init=False)
+    _setup_latch = attr.ib(type=bento.util.CountDownLatch, default=None, init=False)
+    _bars = attr.ib(type=List[tqdm], factory=list, init=False)
+    _run = attr.ib(type=List[bool], factory=list, init=False)
+    _done = attr.ib(type=bool, default=False, init=False)
+
+    def __attrs_post_init__(self) -> None:
+        self.show_bars = self.show_bars and sys.stderr.isatty()
 
     def _update_bars(self, ix: int, lower: int, upper: int) -> None:
+        """
+        Increments a progress bar
+        """
         bar_value = lower
         keep_going = True
         bar = self._bars[ix]
@@ -51,6 +62,72 @@ class Runner:
         with self._lock:
             bar.update(upper - bar_value)
 
+    def _setup_bars(self, indices_and_tools: List[Tuple[int, Tool]]) -> None:
+        """
+        Constructs progress bars for all tools
+        """
+        self._bars = [
+            tqdm(
+                total=MAX_BAR_VALUE,
+                position=ix,
+                ascii="□■",
+                mininterval=BAR_UPDATE_INTERVAL,
+                desc=tool.tool_id().ljust(
+                    bento.util.PRINT_WIDTH - 34, bento.util.LEADER_CHAR
+                ),
+                ncols=bento.util.PRINT_WIDTH - 2,
+                bar_format=click.style("{desc:s}|{bar}| {elapsed}{postfix}", dim=True),
+                leave=False,
+            )
+            for ix, tool in indices_and_tools
+        ]
+
+    def _echo_slow_run(self) -> None:
+        """
+        Echoes a warning to the screen that Bento is taking longer than expected.
+
+        Wipes and resets any progress bars.
+        """
+        before = time.monotonic()
+
+        while not self._done and time.monotonic() - before < SLOW_RUN_SECONDS:
+            time.sleep(BAR_UPDATE_INTERVAL)
+
+        if not self._done:
+            with self._lock:
+                if self.show_bars:
+                    wipe_line = "".ljust(bento.util.PRINT_WIDTH, " ")
+
+                    click.echo(
+                        "\x1b[0G", nl=False, err=True
+                    )  # Reset cursor to beginning of line
+                    click.echo("\x1b[s", nl=False, err=True)  # Save cursor state
+                    for _ in range(len(self._bars) - 1):
+                        click.echo(wipe_line, err=True)
+                    # Handling last line separately prevents screen roll
+                    click.echo(wipe_line, nl=False, err=True)
+                    click.echo("\x1b[u", nl=False, err=True)  # Retrieve cursor state
+
+                click.secho(
+                    bento.util.wrap(
+                        f"Bento is taking longer than expected, which may mean it’s checking build or dependency "
+                        f"code. This is often unintentional or unexpected.",
+                        extra=-4,
+                    )
+                    + "\n\n"
+                    + bento.util.wrap(
+                        "Please make sure all build and dependency "
+                        f"files are included in your `.bentoignore`, or try running Bento on specific files via `bento "
+                        f"check [PATH]`",
+                        extra=-4,
+                    ),
+                    fg=bento.util.Colors.WARNING,
+                    bold=False,
+                )
+                bento.util.echo_newline()
+        else:
+            logging.debug(f"Bento run completed in less than {SLOW_RUN_SECONDS} s.")
+
     def _run_single_tool(
         self,
         baseline: Baseline,
@@ -63,7 +140,7 @@ class Runner:
         try:
             th = None
             before = time.time()
-            bar = self._bars[ix] if self._show_bars else None
+            bar = self._bars[ix] if self.show_bars else None
             self._run[ix] = True
 
             logging.debug(f"{tool.tool_id()} start")
@@ -115,7 +192,7 @@ class Runner:
 
             logging.debug(
                 f"{tool.tool_id()} completed in {(after - before):2f} s (setup in {(after_setup - before):2f} s)"
-            )  # TODO: Move to debug
+            )
             return tool.tool_id(), results
         except Exception as e:
             logging.error(traceback.format_exc())
@@ -146,33 +223,26 @@ class Runner:
                 f"No tools are configured in this project's .bento.yml.\nPlease contact {SUPPORT_EMAIL_ADDRESS} if this is incorrect."
             )
 
-        if self._show_bars:
-            self._bars = [
-                tqdm(
-                    total=MAX_BAR_VALUE,
-                    position=ix,
-                    ascii="□■",
-                    mininterval=BAR_UPDATE_INTERVAL,
-                    desc=tool.tool_id().ljust(
-                        bento.util.PRINT_WIDTH - 34, bento.util.LEADER_CHAR
-                    ),
-                    ncols=bento.util.PRINT_WIDTH - 2,
-                    bar_format=click.style(
-                        "{desc:s}|{bar}| {elapsed}{postfix}", dim=True
-                    ),
-                    leave=False,
-                )
-                for ix, tool in indices_and_tools
-            ]
+        if self.show_bars:
+            self._setup_bars(indices_and_tools)
         self._run = [True for _, _ in indices_and_tools]
+        self._done = False
         self._setup_latch = bento.util.CountDownLatch(n_tools)
+
+        slow_run_thread = threading.Thread(
+            name="slow_run_timer", target=self._echo_slow_run
+        )
+        slow_run_thread.start()
 
         with ThreadPool(n_tools) as pool:
             # using partial to pass in multiple arguments to __tool_filter
             func = partial(Runner._run_single_tool, self, baseline, files)
             all_results = pool.map(func, indices_and_tools)
 
-        if self._show_bars:
+        self._done = True
+        slow_run_thread.join()
+
+        if self.show_bars:
             for _ in self._bars:
                 click.echo("", err=True)
             for b in self._bars:
