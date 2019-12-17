@@ -93,6 +93,7 @@ def post_metrics(data: PostData, is_finding: bool = False) -> bool:
         url = f"{_get_base_url()}/bento/api/v4/metrics/"
         if is_finding:
             url = f"{url}finding/"
+        logging.info(data)
         r = no_auth_post(url, json=data)
         r.raise_for_status()
         return True

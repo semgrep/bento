@@ -10,6 +10,7 @@ from bento.config import (
     update_tool_run,
 )
 from bento.context import Context
+from bento.decorators import with_metrics
 from bento.util import echo_success
 
 
@@ -41,6 +42,7 @@ def enable() -> None:
     help_summary="Turn ON a tool.",
 )
 @click.argument("tool", type=str, nargs=1, autocompletion=get_valid_tools)
+@with_metrics
 @click.pass_obj
 def tool(context: Context, tool: str) -> None:
     """
@@ -55,6 +57,7 @@ def tool(context: Context, tool: str) -> None:
 @enable.command(short_help="Specify check")
 @click.argument("tool", type=str, nargs=1, autocompletion=get_valid_tools)
 @click.argument("check", type=str, nargs=1, autocompletion=get_disabled_checks)
+@with_metrics
 @click.pass_obj
 def check(context: Context, tool: str, check: str) -> None:
     """

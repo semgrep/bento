@@ -34,7 +34,13 @@ def with_metrics(f: _AnyCallable) -> _AnyCallable:
         before = time.time()
 
         context = click.get_current_context()
-        command = context.command.name
+
+        if context.parent and context.parent.parent:
+            # this is a command with a subcommand e.g. `bento disable check <tool> <check>`
+            command = context.parent.command.name
+        else:
+            command = context.command.name
+
         cli_context = context.obj
         timestamp = (
             cli_context.timestamp if cli_context else datetime.utcnow().isoformat("T")
