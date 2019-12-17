@@ -178,6 +178,26 @@ REGISTRY: Dict[str, AnalyzerDataJson] = {
         },
         "public": False,
     },
+    "r2c/shellcheck": {
+        "versions": {
+            "0.0.1": {
+                "manifest": {
+                    "analyzer_name": "r2c/shellcheck",
+                    "author_name": "brendon",
+                    "author_email": "brendon.go@gmail.com",
+                    "version": "0.0.1",
+                    "spec_version": "1.2.0",
+                    "dependencies": {"public/source-code": "*"},
+                    "type": "commit",
+                    "output": {"type": "json"},
+                    "deterministic": True,
+                    "readme": "# Analyzer name: shellcheck\n\n# Description\n\nr2c wrapper around koalaman/shellcheck https://github.com/koalaman/shellcheck\n",
+                },
+                "pending": False,
+            }
+        },
+        "public": False,
+    },
 }
 
 

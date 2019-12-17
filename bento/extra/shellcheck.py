@@ -1,27 +1,26 @@
-import json
 import os
 import re
-import subprocess
-from typing import Any, Dict, Iterable, List, Pattern, Set, Type
+from typing import Any, Dict, Iterable, List, Pattern, Type
+
+from semantic_version import Version
 
 from bento.base_context import BaseContext
 from bento.parser import Parser
-from bento.tool import StrTool
-from bento.util import echo_success, fetch_line_in_file
+from bento.tool import JsonR, JsonTool
+from bento.util import fetch_line_in_file
 from bento.violation import Violation
 
 
-class ShellcheckParser(Parser[str]):
+class ShellcheckParser(Parser[JsonR]):
     def to_violation(self, result: Dict[str, Any]) -> Violation:
-        start_line = result["line"]
-        column = result["column"]
-        check_id = f"SC{result['code']}"
-        message = result["message"]
-        path = result["file"]
 
-        path = self.trim_base(path)
+        path = self.trim_base(result["path"])
+        start_line = result["start"]["line"]
+        start_col = result["start"]["col"]
+        message = result.get("extra", {}).get("message")
+        check_id = result["check_id"]
 
-        level = result["level"]
+        level = result.get("extra", {}).get("level")
         if level == "error":
             severity = 2
         elif level == "warning":
@@ -37,27 +36,29 @@ class ShellcheckParser(Parser[str]):
         )
 
         return Violation(
-            tool_id=ShellcheckTool.TOOL_ID,
+            tool_id=ShellcheckTool.tool_id(),
             check_id=check_id,
             path=path,
             line=start_line,
-            column=column,
+            column=start_col,
             message=message,
             severity=severity,
             syntactic_context=line_of_code,
             link=link,
         )
 
-    def parse(self, results: str) -> List[Violation]:
+    def parse(self, results: JsonR) -> List[Violation]:
         violations: List[Violation] = []
-        for r in json.loads(results):
-            violations.append(self.to_violation(r))
+        for check in results:
+            violations.append(self.to_violation(check))
         return violations
 
 
-class ShellcheckTool(StrTool):
+class ShellcheckTool(JsonTool):
+    ANALYZER_NAME = "r2c/shellcheck"
+    ANALYZER_VERSION = Version("0.0.1")
+    FILE_NAME_FILTER = re.compile(r".*")
     TOOL_ID = "r2c.shellcheck"
-    DOCKER_IMAGE = "koalaman/shellcheck:v0.7.0"
 
     @property
     def parser_type(self) -> Type[Parser]:
@@ -73,22 +74,7 @@ class ShellcheckTool(StrTool):
 
     @property
     def file_name_filter(self) -> Pattern:
-        return re.compile(r".*\.sh\b")
-
-    def filter_paths(self, paths: Iterable[str]) -> Set[str]:
-        """
-            Need to find paths to all shell files
-        """
-        resolved = [os.path.realpath(p) for p in paths]
-        valid_paths = {
-            e.path
-            for e in self.context.file_ignores.entries()
-            if e.survives
-            if self.file_name_filter.match(os.path.basename(e.path))
-            if any(os.path.realpath(e.path).startswith(r) for r in resolved)
-        }
-
-        return valid_paths
+        return self.FILE_NAME_FILTER
 
     @property
     def project_name(self) -> str:
@@ -96,32 +82,26 @@ class ShellcheckTool(StrTool):
 
     def setup(self) -> None:
         # import inside def for performance
-        import docker
+        from bento.extra.r2c_analyzer import prepull_analyzers
 
-        client = docker.from_env()
-        if not any(i for i in client.images.list() if self.DOCKER_IMAGE in i.tags):
-            client.images.pull(ShellcheckTool.DOCKER_IMAGE)
-            echo_success(f"Retrieved {self.TOOL_ID} Container")
+        prepull_analyzers(self.ANALYZER_NAME, self.ANALYZER_VERSION)
 
-    def run(self, files: Iterable[str]) -> str:
-        res = self.execute(
-            [
-                "docker",
-                "run",
-                "--network",
-                "none",
-                "--rm",
-                "-v",
-                f"{os.path.abspath(self.base_path)}:{os.path.abspath(self.base_path)}",
-                ShellcheckTool.DOCKER_IMAGE,
-                "-f",
-                "json",
-            ]
-            + list(files),
-            stdout=subprocess.PIPE,
-            stderr=subprocess.PIPE,
+    def run(self, files: Iterable[str]) -> JsonR:
+        # import inside def for performance
+        from bento.extra.r2c_analyzer import run_analyzer_on_local_code
+
+        targets = [os.path.realpath(p) for p in files]
+
+        ignore_files = {
+            e.path for e in self.context.file_ignores.entries() if not e.survives
+        }
+        return run_analyzer_on_local_code(
+            self.ANALYZER_NAME,
+            self.ANALYZER_VERSION,
+            self.base_path,
+            ignore_files,
+            targets,
         )
-        return res.stdout
 
     @classmethod
     def matches_project(cls, context: BaseContext) -> bool:
