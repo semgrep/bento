@@ -91,7 +91,7 @@ steps:
       - --agree
       - check
     expected_err: bento-check-with-archive.err
-    expected_out: null
+    expected_out: bento-check-with-archive.out
     returncode: 0
   - name: install-hook
     description: should successfully install as a commit hook

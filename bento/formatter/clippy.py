@@ -73,6 +73,9 @@ class Clippy(Formatter):
         return f"{Clippy.BOLD}==> Bento Summary{Clippy.END}"
 
     def dump(self, findings: FindingsMap) -> Collection[str]:
+        if not findings:
+            return []
+
         violations = self.by_path(findings)
         lines = [self.__print_summary()]
         max_message_len = min(max((len(v.message) for v in violations), default=0), 200)

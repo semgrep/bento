@@ -14,7 +14,7 @@ BENTO_REPO_ROOT = str(Path(__file__).parent.parent.parent.resolve())
 
 def write_expected_file(filename: str, output: str) -> None:
     with open(filename, "w") as file:
-        stripped = remove_trailing_space(output)
+        stripped = remove_trailing_space(remove_timing_seconds(output))
         file.write(stripped)
 
 
@@ -36,12 +36,10 @@ def match_expected(output: str, expected: str) -> bool:
 
     """
     output = remove_trailing_space(output)
-    expected = remove_trailing_space(expected)
 
     # Handle dynamic characters (for now just timing info)
     if "finding(s) in" in expected or "findings in" in expected:
         output = remove_timing_seconds(output)
-        expected = remove_timing_seconds(expected)
 
     if output.strip() != expected.strip():
         print("==== EXPECTED ====")
@@ -68,6 +66,8 @@ def check_command(step: Any, pwd: str, target: str, rewrite: bool) -> None:
         part.replace("__BENTO_REPO_ROOT__", BENTO_REPO_ROOT) for part in command
     ]
 
+    print(f"======= {test_identifier} ========")
+
     runned = subprocess.run(
         substituted,
         # Note that we can't use BENTO_BASE_PATH since the acceptance tests
@@ -79,7 +79,6 @@ def check_command(step: Any, pwd: str, target: str, rewrite: bool) -> None:
         encoding="utf-8",
     )
 
-    print(f"======= {test_identifier} ========")
     print("Command return code:", runned.returncode)
 
     if "returncode" in step:

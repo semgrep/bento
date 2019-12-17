@@ -9,12 +9,14 @@ import bento.extra.eslint
 import bento.result
 import bento.tool_runner
 import pytest
+from _pytest.monkeypatch import MonkeyPatch
 from bento.commands.check import check
 from bento.context import Context
 from tests.util import mod_file
 
-INTEGRATION = Path(__file__).parent.parent / "integration"
-SIMPLE = Path(__file__).parent.parent / "integration/simple"
+BASE = Path(__file__).parent.parent.parent
+INTEGRATION = BASE / "tests" / "integration"
+SIMPLE = INTEGRATION / "simple"
 
 
 def test_check_happy_path() -> None:
@@ -30,9 +32,10 @@ def test_check_happy_path() -> None:
     assert len(parsed) == 4
 
 
-def test_check_specified_paths() -> None:
+def test_check_specified_paths(monkeypatch: MonkeyPatch) -> None:
     """Validates that check discovers issues in specified paths"""
 
+    monkeypatch.chdir(SIMPLE)
     runner = CliRunner(mix_stderr=False)
     Context(SIMPLE).cache.wipe()
 
@@ -58,9 +61,10 @@ def test_check_show_all() -> None:
     assert len(parsed) == 5
 
 
-def test_check_specified_paths_and_staged() -> None:
+def test_check_specified_paths_and_staged(monkeypatch: MonkeyPatch) -> None:
     """Validates that check errors when --staged-only used with paths"""
 
+    monkeypatch.chdir(SIMPLE)
     runner = CliRunner(mix_stderr=False)
     Context(SIMPLE).cache.wipe()
 
@@ -73,6 +77,36 @@ def test_check_specified_paths_and_staged() -> None:
             catch_exceptions=False,
         ),
     )
+
+
+def test_check_specified_ignored(monkeypatch: MonkeyPatch) -> None:
+    """Validates that check does not check specified, ignored paths"""
+
+    monkeypatch.chdir(BASE)
+    runner = CliRunner(mix_stderr=False)
+
+    result = runner.invoke(
+        check,
+        ["-f", "json", "tests/integration/simple/bar.py"],
+        obj=Context(base_path=BASE),
+    )
+    parsed = json.loads(result.stdout)
+    print(parsed)
+    assert not parsed
+
+
+def test_check_relative_path(monkeypatch: MonkeyPatch) -> None:
+    """Validates that check works with relative specified paths when not run from project root"""
+
+    monkeypatch.chdir(SIMPLE / "dist")
+    runner = CliRunner(mix_stderr=False)
+
+    result = runner.invoke(
+        check, ["-f", "json", "../bar.py"], obj=Context(base_path=SIMPLE)
+    )
+    parsed = json.loads(result.stdout)
+    print(parsed)
+    assert len(parsed) == 1
 
 
 def test_check_no_archive() -> None:

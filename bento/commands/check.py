@@ -4,7 +4,8 @@ import subprocess
 import sys
 import threading
 import time
-from typing import Any, Dict, Iterable, List, Optional, Tuple
+from contextlib import contextmanager
+from typing import Any, Collection, Dict, Iterable, Iterator, List, Optional, Tuple
 
 import click
 from pre_commit.git import get_staged_files
@@ -61,6 +62,64 @@ def __list_paths(ctx: Any, args: List[str], incomplete: str) -> AutocompleteSugg
         for p in os.listdir(dir_to_list)
         if not path_stub or p.startswith(path_stub)
     ]
+
+
+@contextmanager
+def _process_paths(
+    context: Context, paths: Optional[List[str]], staged_only: bool
+) -> Iterator[Optional[List[str]]]:
+    """
+    Provides a with-expression within which a list of paths to be checked is provided
+
+    This function operates in three different modes, depending on the value of
+    the `paths` and `staged_only` variables:
+
+    `paths` is truthy (a non-empty list), `staged_only` is false:
+        The contents of `paths`, less any ignored paths, are passed to the with-expression
+
+    `paths` is falsey, `staged_only` is true:
+        All non-ignored files staged for git commit are passed to the with-expression
+
+    `paths` is falsey, `staged_only` is false:
+        None is passed to the with-expression (which causes check to run on the base path)
+
+    In any of these modes, this function should be used as follows:
+
+        with _process_paths(context, input_paths, staged_only) as processed_paths:
+            ...
+
+    :param context: The Bento command context
+    :param paths: A list of paths to check, or None to indicate that check should operate
+                  against the base path
+    :param staged_only: Whether to use staged files as the list of paths
+    :return: A Python with-expression
+    :raises Exception: If staged_only is True and paths is truthy
+    """
+    git_stash = noop_context()
+
+    if paths:
+        if staged_only:
+            raise Exception("--staged_only should not be used with explicit paths")
+        paths = [
+            str(
+                context.base_path
+                / os.path.relpath(os.path.abspath(p), context.base_path)
+            )
+            for p in paths
+        ]
+    elif staged_only:
+        git_stash = staged_files_only(
+            os.path.join(os.path.expanduser("~"), ".cache", "bento", "patches")
+        )
+        paths = get_staged_files()
+    else:
+        paths = None
+
+    if paths is not None:
+        paths = context.file_ignores.filter_paths(paths)
+
+    with git_stash:
+        yield paths
 
 
 @click.command()
@@ -143,28 +202,22 @@ def check(
 
     click.echo("Running Bento checks...\n", err=True)
 
-    ctx = noop_context()
-    if paths and len(paths) > 0:
-        if staged_only:
-            raise Exception("--staged_only should not be used with explicit paths")
-    elif staged_only:
-        ctx = staged_files_only(
-            os.path.join(os.path.expanduser("~"), ".cache", "bento", "patches")
-        )
-        paths = get_staged_files()
-    else:
-        paths = None
+    with _process_paths(context, paths, staged_only) as processed_paths:
+        if processed_paths is not None and len(processed_paths) == 0:
+            echo_warning("All paths passed to `bento check` are ignored.")
+            all_results: Collection[bento.tool_runner.RunResults] = []
+            elapsed = 0.0
 
-    with ctx:
-        before = time.time()
-        runner = bento.tool_runner.Runner()
-        tools: Iterable[Tool[Any]] = context.tools.values()
+        else:
+            before = time.time()
+            runner = bento.tool_runner.Runner()
+            tools: Iterable[Tool[Any]] = context.tools.values()
 
-        if tool:
-            tools = [context.configured_tools[tool]]
+            if tool:
+                tools = [context.configured_tools[tool]]
 
-        all_results = runner.parallel_results(tools, baseline, paths)
-        elapsed = time.time() - before
+            all_results = runner.parallel_results(tools, baseline, processed_paths)
+            elapsed = time.time() - before
 
     # Progress bars terminate on whitespace
     echo_newline()
@@ -219,12 +272,12 @@ You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PA
     stats_thread = threading.Thread(name="stats", target=post_metrics)
     stats_thread.start()
 
-    if n_all_filtered > 0:
-        dumped = [f.dump(filtered_findings) for f in fmts]
-        context.start_user_timer()
-        bento.util.less(dumped, pager=pager, overrun_pages=OVERRUN_PAGES)
-        context.stop_user_timer()
+    dumped = [f.dump(filtered_findings) for f in fmts]
+    context.start_user_timer()
+    bento.util.less(dumped, pager=pager, overrun_pages=OVERRUN_PAGES)
+    context.stop_user_timer()
 
+    if n_all_filtered > 0:
         echo_warning(f"{n_all_filtered} finding(s) in {elapsed:.2f} s\n")
         if not context.is_init:
             echo_next_step("To suppress all findings", "bento archive")

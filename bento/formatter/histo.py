@@ -115,6 +115,9 @@ class Histo(Formatter):
               B006                         52
               Other                       116
         """
+        if not findings:
+            return []
+
         all_hits = self._all_hits(findings)
         max_count = max(h.max_count for h in all_hits)
         check_width = max(h.max_check_width for h in all_hits)

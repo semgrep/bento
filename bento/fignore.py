@@ -4,7 +4,7 @@ import os
 import re
 import time
 from pathlib import Path
-from typing import Collection, Iterable, Iterator, Set, TextIO
+from typing import Collection, Dict, Iterable, Iterator, List, Mapping, Set, TextIO
 
 import attr
 
@@ -25,12 +25,26 @@ class Entry(object):
     survives = attr.ib(type=bool)
 
 
+@attr.s(auto_attribs=True)
+class WalkEntries(Collection[Entry]):
+    cache: Dict[str, Entry]
+
+    def __len__(self) -> int:
+        return len(self.cache)
+
+    def __iter__(self) -> Iterator[Entry]:
+        return iter(self.cache.values())
+
+    def __contains__(self, item: object) -> bool:
+        return isinstance(item, Entry) and item.path in self.cache
+
+
 @attr.s
-class FileIgnore(object):
+class FileIgnore(Mapping[str, Entry]):
     base_path = attr.ib(type=Path)
     patterns = attr.ib(type=Set[str])
     _processed_patterns = attr.ib(type=Set[str], init=False)
-    _walk_cache: Collection[Entry] = attr.ib(default=None, init=False)
+    _walk_cache: Dict[str, Entry] = attr.ib(default=None, init=False)
 
     def __attrs_post_init__(self) -> None:
         self._processed_patterns = Processor(self.base_path).process(self.patterns)
@@ -81,16 +95,33 @@ class FileIgnore(object):
         pretty_patterns = "\n".join(self.patterns)
         logging.info(f"Ignored patterns are:\n{pretty_patterns}")
         before = time.time()
-        self._walk_cache = list(
-            self._walk(str(self.base_path), str(self.base_path), directories_only=False)
+        entries = self._walk(
+            str(self.base_path), str(self.base_path), directories_only=False
         )
+        self._walk_cache = dict((e.path, e) for e in entries)
         logging.info(f"Loaded file ignore cache in {time.time() - before} s.")
 
     def entries(self) -> Collection[Entry]:
         """
         Returns all files that are not ignored, relative to the base path.
         """
-        return self._walk_cache
+        return WalkEntries(self._walk_cache)
+
+    def filter_paths(self, paths: List[str]) -> List[str]:
+        abspaths = (os.path.abspath(p) for p in paths)
+        return [p for p in abspaths if p in self and self[p].survives]
+
+    def __getitem__(self, item: str) -> Entry:
+        return self._walk_cache[item]
+
+    def __iter__(self) -> Iterator[str]:
+        return iter(self._walk_cache)
+
+    def __len__(self) -> int:
+        return len(self._walk_cache)
+
+    def __contains__(self, item: object) -> bool:
+        return item in self._walk_cache
 
 
 @attr.s(auto_attribs=True)

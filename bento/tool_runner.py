@@ -199,7 +199,7 @@ class Runner:
             return tool.tool_id(), e
 
     def parallel_results(
-        self, tools: Iterable[Tool], baseline: Baseline, files: Optional[List[str]]
+        self, tools: Iterable[Tool], baseline: Baseline, paths: Optional[List[str]]
     ) -> Collection[RunResults]:
         """Runs all tools in parallel.
 
@@ -210,7 +210,7 @@ class Runner:
 
         Parameters:
             baseline (set): The set of whitelisted finding hashes
-            files (list): If present, the list of files to pass to each tool
+            paths (list): If present, the list of paths to pass to each tool
 
         Returns:
             (collection): For each tool, a `RunResult`, which is a tuple of (`tool_id`, `findings`)
@@ -236,7 +236,7 @@ class Runner:
 
         with ThreadPool(n_tools) as pool:
             # using partial to pass in multiple arguments to __tool_filter
-            func = partial(Runner._run_single_tool, self, baseline, files)
+            func = partial(Runner._run_single_tool, self, baseline, paths)
             all_results = pool.map(func, indices_and_tools)
 
         self._done = True
