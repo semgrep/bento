@@ -1,7 +1,5 @@
 import json
 
-import click
-
 import bento.formatter
 from bento.violation import Violation
 from tests.util import strip_ansi
@@ -36,11 +34,11 @@ VIOLATIONS = {
 
 def test_stylish_formatter() -> None:
     stylish = bento.formatter.for_name("stylish", {})
-    output = stylish.dump(VIOLATIONS)
+    output = [strip_ansi(line) for line in stylish.dump(VIOLATIONS)]
     expectation = [
         "bento/test/integration/init.js",
-        f"  0:0  {click.style('error  ', fg='red')} Missing semicolon.            r2c.eslint     semi https://eslint.org/docs/rules/semi",
-        f"  0:0  {click.style('warning', fg='yellow')} Unexpected console statement. r2c.eslint     no-console https://eslint.org/docs/rules/no-console",
+        f"   0:0  Missing semicolon.                       r2c.eslint     semi https://eslint.org/docs/rules/semi",
+        f"   0:0  Unexpected console statement.            r2c.eslint     no-console https://eslint.org/docs/rules/no-console",
         "",
     ]
 
@@ -49,25 +47,24 @@ def test_stylish_formatter() -> None:
 
 def test_clippy_formatter() -> None:
     clippy = bento.formatter.for_name("clippy", {})
-    output = clippy.dump(VIOLATIONS)
+    output = [strip_ansi(line) for line in clippy.dump(VIOLATIONS)]
     expectation = [
-        "\x1b[1m==> Bento Summary\x1b[0m",
-        "\x1b[1m\x1b[31merror\x1b[0m: \x1b[1mr2c.eslint.semi https://eslint.org/docs/rules/semi\x1b[0m",
-        "     \x1b[34m-->\x1b[0m bento/test/integration/init.js:0:0",
-        "      \x1b[34m|\x1b[0m",
-        " \x1b[94m   0\x1b[0m \x1b[34m|\x1b[0m   console.log(3)",
-        "      \x1b[34m|\x1b[0m",
-        "      = \x1b[1mnote:\x1b[0m Missing semicolon.           ",
+        "r2c.eslint semi https://eslint.org/docs/rules/semi",
+        "     > bento/test/integration/init.js:0",
+        "     ╷",
+        "    0│   console.log(3)",
+        "     ╵",
+        "     = Missing semicolon.",
         "",
-        "\x1b[1m\x1b[33mwarning\x1b[0m: \x1b[1mr2c.eslint.no-console https://eslint.org/docs/rules/no-console\x1b[0m",
-        "     \x1b[34m-->\x1b[0m bento/test/integration/init.js:0:0",
-        "      \x1b[34m|\x1b[0m",
-        " \x1b[94m   0\x1b[0m \x1b[34m|\x1b[0m   console.log(3)",
-        "      \x1b[34m|\x1b[0m",
-        "      = \x1b[1mnote:\x1b[0m Unexpected console statement.",
-        "",
+        "r2c.eslint no-console https://eslint.org/docs/rules/no-console",
+        "     > bento/test/integration/init.js:0",
+        "     ╷",
+        "    0│   console.log(3)",
+        "     ╵",
+        "     = Unexpected console statement.",
         "",
     ]
+    print(output)
     assert output == expectation
 
 

@@ -1,18 +1,19 @@
 import itertools
 import shutil
 import sys
+import textwrap
 from typing import Collection, List
 
 import click
 
 from bento.formatter.base import FindingsMap, Formatter
-from bento.util import Colors, render_link
+from bento.util import PRINT_WIDTH, Colors, render_link
 from bento.violation import Violation
 
 
 class Clippy(Formatter):
     """
-    Mimics the eslint "clippy" formatter
+    Mimics the clippy formatter
     """
 
     SEVERITY_STR = {
@@ -21,79 +22,77 @@ class Clippy(Formatter):
         2: click.style("error", fg=Colors.ERROR),
     }
 
+    PIPE = click.style("│", dim=True)
+    CONTEXT_HEADER = f"     {click.style('╷', dim=True)}"
+    CONTEXT_FOOTER = f"     {click.style('╵', dim=True)}"
+    NOTE_LEADER = f"     = "
+    LEADER_LEN = len(NOTE_LEADER)
+    MESSAGE_OVERFLOW_LEADER = "".ljust(len(NOTE_LEADER), " ")
+    MIN_MESSAGE_LEN = 40
+
     @staticmethod
-    def __print_path(path: str, line: int, col: int) -> str:
-        arrow = click.style("-->", fg="blue")
-        return f"     {arrow} {path}:{line}:{col}"
+    def _print_path(path: str, line: int, col: int) -> str:
+        fpos = click.style(f"{path}:{line}")
+        return f"     > {fpos}"
 
-    def __print_violation(self, violation: Violation, max_message_len: int) -> str:
-        message = Clippy.ellipsis_trim(violation.message, max_message_len)
+    def _print_violation(self, violation: Violation, max_message_len: int) -> List[str]:
+        message_lines = textwrap.wrap(violation.message.strip(), width=max_message_len)
 
-        # save some space for what comes next
-        message = f"{message:<{max_message_len}s}"
-
-        nl = "\n"
-        pipe = click.style("|", fg="blue")
-        violation_message = f"      = {Clippy.BOLD}note:{Clippy.END} {message}{nl}"
+        out = []
 
         # Strip so trailing newlines are not printed out
-        context = violation.syntactic_context.rstrip()
+        stripped = textwrap.dedent(violation.syntactic_context).rstrip()
+        context = [line.rstrip() for line in stripped.split("\n")]
 
-        if context:
-            formatted_context = ""
-            for offset, line in enumerate(context.split("\n")):
-                line = line.rstrip()
-                line_no = click.style(
-                    f"{violation.line + offset:>4d}", fg=Colors.STATUS
-                )
-                formatted_context += f" {line_no} {pipe}   {line}{nl}"
+        if stripped:
+            out.append(Clippy.CONTEXT_HEADER)
+            for offset, line in enumerate(context):
+                line_no = click.style(f"{violation.line + offset:>4d}", dim=True)
+                out.append(f" {line_no}{Clippy.PIPE}   {line}")
+            out.append(Clippy.CONTEXT_FOOTER)
 
-            violation_message = (
-                f"      {pipe}{nl}" f"{formatted_context}" f"      {pipe}{nl}"
-            ) + violation_message
-        return violation_message
+        out.append(f"{Clippy.NOTE_LEADER}{click.style(message_lines[0], dim=True)}")
+        for mline in message_lines[1:]:
+            out.append(
+                f"{Clippy.MESSAGE_OVERFLOW_LEADER}{click.style(mline, dim=True)}"
+            )
 
-    def __print_error_message(self, violation: Violation) -> str:
+        return out
+
+    def _print_error_message(self, violation: Violation) -> str:
         tool_id = f"{violation.tool_id}".strip()
         rule = f"{violation.check_id}".strip()
 
-        full_rule = f"{tool_id}.{rule}"
+        link = render_link(rule, violation.link)
 
-        if not violation.link:
-            link = full_rule
-        else:
-            link = render_link(full_rule, violation.link)
-
-        sev_str = Clippy.SEVERITY_STR.get(violation.severity, "unknown")
-        sev = f"{sev_str}".strip()
-
-        return f"{Clippy.BOLD}{sev}: {Clippy.BOLD}{link}{Clippy.END}"
-
-    def __print_summary(self) -> str:
-        return f"{Clippy.BOLD}==> Bento Summary{Clippy.END}"
+        return f"{Clippy.BOLD}{tool_id} {link}{Clippy.END}"
 
     def dump(self, findings: FindingsMap) -> Collection[str]:
         if not findings:
             return []
 
+        lines = []
         violations = self.by_path(findings)
-        lines = [self.__print_summary()]
-        max_message_len = min(max((len(v.message) for v in violations), default=0), 200)
+        max_message_len = min(
+            max((len(v.message) for v in violations), default=0),
+            PRINT_WIDTH - Clippy.LEADER_LEN,
+        )
 
         if sys.stdout.isatty():
-            terminal_width, _ = shutil.get_terminal_size((50, 20))
-            max_message_len = max(min(max_message_len, terminal_width - 10), 20)
+            terminal_width, _ = shutil.get_terminal_size((PRINT_WIDTH, 0))
+            max_message_len = max(
+                min(max_message_len, terminal_width - Clippy.LEADER_LEN),
+                Clippy.MIN_MESSAGE_LEN,
+            )
 
         ordered: List[Violation] = sorted(violations, key=Formatter.path_of)
 
         for path, vv in itertools.groupby(ordered, Formatter.path_of):
             for v in sorted(vv, key=lambda v: (v.line, v.column, v.message)):
-                lines.append(self.__print_error_message(v))
-                lines.append(Clippy.__print_path(path, v.line, v.column))
+                lines.append(self._print_error_message(v))
+                lines.append(Clippy._print_path(path, v.line, v.column))
 
-                violation_message = self.__print_violation(v, max_message_len)
-                for l in violation_message.split("\n"):
-                    lines.append(l)
-            lines.append("")
+                lines += self._print_violation(v, max_message_len)
+                lines.append("")
 
         return lines

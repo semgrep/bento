@@ -1,14 +1,12 @@
 Running Bento checks...
 
 
-==> Bento Summary
-error: r2c.eslint.no-undef https://eslint.org/docs/rules/no-undef
-     --> bad.js:1:1
-      |
-    1 |   x = "potato";
-      |
-      = note: 'x' is not defined.
-
+r2c.eslint no-undef https://eslint.org/docs/rules/no-undef
+     > bad.js:1
+     ╷
+    1│   x = "potato";
+     ╵
+     = 'x' is not defined.
 
 r2c.eslint:
   no-undef       1▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
