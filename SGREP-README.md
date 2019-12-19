@@ -2,6 +2,8 @@
 
 The goal of `sgrep` is to allow programmers to express complex code *patterns* with a familiar syntax. The idea is to mix the convenience of grep with the correctness and precision of a compiler frontend. Using sgrep via [Bento](http://bento.dev/) to allow developers and security engineers to easily develop and run custom checks on every commit.
 
+Sgrep was recently presented at a meetup hosted at r2c: [the slides from the meetup are the best way to get a quick introduction](https://r2c.dev/sgrep-public.pdf).
+
 ## Principles
 
 sgrep’s design follows 3 principles:
@@ -22,7 +24,7 @@ System requirements:
 On macOS and Ubuntu:
 
 ```
-$ pip3 install bento-cli==0.7.0b6
+$ pip3 install bento-cli
 # now change directory to a project of interest
 $ bento init
 ```
