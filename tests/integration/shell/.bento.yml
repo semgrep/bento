@@ -1,0 +1,7 @@
+formatter:
+  - clippy:
+  - histo:
+tools:
+  r2c.shellcheck:
+    ignores: []
+    run: true
