@@ -41,7 +41,7 @@ class Clippy(Formatter):
         out = []
 
         # Strip so trailing newlines are not printed out
-        stripped = textwrap.dedent(violation.syntactic_context).rstrip()
+        stripped = violation.syntactic_context.rstrip()
         context = [line.rstrip() for line in stripped.split("\n")]
 
         if stripped:

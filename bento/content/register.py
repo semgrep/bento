@@ -7,8 +7,10 @@ from bento.renderer import (
     Multi,
     Newline,
     Processors,
+    Progress,
     Prompt,
     Steps,
+    Sub,
     Text,
     Warn,
 )
@@ -117,6 +119,26 @@ class ConfirmTos:
     error = Error(
         "Bento did NOT install. Bento beta users must agree to the terms of service to continue. Please reach out to "
         "us at support@r2c.dev with questions or concerns. "
+    )
+
+
+class UpdateGitignore:
+    confirm = Confirm(
+        content=Multi(
+            [
+                "Some Bento files should be excluded from version control. Should Bento append them to ",
+                Sub(0, style={"bold": True}),
+                "?",
+            ],
+            processor=Processors.wrap(),
+        ),
+        options={"default": True},
+    )
+    confirm_yes = Newline()
+    confirm_no = Newline()
+    update = Progress(
+        content=Multi(["Updating ", Sub(0, style={"bold": True, "dim": True})]),
+        extra=12,
     )
 
 

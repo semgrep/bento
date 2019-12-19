@@ -4,7 +4,7 @@ from typing import Any, Dict, Iterable, Iterator, List, Pattern, Type
 import yaml
 
 from bento.base_context import BaseContext
-from bento.constants import GREP_CONFIG_PATH
+from bento.constants import GREP_CONFIG_FILE_NAME
 from bento.parser import Parser
 from bento.result import Violation
 from bento.tool import JsonR, JsonTool
@@ -95,7 +95,7 @@ class GrepTool(JsonTool):
         all_source_dirs = [f"{source_dir}" for source_dir in files]
 
         try:
-            with (self.context.base_path / GREP_CONFIG_PATH).open() as grep_file:
+            with (self.context.base_path / GREP_CONFIG_FILE_NAME).open() as grep_file:
                 yml = yaml.safe_load(grep_file)
             grep_rules = yml.get("patterns", [])
         except FileNotFoundError:

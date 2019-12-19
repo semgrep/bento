@@ -33,8 +33,18 @@ def fake_input(tmp_path: Path, input: str) -> Iterator[Context]:
                     yield (context)
 
 
-def test_register_email_from_env(monkeypatch: MonkeyPatch) -> None:
+@contextmanager
+def setup_global_gitignore(tmp_path: Path) -> Iterator[None]:
+    tmp_ignore = tmp_path / ".gitignore"
+    with tmp_ignore.open("w") as stream:
+        stream.write(".bento/\n")
+    with patch("bento.git.global_ignore_path", lambda p: tmp_ignore):
+        yield
+
+
+def test_register_email_from_env(monkeypatch: MonkeyPatch, tmp_path: Path) -> None:
     monkeypatch.setenv("BENTO_EMAIL", "heresjohnny@r2c.dev")
+
     context = Context(base_path=INTEGRATION / "simple")
     registrar = Registrar(context=context, agree=False)
 
@@ -91,14 +101,15 @@ def test_register_happy_path(tmp_path: Path, capsys: CaptureFixture) -> None:
     email_question = "What is your email address?"
     tos_question = "Continue and agree to Bento's terms of service and privacy policy?"
 
-    with fake_input(tmp_path, f"{QA_TEST_EMAIL_ADDRESS}\n\n") as context:
-        registrar = Registrar(context=context, agree=False, email=None)
+    with setup_global_gitignore(tmp_path):
+        with fake_input(tmp_path, f"{QA_TEST_EMAIL_ADDRESS}\n\n") as context:
+            registrar = Registrar(context=context, agree=False, email=None)
 
-        assert registrar.verify()
-        assert read_global_config() == {
-            "email": QA_TEST_EMAIL_ADDRESS,
-            "terms_of_service": "0.3.0",
-        }
+            assert registrar.verify()
+            assert read_global_config() == {
+                "email": QA_TEST_EMAIL_ADDRESS,
+                "terms_of_service": "0.3.0",
+            }
 
     outerr = capsys.readouterr()
     assert email_question in outerr.err
@@ -109,15 +120,18 @@ def test_register_happy_path(tmp_path: Path, capsys: CaptureFixture) -> None:
 def test_already_registered(tmp_path: Path, capsys: CaptureFixture) -> None:
     """Asserts registration skipped if current"""
 
-    with tmp_config(tmp_path) as context:
-        persist_global_config(
-            {
-                "email": QA_TEST_EMAIL_ADDRESS,
-                "terms_of_service": TERMS_OF_SERVICE_VERSION,
-            }
-        )
-        registrar = Registrar(context=context, agree=False, email=QA_TEST_EMAIL_ADDRESS)
-        assert registrar.verify()
+    with setup_global_gitignore(tmp_path):
+        with tmp_config(tmp_path) as context:
+            persist_global_config(
+                {
+                    "email": QA_TEST_EMAIL_ADDRESS,
+                    "terms_of_service": TERMS_OF_SERVICE_VERSION,
+                }
+            )
+            registrar = Registrar(
+                context=context, agree=False, email=QA_TEST_EMAIL_ADDRESS
+            )
+            assert registrar.verify()
 
     output = capsys.readouterr()
     assert not output.err
@@ -127,11 +141,34 @@ def test_already_registered(tmp_path: Path, capsys: CaptureFixture) -> None:
 def test_register_email_option(tmp_path: Path) -> None:
     """Validates registration if email via command line"""
 
-    with fake_input(tmp_path, "\n") as context:
-        registrar = Registrar(context=context, agree=False, email=QA_TEST_EMAIL_ADDRESS)
+    with setup_global_gitignore(tmp_path):
+        with fake_input(tmp_path, "\n") as context:
+            registrar = Registrar(
+                context=context, agree=False, email=QA_TEST_EMAIL_ADDRESS
+            )
 
-        assert registrar.verify()
-        assert read_global_config() == {"terms_of_service": TERMS_OF_SERVICE_VERSION}
+            assert registrar.verify()
+            assert read_global_config() == {
+                "terms_of_service": TERMS_OF_SERVICE_VERSION
+            }
+
+
+def test_register_setup_gitignore(tmp_path: Path) -> None:
+    """Validates that registration configures global gitignore"""
+
+    tmp_ignore = tmp_path / ".gitignore"
+    with patch("bento.git.global_ignore_path", lambda p: tmp_ignore):
+        with fake_input(tmp_path, "\n\n") as context:
+            registrar = Registrar(
+                context=context, agree=False, email=QA_TEST_EMAIL_ADDRESS
+            )
+            assert registrar.verify()
+
+        with tmp_ignore.open("r") as stream:
+            lines = [l.rstrip() for l in stream]
+
+        assert ".bento/" in lines
+        assert ".bentoignore" in lines
 
 
 def test_register_agree_flag(tmp_path: Path) -> None:

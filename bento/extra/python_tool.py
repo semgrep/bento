@@ -10,6 +10,7 @@ from typing import Dict, Generic, Iterable, List, Tuple
 
 from semantic_version import SimpleSpec, Version
 
+import bento.constants as constants
 from bento.base_context import BaseContext
 from bento.tool import R, Tool
 from bento.util import EMPTY_DICT
@@ -36,7 +37,7 @@ class PythonTool(Generic[R], Tool[R]):
 
     @property
     def __venv_dir(self) -> Path:
-        return self.context.resource_path / self.venv_subdir_name()
+        return constants.VENV_PATH / self.venv_subdir_name()
 
     def venv_create(self) -> None:
         """

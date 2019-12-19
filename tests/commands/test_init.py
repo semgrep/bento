@@ -1,4 +1,5 @@
 from pathlib import Path
+from unittest.mock import patch
 
 from click.testing import CliRunner
 
@@ -70,12 +71,9 @@ def test_init_already_setup() -> None:
 │                             Bento Initialization                             │
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Creating default ignore file at .bentoignore․․․․․․․․․․․․․․․․․․․․․ 👋 Skipped   
-Creating default configuration at .bento.yml․․․․․․․․․․․․․․․․․․․․․ 👋 Skipped   
-Updating .gitignore․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․ 👋 Skipped   
+Creating default configuration at .bento/config.yml․․․․․․․․․․․․․․ 👋 Skipped   
 
 Detected project with Python and node-js (with react)
-
-Bento archive is already configured on this project.
 
 
 ╭──────────────────────────────────────────────────────────────────────────────╮
@@ -136,21 +134,24 @@ def test_init_py_only() -> None:
     assert "r2c.bandit" in config["tools"]
 
 
-def test_init_clean() -> None:
+def test_init_clean(tmp_path: Path) -> None:
     """Validates that `init --clean` deletes tool virtual environments"""
     context = Context(base_path=INTEGRATION / "py-only")
-    venv_file = INTEGRATION / "py-only" / ".bento" / "flake8" / "bin" / "activate"
 
-    # Ensure venv is created
-    CliRunner(mix_stderr=False).invoke(check, obj=context)
-    assert venv_file.exists()
+    with patch("bento.constants.VENV_PATH", new=tmp_path):
+        venv_file = tmp_path / "flake8" / "bin" / "activate"
 
-    # Ensure venv is corrupted, and not fixed with standard check
-    venv_file.unlink()
-    CliRunner(mix_stderr=False).invoke(check, obj=context)
-    assert not venv_file.exists()
+        # Ensure venv is created
+        CliRunner(mix_stderr=False).invoke(check, obj=context)
+        assert venv_file.exists()
 
-    # Ensure `init --clean` followed by `check` recreates venv
-    CliRunner(mix_stderr=False).invoke(init, obj=context, args=["--clean"])
-    CliRunner(mix_stderr=False).invoke(check, obj=context)
-    assert venv_file.exists()
+        # Ensure venv is corrupted, and not fixed with standard check
+        venv_file.unlink()
+        CliRunner(mix_stderr=False).invoke(check, obj=context)
+        assert not venv_file.exists()
+
+        # Ensure `init --clean` followed by `check` recreates venv
+        CliRunner(mix_stderr=False).invoke(init, obj=context, args=["--clean"])
+        assert not tmp_path.exists()
+        CliRunner(mix_stderr=False).invoke(check, obj=context)
+        assert venv_file.exists()

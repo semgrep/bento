@@ -34,6 +34,19 @@ def user_email(path: Optional[Path] = None) -> Optional[str]:
         return None
 
 
+def global_ignore_path(path: Optional[Path] = None) -> Optional[Path]:
+    r = repo(path)
+    if r is None:
+        return None
+
+    try:
+        return Path(r.config_reader("global").get_value("core", "excludesfile").strip())
+    except configparser.NoSectionError:
+        return None
+    except configparser.NoOptionError:
+        return None
+
+
 def url(path: Optional[Path] = None) -> Optional[str]:
     """Get remote.origin.url for git dir at dirPath"""
     r = repo(path)

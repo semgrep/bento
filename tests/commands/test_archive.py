@@ -30,7 +30,7 @@ def test_archive_updates_whitelist() -> None:
 
     with mod_file(context.baseline_file_path) as whitelist:
         runner.invoke(archive, obj=context)
-        yml = bento.result.yml_to_violation_hashes(whitelist)
+        yml = bento.result.json_to_violation_hashes(whitelist)
 
     expectation = {
         "r2c.bandit": {

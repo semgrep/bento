@@ -1,7 +1,8 @@
 import logging
 import os
 import sys
-from typing import Any, Dict, Optional
+from pathlib import Path
+from typing import Any, Dict, Optional, Tuple
 
 import attr
 from packaging.version import InvalidVersion, Version
@@ -17,6 +18,8 @@ import bento.util
 from bento.context import Context
 from bento.network import post_metrics
 from bento.util import echo_newline, persist_global_config, read_global_config
+
+GLOBAL_GITIGNORE_PATTERN = ".bento/\n.bentoignore"
 
 
 @attr.s(auto_attribs=True)
@@ -163,6 +166,50 @@ class Registrar(object):
             content.ConfirmTos.error.echo()
             return False
 
+    def _query_gitignore_update(self) -> Tuple[Path, bool]:
+        """
+        Determines if gitignore should be updated by init
+
+        Requirements:
+        - Interactive terminal
+        - bento/ not in ignore file
+        - User agrees
+
+        :return: A tuple of (the path to the global git ignore, whether to update the file)
+        """
+
+        gitignore_path = (
+            bento.git.global_ignore_path(self.context.base_path)
+            or constants.DEFAULT_GLOBAL_GIT_IGNORE_PATH
+        )
+
+        if sys.stderr.isatty() and sys.stdin.isatty():
+            has_ignore = None
+            if gitignore_path.exists():
+                with gitignore_path.open("r") as fd:
+                    has_ignore = next(filter(lambda l: ".bento" in l, fd), None)
+            if has_ignore is None:
+                if content.UpdateGitignore.confirm.echo(gitignore_path):
+                    gitignore_path.parent.resolve().mkdir(exist_ok=True)
+                    content.UpdateGitignore.confirm_yes.echo()
+                    return gitignore_path, True
+                else:
+                    content.UpdateGitignore.confirm_no.echo()
+        return gitignore_path, False
+
+    def _update_gitignore_if_necessary(self, ignore_path: Path, update: bool) -> None:
+        """
+        Adds bento patterns to global git ignore if _query_gitignore_update returned a path
+        """
+        if update:
+            on_done = content.UpdateGitignore.update.echo(ignore_path)
+            with ignore_path.open("a") as fd:
+                fd.write(
+                    f"\n# Ignore bento tool run paths (this line added by `bento init`)\n{GLOBAL_GITIGNORE_PATTERN}\n"
+                )
+            on_done()
+            logging.info(f"Added '.bento/' to {ignore_path}")
+
     def _suggest_autocomplete(self) -> None:
         """
         Suggests code to add to the user's shell config to set up autocompletion
@@ -198,6 +245,10 @@ class Registrar(object):
 
         if not self.agree and not self._confirm_tos_update():
             return False
+
+        if not self.agree:
+            ignore_path, update_ignore = self._query_gitignore_update()
+            self._update_gitignore_if_necessary(ignore_path, update_ignore)
 
         if self.is_first_run and not self.agree:
             self._suggest_autocomplete()

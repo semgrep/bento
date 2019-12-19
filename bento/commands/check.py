@@ -190,7 +190,7 @@ def check(
 
     if not show_all and context.baseline_file_path.exists():
         with context.baseline_file_path.open() as json_file:
-            baseline = bento.result.yml_to_violation_hashes(json_file)
+            baseline = bento.result.json_to_violation_hashes(json_file)
     else:
         baseline = {}
 

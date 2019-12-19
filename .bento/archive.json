@@ -1,0 +1,84 @@
+{
+  "r2c.bandit": {
+    "violations": {
+      "1062d649612b2a6f2873bfff0e7c7067": {
+        "tool_id": "r2c.bandit",
+        "check_id": "B602",
+        "path": "bento/extra/hadolint.py",
+        "message": "subprocess call with shell=True identified, security issue.",
+        "severity": 2,
+        "syntactic_context": "f\"docker run --network none --rm -i {self.DOCKER_IMAGE} hadolint --format json - < {file}\",\nshell=True,\ncwd=self.base_path,\nencoding=\"utf8\",\nstdout=subprocess.PIPE,\nstderr=subprocess.PIPE,"
+      },
+      "a2c4503e8a1358b4e417754b97c28048": {
+        "tool_id": "r2c.bandit",
+        "check_id": "B602",
+        "path": "tests/extra/test_python_tool.py",
+        "message": "subprocess call with shell=True identified, security issue.",
+        "severity": 2,
+        "syntactic_context": "env=env,\nshell=True,\nstdout=subprocess.PIPE,\nstderr=subprocess.PIPE,\nencoding=\"utf8\","
+      },
+      "a75a4820e9cfb8fe9324dc0f1671bbc8": {
+        "tool_id": "r2c.bandit",
+        "check_id": "B602",
+        "path": "bento/extra/python_tool.py",
+        "message": "subprocess call with shell=True identified, security issue.",
+        "severity": 2,
+        "syntactic_context": "wrapped,\nshell=True,\ncwd=str(self.base_path),\nencoding=\"utf8\",\nexecutable=\"/bin/bash\",\nenv=env,\nstdout=subprocess.PIPE,\nstderr=subprocess.PIPE,"
+      },
+      "b202f5f342f3557c06ec01dd81dd7658": {
+        "tool_id": "r2c.bandit",
+        "check_id": "B602",
+        "path": "tests/extra/test_python_tool.py",
+        "message": "subprocess call with shell=True identified, security issue.",
+        "severity": 2,
+        "syntactic_context": "proc = subprocess.Popen(\n    cmd, env=env, shell=True, stdout=subprocess.PIPE, encoding=\"utf8\""
+      },
+      "b566c3fee7249877763f6eb616ae4d18": {
+        "tool_id": "r2c.bandit",
+        "check_id": "B602",
+        "path": "tests/extra/test_python_tool.py",
+        "message": "subprocess call with shell=True identified, security issue.",
+        "severity": 2,
+        "syntactic_context": "proc = subprocess.Popen(\n    cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding=\"utf8\""
+      },
+      "c6b42c4f58df6ae2e1d6a0dc31c8a355": {
+        "tool_id": "r2c.bandit",
+        "check_id": "B602",
+        "path": "tests/extra/test_python_tool.py",
+        "message": "subprocess call with shell=True identified, security issue.",
+        "severity": 2,
+        "syntactic_context": "proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, encoding=\"utf8\")"
+      }
+    }
+  },
+  "r2c.eslint": {
+    "violations": {
+      "c6e0f687a580ef5e681dc3b4a7ed7fce": {
+        "tool_id": "r2c.eslint",
+        "check_id": "no-undef",
+        "path": "tests/acceptance/bad.js",
+        "message": "'x' is not defined.",
+        "severity": 2,
+        "syntactic_context": "x = \"potato\";"
+      }
+    }
+  },
+  "r2c.flake8": {
+    "violations": {}
+  },
+  "r2c.hadolint": {
+    "violations": {
+      "8228d6515361106e8f40a51d558d6545": {
+        "tool_id": "r2c.hadolint",
+        "check_id": "DL3013",
+        "path": "tests/acceptance/environments/python36.Dockerfile",
+        "message": "Pin versions in pip. Instead of `pip install <package>` use `pip install <package>==<version>`",
+        "severity": 1,
+        "syntactic_context": "RUN pip install ./*.whl\n"
+      }
+    }
+  },
+  "r2c.requests": {
+    "violations": {}
+  }
+}

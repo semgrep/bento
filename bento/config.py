@@ -57,7 +57,7 @@ def update_ignores(
     ignores = set(tool_config[tool].get("ignore", []))
     update_func(ignores)
 
-    tool_config[tool]["ignore"] = list(ignores)
+    tool_config[tool]["ignore"] = sorted(list(ignores))
 
     context.config = config
 

@@ -1,5 +1,5 @@
 import sys
-from typing import List, Set
+from typing import Dict, Set
 
 import click
 
@@ -26,12 +26,12 @@ def archive(context: Context, show_bars: bool = True) -> None:
 
     if context.baseline_file_path.exists():
         with context.baseline_file_path.open() as json_file:
-            old_baseline = bento.result.yml_to_violation_hashes(json_file)
+            old_baseline = bento.result.json_to_violation_hashes(json_file)
             old_hashes = {h for hh in old_baseline.values() for h in hh}
     else:
         old_hashes = set()
 
-    new_baseline: List[str] = []
+    new_baseline: Dict[str, bento.result.ToolResults] = {}
     tools = context.tools.values()
 
     all_findings = bento.tool_runner.Runner(show_bars=show_bars).parallel_results(
@@ -47,7 +47,7 @@ def archive(context: Context, show_bars: bool = True) -> None:
         if isinstance(vv, Exception):
             raise vv
         n_found += len(vv)
-        new_baseline += bento.result.tool_results_to_yml(tool_id, vv)
+        new_baseline[tool_id] = bento.result.dump_results(vv)
         for v in vv:
             h = v.syntactic_identifier_str()
             found_hashes.add(h)
@@ -59,7 +59,7 @@ def archive(context: Context, show_bars: bool = True) -> None:
 
     context.baseline_file_path.parent.mkdir(exist_ok=True, parents=True)
     with context.baseline_file_path.open("w") as json_file:
-        json_file.writelines(new_baseline)
+        bento.result.write_tool_results(json_file, new_baseline)
 
     success_str = click.style(f"Project analyzed with {len(tools)} tool(s).", bold=True)
     success_str += (

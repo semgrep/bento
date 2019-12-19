@@ -1,0 +1,14 @@
+{
+  "r2c.flake8": {
+    "violations": {
+      "27a91174ddbf5e932a1b2cdbd57da9e0": {
+        "tool_id": "r2c.flake8",
+        "check_id": "E999",
+        "path": "foo.py",
+        "message": "SyntaxError: invalid syntax",
+        "severity": 2,
+        "syntactic_context": "def broken(x)"
+      }
+    }
+  }
+}

@@ -6,4 +6,4 @@ Project analyzed with 5 tool(s).
 
 ◦ To view archived results, run $ bento check --show-all.
 
-Please check '.bento-whitelist.yml' in to source control.
+Please check '.bento/archive.json' in to source control.

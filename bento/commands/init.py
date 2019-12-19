@@ -4,7 +4,7 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import Optional, Union
+from typing import Union
 
 import attr
 import click
@@ -27,36 +27,6 @@ def _dim_filename(path: Union[Path, str]) -> str:
 @attr.s(auto_attribs=True)
 class InitCommand(object):
     context: Context
-
-    def _query_gitignore_update(self) -> Optional[Path]:
-        """
-        Determines if gitignore should be updated by init
-
-        Requirements:
-        - Interactive terminal
-        - Git project
-        - .gitignore exists
-        - bento/ not in .gitignore
-        - User agrees
-
-        :return: The path to update, or None if no update should occur
-        """
-        r = bento.git.repo(self.context.base_path)
-        if sys.stderr.isatty() and sys.stdin.isatty() and r:
-            ignore_file = Path(r.working_tree_dir) / ".gitignore"
-            has_ignore = None
-            if ignore_file.exists():
-                with ignore_file.open("r") as fd:
-                    has_ignore = next(
-                        filter(lambda l: l.rstrip() == ".bento/", fd), None
-                    )
-            if has_ignore is None:
-                if content.UpdateGitignore.confirm.echo():
-                    content.UpdateGitignore.confirm_yes.echo()
-                    return ignore_file
-                else:
-                    content.UpdateGitignore.confirm_no.echo()
-        return None
 
     def _install_config_if_not_exists(self) -> bool:
         """
@@ -112,13 +82,13 @@ class InitCommand(object):
             # If we're in a git repo with a .gitignore, add it to .bentoignore
             repo = bento.git.repo()
             if repo:
-                path_to_gitignore = (
-                    Path(os.path.relpath(repo.working_tree_dir, self.context.base_path))
-                    / ".gitignore"
-                )
+                path_to_gitignore = Path(repo.working_tree_dir) / ".gitignore"
                 if path_to_gitignore.exists():
+                    include_path = os.path.relpath(
+                        path_to_gitignore, self.context.base_path
+                    )
                     with self.context.ignore_file_path.open("a") as ignore_file:
-                        ignore_file.write(f":include {path_to_gitignore}\n")
+                        ignore_file.write(f":include {include_path}\n")
                     gitignore_added = True
 
             # Otherwise, add the contents of configs/extra-ignore-patterns
@@ -135,24 +105,11 @@ class InitCommand(object):
             content.InstallIgnore.install.echo(pretty_path, skip=True)
             return False
 
-    def _update_gitignore_if_necessary(self, ignore_path: Optional[Path]) -> None:
-        """Adds bento patterns to project .gitignore if _query_gitignore_update returned a Path"""
-        if ignore_path:
-            on_done = content.UpdateGitignore.update.echo()
-            with ignore_path.open("a") as fd:
-                fd.write(
-                    "\n# Ignore bento tool run paths (this line added by `bento init`)\n.bento/\n"
-                )
-            on_done()
-            logging.info("Added '.bento/' to your .gitignore.")
-        else:
-            content.UpdateGitignore.update.echo(skip=True)
-
     def _maybe_clean_tools(self, clean: bool) -> None:
         """If clean flag is passed, cleans tool installation"""
         if clean:
             content.Clean.tools.echo()
-            subprocess.run(["rm", "-r", self.context.resource_path], check=True)
+            subprocess.run(["rm", "-r", constants.VENV_PATH], check=True)
 
     def _identify_project(self) -> None:
         """Identifies this project"""
@@ -195,14 +152,11 @@ class InitCommand(object):
 
         return False
 
-    def _next_steps(self, diffs_created: bool) -> None:
+    def _next_steps(self) -> None:
         if sys.stdin.isatty() and sys.stderr.isatty():
             content.NextSteps.prompt.echo()
 
         content.NextSteps.body.echo()
-
-        if diffs_created:
-            content.NextSteps.diffs_added.echo()
 
         if sys.stdin.isatty() and sys.stderr.isatty():
             content.NextSteps.finish_init.echo()
@@ -219,34 +173,26 @@ class InitCommand(object):
         ctx.invoke(archive, show_bars=False)
         content.RunArchive.post.echo()
 
-    def run(self, ctx: click.Context, clean: bool, pager: bool = True) -> None:
+    def run(self, ctx: click.Context, clean: bool) -> None:
         content.run_all.echo()
 
+        self.context.resource_path.mkdir(exist_ok=True)
+
         # Ask any necessary pre-install questions
-        gitignore_path = self._query_gitignore_update()
+        # gitignore_path = self._query_gitignore_update()
 
         # Perform configuration
-        bentoignore_created = self._install_ignore_if_not_exists()
-        config_created = self._install_config_if_not_exists()
-        self._update_gitignore_if_necessary(gitignore_path)
+        self._install_ignore_if_not_exists()
+        self._install_config_if_not_exists()
 
         # Perform project identification
         self._identify_project()
 
         # Perform initial analysis
         self._maybe_clean_tools(clean)
-        has_findings = self._run_check(ctx, clean, pager)
-        if has_findings:
-            self._run_archive(ctx)
 
         # Message next steps
-        diffs_created = (
-            gitignore_path is not None
-            or bentoignore_created
-            or config_created
-            or has_findings
-        )
-        self._next_steps(diffs_created)
+        self._next_steps()
 
 
 @click.command()
@@ -257,13 +203,8 @@ class InitCommand(object):
     is_flag=True,
     default=False,
 )
-@click.option(
-    "--pager/--no-pager",
-    help="Send long output through a pager. This should be disabled when used as an integration (e.g. with an editor).",
-    default=True,
-)
 @with_metrics
-def init(ctx: click.Context, clean: bool, pager: bool = True) -> None:
+def init(ctx: click.Context, clean: bool) -> None:
     """
     Autodetects and installs tools.
 
@@ -271,4 +212,4 @@ def init(ctx: click.Context, clean: bool, pager: bool = True) -> None:
     """
     context: Context = ctx.obj
 
-    InitCommand(context).run(ctx, clean, pager)
+    InitCommand(context).run(ctx, clean)

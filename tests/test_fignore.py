@@ -19,8 +19,8 @@ def __kept(ignores: Set[str]) -> Collection[str]:
 
 def test_no_ignore() -> None:
     all_files = __kept(set())
-    assert str(WALK_PATH / ".bento.yml") in all_files
-    assert str(WALK_PATH / ".bento-whitelist.yml") in all_files
+    assert str(WALK_PATH / ".bento" / "config.yml") in all_files
+    assert str(WALK_PATH / ".bento" / "archive.json") in all_files
 
 
 def test_ignore_any_dir() -> None:
@@ -145,12 +145,10 @@ def test_ignores_from_ignore_file(monkeypatch: MonkeyPatch) -> None:
     assert survivors == {
         "tests/integration/simple/.eslintrc.yml",
         "tests/integration/simple/.bentoignore",
-        "tests/integration/simple/.bento.yml",
         "tests/integration/simple/init.js",
         "tests/integration/simple/package-lock.json",
         "tests/integration/simple/package.json",
         "tests/integration/simple/bar.py",
-        "tests/integration/simple/.bento-whitelist.yml",
         "tests/integration/simple/foo.py",
     }
 

@@ -36,28 +36,6 @@ def _step_item(desc: str, cmd: str, nl: bool = True) -> Content:
     )
 
 
-class UpdateGitignore:
-    confirm = Confirm(
-        content=Multi(
-            [
-                "Some Bento files should be excluded from version control. Should Bento append them to your ",
-                Text(".gitignore", style={"bold": True}),
-                "?",
-            ],
-            processor=Processors.wrap(),
-        ),
-        options={"default": True},
-    )
-    confirm_yes = Newline()
-    confirm_no = Newline()
-    update = Progress(
-        content=Multi(
-            ["Updating ", Text(".gitignore", style={"bold": True, "dim": True})]
-        ),
-        extra=12,
-    )
-
-
 class InstallConfig:
     install = Progress(
         content=Multi(
@@ -154,22 +132,6 @@ class NextSteps:
                     _step_item("install commit hook", "bento install-hook"),
                     _step_item(
                         "get help for a command", "bento [COMMAND] --help", nl=False
-                    ),
-                ]
-            )
-        ),
-    )
-
-    diffs_added = Steps(
-        Echo("Please add Bento to version control:"),
-        Newline(),
-        Echo(
-            Multi(
-                [
-                    "  $ ",
-                    Text(
-                        "git add .gitignore .bento?* && git commit -m 'Add Bento to project'",
-                        style={"bold": True},
                     ),
                 ]
             )

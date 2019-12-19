@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 from threading import Lock
-from typing import Any, ClassVar, Dict, Union
+from typing import Any, Dict, Union
 
 import attr
 import yaml
@@ -30,17 +30,13 @@ class BaseContext:
     _ignores = attr.ib(type=FileIgnore, default=None, init=False)
     _ignore_lock = attr.ib(type=Lock, factory=Lock, init=False)
 
-    CONFIG_FILE: ClassVar[str] = ".bento.yml"
-    RESOURCE_DIR: ClassVar[str] = ".bento"
-    LOCAL_RUN_CACHE: ClassVar[str] = ".bento/cache"
-    BASELINE_FILE_PATH: ClassVar[str] = ".bento-whitelist.yml"
-
     @base_path.default
     def _find_base_path(self) -> Path:
         """Find the path to the nearest containing directory with bento config.
 
         This starts at the current directory, then recurses upwards looking for
-        a directory with the necessary config file.
+        a directory with the necessary config file. This function will not recurse
+        at or beyond the user's home directory.
 
         The returned path is relative to the current working directory, so that
         when printed in log messages and such it looks readable.
@@ -53,23 +49,26 @@ class BaseContext:
         """
         cwd = Path.cwd()
         for base_path in [cwd, *cwd.parents]:
-            if (base_path / self.CONFIG_FILE).is_file():
+            config_path = base_path / constants.RESOURCE_PATH
+            if config_path == constants.GLOBAL_RESOURCE_PATH:  # Don't go past user home
+                break
+            if (config_path / constants.CONFIG_FILE_NAME).is_file():
                 return base_path
         return cwd
 
     @property
     def config_path(self) -> Path:
-        return self.base_path / self.CONFIG_FILE
+        return self.base_path / constants.RESOURCE_PATH / constants.CONFIG_FILE_NAME
 
     @property
     def resource_path(self) -> Path:
         if not self._resource_path:
-            self._resource_path = self.base_path / self.RESOURCE_DIR
+            self._resource_path = self.base_path / constants.RESOURCE_PATH
         return self._resource_path
 
     @property
     def baseline_file_path(self) -> Path:
-        return self.base_path / self.BASELINE_FILE_PATH
+        return self.resource_path / constants.ARCHIVE_FILE_NAME
 
     @property
     def ignore_file_path(self) -> Path:
@@ -111,7 +110,7 @@ class BaseContext:
     @property
     def cache(self) -> RunCache:
         if self._cache is None:
-            cp = self.cache_path or (self.base_path / self.LOCAL_RUN_CACHE)
+            cp = self.cache_path or (self.resource_path / constants.CACHE_PATH)
             self._cache = RunCache(cache_dir=cp, file_ignore=self.file_ignores)
         return self._cache
 

@@ -78,7 +78,7 @@ def read_global_config() -> Optional[Dict[str, Any]]:
 
 
 def persist_global_config(global_config: Dict[str, Any]) -> None:
-    os.makedirs(constants.GLOBAL_CONFIG_DIR, exist_ok=True)
+    os.makedirs(constants.GLOBAL_RESOURCE_PATH, exist_ok=True)
     with open(constants.GLOBAL_CONFIG_PATH, "w+") as yaml_file:
         yaml.safe_dump(global_config, yaml_file)
 

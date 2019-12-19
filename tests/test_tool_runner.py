@@ -54,9 +54,9 @@ def test_tool_parallel_results_no_archive_no_files(monkeypatch: MonkeyPatch) -> 
 def test_tool_parallel_results_with_archive_no_files(monkeypatch: MonkeyPatch) -> None:
     """Validates that tools are run in parallel and return proper finding counts (archive, no passed files)"""
     with open(
-        os.path.join(BASE_PATH, "tests/integration/simple/.bento-whitelist.yml")
+        os.path.join(BASE_PATH, "tests/integration/simple/.bento/archive.json")
     ) as file:
-        archive = bento.result.yml_to_violation_hashes(file)
+        archive = bento.result.json_to_violation_hashes(file)
     counts = __count_simple_findings(archive, None, monkeypatch)
 
     expectation = {"r2c.bandit": (2, 0), "r2c.eslint": (1, 0), "r2c.flake8": (1, 1)}
@@ -83,9 +83,9 @@ def test_tool_parallel_results_no_archive_py_files(monkeypatch: MonkeyPatch) -> 
 def test_tool_parallel_results_archive_py_files(monkeypatch: MonkeyPatch) -> None:
     """Validates that tools are run in parallel and return proper finding counts (archive, passed files)"""
     with open(
-        os.path.join(BASE_PATH, "tests/integration/simple/.bento-whitelist.yml")
+        os.path.join(BASE_PATH, "tests/integration/simple/.bento/archive.json")
     ) as file:
-        archive = bento.result.yml_to_violation_hashes(file)
+        archive = bento.result.json_to_violation_hashes(file)
     counts = __count_simple_findings(archive, ["foo.py"], monkeypatch)
     expectation = {"r2c.bandit": (1, 0), "r2c.eslint": (0, 0), "r2c.flake8": (1, 1)}
 
