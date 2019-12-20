@@ -1,0 +1,109 @@
+==> Bento Summary
+error: r2c.click.r2c-click-option-function-argument-check
+     --> src/flask/cli.py:779:1
+      |
+  779 |   @click.command("run", short_help="Run a development server.")
+      |
+      = note: function `run_command` missing parameter `key,reload/__no_reload,debugger/__no_debugger,eager_loading/__lazy_loader,with_threads/__without_threads` for `@click.option`                                 
+
+warning: r2c.bandit.B307 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b307-eval
+     --> src/flask/cli.py:892:0
+      |
+  892 |                eval(compile(f.read(), startup, "exec"), ctx)
+      |
+      = note: Use of possibly insecure function - consider using safer ast.literal_eval.                                                                                                                              
+
+
+advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+     --> tests/test_appctx.py:74:0
+      |
+   74 |        except Exception:
+      |
+      = note: Try, Except, Pass detected.                                                                                                                                                                             
+
+advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+     --> tests/test_appctx.py:93:0
+      |
+   93 |            except Exception:
+      |
+      = note: Try, Except, Pass detected.                                                                                                                                                                             
+
+
+advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+     --> tests/test_basic.py:784:0
+      |
+  784 |            except Exception:
+      |
+      = note: Try, Except, Pass detected.                                                                                                                                                                             
+
+advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+     --> tests/test_basic.py:796:0
+      |
+  796 |            except Exception:
+      |
+      = note: Try, Except, Pass detected.                                                                                                                                                                             
+
+error: r2c.bandit.B201 https://bandit.readthedocs.io/en/latest/plugins/b201_flask_debug_true.html
+     --> tests/test_basic.py:1912:0
+      |
+ 1912 |        app.run(hostname, port, debug=True)
+      |
+      = note: A Flask app appears to be run with debug=True, which exposes the Werkzeug debugger and allows the execution of arbitrary code.                                                                          
+
+error: r2c.flask.secure-set-cookie https://checks.bento.dev/en/latest/flake8-flask/secure-set-cookie
+     --> tests/test_basic.py:1956:9
+      |
+ 1956 |           r.set_cookie("foo", "bar" * 100)
+      |
+      = note: Flask cookies should be handled securely by setting secure=True, httponly=True, and samesite='Lax' in set_cookie(...).  If your situation calls for different settings, explicitly disable the settin...
+
+
+advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+     --> tests/test_reqctx.py:45:0
+      |
+   45 |        except Exception:
+      |
+      = note: Try, Except, Pass detected.                                                                                                                                                                             
+
+advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+     --> tests/test_reqctx.py:64:0
+      |
+   64 |            except Exception:
+      |
+      = note: Try, Except, Pass detected.                                                                                                                                                                             
+
+
+error: r2c.flask.unescaped-file-extension https://checks.bento.dev/en/latest/flake8-flask/unescaped-file-extension
+     --> tests/test_templating.py:96:16
+      |
+   96 |           return flask.render_template(
+      |
+      = note: Flask does not autoescape templates with the {'txt'} extension by default. Flask only autoescapes .html, .htm, .xml, and .xhtml files. Make sure your variables are escaped using `flask.Markup.escape`.
+
+error: r2c.flask.unescaped-file-extension https://checks.bento.dev/en/latest/flake8-flask/unescaped-file-extension
+     --> tests/test_templating.py:115:12
+      |
+  115 |       assert flask.render_template("mail.txt", foo="<test>") == "<test> Mail"
+      |
+      = note: Flask does not autoescape templates with the {'txt'} extension by default. Flask only autoescapes .html, .htm, .xml, and .xhtml files. Make sure your variables are escaped using `flask.Markup.escape`.
+
+error: r2c.bandit.B201 https://bandit.readthedocs.io/en/latest/plugins/b201_flask_debug_true.html
+     --> tests/test_templating.py:404:0
+      |
+  404 |        app.run(debug=True)
+      |
+      = note: A Flask app appears to be run with debug=True, which exposes the Werkzeug debugger and allows the execution of arbitrary code.                                                                          
+
+
+r2c.bandit:
+  B110                                    6▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  B201                                    2▕▬▬▬▬▬▬▬▬▬▬▬▬
+  B307                                    1▕▬▬▬▬▬▬
+
+r2c.flask:
+  unescaped-file-extension                2▕▬▬▬▬▬▬▬▬▬▬▬▬
+  secure-set-cookie                       1▕▬▬▬▬▬▬
+
+r2c.click:
+  r2c-click-option-function-argument-     1▕▬▬▬▬▬▬
+

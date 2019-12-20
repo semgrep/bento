@@ -1,0 +1,4 @@
+include bento/extra/eslint/*.yml
+include bento/configs/*
+include bento/resources/*.template
+include bento/resources/*.yml

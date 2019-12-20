@@ -1,0 +1,206 @@
+target_repo: https://github.com/microsoft/project-python-django-webapp
+target_hash: b196bd3c9ff7bc31ea33316792db30b755b0c2ba
+steps:
+  - name: noconfig
+    description: bento check fails when no configuration file is found
+    command:
+      - bento
+      - --agree
+      - check
+    expected_err:
+      - "✘ No Bento configuration found. Please run `bento init`."
+    expected_out: ""
+    returncode: 3
+  - name: bento-init
+    description: bento init detects python and install bandit and flake8
+    command:
+      - bento
+      - --agree
+      - init
+    expected_err: |
+      ╭──────────────────────────────────────────────────────────────────────────────╮
+      │                             Bento Initialization                             │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+      Creating default ignore file at .bentoignore․․․․․․․․․․․․․․․․․․․․․ 🍜 Setting up\b\b\b\b\b\b\b\b\b\b\b\b\b🍱 Done
+      Creating default configuration at .bento.yml․․․․․․․․․․․․․․․․․․․․․ 🍜 Setting up\b\b\b\b\b\b\b\b\b\b\b\b\b🍱 Done
+      Updating .gitignore․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․․ 👋 Skipped
+
+      Detected project with Python
+
+      ⚠ Skipping project analysis due to noninteractive terminal.
+
+      ╭──────────────────────────────────────────────────────────────────────────────╮
+      │                                  Next Steps                                  │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+      Bento is at its best when it runs automatically, either in CI or as a git hook.
+      To learn more about these, see Bento in CI or Bento as a Git Hook in our
+      README.
+
+      To use Bento:
+        check project․․․․․․․․․․․․․․․․․․․․․․․․․․․ $ bento check
+        view archived results․․․․․․․․․․․․․․․․․․․ $ bento check --show-all
+        disable a check․․․․․․․․․․․․․․․․․․․․․․․․․ $ bento disable check [TOOL] [CHECK]
+        enable a tool․․․․․․․․․․․․․․․․․․․․․․․․․․․ $ bento enable tool [TOOL]
+        install commit hook․․․․․․․․․․․․․․․․․․․․․ $ bento install-hook
+        get help for a command․․․․․․․․․․․․․․․․․․ $ bento [COMMAND] --help
+
+      Please add Bento to version control:
+
+        $ git add .gitignore .bento?* && git commit -m 'Add Bento to project'
+
+      ╭──────────────────────────────────────────────────────────────────────────────╮
+      │                                  Thank You                                   │
+      ╰──────────────────────────────────────────────────────────────────────────────╯
+      From all of us at r2c, thank you for trying Bento! We can’t wait to hear what
+      you think.
+
+      Help and feedback: Reach out to us at support@r2c.dev or file an issue on
+      GitHub. We’d love to hear from you!
+
+      Community: Join #bento on our community Slack. Get support, talk with other
+      users, and share feedback.
+    expected_out: ""
+    returncode: 0
+  - name: enable-click
+    description: enable click tool (Hack for now so no need to rewrite tests)
+    command:
+      - bento
+      - --agree
+      - enable
+      - tool
+      - r2c.click
+    expected_err: "✔ r2c.click enabled"
+    expected_out: ""
+    returncode: 0
+  - name: bento-check-with-init
+    description: bento check after init has findings
+    command:
+      - bento
+      - --agree
+      - check
+    expected_err:
+      - "⚠ 1 finding(s) in"
+      - ◦ To suppress all findings, run $ bento archive.
+    expected_out:
+      file: bento-check-with-init.out
+    returncode: 2
+  - name: disable-finding
+    description: try disabling a finding
+    command:
+      - bento
+      - --agree
+      - disable
+      - check
+      - r2c.flake8
+      - F401
+    expected_err: "✔ 'F401' disabled for 'r2c.flake8'"
+    expected_out: ""
+    returncode: 0
+  - name: bento-check-with-disable
+    description: bento check should hide disabled finding
+    command:
+      - bento
+      - --agree
+      - check
+    expected_err:
+      - "⚠ 1 finding(s) in"
+    expected_out:
+      file: bento-check-with-disable.out
+    returncode: 2
+  - name: bento-archive
+    description: should archive all existing findings
+    command:
+      - bento
+      - --agree
+      - archive
+    expected_err: |
+      Running Bento archive...
+
+
+      Project analyzed with 5 tool(s).
+      1 finding(s) were archived, and will be hidden in future Bento runs.
+
+      ◦ To view archived results, run $ bento check --show-all.
+
+      Please check '.bento-whitelist.yml' in to source control.
+    expected_out: ""
+    returncode: 0
+  - name: bento-check-with-archive
+    description: should have no findings after archiving
+    command:
+      - bento
+      - --agree
+      - check
+    expected_err:
+      - ✔ 0 findings in
+      - ◦ Not showing 1 archived finding(s). To view, run $ bento check --show-all.
+    expected_out: ""
+    returncode: 0
+  - name: install-hook
+    description: should successfully install as a commit hook
+    command:
+      - bento
+      - --agree
+      - install-hook
+    expected_err: "✔ Added Bento to your git pre-commit hooks."
+    expected_out: ""
+    returncode: 0
+  - name: twice-install-hook
+    description: should detect pre-commit hook already installed
+    command:
+      - bento
+      - --agree
+      - install-hook
+    expected_err: "✔ Bento already installed as a pre-commit hook"
+    expected_out: ""
+    returncode: 0
+  - name: add-findings
+    descripton: add file with known findings
+    command:
+      - cp
+      - __BENTO_REPO_ROOT__/tests/integration/simple/foo.py
+      - failure.py
+    expected_err: ""
+    expected_out: ""
+    returncode: 0
+  - name: git-add-findings
+    description: add file with findings to staging
+    command:
+      - git
+      - add
+      - failure.py
+    expected_err: ""
+    expected_out: ""
+    returncode: 0
+  - name: git-commit
+    description: should run bento as pre-commit hook
+    command:
+      - git
+      - -c
+      - user.name="placeholder"
+      - -c
+      - user.email="place@holder.com"
+      - commit
+    expected_err:
+      - Running Bento checks...
+      - "⚠ 3 finding(s) in"
+      - |
+        error: r2c.bandit.error
+             --> failure.py:0:0
+              = note: syntax error while parsing AST from file
+
+        error: r2c.flake8.E999
+             --> failure.py:5:13
+              |
+            5 |   def broken(x)
+              |
+              = note: SyntaxError: invalid syntax
+
+        error: r2c.flake8.E113 https://lintlyci.github.io/Flake8Rules/rules/E113.html
+             --> failure.py:6:5
+              |
+            6 |       return x
+              |
+              = note: unexpected indentation
+    expected_out: ""
+    returncode: 1
