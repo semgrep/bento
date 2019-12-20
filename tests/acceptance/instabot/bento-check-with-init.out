@@ -1,0 +1,453 @@
+==> Bento Summary
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/comment_medias_by_location.py:78:0
+      |
+   78 |                    input(u"How much comments per location?\n")
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/comment_medias_by_location.py:81:0
+      |
+   81 |        location_name = input(u"Write location name:\n").strip()
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/comment_medias_by_location.py:86:0
+      |
+   86 |        ncomments = args.amount or input(u"How much comments per location?\n")
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/comment_medias_by_location.py:92:0
+      |
+   92 |            ans = input(u"What place would you want to choose?\n").strip()
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/filter_blacklist_hashtag_medias.py:15:0
+      |
+   15 |    blacklist_hashtag_input = input("\n Enter a blacklist hashtag: ")
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/filter_private_profiles.py:18:0
+      |
+   18 |    private_user_input = input("\n Enter a private user: ")
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/interact_DM.py:29:0
+      |
+   29 |        get_choice = input(message)
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/interact_DM.py:52:0
+      |
+   52 |                    text = input("write your message: ")
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/like_medias_by_location.py:76:0
+      |
+   76 |                    nlikes = input(u"How much likes per location?\n")
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/like_medias_by_location.py:81:0
+      |
+   81 |        location_name = input(u"Write location name:\n").strip()
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/like_medias_by_location.py:87:0
+      |
+   87 |            nlikes = input(u"How much likes per location?\n")
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/like_medias_by_location.py:95:0
+      |
+   95 |            ans = int(input(u"What place would you want to choose?\n").strip())
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/message_users.py:65:0
+      |
+   65 |        scrape = input("what page likers do you want to message? :")
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+
+advice: r2c.bandit.B605 https://bandit.readthedocs.io/en/latest/plugins/b605_start_process_with_a_shell.html
+     --> examples/multi_script_CLI.py:42:0
+      |
+   42 |            os.system("cls")
+      |
+      = note: Starting a process with a shell: Seems safe, but may be changed in the future, consider rewriting without shell                                                                                         
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/multi_script_CLI.py:235:0
+      |
+  235 |            ans = input("What would you like to do?\n").strip()
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/multi_script_CLI.py:267:0
+      |
+  267 |            ans = input("How do you want to follow?\n").strip()
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/multi_script_CLI.py:279:0
+      |
+  279 |                        input(
+  280 |                            "Insert hashtags separated by spaces\n"
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/multi_script_CLI.py:302:0
+      |
+  302 |                    user_id = input("who?\n").strip()
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/multi_script_CLI.py:316:0
+      |
+  316 |                    user_id = input("who?\n").strip()
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/multi_script_CLI.py:330:0
+      |
+  330 |                    user_id = input("who?\n").strip()
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/multi_script_CLI.py:360:0
+      |
+  360 |            ans = input("How do you want to like?\n").strip()
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/multi_script_CLI.py:372:0
+      |
+  372 |                        input(
+  373 |                            "Insert hashtags separated by spaces\n"
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/multi_script_CLI.py:394:0
+      |
+  394 |                    user_id = input("who?\n").strip()
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/multi_script_CLI.py:407:0
+      |
+  407 |                    user_id = input("who?\n").strip()
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/multi_script_CLI.py:420:0
+      |
+  420 |                    user_id = input("who?\n").strip()
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/multi_script_CLI.py:452:0
+      |
+  452 |            ans = input("How do you want to comment?\n").strip()
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/multi_script_CLI.py:462:0
+      |
+  462 |                    hashtag = input("what?").strip()
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/multi_script_CLI.py:475:0
+      |
+  475 |                    user_id = input("who?\n").strip()
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/multi_script_CLI.py:520:0
+      |
+  520 |            ans = input("How do you want to unfollow?\n").strip()
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/multi_script_CLI.py:547:0
+      |
+  547 |            ans = input("how do you want to block?\n").strip()
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/multi_script_CLI.py:576:0
+      |
+  576 |            ans = input("What setting do you need?\n").strip()
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/multi_script_CLI.py:580:0
+      |
+  580 |                change = input("Want to change it? y/n\n").strip()
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/reset_following.py:20:0
+      |
+   20 |            answer = input(
+   21 |                """
+   22 |            Please select
+   23 |            1) Create Friends List
+   24 |                Make a list of the users you follow before you follow bot.
+   25 |            2) Restore Friends List
+   26 |                Unfollow all user accept for the users in your friends list.
+   27 |            3) Exit
+   28 |            \n
+   29 |            """
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> examples/video/upload_video.py:75:0
+      |
+   75 |                        caption = input(
+   76 |                            "No caption found for this media. "
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> instabot/api/api.py:318:0
+      |
+  318 |            code = input("Insert choice: ")
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> instabot/api/api.py:328:0
+      |
+  328 |            code = input("Insert code: ")
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+error: r2c.bandit.B322 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b322-input
+     --> instabot/api/api.py:476:0
+      |
+  476 |                        two_factor_code = input("Enter 2FA verification code: ")
+      |
+      = note: The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, us...
+
+advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+     --> instabot/api/api.py:538:0
+      |
+  538 |                except Exception:
+      |
+      = note: Try, Except, Pass detected.                                                                                                                                                                             
+
+error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+     --> instabot/api/api.py:673:41
+      |
+  673 |       def get_timeline_feed(self, options=[]):
+      |
+      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+
+error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+     --> instabot/api/api.py:736:17
+      |
+  736 |           options={},
+      |
+      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+
+error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+     --> instabot/api/api.py:777:76
+      |
+  777 |           self, video, caption=None, upload_id=None, thumbnail=None, options={}
+      |
+      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+
+error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+     --> instabot/api/api.py:817:17
+      |
+  817 |           options={},
+      |
+      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+
+
+error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+     --> instabot/api/api_photo.py:107:13
+      |
+  107 |       options={},
+      |
+      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+
+error: r2c.flake8.B007 https://lintlyci.github.io/Flake8Rules/rules/B007.html
+     --> instabot/api/api_photo.py:179:13
+      |
+  179 |           for attempt in range(4):
+      |
+      = note: Loop control variable 'attempt' not used within the loop body. If this is intended, start the name with an underscore.                                                                                  
+
+
+error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+     --> instabot/api/api_video.py:102:13
+      |
+  102 |       options={}
+      |
+      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+
+error: r2c.flake8.B007 https://lintlyci.github.io/Flake8Rules/rules/B007.html
+     --> instabot/api/api_video.py:202:17
+      |
+  202 |               for attempt in range(4):
+      |
+      = note: Loop control variable 'attempt' not used within the loop body. If this is intended, start the name with an underscore.                                                                                  
+
+error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+     --> instabot/api/api_video.py:234:13
+      |
+  234 |       options={}
+      |
+      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+
+
+error: r2c.flake8.EXE001 https://lintlyci.github.io/Flake8Rules/rules/EXE001.html
+     --> instabot/api/prepare.py:1:1
+      |
+    1 |   #!/usr/bin/env python
+      |
+      = note: Shebang is present but the file is not executable.                                                                                                                                                      
+
+error: r2c.flake8.B007 https://lintlyci.github.io/Flake8Rules/rules/B007.html
+     --> instabot/api/prepare.py:37:26
+      |
+   37 |           for ind, (login, password) in enumerate(lines):
+      |
+      = note: Loop control variable 'password' not used within the loop body. If this is intended, start the name with an underscore.                                                                                 
+
+
+error: r2c.flake8.EXE002 https://lintlyci.github.io/Flake8Rules/rules/EXE002.html
+     --> instabot/bot/bot.py:0:1
+      = note: The file is executable but no shebang is present.                                                                                                                                                       
+
+error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+     --> instabot/bot/bot.py:170:28
+      |
+  170 |           blacklist_hashtags=["#shop", "#store", "#free"],
+      |
+      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+
+error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+     --> instabot/bot/bot.py:752:17
+      |
+  752 |           options={}
+      |
+      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+
+error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+     --> instabot/bot/bot.py:780:71
+      |
+  780 |       def upload_video(self, video, caption="", thumbnail=None, options={}):
+      |
+      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+
+
+warning: r2c.bandit.B301 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b301-pickle
+     --> instabot/bot/bot_checkpoint.py:66:0
+      |
+   66 |                checkpoint = pickle.load(f)
+      |
+      = note: Pickle and modules that wrap it can be unsafe when used to deserialize untrusted data, possible security issue.                                                                                         
+
+advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+     --> instabot/bot/bot_checkpoint.py:71:0
+      |
+   71 |        except Exception:
+      |
+      = note: Try, Except, Pass detected.                                                                                                                                                                             
+
+
+error: r2c.flake8.EXE002 https://lintlyci.github.io/Flake8Rules/rules/EXE002.html
+     --> instabot/bot/bot_filter.py:0:1
+      = note: The file is executable but no shebang is present.                                                                                                                                                       
+
+
+error: r2c.flake8.EXE002 https://lintlyci.github.io/Flake8Rules/rules/EXE002.html
+     --> instabot/bot/bot_follow.py:0:1
+      = note: The file is executable but no shebang is present.                                                                                                                                                       
+
+
+error: r2c.flake8.EXE002 https://lintlyci.github.io/Flake8Rules/rules/EXE002.html
+     --> instabot/bot/bot_like.py:0:1
+      = note: The file is executable but no shebang is present.                                                                                                                                                       
+
+
+error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+     --> instabot/bot/bot_photo.py:13:13
+      |
+   13 |       options={}
+      |
+      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+
+
+error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
+     --> instabot/bot/bot_video.py:4:67
+      |
+    4 |   def upload_video(self, video, caption="", thumbnail=None, options={}):
+      |
+      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+
+
+r2c.bandit:
+  B322          36▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  B110           2▕▬▬▬
+  B301           1▕▬▬
+  B605           1▕▬▬
+
+r2c.flake8:
+  B006          12▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  EXE002         4▕▬▬▬▬▬▬▬
+  B007           3▕▬▬▬▬▬
+  EXE001         1▕▬▬
+

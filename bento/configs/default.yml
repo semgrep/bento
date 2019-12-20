@@ -1,0 +1,432 @@
+formatter:
+  - clippy: {}
+  - histo: {}
+tools:
+  r2c.bandit:
+    ignore:
+      - B101 # assert_used
+      - B104 # hardcoded_bind_all_interfaces
+      - B105 # hardcoded_password_string
+      - B106 # hardcoded_password_funcarg
+      - B107 # hardcoded_password_default
+      - B108 # hardcoded_tmp_directory
+      - B112 # try_except_continue
+      - B303 # md5
+      - B310 # urllib_urlopen
+      - B311 # random
+      - B403 # import_pickle
+      - B404 # import_subprocess
+      - B405 # import_xml_etree
+      - B406 # import_xml_sax
+      - B407 # import_xml_expat
+      - B408 # import_xml_minidom
+      - B409 # import_xml_pulldom
+      - B410 # import_lxml
+      - B603 # subprocess_without_shell_equals_true
+      - B604 # any_other_function_with_shell_equals_true
+      - B606 # start_process_with_no_shell
+      - B607 # start_process_with_partial_path
+      - B608 # hardcoded_sql_expressions
+  r2c.eslint:
+    ignore:
+      - "@typescript-eslint/camelcase"
+      - "@typescript-eslint/member-delimiter-style"
+      - array-bracket-newline
+      - array-bracket-spacing
+      - array-element-newline
+      - arrow-body-style
+      - arrow-parens
+      - block-spacing
+      - brace-style
+      - camelcase
+      - capitalized-comments
+      - comma-dangle
+      - comma-spacing
+      - comma-style
+      - computed-property-spacing
+      - consistent-this
+      - curly
+      - eol-last
+      - func-call-spacing
+      - func-name-matching
+      - func-names
+      - func-style
+      - function-call-argument-newline
+      - function-paren-newline
+      - id-blacklist
+      - id-length
+      - id-match
+      - implicit-arrow-linebreak
+      - import/dynamic-import-chunkname
+      - import/exports-last
+      - import/extensions
+      - import/first
+      - import/group-exports
+      - import/max-dependencies
+      - import/newline-after-import
+      - import/no-anonymous-default-export
+      - import/no-cycle
+      - import/no-default-export
+      - import/no-duplicates
+      - import/no-named-default
+      - import/no-named-export
+      - import/no-namespace
+      - import/no-unassigned-import
+      - import/order
+      - import/prefer-default-export
+      - indent
+      - jsx-a11y/alt-text
+      - jsx-a11y/anchor-has-content
+      - jsx-a11y/aria-activedescendant-has-tabindex
+      - jsx-a11y/click-events-have-key-events
+      - jsx-a11y/html-has-lang
+      - jsx-a11y/iframe-has-title
+      - jsx-a11y/img-redundant-alt
+      - jsx-a11y/interactive-supports-focus
+      - jsx-a11y/label-has-associated-control
+      - jsx-a11y/media-has-caption
+      - jsx-a11y/mouse-events-have-key-events
+      - jsx-a11y/no-access-key
+      - jsx-a11y/no-autofocus
+      - jsx-a11y/no-distracting-elements
+      - jsx-a11y/no-noninteractive-element-interactions
+      - jsx-a11y/no-noninteractive-tabindex
+      - jsx-a11y/no-onchange
+      - jsx-a11y/no-redundant-roles
+      - jsx-a11y/no-static-element-interactions
+      - jsx-a11y/scope
+      - jsx-a11y/tabindex-no-positive
+      - jsx-quotes
+      - key-spacing
+      - keyword-spacing
+      - line-comment-position
+      - linebreak-style
+      - lines-around-comment
+      - lines-between-class-members
+      - max-depth
+      - max-len
+      - max-lines
+      - max-lines-per-function
+      - max-nested-callbacks
+      - max-params
+      - max-statements
+      - max-statements-per-line
+      - multiline-comment-style
+      - multiline-ternary
+      - new-cap
+      - new-parens
+      - newline-per-chained-call
+      - no-array-constructor
+      - no-bitwise
+      - no-case-declarations
+      - no-cond-assign
+      - no-console
+      - no-continue
+      - no-inline-comments
+      - no-lonely-if
+      - no-mixed-operators
+      - no-mixed-spaces-and-tabs
+      - no-multi-assign
+      - no-multiple-empty-lines
+      - no-negated-condition
+      - no-nested-ternary
+      - no-new-object
+      - no-plusplus
+      - no-restricted-syntax
+      - no-return-assign
+      - no-tabs
+      - no-ternary
+      - no-trailing-spaces
+      - no-underscore-dangle
+      - no-unneeded-ternary
+      - no-unused-vars
+      - no-var
+      - no-whitespace-before-property
+      - nonblock-statement-body-position
+      - object-curly-newline
+      - object-curly-spacing
+      - object-property-newline
+      - one-var
+      - one-var-declaration-per-line
+      - operator-assignment
+      - operator-linebreak
+      - padded-blocks
+      - padding-line-between-statements
+      - prefer-arrow-callback
+      - prefer-const
+      - prefer-destructuring
+      - prefer-named-capture-group
+      - prefer-numeric-literals
+      - prefer-object-spread
+      - prefer-promise-reject-errors
+      - prefer-reflect
+      - prefer-rest-params
+      - prefer-spread
+      - prefer-template
+      - quote-props
+      - quotes
+      - react/boolean-prop-naming
+      - react/button-has-type
+      - react/default-props-match-prop-types
+      - react/destructuring-assignment
+      - react/display-name
+      - react/forbid-component-props
+      - react/forbid-dom-props
+      - react/forbid-elements
+      - react/forbid-foreign-prop-types
+      - react/forbid-prop-types
+      - react/jsx-boolean-value
+      - react/jsx-closing-bracket-location
+      - react/jsx-closing-tag-location
+      - react/jsx-curly-brace-presence
+      - react/jsx-curly-newline
+      - react/jsx-curly-spacing
+      - react/jsx-equals-spacing
+      - react/jsx-filename-extension
+      - react/jsx-fragments
+      - react/jsx-handler-names
+      - react/jsx-indent
+      - react/jsx-indent-props
+      - react/jsx-key
+      - react/jsx-max-depth
+      - react/jsx-max-props-per-line
+      - react/jsx-no-literals
+      - react/jsx-one-expression-per-line
+      - react/jsx-pascal-case
+      - react/jsx-props-no-multi-spaces
+      - react/jsx-props-no-spreading
+      - react/jsx-sort-default-props
+      - react/jsx-sort-prop-types
+      - react/jsx-sort-props
+      - react/jsx-space-before-closing
+      - react/jsx-tag-spacing
+      - react/jsx-wrap-multilines
+      - react/no-children-prop
+      - react/no-find-dom-node
+      - react/no-multi-comp
+      - react/no-redundant-should-component-update
+      - react/no-set-state
+      - react/no-string-refs
+      - react/no-unknown-property
+      - react/prefer-es6-class
+      - react/prefer-read-only-props
+      - react/prefer-stateless-function
+      - react/prop-types
+      - react/react-in-jsx-scope
+      - react/require-default-props
+      - react/require-optimization
+      - react/self-closing-comp
+      - react/sort-comp
+      - react/sort-prop-types
+      - react/state-in-constructor
+      - react/static-property-placement
+      - react/style-prop-object
+      - semi
+      - semi-spacing
+      - semi-style
+      - sort-keys
+      - sort-vars
+      - space-before-blocks
+      - space-before-function-paren
+      - space-in-parens
+      - space-infix-ops
+      - space-unary-ops
+      - spaced-comment
+      - strict
+      - switch-colon-spacing
+      - template-tag-spacing
+      - unicode-bom
+      - wrap-regex
+      - accessor-pairs
+      - class-methods-use-this
+      - consistent-return
+      - dot-location
+      - dot-notation
+      - guard-for-in
+      - lines-around-directive
+      - max-classes-per-file
+      - no-div-regex
+      - no-else-return
+      - no-empty-function
+      - no-fallthrough
+      - no-floating-decimal
+      - no-implicit-globals
+      - no-invalid-this
+      - no-labels
+      - no-multi-spaces
+      - no-multi-str
+      - no-octal
+      - no-param-reassign
+      - no-redeclare
+      - no-script-url
+      - no-self-assign
+      - no-self-compare
+      - no-throw-literal
+      - no-void
+      - vars-on-top
+      - yoda
+  r2c.flake8:
+    ignore:
+      # Do not use bare except; duplicate of E722
+      - B001
+      # Do not call getattr with a constant attribute value
+      - B009
+      # Do not call setattr with a constant attribute value
+      - B010
+      # Indentation contains mixed spaces and tabs
+      - E101
+      # Indentation is not a multiple of four
+      - E111
+      # Indentation is not a multiple of four (comment)
+      - E114
+      # Expected an indented block (comment)
+      - E115
+      # Unexpected indentation (comment)
+      - E116
+      # Over-indented
+      - E117
+      # Continuation line under-indented for hanging indent
+      - E121
+      # Continuation line missing indentation or outdented
+      - E122
+      # Closing bracket does not match indentation of opening bracket's line
+      - E123
+      # Closing bracket does not match visual indentation
+      - E124
+      # Continuation line with same indent as next logical line
+      - E125
+      # Continuation line over-indented for hanging indent
+      - E126
+      # Continuation line over-indented for visual indent
+      - E127
+      # Continuation line under-indented for visual indent
+      - E128
+      # Visually indented line with same indent as next logical line
+      - E129
+      # Continuation line unaligned for hanging indent
+      - E131
+      # Closing bracket is missing indentation
+      - E133
+      # Whitespace after '('
+      - E201
+      # Whitespace before ')'
+      - E202
+      # Whitespace before ':'
+      - E203
+      # Whitespace before '('
+      - E211
+      # Multiple spaces before operator
+      - E221
+      # Multiple spaces after operator
+      - E222
+      # Tab before operator
+      - E223
+      # Tab after operator
+      - E224
+      # Missing whitespace around operator
+      - E225
+      # Missing whitespace around arithmetic operator
+      - E226
+      # Missing whitespace around bitwise or shift operator
+      - E227
+      # Missing whitespace around modulo operator
+      - E228
+      # Missing whitespace after ',', ';', or ':'
+      - E231
+      # Multiple spaces after ','
+      - E241
+      # Tab after ','
+      - E242
+      # Unexpected spaces around keyword / parameter equals
+      - E251
+      # Missing whitespace around parameter equals
+      - E252
+      # At least two spaces before inline comment
+      - E261
+      # Inline comment should start with '# '
+      - E262
+      # Block comment should start with '# '
+      - E265
+      # Too many leading '#' for block comment
+      - E266
+      # Multiple spaces after keyword
+      - E271
+      # Multiple spaces before keyword
+      - E272
+      # Tab after keyword
+      - E273
+      # Tab before keyword
+      - E274
+      # Missing whitespace after keyword
+      - E275
+      # Expected 1 blank line, found 0
+      - E301
+      # Expected 2 blank lines, found 0
+      - E302
+      # Too many blank lines (3)
+      - E303
+      # Blank lines found after function decorator
+      - E304
+      # Expected 2 blank lines after end of function or class
+      - E305
+      # Expected 1 blank line before a nested definition, found 0
+      - E306
+      # Multiple imports on one line
+      - E401
+      # Module level import not at top of file
+      - E402
+      # Line too long (82 > 79 characters)
+      - E501
+      # The backslash is redundant between brackets
+      - E502
+      # Multiple statements on one line (colon)
+      - E701
+      # Multiple statements on one line (semicolon)
+      - E702
+      # Statement ends with a semicolon
+      - E703
+      # Multiple statements on one line (def)
+      - E704
+      # Comparison to none should be 'if cond is none:‘
+      - E711
+      # Comparison to true should be 'if cond is true:' or 'if cond:'
+      - E712
+      # Test for membership should be 'not in'
+      - E713
+      # Test for object identity should be 'is not'
+      - E714
+      # Do not compare types, use 'isinstance()'
+      - E721
+      # Do not assign a lambda expression, use a def
+      - E731
+      # Do not use variables named 'l', 'o', or 'i'
+      - E741
+      # Do not define classes named 'l', 'o', or 'i'
+      - E742
+      # Do not define functions named 'l', 'o', or 'i'
+      - E743
+      # `module` imported but unused
+      - F401
+      # local variable `name` is assigned but never used
+      - F841
+      # Indentation contains tabs
+      - W191
+      # Trailing whitespace
+      - W291
+      # No newline at end of file
+      - W292
+      # Blank line contains whitespace
+      - W293
+      # Blank line at end of file
+      - W391
+      # Line break occurred before a binary operator
+      - W503
+      # Line break occurred after a binary operator
+      - W504
+      # ‘from module import *’ only allowed at module level
+      - F406
+  r2c.flask:
+    ignore:
+      - r2c-flask-use-blueprint-for-modularity
+  r2c.requests:
+    ignore: []
