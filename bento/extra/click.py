@@ -23,7 +23,7 @@ class ClickTool(Flake8Tool):
     PACKAGES = {
         "flake8": SimpleSpec("~=3.7.0"),
         "flake8-json": SimpleSpec("~=19.8.0"),
-        "flake8-click": SimpleSpec("~=0.2.3"),
+        "flake8-click": SimpleSpec("==0.2.3"),
     }
 
     @property
