@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 
-from _pytest.tmpdir import tmp_path_factory
 from bento.extra.checked_return import CheckedReturnTool
 from bento.violation import Violation
 from tests.test_tool import context_for
@@ -10,10 +9,10 @@ THIS_PATH = Path(os.path.dirname(__file__))
 BASE_PATH = THIS_PATH / ".." / ".." / ".."
 
 
-def test_run(tmp_path_factory: tmp_path_factory) -> None:
+def test_run(tmp_path: Path) -> None:
     base_path = BASE_PATH / "tests/integration/checked_return"
     tool = CheckedReturnTool(
-        context_for(tmp_path_factory, CheckedReturnTool.tool_id(), base_path)
+        context_for(tmp_path, CheckedReturnTool.tool_id(), base_path)
     )
     tool.setup()
     violations = tool.results()

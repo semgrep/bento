@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 
-from _pytest.tmpdir import tmp_path_factory
 from bento.extra.requests import RequestsTool
 from bento.violation import Violation
 from tests.test_tool import context_for
@@ -10,18 +9,18 @@ THIS_PATH = Path(os.path.dirname(__file__))
 BASE_PATH = THIS_PATH / ".." / ".." / ".."
 
 
-def test_run_no_base_violations(tmp_path_factory: tmp_path_factory) -> None:
+def test_run_no_base_violations(tmp_path: Path) -> None:
     base_path = BASE_PATH / "tests/integration/simple"
-    tool = RequestsTool(context_for(tmp_path_factory, RequestsTool.TOOL_ID, base_path))
+    tool = RequestsTool(context_for(tmp_path, RequestsTool.TOOL_ID, base_path))
     tool.setup()
     violations = tool.results()
 
     assert not violations
 
 
-def test_run_flask_violations(tmp_path_factory: tmp_path_factory) -> None:
+def test_run_flask_violations(tmp_path: Path) -> None:
     base_path = BASE_PATH / "tests/integration/requests"
-    tool = RequestsTool(context_for(tmp_path_factory, RequestsTool.TOOL_ID, base_path))
+    tool = RequestsTool(context_for(tmp_path, RequestsTool.TOOL_ID, base_path))
     tool.setup()
     violations = tool.results()
 

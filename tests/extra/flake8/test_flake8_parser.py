@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 
-from _pytest.tmpdir import tmp_path_factory
 from bento.extra.flake8 import Flake8Parser, Flake8Tool
 from bento.violation import Violation
 from tests.test_tool import context_for
@@ -32,9 +31,9 @@ def test_parse() -> None:
     assert result == expectation
 
 
-def test_run(tmp_path_factory: tmp_path_factory) -> None:
+def test_run(tmp_path: Path) -> None:
     base_path = BASE_PATH / "tests/integration/simple"
-    tool = Flake8Tool(context_for(tmp_path_factory, Flake8Tool.TOOL_ID, base_path))
+    tool = Flake8Tool(context_for(tmp_path, Flake8Tool.TOOL_ID, base_path))
     tool.setup()
     violations = tool.results()
 
@@ -74,8 +73,8 @@ def test_run(tmp_path_factory: tmp_path_factory) -> None:
     assert violations == expectation
 
 
-def test_file_match(tmp_path_factory: tmp_path_factory) -> None:
-    f = Flake8Tool(context_for(tmp_path_factory, Flake8Tool.TOOL_ID)).file_name_filter
+def test_file_match(tmp_path: Path) -> None:
+    f = Flake8Tool(context_for(tmp_path, Flake8Tool.TOOL_ID)).file_name_filter
 
     assert f.match("py") is None
     assert f.match("foo.py") is not None

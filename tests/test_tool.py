@@ -1,9 +1,8 @@
 import os
 import re
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Pattern, Type
+from typing import Any, Dict, Iterable, List, Optional, Pattern, Type, Union
 
-from _pytest.tmpdir import tmp_path_factory
 from bento.base_context import BaseContext
 from bento.tool import Parser, StrTool
 from bento.violation import Violation
@@ -25,16 +24,16 @@ def result_for(path: str) -> Violation:
 
 
 def context_for(
-    tmp_path_factory: tmp_path_factory,
+    tmp_path: Path,
     tool_id: str,
-    base_path: Path = THIS_PATH,
+    base_path: Path = THIS_PATH.parent,
     config: Optional[Dict[str, Any]] = None,
 ) -> BaseContext:
     return BaseContext(
         base_path=base_path,
         config={"tools": {tool_id: config or {}}},
-        cache_path=tmp_path_factory.mktemp("cache-dir-"),
-        resource_path=tmp_path_factory.mktemp("resource-dir-"),
+        cache_path=tmp_path / "cache",
+        resource_path=tmp_path / "resource",
     )
 
 
@@ -46,11 +45,11 @@ class ParserFixture(Parser):
 class ToolFixture(StrTool):
     def __init__(
         self,
-        tmp_path_factory: Any,
-        base_path: Path = THIS_PATH,
+        tmp_path: Path,
+        base_path: Path = THIS_PATH.parent,
         config: Optional[Dict[str, Any]] = None,
     ):
-        super().__init__(context_for(tmp_path_factory, "test", base_path, config))
+        super().__init__(context_for(tmp_path, "test", base_path, config))
 
     @property
     def parser_type(self) -> Type[Parser]:
@@ -70,7 +69,7 @@ class ToolFixture(StrTool):
 
     @property
     def file_name_filter(self) -> Pattern:
-        return re.compile(r"\btest_tool\.py\b")
+        return re.compile(r"test_tool\.py")
 
     @classmethod
     def matches_project(cls, context: BaseContext) -> bool:
@@ -83,46 +82,51 @@ class ToolFixture(StrTool):
         return ",".join(files)
 
 
-def test_file_path_filter_terminal(tmp_path_factory: tmp_path_factory) -> None:
-    tool = ToolFixture(tmp_path_factory)
-    result = tool.filter_paths(["test_tool.py", "foo.py"])
-    expectation = {"test_tool.py"}
+def _relpath(path: Union[str, Path]) -> str:
+    return str(THIS_PATH / path)
+
+
+def test_file_path_filter_terminal(tmp_path: Path) -> None:
+    tool = ToolFixture(tmp_path)
+    input = [_relpath(p) for p in ["test_tool.py", "foo.py"]]
+    result = tool.filter_paths(input)
+    expectation = {_relpath("test_tool.py")}
 
     assert result == expectation
 
 
-def test_file_path_match(tmp_path_factory: tmp_path_factory) -> None:
-    tool = ToolFixture(tmp_path_factory)
-    result = tool.filter_paths([str(THIS_PATH)])
-    expectation = {str(THIS_PATH)}
+def test_file_path_match(tmp_path: Path) -> None:
+    tool = ToolFixture(tmp_path)
+    result = tool.filter_paths([_relpath(".")])
+    expectation = {_relpath("test_tool.py")}
 
     assert result == expectation
 
 
-def test_file_path_no_match(tmp_path_factory: tmp_path_factory) -> None:
-    tool = ToolFixture(tmp_path_factory)
-    search_path = THIS_PATH / "integration" / "simple"
-    result = tool.filter_paths([str(search_path)])
+def test_file_path_no_match(tmp_path: Path) -> None:
+    tool = ToolFixture(tmp_path)
+    search_path = _relpath(Path("integration") / "simple")
+    result = tool.filter_paths([search_path])
 
     assert not result
 
 
-def test_tool_run_no_paths(tmp_path_factory: tmp_path_factory) -> None:
-    tool = ToolFixture(tmp_path_factory)
+def test_tool_run_no_paths(tmp_path: Path) -> None:
+    tool = ToolFixture(tmp_path)
     result = tool.results()
 
-    assert result == [result_for(str(THIS_PATH))]
+    assert result == [result_for(_relpath("test_tool.py"))]
 
 
-def test_tool_run_file(tmp_path_factory: tmp_path_factory) -> None:
-    tool = ToolFixture(tmp_path_factory)
-    result = tool.results(["test_tool.py"])
+def test_tool_run_file(tmp_path: Path) -> None:
+    tool = ToolFixture(tmp_path)
+    result = tool.results([str(THIS_PATH / "test_tool.py")])
 
-    assert result == [result_for("test_tool.py")]
+    assert result == [result_for(_relpath("test_tool.py"))]
 
 
-def test_tool_run_ignores(tmp_path_factory: tmp_path_factory) -> None:
-    tool = ToolFixture(tmp_path_factory, config={"ignore": ["test"]})
+def test_tool_run_ignores(tmp_path: Path) -> None:
+    tool = ToolFixture(tmp_path, config={"ignore": ["test"]})
     result = tool.results()
 
     assert not result

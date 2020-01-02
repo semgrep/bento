@@ -109,7 +109,11 @@ class FileIgnore(Mapping[str, Entry]):
 
     def filter_paths(self, paths: List[str]) -> List[str]:
         abspaths = (os.path.abspath(p) for p in paths)
-        return [p for p in abspaths if p in self and self[p].survives]
+        return [
+            p
+            for p in abspaths
+            if p in self and self[p].survives or os.path.samefile(p, self.base_path)
+        ]
 
     def __getitem__(self, item: str) -> Entry:
         return self._walk_cache[item]

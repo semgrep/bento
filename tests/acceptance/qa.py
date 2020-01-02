@@ -175,17 +175,8 @@ def test_flask() -> None:
     run_repo("flask")
 
 
-def run_create_react_app(rewrite: bool) -> None:
-    # eslint runs forever unless we ignore 'lib/'
-    def setup_ignores(root: Path) -> None:
-        with (root / ".gitignore").open("a") as gitignore:
-            gitignore.writelines(["lib/\n"])
-
-    run_repo("create-react-app", pre=setup_ignores, rewrite=rewrite)
-
-
 def test_create_react_app() -> None:
-    run_create_react_app(rewrite=False)
+    run_repo("create-react-app")
 
 
 def test_django_example() -> None:
@@ -200,4 +191,4 @@ if __name__ == "__main__":
     run_repo("flask", rewrite=True)
     run_repo("django-example", rewrite=True)
     run_repo("instabot", rewrite=True)
-    run_create_react_app(rewrite=True)
+    run_repo("test_create_react_app", rewrite=True)

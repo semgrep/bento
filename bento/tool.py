@@ -161,22 +161,16 @@ class Tool(ABC, Generic[R]):
             A set of valid paths
         """
 
-        def add_path(out: Set[str], p: str) -> None:
-            if os.path.isdir(p):
-                # Adds path if any file matches filter
-                for _, _, files in os.walk(p):
-                    for f in files:
-                        if self.file_name_filter.match(f):
-                            out.add(p)
-                            return
-            elif self.file_name_filter.match(p):
-                out.add(p)
-
-        out: Set[str] = set()
-        for p in paths:
-            add_path(out, p)
-
-        return out
+        abspaths = [os.path.abspath(p) for p in paths]
+        to_run = {
+            e.path
+            for e in self.context.file_ignores.entries()
+            if e.survives
+            and self.file_name_filter.match(os.path.basename(e.path))
+            and any(e.path.startswith(p) for p in abspaths)
+            and e.dir_entry.is_file()
+        }
+        return to_run
 
     def execute(self, command: List[str], **kwargs: Any) -> subprocess.CompletedProcess:
         """
@@ -212,7 +206,6 @@ class Tool(ABC, Generic[R]):
         """
         if paths is None:
             paths = [str(self.base_path)]
-        paths = self.filter_paths(paths)
 
         if paths:
             logging.debug(f"Checking for local cache for {self.tool_id()}")
@@ -221,7 +214,10 @@ class Tool(ABC, Generic[R]):
                 logging.debug(
                     f"Cache entry invalid for {self.tool_id()}. Running Tool."
                 )
-                raw = self.run(paths)
+                paths_to_run = self.filter_paths(paths)
+                if not paths_to_run:
+                    return []
+                raw = self.run(paths_to_run)
                 self.context.cache.put(self.tool_id(), paths, self.serialize(raw))
             else:
                 raw = self.deserialize(cache_repr)

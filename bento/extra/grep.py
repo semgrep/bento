@@ -72,23 +72,12 @@ class GrepTool(JsonTool):
     ) -> Iterator[str]:
         includes = []
 
-        excludes = []
-
-        for pattern in self.context.file_ignores.patterns:
-            if pattern.endswith("/"):
-                excludes.extend(["--exclude-dir", pattern.rstrip("/")])
-            else:
-                excludes.extend(["--exclude", pattern])
-
         regex = rule.get("regex")
         if regex:
             file_ext_filters = rule.get("file_extentions", [])
             for file_ext_filter in file_ext_filters:
                 includes.extend(["--include", file_ext_filter])
-            exclude_dirs = rule.get("exclude_dirs", [])
-            for exlude_dir in exclude_dirs:
-                excludes.extend(["--exclude-dir", exlude_dir])
-            cmd = ["grep"] + includes + excludes + ["-nRI", regex] + all_source_dirs
+            cmd = ["grep"] + includes + ["-nRI", regex] + all_source_dirs
         yield self.execute(cmd, capture_output=True).stdout
 
     def run(self, files: Iterable[str]) -> JsonR:

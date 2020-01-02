@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 
-from _pytest.tmpdir import tmp_path_factory
 from bento.extra.sgrep import SGrepTool
 from bento.violation import Violation
 from tests.test_tool import context_for
@@ -10,9 +9,9 @@ THIS_PATH = Path(os.path.dirname(__file__))
 BASE_PATH = THIS_PATH / ".." / ".." / ".."
 
 
-def test_run(tmp_path_factory: tmp_path_factory) -> None:
+def test_run(tmp_path: Path) -> None:
     base_path = BASE_PATH / "tests/integration/sgrep"
-    tool = SGrepTool(context_for(tmp_path_factory, SGrepTool.tool_id(), base_path))
+    tool = SGrepTool(context_for(tmp_path, SGrepTool.tool_id(), base_path))
     tool.setup()
     violations = tool.results()
     print(violations)

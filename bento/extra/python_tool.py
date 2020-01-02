@@ -1,6 +1,5 @@
 import json
 import logging
-import shlex
 import subprocess
 import venv
 from abc import abstractmethod
@@ -144,17 +143,6 @@ class PythonTool(Generic[R], Tool[R]):
             if name not in installed or not spec.match(installed[name]):
                 to_install[name] = spec
         return to_install
-
-    def _ignore_param(self) -> str:
-        """
-        Returns a file exclusion parameter for Python tools
-        """
-        ignores = (
-            shlex.quote(e.path)
-            for e in self.context.file_ignores.entries()
-            if not e.survives
-        )
-        return ",".join(ignores)
 
     def setup(self) -> None:
         self.venv_create()

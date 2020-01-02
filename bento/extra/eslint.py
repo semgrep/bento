@@ -228,30 +228,22 @@ class EslintTool(JsTool, JsonTool):
         )
 
     def run(self, files: Iterable[str]) -> JsonR:
-        ignores = [
-            arg
-            for p in self.context.file_ignores.patterns
-            for arg in ["--ignore-pattern", p]
-        ]
         disables = [
             arg
             for d in self.config.get("ignore", [])
             for arg in ["--rule", f"{d}: off"]
         ]
-        cmd = (
-            [
-                "./node_modules/eslint/bin/eslint.js",
-                "--no-eslintrc",
-                "-c",
-                EslintTool.CONFIG_FILE_NAME,
-                "-f",
-                "json",
-                "--ext",
-                "js,jsx,ts,tsx",
-            ]
-            + ignores
-            + disables
-        )
+        cmd = [
+            "./node_modules/eslint/bin/eslint.js",
+            "--no-eslintrc",
+            "--no-ignore",
+            "-c",
+            EslintTool.CONFIG_FILE_NAME,
+            "-f",
+            "json",
+            "--ext",
+            "js,jsx,ts,tsx",
+        ] + disables
         for f in files:
             cmd.append(f)
         result = self.execute(
