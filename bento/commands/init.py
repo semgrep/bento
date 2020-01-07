@@ -48,16 +48,13 @@ class InitCommand(object):
             logging.debug(
                 f"Matching tools for this project: {', '.join(yml['tools'].keys())}"
             )
-            if yml["tools"]:
-                with config_path.open("w") as config_file:
-                    yaml.safe_dump(yml, stream=config_file)
-                on_done()
-                logging.info(f"Created {pretty_path}.")
-                return True
-            else:
+            if not yml["tools"]:
                 logging.warning("No tools match this project")
-                content.InstallConfig.error.echo()
-                sys.exit(3)
+            with config_path.open("w") as config_file:
+                yaml.safe_dump(yml, stream=config_file)
+            on_done()
+            logging.info(f"Created {pretty_path}.")
+            return True
         else:
             content.InstallConfig.install.echo(pretty_path, skip=True)
             return False
@@ -122,7 +119,7 @@ class InitCommand(object):
             projects = " and ".join(project_names)
         else:
             content.Identify.failure.echo()
-            sys.exit(3)
+            return
         content.Identify.success.echo(projects)
 
     def _run_check(self, ctx: click.Context, clean: bool, pager: bool) -> bool:

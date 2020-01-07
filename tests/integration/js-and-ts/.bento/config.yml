@@ -1,11 +1,16 @@
 formatter:
-  stylish: {}
+- clippy: {}
+- histo: {}
 tools:
   r2c.eslint:
     ignore:
+    - '@typescript-eslint/camelcase'
+    - '@typescript-eslint/member-delimiter-style'
     - array-bracket-newline
     - array-bracket-spacing
     - array-element-newline
+    - arrow-body-style
+    - arrow-parens
     - block-spacing
     - brace-style
     - camelcase
@@ -35,6 +40,7 @@ tools:
     - import/max-dependencies
     - import/newline-after-import
     - import/no-anonymous-default-export
+    - import/no-cycle
     - import/no-default-export
     - import/no-duplicates
     - import/no-named-default
@@ -108,6 +114,8 @@ tools:
     - no-trailing-spaces
     - no-underscore-dangle
     - no-unneeded-ternary
+    - no-unused-vars
+    - no-var
     - no-whitespace-before-property
     - nonblock-statement-body-position
     - object-curly-newline

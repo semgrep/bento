@@ -3,7 +3,6 @@ from bento.renderer import (
     Confirm,
     Content,
     Echo,
-    Error,
     Link,
     Multi,
     Newline,
@@ -46,7 +45,6 @@ class InstallConfig:
         ),
         extra=12,
     )
-    error = Error("Bento can't identify this project")
 
 
 class InstallIgnore:
@@ -76,7 +74,20 @@ class Identify:
         Echo(Multi(["Detected project with ", Sub(0, style={"bold": True})])),
         Newline(),
     )
-    failure = Steps(Newline(), Error("Bento can't identify this project."))
+    failure = Steps(
+        Newline(),
+        Warn(
+            "Bento can't automatically identify this project. Please manually configure this project:"
+        ),
+        Echo(
+            Multi(
+                [
+                    _step_item("configure a tool manually", "bento enable tool TOOL"),
+                    _step_item("list available tools", "bento enable tool --help"),
+                ]
+            )
+        ),
+    )
 
 
 class Check:

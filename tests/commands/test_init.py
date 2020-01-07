@@ -27,15 +27,14 @@ def test_install_config() -> None:
 
 
 def test_no_install_empty_project() -> None:
-    """Validates that bento does not install a config on an empty project"""
+    """Validates that bento does installs a config on an empty project"""
     context = Context(base_path=INTEGRATION / "none")
     command = InitCommand(context)
-    # pytest.raises() does not catch SystemExit, so use try/except here
-    try:
+    with mod_file(context.config_path):
+        context.config_path.unlink()
+        assert not context.config_path.exists()
         command._install_config_if_not_exists()
-    except SystemExit as ex:
-        assert isinstance(ex, SystemExit)
-    assert not context.config_path.exists()
+        assert len(context.config["tools"]) == 0
 
 
 def test_install_ignore_in_repo() -> None:
