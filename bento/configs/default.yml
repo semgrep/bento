@@ -1,3 +1,5 @@
+autorun:
+  block: false
 formatter:
   - clippy: {}
   - histo: {}

@@ -291,7 +291,9 @@ You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PA
             f"bento check {SHOW_ALL}",
         )
 
-    if is_error:
+    if staged_only and not context.autorun_is_blocking:
+        return
+    elif is_error:
         sys.exit(3)
     elif n_all_filtered > 0:
         sys.exit(2)

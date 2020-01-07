@@ -59,6 +59,10 @@ class InstallIgnore:
     )
 
 
+class InstallAutorun:
+    install = Progress("Configuring Bento to analyze every commit", extra=-4)
+
+
 class Clean:
     tools = Steps(Echo("Reinstalling tools due to passed --clean flag."), Newline())
     check = Warn(

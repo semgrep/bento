@@ -1,15 +1,4 @@
 Running Bento checks...
 
 
-r2c.eslint no-undef https://eslint.org/docs/rules/no-undef
-     > bad.js:1
-     ╷
-    1│   x = "potato";
-     ╵
-     = 'x' is not defined.
-
-r2c.eslint:
-  no-undef       1▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-
-⚠ 1 finding(s) in  s
-◦ To suppress all findings, run $ bento archive.
+✔ 0 findings in  s

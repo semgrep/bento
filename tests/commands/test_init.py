@@ -71,6 +71,7 @@ def test_init_already_setup() -> None:
 ╰──────────────────────────────────────────────────────────────────────────────╯
 Creating default ignore file at .bentoignore․․․․․․․․․․․․․․․․․․․․․ 👋 Skipped   
 Creating default configuration at .bento/config.yml․․․․․․․․․․․․․․ 👋 Skipped   
+Configuring Bento to analyze every commit․․․․․․․․․․․․․․․․․․․․․․․․ 👋 Skipped   
 
 Detected project with Python and node-js (with react)
 

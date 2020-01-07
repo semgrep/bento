@@ -83,7 +83,8 @@ steps:
     command:
       - bento
       - --agree
-      - install-hook
+      - enable
+      - autorun
     expected_err: install-hook.err
     expected_out: null
     returncode: 0
@@ -92,7 +93,8 @@ steps:
     command:
       - bento
       - --agree
-      - install-hook
+      - enable
+      - autorun
     expected_err: twice-install-hook.err
     expected_out: null
     returncode: 0
@@ -123,6 +125,8 @@ steps:
       - -c
       - user.email="place@holder.com"
       - commit
+      - -m
+      - bad
     expected_err: git-commit.err
-    expected_out: null
-    returncode: 1
+    expected_out: git-commit.out
+    returncode: 0

@@ -8,7 +8,7 @@ import click
 from packaging.version import Version
 
 import bento.constants as constants
-from bento.commands import archive, check, disable, enable, hook, init, register
+from bento.commands import archive, check, disable, enable, init, register
 from bento.context import Context
 from bento.network import fetch_latest_version
 from bento.util import echo_error
@@ -112,7 +112,5 @@ def cli(
 cli.add_command(archive.archive)
 cli.add_command(check.check)
 cli.add_command(init.init)
-cli.add_command(hook.install_hook)
-cli.add_command(hook.uninstall_hook)
 cli.add_command(enable.enable)
 cli.add_command(disable.disable)

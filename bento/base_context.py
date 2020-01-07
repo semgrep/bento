@@ -97,6 +97,13 @@ class BaseContext:
         self._config = config
 
     @property
+    def autorun_is_blocking(self) -> bool:
+        """
+        Returns whether `bento check --staged-only` should block commits
+        """
+        return self.config.get("autorun", {}).get("block", False)
+
+    @property
     def file_ignores(self) -> FileIgnore:
         with self._ignore_lock:
             # Only initialize the file ignores once. Since this uses system calls,

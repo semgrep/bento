@@ -40,6 +40,11 @@ SLACK_SIGNUP_LINK = "https://join.slack.com/t/r2c-community/shared_invite/enQtNj
 
 ARGS_TO_EXCLUDE_FROM_METRICS = {"check": {"paths"}}
 
+# Config items
+
+AUTORUN = "autorun"
+AUTORUN_BLOCK = "block"
+
 ### messages ###
 
 UPGRADE_WARNING_OUTPUT = f"""

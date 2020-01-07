@@ -10,11 +10,15 @@ import yaml
 import bento.constants
 
 BENTO_REPO_ROOT = str(Path(__file__).parent.parent.parent.resolve())
+DYNAMIC_SECONDS = re.compile(r"([\s\S]* \d+ finding.?s.? in )\d+\.\d+( s[\s\S]*)")
+DETACHED_HEAD = re.compile(r"\[detached HEAD ([0-9a-f]+)\]")
 
 
 def write_expected_file(filename: str, output: str) -> None:
     with open(filename, "w") as file:
-        stripped = remove_trailing_space(remove_timing_seconds(output))
+        stripped = remove_commit_hash(
+            remove_trailing_space(remove_timing_seconds(output))
+        )
         file.write(stripped)
 
 
@@ -23,9 +27,12 @@ def remove_trailing_space(string: str) -> str:
 
 
 def remove_timing_seconds(string: str) -> str:
-    dynamic_seconds = re.compile(r"([\s\S]* \d+ finding.?s.? in )\d+\.\d+( s[\s\S]*)")
-    result = re.sub(dynamic_seconds, r"\1\2", string)
+    result = re.sub(DYNAMIC_SECONDS, r"\1\2", string)
     return result
+
+
+def remove_commit_hash(string: str) -> str:
+    return re.sub(DETACHED_HEAD, r"[detached HEAD ]", string)
 
 
 def match_expected(output: str, expected: str) -> bool:
@@ -40,6 +47,9 @@ def match_expected(output: str, expected: str) -> bool:
     # Handle dynamic characters (for now just timing info)
     if "finding(s) in" in expected or "findings in" in expected:
         output = remove_timing_seconds(output)
+
+    if "detached HEAD" in expected:
+        output = remove_commit_hash(output)
 
     if output.strip() != expected.strip():
         print("==== EXPECTED ====")

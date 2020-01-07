@@ -1,1 +1,3 @@
-✔ Bento already installed as a pre-commit hook
+✔ Installed Bento autorun in non-blocking mode.
+◦ To uninstall Bento autorun, run $ bento disable autorun.
+◦ To make autorun blocking, run $ bento enable autorun --block.

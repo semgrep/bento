@@ -14,8 +14,7 @@ import bento.constants as constants
 import bento.content.init as content
 import bento.git
 import bento.tool_runner
-from bento.commands.archive import archive
-from bento.commands.check import check
+from bento.commands.autorun import install_autorun
 from bento.context import Context
 from bento.decorators import with_metrics
 
@@ -102,6 +101,14 @@ class InitCommand(object):
             content.InstallIgnore.install.echo(pretty_path, skip=True)
             return False
 
+    def _configure_autorun(self, ctx: click.Context, is_first_run: bool) -> None:
+        if is_first_run:
+            on_done = content.InstallAutorun.install.echo()
+            ctx.invoke(install_autorun, block=False)
+            on_done()
+        else:
+            content.InstallAutorun.install.echo(skip=True)
+
     def _maybe_clean_tools(self, clean: bool) -> None:
         """If clean flag is passed, cleans tool installation"""
         if clean:
@@ -122,33 +129,6 @@ class InitCommand(object):
             return
         content.Identify.success.echo(projects)
 
-    def _run_check(self, ctx: click.Context, clean: bool, pager: bool) -> bool:
-        """
-        Runs bento check if user agrees to prompt
-
-        :return: If there were findings
-        """
-        if clean and self.context.baseline_file_path.exists():
-            content.Clean.check.echo()
-            self.context.baseline_file_path.unlink()
-
-        if self.context.baseline_file_path.exists():
-            content.Check.unnecessary.echo()
-        else:
-            if sys.stderr.isatty() and sys.stdin.isatty():
-                if content.Check.prompt.echo():
-                    try:
-                        content.Check.header.echo()
-                        ctx.invoke(check, formatter=("histo",), pager=pager)
-                    except SystemExit as ex:
-                        if ex.code >= 3:
-                            raise ex
-                        return True
-            else:
-                content.Check.noninteractive.echo()
-
-        return False
-
     def _next_steps(self) -> None:
         if sys.stdin.isatty() and sys.stderr.isatty():
             content.NextSteps.prompt.echo()
@@ -160,27 +140,16 @@ class InitCommand(object):
 
         content.NextSteps.thank_you.echo()
 
-    def _run_archive(self, ctx: click.Context) -> None:
-        """
-        Runs bento archive if user agrees to prompt
-
-        :return:
-        """
-        content.RunArchive.pre.echo()
-        ctx.invoke(archive, show_bars=False)
-        content.RunArchive.post.echo()
-
     def run(self, ctx: click.Context, clean: bool) -> None:
         content.run_all.echo()
 
         self.context.resource_path.mkdir(exist_ok=True)
-
-        # Ask any necessary pre-install questions
-        # gitignore_path = self._query_gitignore_update()
+        is_first_init = not self.context.config_path.exists()
 
         # Perform configuration
         self._install_ignore_if_not_exists()
         self._install_config_if_not_exists()
+        self._configure_autorun(ctx, is_first_init)
 
         # Perform project identification
         self._identify_project()
