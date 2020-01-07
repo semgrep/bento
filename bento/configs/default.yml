@@ -31,6 +31,7 @@ tools:
     ignore:
       - "@typescript-eslint/camelcase"
       - "@typescript-eslint/member-delimiter-style"
+      - accessor-pairs
       - array-bracket-newline
       - array-bracket-spacing
       - array-element-newline
@@ -40,12 +41,16 @@ tools:
       - brace-style
       - camelcase
       - capitalized-comments
+      - class-methods-use-this
       - comma-dangle
       - comma-spacing
       - comma-style
       - computed-property-spacing
+      - consistent-return
       - consistent-this
       - curly
+      - dot-location
+      - dot-notation
       - eol-last
       - func-call-spacing
       - func-name-matching
@@ -53,6 +58,7 @@ tools:
       - func-style
       - function-call-argument-newline
       - function-paren-newline
+      - guard-for-in
       - id-blacklist
       - id-length
       - id-match
@@ -102,7 +108,9 @@ tools:
       - line-comment-position
       - linebreak-style
       - lines-around-comment
+      - lines-around-directive
       - lines-between-class-members
+      - max-classes-per-file
       - max-depth
       - max-len
       - max-lines
@@ -122,25 +130,43 @@ tools:
       - no-cond-assign
       - no-console
       - no-continue
+      - no-div-regex
+      - no-else-return
+      - no-empty-function
+      - no-fallthrough
+      - no-floating-decimal
+      - no-implicit-globals
       - no-inline-comments
+      - no-invalid-this
+      - no-labels
       - no-lonely-if
       - no-mixed-operators
       - no-mixed-spaces-and-tabs
       - no-multi-assign
+      - no-multi-spaces
+      - no-multi-str
       - no-multiple-empty-lines
       - no-negated-condition
       - no-nested-ternary
       - no-new-object
+      - no-octal
+      - no-param-reassign
       - no-plusplus
+      - no-redeclare
       - no-restricted-syntax
       - no-return-assign
+      - no-script-url
+      - no-self-assign
+      - no-self-compare
       - no-tabs
       - no-ternary
+      - no-throw-literal
       - no-trailing-spaces
       - no-underscore-dangle
       - no-unneeded-ternary
       - no-unused-vars
       - no-var
+      - no-void
       - no-whitespace-before-property
       - nonblock-statement-body-position
       - object-curly-newline
@@ -236,34 +262,8 @@ tools:
       - switch-colon-spacing
       - template-tag-spacing
       - unicode-bom
-      - wrap-regex
-      - accessor-pairs
-      - class-methods-use-this
-      - consistent-return
-      - dot-location
-      - dot-notation
-      - guard-for-in
-      - lines-around-directive
-      - max-classes-per-file
-      - no-div-regex
-      - no-else-return
-      - no-empty-function
-      - no-fallthrough
-      - no-floating-decimal
-      - no-implicit-globals
-      - no-invalid-this
-      - no-labels
-      - no-multi-spaces
-      - no-multi-str
-      - no-octal
-      - no-param-reassign
-      - no-redeclare
-      - no-script-url
-      - no-self-assign
-      - no-self-compare
-      - no-throw-literal
-      - no-void
       - vars-on-top
+      - wrap-regex
       - yoda
   r2c.flake8:
     ignore:

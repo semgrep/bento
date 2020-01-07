@@ -1,4 +1,5 @@
 include bento/extra/eslint/*.yml
+include bento/extra/eslint/package.json
 include bento/configs/*
 include bento/resources/*.template
 include bento/resources/*.yml

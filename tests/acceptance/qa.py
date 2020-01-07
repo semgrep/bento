@@ -191,4 +191,4 @@ if __name__ == "__main__":
     run_repo("flask", rewrite=True)
     run_repo("django-example", rewrite=True)
     run_repo("instabot", rewrite=True)
-    run_repo("test_create_react_app", rewrite=True)
+    run_repo("create-react-app", rewrite=True)

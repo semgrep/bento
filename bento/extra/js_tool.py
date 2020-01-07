@@ -1,6 +1,8 @@
 import json
 import logging
 import subprocess
+from abc import abstractmethod
+from pathlib import Path
 from typing import Dict, Optional, Set
 
 import attr
@@ -18,21 +20,26 @@ VersionDict = Dict[str, Version]
 class NpmDeps(object):
     """Represents top-level npm package dependencies for a project"""
 
-    main: Dict[str, Version]
-    dev: Dict[str, Version]
+    main: Dict[str, NpmSpec]
+    dev: Dict[str, NpmSpec]
 
     def __contains__(self, item: str) -> bool:
         return item in self.main or item in self.dev
 
 
 class JsTool(Tool):
-    def _dependencies(self) -> NpmDeps:
+    @property
+    @abstractmethod
+    def install_location(self) -> Path:
+        pass
+
+    def _dependencies(self, location: Path) -> NpmDeps:
         """
         Returns an inventory of all top-level dependencies (not necessarily installed)
 
         :return: The dependencies, with versions
         """
-        package_json_path = self.base_path / "package.json"
+        package_json_path = location / "package.json"
         with package_json_path.open() as stream:
             packages = json.load(stream)
 
@@ -40,11 +47,13 @@ class JsTool(Tool):
             packages.get("dependencies", {}), packages.get("devDependencies", {})
         )
 
-    def _installed_version(self, package: str) -> Optional[Version]:
-        """Gets the version of a package that was installed.
+    def _installed_version(self, package: str, location: Path) -> Optional[Version]:
+        """
+        Gets the version of a package that was installed.
 
-        Returns None if that package has not been installed."""
-        package_json_path = self.base_path / "node_modules" / package / "package.json"
+        Returns None if that package has not been installed.
+        """
+        package_json_path = location / "node_modules" / package / "package.json"
         try:
             with package_json_path.open() as f:
                 package_json = json.load(f)
@@ -58,15 +67,14 @@ class JsTool(Tool):
     def _npm_install(self, packages: VersionDict) -> None:
         """Runs npm install $package@^$version for each package."""
         logging.info(f"Installing {packages}...")
-        uses_yarn = (self.base_path / "yarn.lock").exists()
         args = [f"{name}@^{version}" for name, version in packages.items()]
-        if uses_yarn:
-            # If yarn is using nested project, we still want to install in workspace root
-            cmd = ["yarn", "add", "--dev", "--ignore-workspace-root-check"]
-        else:
-            cmd = ["npm", "install", "--save-dev"]
+        cmd = ["npm", "install", "--save-dev"]
         result = self.execute(
-            cmd + args, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+            cmd + args,
+            cwd=self.install_location,
+            check=True,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE,
         )
         logging.info(result.stdout)
         logging.info(result.stderr)
@@ -82,7 +90,7 @@ class JsTool(Tool):
         """
         to_install = {}
         for name, required_version in packages.items():
-            installed = self._installed_version(name)
+            installed = self._installed_version(name, location=self.install_location)
             if not (installed and installed >= required_version):
                 to_install[name] = required_version
         if not to_install:

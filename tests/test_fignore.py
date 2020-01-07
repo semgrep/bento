@@ -143,7 +143,6 @@ def test_ignores_from_ignore_file(monkeypatch: MonkeyPatch) -> None:
 
     survivors = {e.path for e in fi.entries() if e.survives}
     assert survivors == {
-        "tests/integration/simple/.eslintrc.yml",
         "tests/integration/simple/.bentoignore",
         "tests/integration/simple/init.js",
         "tests/integration/simple/package-lock.json",
