@@ -30,7 +30,7 @@ class FlaskTool(Flake8Tool):
     PACKAGES = {
         "flake8": SimpleSpec("~=3.7.0"),
         "flake8-json": SimpleSpec("~=19.8.0"),
-        "flake8-flask": SimpleSpec("~=0.7.3"),
+        "flake8-flask": SimpleSpec("~=0.8.2"),
     }
 
     @property

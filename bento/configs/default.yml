@@ -276,7 +276,6 @@ tools:
       - unused-module
       - unused-variable
   r2c.flask:
-    ignore:
-      - r2c-flask-use-blueprint-for-modularity
+    ignore: []
   r2c.requests:
     ignore: []
