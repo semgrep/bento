@@ -1,305 +1,305 @@
-r2c.eslint import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+eslint import/no-unresolved https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-unresolved.md
      > docusaurus/website/src/pages/index.js:9
      ╷
     9│   import Link from '@docusaurus/Link';
      ╵
      = Unable to resolve path to module '@docusaurus/Link'.
 
-r2c.eslint import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+eslint import/no-unresolved https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-unresolved.md
      > docusaurus/website/src/pages/index.js:10
      ╷
    10│   import useDocusaurusContext from '@docusaurus/useDocusaurusContext';
      ╵
      = Unable to resolve path to module '@docusaurus/useDocusaurusContext'.
 
-r2c.eslint import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+eslint import/no-unresolved https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-unresolved.md
      > docusaurus/website/src/pages/index.js:11
      ╷
    11│   import withBaseUrl from '@docusaurus/withBaseUrl';
      ╵
      = Unable to resolve path to module '@docusaurus/withBaseUrl'.
 
-r2c.eslint import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+eslint import/no-unresolved https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-unresolved.md
      > docusaurus/website/src/pages/index.js:13
      ╷
    13│   import Layout from '@theme/Layout';
      ╵
      = Unable to resolve path to module '@theme/Layout'.
 
-r2c.eslint import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+eslint import/no-unresolved https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-unresolved.md
      > docusaurus/website/src/pages/index.js:14
      ╷
    14│   import CodeBlock from '@theme/CodeBlock';
      ╵
      = Unable to resolve path to module '@theme/CodeBlock'.
 
-r2c.eslint import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+eslint import/no-unresolved https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-unresolved.md
      > docusaurus/website/src/pages/index.js:16
      ╷
    16│   import classnames from 'classnames';
      ╵
      = Unable to resolve path to module 'classnames'.
 
-r2c.eslint react/no-array-index-key https://eslint.org/docs/rules/react/no-array-index-key
+eslint react/no-array-index-key https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/no-array-index-key.md
      > docusaurus/website/src/pages/index.js:71
      ╷
    71│   key={idx}
      ╵
      = Do not use Array index in keys
 
-r2c.eslint no-undef-init https://eslint.org/docs/rules/no-undef-init
+eslint no-undef-init https://eslint.org/docs/rules/no-undef-init
      > packages/babel-preset-react-app/create.js:50
      ╷
    50│   var absoluteRuntimePath = undefined;
      ╵
      = It's not necessary to initialize 'absoluteRuntimePath' to undefined.
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/create.js:71
      ╷
    71│   require('@babel/preset-env').default,
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/create.js:80
      ╷
    80│   require('@babel/preset-env').default,
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/create.js:94
      ╷
    94│   require('@babel/preset-react').default,
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/create.js:104
      ╷
   104│   isTypeScriptEnabled && [require('@babel/preset-typescript').default],
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/create.js:114
      ╷
   114│   require('@babel/plugin-transform-flow-strip-types').default,
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/create.js:119
      ╷
   119│   require('babel-plugin-macros'),
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/create.js:124
      ╷
   124│   require('@babel/plugin-transform-destructuring').default,
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/create.js:145
      ╷
   145│   require('@babel/plugin-proposal-decorators').default,
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/create.js:152
      ╷
   152│   require('@babel/plugin-proposal-class-properties').default,
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/create.js:161
      ╷
   161│   require('@babel/plugin-proposal-object-rest-spread').default,
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/create.js:169
      ╷
   169│   require('@babel/plugin-transform-runtime').default,
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/create.js:176
      ╷
   176│   version: require('@babel/runtime/package.json').version,
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/create.js:190
      ╷
   190│   require('babel-plugin-transform-react-remove-prop-types').default,
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/create.js:196
      ╷
   196│   require('@babel/plugin-syntax-dynamic-import').default,
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/create.js:199
      ╷
   199│   require('babel-plugin-dynamic-import-node'),
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/create.js:204
      ╷
   204│   plugins: [require('@babel/plugin-transform-flow-strip-types').default],
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/create.js:210
      ╷
   210│   require('@babel/plugin-proposal-decorators').default,
      ╵
      = Unexpected require().
 
-r2c.eslint no-undef-init https://eslint.org/docs/rules/no-undef-init
+eslint no-undef-init https://eslint.org/docs/rules/no-undef-init
      > packages/babel-preset-react-app/dependencies.js:46
      ╷
    46│   var absoluteRuntimePath = undefined;
      ╵
      = It's not necessary to initialize 'absoluteRuntimePath' to undefined.
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/dependencies.js:72
      ╷
    72│   require('@babel/preset-env').default,
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/dependencies.js:85
      ╷
    85│   require('@babel/preset-env').default,
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/dependencies.js:104
      ╷
   104│   require('@babel/plugin-transform-destructuring').default,
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/dependencies.js:126
      ╷
   126│   require('@babel/plugin-transform-runtime').default,
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/dependencies.js:142
      ╷
   142│   require('@babel/plugin-syntax-dynamic-import').default,
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/babel-preset-react-app/dependencies.js:145
      ╷
   145│   require('babel-plugin-dynamic-import-node'),
      ╵
      = Unexpected require().
 
-r2c.eslint error
+eslint error
      > packages/create-react-app/createReactApp.js:129
      ╷
   129│   return envinfo
      ╵
      = Parsing error: 'return' outside of function
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-app-polyfill/ie11.js:13
      ╷
    13│   require('promise/lib/rejection-tracking').enable();
      ╵
      = Unexpected require().
 
-r2c.eslint no-restricted-globals https://eslint.org/docs/rules/no-restricted-globals
+eslint no-restricted-globals https://eslint.org/docs/rules/no-restricted-globals
      > packages/react-app-polyfill/ie11.js:14
      ╷
    14│   self.Promise = require('promise/lib/es6-extensions.js');
      ╵
      = Unexpected use of 'self'.
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-app-polyfill/ie11.js:14
      ╷
    14│   self.Promise = require('promise/lib/es6-extensions.js');
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-app-polyfill/ie11.js:21
      ╷
    21│   require('whatwg-fetch');
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-app-polyfill/jsdom.js:13
      ╷
    13│   require('whatwg-fetch');
      ╵
      = Unexpected require().
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > packages/react-dev-utils/FileSizeReporter.js:44
      ╷
    44│   var previousSize = sizes[removeFileNameHash(root, asset.name)];
      ╵
      = 'removeFileNameHash' was used before it was defined.
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > packages/react-dev-utils/FileSizeReporter.js:45
      ╷
    45│   var difference = getDifferenceLabel(size, previousSize);
      ╵
      = 'getDifferenceLabel' was used before it was defined.
 
-r2c.eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
+eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
      > packages/react-dev-utils/FileSizeReporter.js:52
      ╷
    52│   size: size,
      ╵
      = Expected property shorthand.
 
-r2c.eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
+eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
      > packages/react-dev-utils/FileSizeReporter.js:154
      ╷
   154│   measureFileSizesBeforeBuild: measureFileSizesBeforeBuild,
      ╵
      = Expected property shorthand.
 
-r2c.eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
+eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
      > packages/react-dev-utils/FileSizeReporter.js:155
      ╷
   155│   printFileSizesAfterBuild: printFileSizesAfterBuild,
      ╵
      = Expected property shorthand.
 
-r2c.eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
+eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
      > packages/react-dev-utils/WebpackDevServerUtils.js:416
      ╷
   416│   context: function(pathname, req) {
@@ -313,49 +313,49 @@ r2c.eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
      ╵
      = Expected method shorthand.
 
-r2c.eslint no-shadow https://eslint.org/docs/rules/no-shadow
+eslint no-shadow https://eslint.org/docs/rules/no-shadow
      > packages/react-dev-utils/browsersHelper.js:64
      ╷
    64│   return shouldSetBrowsers(isInteractive).then(shouldSetBrowsers => {
      ╵
      = 'shouldSetBrowsers' is already declared in the upper scope.
 
-r2c.eslint eqeqeq https://eslint.org/docs/rules/eqeqeq
+eslint eqeqeq https://eslint.org/docs/rules/eqeqeq
      > packages/react-dev-utils/evalSourceMapMiddleware.js:17
      ╷
    17│   const module = server._stats.compilation.modules.find(m => m.id == id);
      ╵
      = Expected '===' and instead saw '=='.
 
-r2c.eslint import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+eslint import/no-dynamic-require https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-dynamic-require.md
      > packages/react-dev-utils/getCacheIdentifier.js:15
      ╷
    15│   cacheIdentifier += require(`${packageName}/package.json`).version;
      ╵
      = Calls to require() should use string literals
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-dev-utils/getCacheIdentifier.js:15
      ╷
    15│   cacheIdentifier += require(`${packageName}/package.json`).version;
      ╵
      = Unexpected require().
 
-r2c.eslint import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+eslint import/no-dynamic-require https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-dynamic-require.md
      > packages/react-dev-utils/getProcessForPort.js:37
      ╷
    37│   return require(packagePath).name;
      ╵
      = Calls to require() should use string literals
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-dev-utils/getProcessForPort.js:37
      ╷
    37│   return require(packagePath).name;
      ╵
      = Unexpected require().
 
-r2c.eslint default-case https://eslint.org/docs/rules/default-case
+eslint default-case https://eslint.org/docs/rules/default-case
      > packages/react-dev-utils/launchEditor.js:17
      ╷
    17│   switch (editor) {
@@ -367,7 +367,7 @@ r2c.eslint default-case https://eslint.org/docs/rules/default-case
      ╵
      = Expected a default case.
 
-r2c.eslint default-case https://eslint.org/docs/rules/default-case
+eslint default-case https://eslint.org/docs/rules/default-case
      > packages/react-dev-utils/launchEditor.js:127
      ╷
   127│   switch (editorBasename) {
@@ -428,56 +428,56 @@ r2c.eslint default-case https://eslint.org/docs/rules/default-case
      ╵
      = Expected a default case.
 
-r2c.eslint no-useless-return https://eslint.org/docs/rules/no-useless-return
+eslint no-useless-return https://eslint.org/docs/rules/no-useless-return
      > packages/react-dev-utils/openBrowser.js:61
      ╷
    61│   return;
      ╵
      = Unnecessary return statement.
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > packages/react-dev-utils/printHostingInstructions.js:26
      ╷
    26│   printBaseMessage(buildFolder, publicPathname);
      ╵
      = 'printBaseMessage' was used before it was defined.
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > packages/react-dev-utils/printHostingInstructions.js:28
      ╷
    28│   printDeployInstructions(publicUrl, hasDeployScript, useYarn);
      ╵
      = 'printDeployInstructions' was used before it was defined.
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > packages/react-dev-utils/printHostingInstructions.js:31
      ╷
    31│   printBaseMessage(buildFolder, publicPath);
      ╵
      = 'printBaseMessage' was used before it was defined.
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > packages/react-dev-utils/printHostingInstructions.js:35
      ╷
    35│   printBaseMessage(buildFolder, publicUrl);
      ╵
      = 'printBaseMessage' was used before it was defined.
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > packages/react-dev-utils/printHostingInstructions.js:37
      ╷
    37│   printStaticServerInstructions(buildFolder, useYarn);
      ╵
      = 'printStaticServerInstructions' was used before it was defined.
 
-r2c.eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
+eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
      > packages/react-dev-utils/typescriptFormatter.js:39
      ╷
    39│   { start: { line: line, column: character } },
      ╵
      = Expected property shorthand.
 
-r2c.eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
+eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
      > packages/react-dev-utils/webpackHotDevClient.js:47
      ╷
    47│   onError: function() {
@@ -486,49 +486,49 @@ r2c.eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
      ╵
      = Expected method shorthand.
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > packages/react-dev-utils/webpackHotDevClient.js:106
      ╷
   106│   tryApplyUpdates(function onHotUpdateSuccess() {
      ╵
      = 'tryApplyUpdates' was used before it was defined.
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > packages/react-dev-utils/webpackHotDevClient.js:109
      ╷
   109│   tryDismissErrorOverlay();
      ╵
      = 'tryDismissErrorOverlay' was used before it was defined.
 
-r2c.eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
+eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
      > packages/react-dev-utils/webpackHotDevClient.js:125
      ╷
   125│   warnings: warnings,
      ╵
      = Expected property shorthand.
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > packages/react-dev-utils/webpackHotDevClient.js:147
      ╷
   147│   tryApplyUpdates(function onSuccessfulHotUpdate() {
      ╵
      = 'tryApplyUpdates' was used before it was defined.
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > packages/react-dev-utils/webpackHotDevClient.js:150
      ╷
   150│   tryDismissErrorOverlay();
      ╵
      = 'tryDismissErrorOverlay' was used before it was defined.
 
-r2c.eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
+eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
      > packages/react-dev-utils/webpackHotDevClient.js:164
      ╷
   164│   errors: errors,
      ╵
      = Expected property shorthand.
 
-r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+eslint import/no-extraneous-dependencies https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
      > packages/react-error-overlay/build.js:7
      ╷
     7│   const webpack = require('webpack');
@@ -536,7 +536,7 @@ r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/impor
      = 'webpack' should be listed in the project's dependencies, not
        devDependencies.
 
-r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+eslint import/no-extraneous-dependencies https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
      > packages/react-error-overlay/build.js:8
      ╷
     8│   const chalk = require('chalk');
@@ -544,7 +544,7 @@ r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/impor
      = 'chalk' should be listed in the project's dependencies, not
        devDependencies.
 
-r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+eslint import/no-extraneous-dependencies https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
      > packages/react-error-overlay/build.js:11
      ╷
    11│   const rimraf = require('rimraf');
@@ -552,7 +552,7 @@ r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/impor
      = 'rimraf' should be listed in the project's dependencies, not
        devDependencies.
 
-r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+eslint import/no-extraneous-dependencies https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
      > packages/react-error-overlay/build.js:12
      ╷
    12│   const chokidar = require('chokidar');
@@ -560,28 +560,28 @@ r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/impor
      = 'chokidar' should be listed in the project's dependencies, not
        devDependencies.
 
-r2c.eslint no-unused-expressions https://eslint.org/docs/rules/no-unused-expressions
+eslint no-unused-expressions https://eslint.org/docs/rules/no-unused-expressions
      > packages/react-error-overlay/build.js:47
      ╷
    47│   isCI && process.exit(1);
      ╵
      = Expected an assignment or function call and instead saw an expression.
 
-r2c.eslint no-unused-expressions https://eslint.org/docs/rules/no-unused-expressions
+eslint no-unused-expressions https://eslint.org/docs/rules/no-unused-expressions
      > packages/react-error-overlay/build.js:94
      ╷
    94│   watchMode ? setupWatch() : runBuildSteps();
      ╵
      = Expected an assignment or function call and instead saw an expression.
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/flow/env.js:1
      ╷
     1│   declare module 'anser' {
      ╵
      = Parsing error: Unexpected token module
 
-r2c.eslint import/named https://eslint.org/docs/rules/import/named
+eslint import/named https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/named.md
      > packages/react-error-overlay/src/__tests__/extract-source-map.js:8
      ╷
     8│   import { extractSourceMapUrl } from '../utils/getSourceMap';
@@ -589,7 +589,7 @@ r2c.eslint import/named https://eslint.org/docs/rules/import/named
      = Parse errors in imported module '../utils/getSourceMap': Unexpected token
        : (17:15)
 
-r2c.eslint import/named https://eslint.org/docs/rules/import/named
+eslint import/named https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/named.md
      > packages/react-error-overlay/src/__tests__/get-source-map.js:8
      ╷
     8│   import { getSourceMap } from '../utils/getSourceMap';
@@ -597,7 +597,7 @@ r2c.eslint import/named https://eslint.org/docs/rules/import/named
      = Parse errors in imported module '../utils/getSourceMap': Unexpected token
        : (17:15)
 
-r2c.eslint import/named https://eslint.org/docs/rules/import/named
+eslint import/named https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/named.md
      > packages/react-error-overlay/src/__tests__/lines-around.js:8
      ╷
     8│   import { getLinesAround } from '../utils/getLinesAround';
@@ -605,7 +605,7 @@ r2c.eslint import/named https://eslint.org/docs/rules/import/named
      = Parse errors in imported module '../utils/getLinesAround': Unexpected
        token : (18:7)
 
-r2c.eslint import/named https://eslint.org/docs/rules/import/named
+eslint import/named https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/named.md
      > packages/react-error-overlay/src/__tests__/mapper.js:8
      ╷
     8│   import { map } from '../utils/mapper';
@@ -613,7 +613,7 @@ r2c.eslint import/named https://eslint.org/docs/rules/import/named
      = Parse errors in imported module '../utils/mapper': Unexpected token :
        (20:9)
 
-r2c.eslint import/named https://eslint.org/docs/rules/import/named
+eslint import/named https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/named.md
      > packages/react-error-overlay/src/__tests__/mapper.js:9
      ╷
     9│   import { parse } from '../utils/parser';
@@ -621,7 +621,7 @@ r2c.eslint import/named https://eslint.org/docs/rules/import/named
      = Parse errors in imported module '../utils/parser': Unexpected token :
        (13:31)
 
-r2c.eslint import/named https://eslint.org/docs/rules/import/named
+eslint import/named https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/named.md
      > packages/react-error-overlay/src/__tests__/parser/chrome.js:8
      ╷
     8│   import { parse } from '../../utils/parser';
@@ -629,7 +629,7 @@ r2c.eslint import/named https://eslint.org/docs/rules/import/named
      = Parse errors in imported module '../../utils/parser': Unexpected token :
        (13:31)
 
-r2c.eslint import/named https://eslint.org/docs/rules/import/named
+eslint import/named https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/named.md
      > packages/react-error-overlay/src/__tests__/parser/firefox.js:8
      ╷
     8│   import { parse } from '../../utils/parser';
@@ -637,7 +637,7 @@ r2c.eslint import/named https://eslint.org/docs/rules/import/named
      = Parse errors in imported module '../../utils/parser': Unexpected token :
        (13:31)
 
-r2c.eslint import/named https://eslint.org/docs/rules/import/named
+eslint import/named https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/named.md
      > packages/react-error-overlay/src/__tests__/parser/generic.js:8
      ╷
     8│   import { parse } from '../../utils/parser';
@@ -645,7 +645,7 @@ r2c.eslint import/named https://eslint.org/docs/rules/import/named
      = Parse errors in imported module '../../utils/parser': Unexpected token :
        (13:31)
 
-r2c.eslint import/named https://eslint.org/docs/rules/import/named
+eslint import/named https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/named.md
      > packages/react-error-overlay/src/__tests__/parser/react.js:8
      ╷
     8│   import { parse } from '../../utils/parser';
@@ -653,7 +653,7 @@ r2c.eslint import/named https://eslint.org/docs/rules/import/named
      = Parse errors in imported module '../../utils/parser': Unexpected token :
        (13:31)
 
-r2c.eslint import/named https://eslint.org/docs/rules/import/named
+eslint import/named https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/named.md
      > packages/react-error-overlay/src/__tests__/parser/safari.js:8
      ╷
     8│   import { parse } from '../../utils/parser';
@@ -661,7 +661,7 @@ r2c.eslint import/named https://eslint.org/docs/rules/import/named
      = Parse errors in imported module '../../utils/parser': Unexpected token :
        (13:31)
 
-r2c.eslint import/named https://eslint.org/docs/rules/import/named
+eslint import/named https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/named.md
      > packages/react-error-overlay/src/__tests__/script-lines.js:8
      ╷
     8│   import { ScriptLine } from '../utils/stack-frame';
@@ -669,7 +669,7 @@ r2c.eslint import/named https://eslint.org/docs/rules/import/named
      = Parse errors in imported module '../utils/stack-frame': Unexpected token
        : (13:13)
 
-r2c.eslint import/named https://eslint.org/docs/rules/import/named
+eslint import/named https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/named.md
      > packages/react-error-overlay/src/__tests__/stack-frame.js:8
      ╷
     8│   import { StackFrame } from '../utils/stack-frame';
@@ -677,7 +677,7 @@ r2c.eslint import/named https://eslint.org/docs/rules/import/named
      = Parse errors in imported module '../utils/stack-frame': Unexpected token
        : (13:13)
 
-r2c.eslint import/named https://eslint.org/docs/rules/import/named
+eslint import/named https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/named.md
      > packages/react-error-overlay/src/__tests__/unmapper.js:8
      ╷
     8│   import { unmap } from '../utils/unmapper';
@@ -685,7 +685,7 @@ r2c.eslint import/named https://eslint.org/docs/rules/import/named
      = Parse errors in imported module '../utils/unmapper': Unexpected token :
        (14:22)
 
-r2c.eslint import/named https://eslint.org/docs/rules/import/named
+eslint import/named https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/named.md
      > packages/react-error-overlay/src/__tests__/unmapper.js:9
      ╷
     9│   import { parse } from '../utils/parser';
@@ -693,126 +693,126 @@ r2c.eslint import/named https://eslint.org/docs/rules/import/named
      = Parse errors in imported module '../utils/parser': Unexpected token :
        (13:31)
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/components/CloseButton.js:23
      ╷
    23│   type CloseCallback = () => void;
      ╵
      = Parsing error: Unexpected token CloseCallback
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/components/CodeBlock.js:37
      ╷
    37│   type CodeBlockPropsType = {|
      ╵
      = Parsing error: Unexpected token CodeBlockPropsType
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/components/Collapsible.js:12
      ╷
    12│   import type { Element as ReactElement } from 'react';
      ╵
      = Parsing error: Unexpected token {
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/components/ErrorOverlay.js:12
      ╷
    12│   import type { Node as ReactNode } from 'react';
      ╵
      = Parsing error: Unexpected token {
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/components/Footer.js:19
      ╷
    19│   type FooterPropsType = {|
      ╵
      = Parsing error: Unexpected token FooterPropsType
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/components/Header.js:25
      ╷
    25│   type HeaderPropType = {|
      ╵
      = Parsing error: Unexpected token HeaderPropType
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/components/NavigationBar.js:42
      ╷
    42│   type Callback = () => void;
      ╵
      = Parsing error: Unexpected token Callback
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/containers/CompileErrorContainer.js:16
      ╷
    16│   import type { ErrorLocation } from '../utils/parseCompileError';
      ╵
      = Parsing error: Unexpected token {
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/containers/RuntimeError.js:13
      ╷
    13│   import type { StackFrame } from '../utils/stack-frame';
      ╵
      = Parsing error: Unexpected token {
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/containers/RuntimeErrorContainer.js:16
      ╷
    16│   import type { ErrorRecord } from './RuntimeError';
      ╵
      = Parsing error: Unexpected token {
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/containers/StackFrame.js:14
      ╷
    14│   import type { StackFrame as StackFrameType } from '../utils/stack-frame';
      ╵
      = Parsing error: Unexpected token {
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/containers/StackFrameCodeBlock.js:13
      ╷
    13│   import type { ScriptLine } from '../utils/stack-frame';
      ╵
      = Parsing error: Unexpected token {
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/containers/StackTrace.js:15
      ╷
    15│   import type { StackFrame as StackFrameType } from '../utils/stack-frame';
      ╵
      = Parsing error: Unexpected token {
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/effects/proxyConsole.js:10
      ╷
    10│   type ReactFrame = {
      ╵
      = Parsing error: Unexpected token ReactFrame
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/effects/stackTraceLimit.js:9
      ╷
     9│   let stackTraceRegistered: boolean = false;
      ╵
      = Parsing error: Unexpected token :
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/effects/unhandledError.js:11
      ╷
    11│   type ErrorCallback = (error: Error) => void;
      ╵
      = Parsing error: Unexpected token ErrorCallback
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/effects/unhandledRejection.js:11
      ╷
    11│   type ErrorCallback = (error: Error) => void;
      ╵
      = Parsing error: Unexpected token ErrorCallback
 
-r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+eslint import/no-extraneous-dependencies https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
      > packages/react-error-overlay/src/iframeScript.js:8
      ╷
     8│   import 'react-app-polyfill/ie9';
@@ -820,7 +820,7 @@ r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/impor
      = 'react-app-polyfill' should be listed in the project's dependencies, not
        devDependencies.
 
-r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+eslint import/no-extraneous-dependencies https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
      > packages/react-error-overlay/src/iframeScript.js:9
      ╷
     9│   import React from 'react';
@@ -828,7 +828,7 @@ r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/impor
      = 'react' should be listed in the project's dependencies, not
        devDependencies.
 
-r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+eslint import/no-extraneous-dependencies https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
      > packages/react-error-overlay/src/iframeScript.js:10
      ╷
    10│   import ReactDOM from 'react-dom';
@@ -836,7 +836,7 @@ r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/impor
      = 'react-dom' should be listed in the project's dependencies, not
        devDependencies.
 
-r2c.eslint import/no-named-as-default https://eslint.org/docs/rules/import/no-named-as-default
+eslint import/no-named-as-default https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-named-as-default.md
      > packages/react-error-overlay/src/iframeScript.js:11
      ╷
    11│   import CompileErrorContainer from './containers/CompileErrorContainer';
@@ -844,7 +844,7 @@ r2c.eslint import/no-named-as-default https://eslint.org/docs/rules/import/no-na
      = Parse errors in imported module './containers/CompileErrorContainer':
        Unexpected token { (16:13)
 
-r2c.eslint import/no-named-as-default-member https://eslint.org/docs/rules/import/no-named-as-default-member
+eslint import/no-named-as-default-member https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-named-as-default-member.md
      > packages/react-error-overlay/src/iframeScript.js:11
      ╷
    11│   import CompileErrorContainer from './containers/CompileErrorContainer';
@@ -852,7 +852,7 @@ r2c.eslint import/no-named-as-default-member https://eslint.org/docs/rules/impor
      = Parse errors in imported module './containers/CompileErrorContainer':
        Unexpected token { (16:13)
 
-r2c.eslint import/no-named-as-default https://eslint.org/docs/rules/import/no-named-as-default
+eslint import/no-named-as-default https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-named-as-default.md
      > packages/react-error-overlay/src/iframeScript.js:12
      ╷
    12│   import RuntimeErrorContainer from './containers/RuntimeErrorContainer';
@@ -860,7 +860,7 @@ r2c.eslint import/no-named-as-default https://eslint.org/docs/rules/import/no-na
      = Parse errors in imported module './containers/RuntimeErrorContainer':
        Unexpected token { (16:13)
 
-r2c.eslint import/no-named-as-default-member https://eslint.org/docs/rules/import/no-named-as-default-member
+eslint import/no-named-as-default-member https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-named-as-default-member.md
      > packages/react-error-overlay/src/iframeScript.js:12
      ╷
    12│   import RuntimeErrorContainer from './containers/RuntimeErrorContainer';
@@ -868,7 +868,7 @@ r2c.eslint import/no-named-as-default-member https://eslint.org/docs/rules/impor
      = Parse errors in imported module './containers/RuntimeErrorContainer':
        Unexpected token { (16:13)
 
-r2c.eslint import/named https://eslint.org/docs/rules/import/named
+eslint import/named https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/named.md
      > packages/react-error-overlay/src/iframeScript.js:14
      ╷
    14│   import { applyStyles } from './utils/dom/css';
@@ -876,140 +876,140 @@ r2c.eslint import/named https://eslint.org/docs/rules/import/named
      = Parse errors in imported module './utils/dom/css': Unexpected token :
        (12:26)
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/index.js:20
      ╷
    20│   import type { ErrorRecord } from './listenToRuntimeErrors';
      ╵
      = Parsing error: Unexpected token {
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/listenToRuntimeErrors.js:28
      ╷
    28│   import type { StackFrame } from './utils/stack-frame';
      ╵
      = Parsing error: Unexpected token {
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/utils/dom/absolutifyCaret.js:9
      ╷
     9│   function removeNextBr(parent, component: ?Element) {
      ╵
      = Parsing error: Unexpected token :
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/utils/dom/css.js:12
      ╷
    12│   function getHead(document: Document) {
      ╵
      = Parsing error: Unexpected token :
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/utils/generateAnsiHTML.js:64
      ╷
    64│   function generateAnsiHTML(txt: string): string {
      ╵
      = Parsing error: Unexpected token :
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/utils/getLinesAround.js:18
      ╷
    18│   line: number,
      ╵
      = Parsing error: Unexpected token :
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/utils/getPrettyURL.js:10
      ╷
    10│   sourceFileName: ?string,
      ╵
      = Parsing error: Unexpected token :
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/utils/getSourceMap.js:17
      ╷
    17│   __source_map: SourceMapConsumer;
      ╵
      = Parsing error: Unexpected token :
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/utils/getStackFrames.js:9
      ╷
     9│   import type { StackFrame } from './stack-frame';
      ╵
      = Parsing error: Unexpected token {
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/utils/isBultinErrorName.js:9
      ╷
     9│   function isBultinErrorName(errorName: ?string) {
      ╵
      = Parsing error: Unexpected token :
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/utils/isInternalFile.js:9
      ╷
     9│   function isInternalFile(sourceFileName: ?string, fileName: ?string) {
      ╵
      = Parsing error: Unexpected token :
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/utils/mapper.js:20
      ╷
    20│   frames: StackFrame[],
      ╵
      = Parsing error: Unexpected token :
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/utils/parseCompileError.js:4
      ╷
     4│   export type ErrorLocation = {|
      ╵
      = Parsing error: Unexpected token type
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/utils/parser.js:13
      ╷
    13│   function extractLocation(token: string): [string, number, number] {
      ╵
      = Parsing error: Unexpected token :
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/utils/stack-frame.js:13
      ╷
    13│   lineNumber: number;
      ╵
      = Parsing error: Unexpected token :
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/utils/unmapper.js:14
      ╷
    14│   function count(search: string, string: string): number {
      ╵
      = Parsing error: Unexpected token :
 
-r2c.eslint error
+eslint error
      > packages/react-error-overlay/src/utils/warnings.js:9
      ╷
     9│   import type { ReactFrame } from '../effects/proxyConsole';
      ╵
      = Parsing error: Unexpected token {
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-scripts/config/env.js:43
      ╷
    43│   require('dotenv-expand')(
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-scripts/config/env.js:44
      ╷
    44│   require('dotenv').config({
      ╵
      = Unexpected require().
 
-r2c.eslint import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+eslint import/no-dynamic-require https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-dynamic-require.md
      > packages/react-scripts/config/modules.js:126
      ╷
   126│   const ts = require(resolve.sync('typescript', {
@@ -1018,7 +1018,7 @@ r2c.eslint import/no-dynamic-require https://eslint.org/docs/rules/import/no-dyn
      ╵
      = Calls to require() should use string literals
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-scripts/config/modules.js:126
      ╷
   126│   const ts = require(resolve.sync('typescript', {
@@ -1027,56 +1027,56 @@ r2c.eslint global-require https://eslint.org/docs/rules/global-require
      ╵
      = Unexpected require().
 
-r2c.eslint import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+eslint import/no-dynamic-require https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-dynamic-require.md
      > packages/react-scripts/config/modules.js:133
      ╷
   133│   config = require(paths.appJsConfig);
      ╵
      = Calls to require() should use string literals
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-scripts/config/modules.js:133
      ╷
   133│   config = require(paths.appJsConfig);
      ╵
      = Unexpected require().
 
-r2c.eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
+eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
      > packages/react-scripts/config/modules.js:142
      ╷
   142│   additionalModulePaths: additionalModulePaths,
      ╵
      = Expected property shorthand.
 
-r2c.eslint import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+eslint import/no-dynamic-require https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-dynamic-require.md
      > packages/react-scripts/config/paths.js:34
      ╷
    34│   envPublicUrl || require(appPackageJson).homepage;
      ╵
      = Calls to require() should use string literals
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-scripts/config/paths.js:34
      ╷
    34│   envPublicUrl || require(appPackageJson).homepage;
      ╵
      = Unexpected require().
 
-r2c.eslint no-shadow https://eslint.org/docs/rules/no-shadow
+eslint no-shadow https://eslint.org/docs/rules/no-shadow
      > packages/react-scripts/config/paths.js:65
      ╷
    65│   const extension = moduleFileExtensions.find(extension =>
      ╵
      = 'extension' is already declared in the upper scope.
 
-r2c.eslint import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+eslint import/no-dynamic-require https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-dynamic-require.md
      > packages/react-scripts/config/webpack.config.js:42
      ╷
    42│   const appPackageJson = require(paths.appPackageJson);
      ╵
      = Calls to require() should use string literals
 
-r2c.eslint radix https://eslint.org/docs/rules/radix
+eslint radix https://eslint.org/docs/rules/radix
      > packages/react-scripts/config/webpack.config.js:50
      ╷
    50│   const imageInlineSizeLimit = parseInt(
@@ -1085,224 +1085,224 @@ r2c.eslint radix https://eslint.org/docs/rules/radix
      ╵
      = Missing radix parameter.
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-scripts/config/webpack.config.js:115
      ╷
   115│   require('postcss-flexbugs-fixes'),
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-scripts/config/webpack.config.js:116
      ╷
   116│   require('postcss-preset-env')({
      ╵
      = Unexpected require().
 
-r2c.eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
+eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
      > packages/react-scripts/config/webpack.config.js:198
      ╷
   198│   publicPath: publicPath,
      ╵
      = Expected property shorthand.
 
-r2c.eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
+eslint object-shorthand https://eslint.org/docs/rules/object-shorthand
      > packages/react-scripts/config/webpack.config.js:661
      ╷
   661│   publicPath: publicPath,
      ╵
      = Expected property shorthand.
 
-r2c.eslint import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+eslint import/no-dynamic-require https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-dynamic-require.md
      > packages/react-scripts/config/webpackDevServer.config.js:96
      ╷
    96│   require(paths.proxySetup)(app);
      ╵
      = Calls to require() should use string literals
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-scripts/config/webpackDevServer.config.js:96
      ╷
    96│   require(paths.proxySetup)(app);
      ╵
      = Unexpected require().
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > packages/react-scripts/scripts/build.js:79
      ╷
    79│   copyPublicFolder();
      ╵
      = 'copyPublicFolder' was used before it was defined.
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > packages/react-scripts/scripts/build.js:81
      ╷
    81│   return build(previousFileSizes);
      ╵
      = 'build' was used before it was defined.
 
-r2c.eslint import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+eslint import/no-dynamic-require https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-dynamic-require.md
      > packages/react-scripts/scripts/build.js:112
      ╷
   112│   const appPackage = require(paths.appPackageJson);
      ╵
      = Calls to require() should use string literals
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-scripts/scripts/build.js:112
      ╷
   112│   const appPackage = require(paths.appPackageJson);
      ╵
      = Unexpected require().
 
-r2c.eslint no-shadow https://eslint.org/docs/rules/no-shadow
+eslint no-shadow https://eslint.org/docs/rules/no-shadow
      > packages/react-scripts/scripts/eject.js:117
      ╷
   117│   const files = folders.reduce((files, folder) => {
      ╵
      = 'files' is already declared in the upper scope.
 
-r2c.eslint import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+eslint import/no-dynamic-require https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-dynamic-require.md
      > packages/react-scripts/scripts/eject.js:171
      ╷
   171│   const ownPackage = require(path.join(ownPath, 'package.json'));
      ╵
      = Calls to require() should use string literals
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-scripts/scripts/eject.js:171
      ╷
   171│   const ownPackage = require(path.join(ownPath, 'package.json'));
      ╵
      = Unexpected require().
 
-r2c.eslint import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+eslint import/no-dynamic-require https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-dynamic-require.md
      > packages/react-scripts/scripts/eject.js:172
      ╷
   172│   const appPackage = require(path.join(appPath, 'package.json'));
      ╵
      = Calls to require() should use string literals
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-scripts/scripts/eject.js:172
      ╷
   172│   const appPackage = require(path.join(appPath, 'package.json'));
      ╵
      = Unexpected require().
 
-r2c.eslint import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+eslint import/no-dynamic-require https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-dynamic-require.md
      > packages/react-scripts/scripts/init.js:88
      ╷
    88│   const appPackage = require(path.join(appPath, 'package.json'));
      ╵
      = Calls to require() should use string literals
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-scripts/scripts/init.js:88
      ╷
    88│   const appPackage = require(path.join(appPath, 'package.json'));
      ╵
      = Unexpected require().
 
-r2c.eslint import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+eslint import/no-dynamic-require https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-dynamic-require.md
      > packages/react-scripts/scripts/init.js:193
      ╷
   193│   const templateDependencies = require(templateDependenciesPath).dependencies;
      ╵
      = Calls to require() should use string literals
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-scripts/scripts/init.js:193
      ╷
   193│   const templateDependencies = require(templateDependenciesPath).dependencies;
      ╵
      = Unexpected require().
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > packages/react-scripts/scripts/init.js:205
      ╷
   205│   if (!isReactInstalled(appPackage) || template) {
      ╵
      = 'isReactInstalled' was used before it was defined.
 
-r2c.eslint import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+eslint import/no-dynamic-require https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-dynamic-require.md
      > packages/react-scripts/scripts/start.js:96
      ╷
    96│   const appName = require(paths.appPackageJson).name;
      ╵
      = Calls to require() should use string literals
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-scripts/scripts/start.js:96
      ╷
    96│   const appName = require(paths.appPackageJson).name;
      ╵
      = Unexpected require().
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > packages/react-scripts/scripts/start.js:102
      ╷
   102│   devServer.sockWrite(devServer.sockets, 'warnings', warnings),
      ╵
      = 'devServer' was used before it was defined.
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > packages/react-scripts/scripts/start.js:102
      ╷
   102│   devServer.sockWrite(devServer.sockets, 'warnings', warnings),
      ╵
      = 'devServer' was used before it was defined.
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > packages/react-scripts/scripts/start.js:104
      ╷
   104│   devServer.sockWrite(devServer.sockets, 'errors', errors),
      ╵
      = 'devServer' was used before it was defined.
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > packages/react-scripts/scripts/start.js:104
      ╷
   104│   devServer.sockWrite(devServer.sockets, 'errors', errors),
      ╵
      = 'devServer' was used before it was defined.
 
-r2c.eslint import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+eslint import/no-dynamic-require https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-dynamic-require.md
      > packages/react-scripts/scripts/start.js:118
      ╷
   118│   const proxySetting = require(paths.appPackageJson).proxy;
      ╵
      = Calls to require() should use string literals
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-scripts/scripts/start.js:118
      ╷
   118│   const proxySetting = require(paths.appPackageJson).proxy;
      ╵
      = Unexpected require().
 
-r2c.eslint import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+eslint import/no-dynamic-require https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-dynamic-require.md
      > packages/react-scripts/scripts/utils/createJestConfig.js:72
      ╷
    72│   const overrides = Object.assign({}, require(paths.appPackageJson).jest);
      ╵
      = Calls to require() should use string literals
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-scripts/scripts/utils/createJestConfig.js:72
      ╷
    72│   const overrides = Object.assign({}, require(paths.appPackageJson).jest);
      ╵
      = Unexpected require().
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-scripts/scripts/utils/verifyPackageTree.js:36
      ╷
    36│   const ownPackageJson = require('../../package.json');
      ╵
      = Unexpected require().
 
-r2c.eslint import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+eslint import/no-dynamic-require https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-dynamic-require.md
      > packages/react-scripts/scripts/utils/verifyTypeScriptSetup.js:62
      ╷
    62│   ts = require(resolve.sync('typescript', {
@@ -1311,7 +1311,7 @@ r2c.eslint import/no-dynamic-require https://eslint.org/docs/rules/import/no-dyn
      ╵
      = Calls to require() should use string literals
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > packages/react-scripts/scripts/utils/verifyTypeScriptSetup.js:62
      ╷
    62│   ts = require(resolve.sync('typescript', {
@@ -1320,7 +1320,7 @@ r2c.eslint global-require https://eslint.org/docs/rules/global-require
      ╵
      = Unexpected require().
 
-r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+eslint import/no-extraneous-dependencies https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
      > packages/react-scripts/template-typescript/src/App.test.tsx:1
      ╷
     1│   import React from 'react';
@@ -1328,7 +1328,7 @@ r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/impor
      = 'react' should be listed in the project's dependencies, not
        devDependencies.
 
-r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+eslint import/no-extraneous-dependencies https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
      > packages/react-scripts/template-typescript/src/App.test.tsx:2
      ╷
     2│   import ReactDOM from 'react-dom';
@@ -1336,21 +1336,21 @@ r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/impor
      = 'react-dom' should be listed in the project's dependencies, not
        devDependencies.
 
-r2c.eslint import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+eslint import/no-unresolved https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-unresolved.md
      > packages/react-scripts/template-typescript/src/App.test.tsx:3
      ╷
     3│   import App from './App';
      ╵
      = Unable to resolve path to module './App'.
 
-r2c.eslint error
+eslint error
      > packages/react-scripts/template-typescript/src/App.tsx:5
      ╷
     5│   const App: React.FC = () => {
      ╵
      = Parsing error: Unexpected token :
 
-r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+eslint import/no-extraneous-dependencies https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
      > packages/react-scripts/template-typescript/src/index.tsx:1
      ╷
     1│   import React from 'react';
@@ -1358,7 +1358,7 @@ r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/impor
      = 'react' should be listed in the project's dependencies, not
        devDependencies.
 
-r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+eslint import/no-extraneous-dependencies https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
      > packages/react-scripts/template-typescript/src/index.tsx:2
      ╷
     2│   import ReactDOM from 'react-dom';
@@ -1366,28 +1366,28 @@ r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/impor
      = 'react-dom' should be listed in the project's dependencies, not
        devDependencies.
 
-r2c.eslint import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+eslint import/no-unresolved https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-unresolved.md
      > packages/react-scripts/template-typescript/src/index.tsx:4
      ╷
     4│   import App from './App';
      ╵
      = Unable to resolve path to module './App'.
 
-r2c.eslint import/no-unresolved https://eslint.org/docs/rules/import/no-unresolved
+eslint import/no-unresolved https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-unresolved.md
      > packages/react-scripts/template-typescript/src/index.tsx:5
      ╷
     5│   import * as serviceWorker from './serviceWorker';
      ╵
      = Unable to resolve path to module './serviceWorker'.
 
-r2c.eslint error
+eslint error
      > packages/react-scripts/template-typescript/src/serviceWorker.ts:23
      ╷
    23│   type Config = {
      ╵
      = Parsing error: Unexpected token Config
 
-r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+eslint import/no-extraneous-dependencies https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
      > tasks/compile-lockfile.js:12
      ╷
    12│   const fse = require('fs-extra');
@@ -1395,7 +1395,7 @@ r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/impor
      = 'fs-extra' should be listed in the project's dependencies, not
        devDependencies.
 
-r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+eslint import/no-extraneous-dependencies https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
      > tasks/compile-lockfile.js:27
      ╷
    27│   const dependencies = require('react-scripts/package.json').dependencies;
@@ -1403,14 +1403,14 @@ r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/impor
      = 'react-scripts' should be listed in the project's dependencies. Run 'npm
        i -S react-scripts' to add it
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > tasks/compile-lockfile.js:27
      ╷
    27│   const dependencies = require('react-scripts/package.json').dependencies;
      ╵
      = Unexpected require().
 
-r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+eslint import/no-extraneous-dependencies https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
      > tasks/screencast-start.js:12
      ╷
    12│   const execa = require('execa');
@@ -1418,7 +1418,7 @@ r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/impor
      = 'execa' should be listed in the project's dependencies, not
        devDependencies.
 
-r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+eslint import/no-extraneous-dependencies https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
      > tasks/screencast-start.js:13
      ╷
    13│   const meow = require('meow');
@@ -1426,7 +1426,7 @@ r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/impor
      = 'meow' should be listed in the project's dependencies, not
        devDependencies.
 
-r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+eslint import/no-extraneous-dependencies https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
      > tasks/screencast-start.js:14
      ╷
    14│   const multimatch = require('multimatch');
@@ -1434,14 +1434,14 @@ r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/impor
      = 'multimatch' should be listed in the project's dependencies, not
        devDependencies.
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > tasks/screencast-start.js:16
      ╷
    16│   main(meow());
      ╵
      = 'main' was used before it was defined.
 
-r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+eslint import/no-extraneous-dependencies https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
      > tasks/screencast.js:14
      ╷
    14│   const execa = require('execa');
@@ -1449,7 +1449,7 @@ r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/impor
      = 'execa' should be listed in the project's dependencies, not
        devDependencies.
 
-r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/import/no-extraneous-dependencies
+eslint import/no-extraneous-dependencies https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
      > tasks/screencast.js:15
      ╷
    15│   const tempy = require('tempy');
@@ -1457,49 +1457,49 @@ r2c.eslint import/no-extraneous-dependencies https://eslint.org/docs/rules/impor
      = 'tempy' should be listed in the project's dependencies, not
        devDependencies.
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > tasks/screencast.js:17
      ╷
    17│   main();
      ╵
      = 'main' was used before it was defined.
 
-r2c.eslint import/no-dynamic-require https://eslint.org/docs/rules/import/no-dynamic-require
+eslint import/no-dynamic-require https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-dynamic-require.md
      > tasks/screencast.js:41
      ╷
    41│   const data = require(cast);
      ╵
      = Calls to require() should use string literals
 
-r2c.eslint global-require https://eslint.org/docs/rules/global-require
+eslint global-require https://eslint.org/docs/rules/global-require
      > tasks/screencast.js:41
      ╷
    41│   const data = require(cast);
      ╵
      = Unexpected require().
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > tasks/screencast.js:43
      ╷
    43│   cut(data.stdout, { start: resolveLine, end: fetchLine });
      ╵
      = 'cut' was used before it was defined.
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > tasks/screencast.js:44
      ╷
    44│   cut(data.stdout, { start: countLine, end: doneLine });
      ╵
      = 'cut' was used before it was defined.
 
-r2c.eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
+eslint no-use-before-define https://eslint.org/docs/rules/no-use-before-define
      > tasks/screencast.js:45
      ╷
    45│   replace(data.stdout, [{ in: cwd, out: '~' }]);
      ╵
      = 'replace' was used before it was defined.
 
-r2c.eslint no-useless-catch https://eslint.org/docs/rules/no-useless-catch
+eslint no-useless-catch https://eslint.org/docs/rules/no-useless-catch
      > tasks/screencast.js:54
      ╷
    54│   } catch (err) {
@@ -1508,7 +1508,7 @@ r2c.eslint no-useless-catch https://eslint.org/docs/rules/no-useless-catch
      ╵
      = Unnecessary catch clause.
 
-r2c.eslint:
+eslint:
   global-require                       49▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
   error                                38▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
   no-use-before-define                 23▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬

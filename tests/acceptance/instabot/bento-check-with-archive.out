@@ -1,6 +1,6 @@
-r2c.bandit:
+bandit:
   ✔ No issues detected
 
-r2c.flake8:
+flake8:
   ✔ No issues detected
 

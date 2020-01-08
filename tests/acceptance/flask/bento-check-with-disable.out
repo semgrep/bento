@@ -1,4 +1,4 @@
-r2c.click r2c-click-option-function-argument-check
+r2c.click option-function-argument-check https://checks.bento.dev/en/latest/flake8-click/option-function-argument-check
      > src/flask/cli.py:779
      ╷
   779│   @click.command("run", short_help="Run a development server.")
@@ -7,7 +7,7 @@ r2c.click r2c-click-option-function-argument-check
        /__no_debugger,eager_loading/__lazy_loader,with_threads/__without_threads
        ` for `@click.option`
 
-r2c.bandit B307 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b307-eval
+bandit B307 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b307-eval
      > src/flask/cli.py:892
      ╷
   892│   eval(compile(f.read(), startup, "exec"), ctx)
@@ -15,35 +15,35 @@ r2c.bandit B307 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_cal
      = Use of possibly insecure function - consider using safer
        ast.literal_eval.
 
-r2c.bandit B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+bandit try-except-pass https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
      > tests/test_appctx.py:74
      ╷
    74│   except Exception:
      ╵
      = Try, Except, Pass detected.
 
-r2c.bandit B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+bandit try-except-pass https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
      > tests/test_appctx.py:93
      ╷
    93│   except Exception:
      ╵
      = Try, Except, Pass detected.
 
-r2c.bandit B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+bandit try-except-pass https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
      > tests/test_basic.py:784
      ╷
   784│   except Exception:
      ╵
      = Try, Except, Pass detected.
 
-r2c.bandit B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+bandit try-except-pass https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
      > tests/test_basic.py:796
      ╷
   796│   except Exception:
      ╵
      = Try, Except, Pass detected.
 
-r2c.bandit B201 https://bandit.readthedocs.io/en/latest/plugins/b201_flask_debug_true.html
+bandit flask-debug-true https://bandit.readthedocs.io/en/latest/plugins/b201_flask_debug_true.html
      > tests/test_basic.py:1912
      ╷
  1912│   app.run(hostname, port, debug=True)
@@ -63,14 +63,14 @@ r2c.flask secure-set-cookie https://checks.bento.dev/en/latest/flake8-flask/secu
        client-side JavaScript read the cookie, set httponly=False.  If you want
        to attach cookies to requests for external sites, set samesite=None.
 
-r2c.bandit B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+bandit try-except-pass https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
      > tests/test_reqctx.py:45
      ╷
    45│   except Exception:
      ╵
      = Try, Except, Pass detected.
 
-r2c.bandit B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+bandit try-except-pass https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
      > tests/test_reqctx.py:64
      ╷
    64│   except Exception:
@@ -95,7 +95,7 @@ r2c.flask unescaped-file-extension https://checks.bento.dev/en/latest/flake8-fla
        default. Flask only autoescapes .html, .htm, .xml, and .xhtml files. Make
        sure your variables are escaped using `flask.Markup.escape`.
 
-r2c.bandit B201 https://bandit.readthedocs.io/en/latest/plugins/b201_flask_debug_true.html
+bandit flask-debug-true https://bandit.readthedocs.io/en/latest/plugins/b201_flask_debug_true.html
      > tests/test_templating.py:404
      ╷
   404│   app.run(debug=True)
@@ -103,15 +103,15 @@ r2c.bandit B201 https://bandit.readthedocs.io/en/latest/plugins/b201_flask_debug
      = A Flask app appears to be run with debug=True, which exposes the Werkzeug
        debugger and allows the execution of arbitrary code.
 
-r2c.bandit:
-  B110                                    6▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  B201                                    2▕▬▬▬▬▬▬▬▬▬▬▬▬
-  B307                                    1▕▬▬▬▬▬▬
+bandit:
+  try-except-pass                    6▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  flask-debug-true                   2▕▬▬▬▬▬▬▬▬▬▬▬▬▬
+  B307                               1▕▬▬▬▬▬▬▬
 
 r2c.flask:
-  unescaped-file-extension                2▕▬▬▬▬▬▬▬▬▬▬▬▬
-  secure-set-cookie                       1▕▬▬▬▬▬▬
+  unescaped-file-extension           2▕▬▬▬▬▬▬▬▬▬▬▬▬▬
+  secure-set-cookie                  1▕▬▬▬▬▬▬▬
 
 r2c.click:
-  r2c-click-option-function-argument-     1▕▬▬▬▬▬▬
+  option-function-argument-check     1▕▬▬▬▬▬▬▬
 

@@ -4,32 +4,32 @@ formatter:
   - clippy: {}
   - histo: {}
 tools:
-  r2c.bandit:
+  bandit:
     ignore:
-      - B101 # assert_used
-      - B104 # hardcoded_bind_all_interfaces
-      - B105 # hardcoded_password_string
-      - B106 # hardcoded_password_funcarg
-      - B107 # hardcoded_password_default
-      - B108 # hardcoded_tmp_directory
-      - B112 # try_except_continue
-      - B303 # md5
-      - B310 # urllib_urlopen
-      - B311 # random
-      - B403 # import_pickle
-      - B404 # import_subprocess
-      - B405 # import_xml_etree
-      - B406 # import_xml_sax
-      - B407 # import_xml_expat
-      - B408 # import_xml_minidom
-      - B409 # import_xml_pulldom
-      - B410 # import_lxml
-      - B603 # subprocess_without_shell_equals_true
-      - B604 # any_other_function_with_shell_equals_true
-      - B606 # start_process_with_no_shell
-      - B607 # start_process_with_partial_path
-      - B608 # hardcoded_sql_expressions
-  r2c.eslint:
+      - any-other-function-with-shell-equals-true
+      - assert-used
+      - hardcoded-bind-all-interfaces
+      - hardcoded-password-default
+      - hardcoded-password-funcarg
+      - hardcoded-password-string
+      - hardcoded-sql-expressions
+      - hardcoded-tmp-directory
+      - import-lxml
+      - import-pickle
+      - import-subprocess
+      - import-xml-expat
+      - import-xml-minidom
+      - import-xml-pulldom
+      - import-xml-sax
+      - import_xml-etree
+      - md5
+      - random
+      - start-process-with-no-shell
+      - start-process-with-partial-path
+      - subprocess-without-shell-equals-true
+      - try-except-continue
+      - urllib-urlopen
+  eslint:
     ignore:
       - "@typescript-eslint/camelcase"
       - "@typescript-eslint/member-delimiter-style"
@@ -267,166 +267,14 @@ tools:
       - vars-on-top
       - wrap-regex
       - yoda
-  r2c.flake8:
+  flake8:
     ignore:
-      # Do not use bare except; duplicate of E722
-      - B001
-      # Do not call getattr with a constant attribute value
-      - B009
-      # Do not call setattr with a constant attribute value
-      - B010
-      # Indentation contains mixed spaces and tabs
-      - E101
-      # Indentation is not a multiple of four
-      - E111
-      # Indentation is not a multiple of four (comment)
-      - E114
-      # Expected an indented block (comment)
-      - E115
-      # Unexpected indentation (comment)
-      - E116
-      # Over-indented
-      - E117
-      # Continuation line under-indented for hanging indent
-      - E121
-      # Continuation line missing indentation or outdented
-      - E122
-      # Closing bracket does not match indentation of opening bracket's line
-      - E123
-      # Closing bracket does not match visual indentation
-      - E124
-      # Continuation line with same indent as next logical line
-      - E125
-      # Continuation line over-indented for hanging indent
-      - E126
-      # Continuation line over-indented for visual indent
-      - E127
-      # Continuation line under-indented for visual indent
-      - E128
-      # Visually indented line with same indent as next logical line
-      - E129
-      # Continuation line unaligned for hanging indent
-      - E131
-      # Closing bracket is missing indentation
-      - E133
-      # Whitespace after '('
-      - E201
-      # Whitespace before ')'
-      - E202
-      # Whitespace before ':'
-      - E203
-      # Whitespace before '('
-      - E211
-      # Multiple spaces before operator
-      - E221
-      # Multiple spaces after operator
-      - E222
-      # Tab before operator
-      - E223
-      # Tab after operator
-      - E224
-      # Missing whitespace around operator
-      - E225
-      # Missing whitespace around arithmetic operator
-      - E226
-      # Missing whitespace around bitwise or shift operator
-      - E227
-      # Missing whitespace around modulo operator
-      - E228
-      # Missing whitespace after ',', ';', or ':'
-      - E231
-      # Multiple spaces after ','
-      - E241
-      # Tab after ','
-      - E242
-      # Unexpected spaces around keyword / parameter equals
-      - E251
-      # Missing whitespace around parameter equals
-      - E252
-      # At least two spaces before inline comment
-      - E261
-      # Inline comment should start with '# '
-      - E262
-      # Block comment should start with '# '
-      - E265
-      # Too many leading '#' for block comment
-      - E266
-      # Multiple spaces after keyword
-      - E271
-      # Multiple spaces before keyword
-      - E272
-      # Tab after keyword
-      - E273
-      # Tab before keyword
-      - E274
-      # Missing whitespace after keyword
-      - E275
-      # Expected 1 blank line, found 0
-      - E301
-      # Expected 2 blank lines, found 0
-      - E302
-      # Too many blank lines (3)
-      - E303
-      # Blank lines found after function decorator
-      - E304
-      # Expected 2 blank lines after end of function or class
-      - E305
-      # Expected 1 blank line before a nested definition, found 0
-      - E306
-      # Multiple imports on one line
-      - E401
-      # Module level import not at top of file
-      - E402
-      # Line too long (82 > 79 characters)
-      - E501
-      # The backslash is redundant between brackets
-      - E502
-      # Multiple statements on one line (colon)
-      - E701
-      # Multiple statements on one line (semicolon)
-      - E702
-      # Statement ends with a semicolon
-      - E703
-      # Multiple statements on one line (def)
-      - E704
-      # Comparison to none should be 'if cond is none:‘
-      - E711
-      # Comparison to true should be 'if cond is true:' or 'if cond:'
-      - E712
-      # Test for membership should be 'not in'
-      - E713
-      # Test for object identity should be 'is not'
-      - E714
-      # Do not compare types, use 'isinstance()'
-      - E721
-      # Do not assign a lambda expression, use a def
-      - E731
-      # Do not use variables named 'l', 'o', or 'i'
-      - E741
-      # Do not define classes named 'l', 'o', or 'i'
-      - E742
-      # Do not define functions named 'l', 'o', or 'i'
-      - E743
-      # `module` imported but unused
-      - F401
-      # local variable `name` is assigned but never used
-      - F841
-      # Indentation contains tabs
-      - W191
-      # Trailing whitespace
-      - W291
-      # No newline at end of file
-      - W292
-      # Blank line contains whitespace
-      - W293
-      # Blank line at end of file
-      - W391
-      # Line break occurred before a binary operator
-      - W503
-      # Line break occurred after a binary operator
-      - W504
-      # ‘from module import *’ only allowed at module level
-      - F406
+      - bad-wildcard-import
+      - bare-except-bugbear
+      - no-getattr
+      - no-setattr
+      - unused-module
+      - unused-variable
   r2c.flask:
     ignore:
       - r2c-flask-use-blueprint-for-modularity

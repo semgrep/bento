@@ -62,7 +62,7 @@ class HadolintParser(Parser[str]):
 
 
 class HadolintTool(StrTool):
-    TOOL_ID = "r2c.hadolint"
+    TOOL_ID = "hadolint"
     DOCKER_IMAGE = "hadolint/hadolint:v1.17.2-8-g65736cb"
     DOCKERFILE_FILTER = re.compile(".*Dockerfile.*", re.IGNORECASE)
 

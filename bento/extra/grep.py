@@ -36,7 +36,7 @@ class GrepParser(Parser[JsonR]):
 
 
 class GrepTool(JsonTool):
-    TOOL_ID = "r2c.grep"  # to-do: versioning?
+    TOOL_ID = "grep"  # to-do: versioning?
     PROJECT_NAME = "Grep"
 
     @property

@@ -16,7 +16,7 @@ def test_run(tmp_path: Path) -> None:
     violations = tool.results()
     assert violations == [
         Violation(
-            tool_id="r2c.shellcheck",
+            tool_id="shellcheck",
             check_id="SC2068",
             path="foo.sh",
             line=3,

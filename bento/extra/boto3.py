@@ -15,8 +15,8 @@ class Boto3Parser(Flake8Parser):
         page = Boto3Parser.id_to_name(check_id)
         return f"https://checks.bento.dev/en/latest/flake8-boto3/{page}"
 
-    @staticmethod
-    def id_to_name(check_id: str) -> str:
+    @classmethod
+    def id_to_name(cls, check_id: str) -> str:
         return check_id.replace(PREFIX, "")
 
     @staticmethod

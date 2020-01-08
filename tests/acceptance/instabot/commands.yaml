@@ -46,8 +46,8 @@ steps:
       - --agree
       - disable
       - check
-      - r2c.bandit
-      - B322
+      - bandit
+      - python2-input
     expected_err: disable-finding.err
     expected_out: null
     returncode: 0
@@ -67,8 +67,8 @@ steps:
       - --agree
       - enable
       - check
-      - r2c.bandit
-      - B322
+      - bandit
+      - python2-input
     expected_err: reenable-check.err
     expected_out: null
     returncode: 0

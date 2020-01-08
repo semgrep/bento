@@ -127,7 +127,7 @@ def _process_paths(
     "-f",
     "--formatter",
     type=click.Choice(bento.formatter.FORMATTERS.keys()),
-    help="Which output format to use. Falls back to the formatter(s) configured in `.bento.yml`.",
+    help=f"Which output format to use. Falls back to the formatter(s) configured in `{bento.constants.CONFIG_FILE_NAME}`.",
     multiple=True,
 )
 @click.option(
@@ -177,7 +177,7 @@ def check(
     """
     if tool and tool not in context.configured_tools:
         click.echo(
-            f"{tool} has not been configured. Adding default configuration for tool to .bento.yml"
+            f"{tool} has not been configured. Adding default configuration for tool to {bento.constants.CONFIG_FILE_NAME}"
         )
         update_tool_run(context, tool, False)
         # Set configured_tools to None so that future calls will

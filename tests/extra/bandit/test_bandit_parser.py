@@ -28,7 +28,7 @@ def test_run(tmp_path: Path) -> None:
             link=None,
         ),
         Violation(
-            check_id="B404",
+            check_id="import-subprocess",
             tool_id=BanditTool.TOOL_ID,
             path="bar.py",
             line=1,
@@ -39,7 +39,7 @@ def test_run(tmp_path: Path) -> None:
             link="https://bandit.readthedocs.io/en/latest/blacklists/blacklist_imports.html#b404-import-subprocess",
         ),
         Violation(
-            check_id="B602",
+            check_id="subprocess-popen-with-shell-equals-true",
             tool_id=BanditTool.TOOL_ID,
             path="bar.py",
             line=4,

@@ -46,7 +46,7 @@ steps:
       - --agree
       - check
       - -t
-      - r2c.bandit
+      - bandit
     expected_err: run-single-tool-bandit.err
     expected_out: bento-check-bandit.out
     returncode: 2
@@ -57,8 +57,8 @@ steps:
       - --agree
       - disable
       - check
-      - r2c.bandit
-      - B102
+      - bandit
+      - exec-used
     expected_err: disable-finding.err
     expected_out: null
     returncode: 0
@@ -69,7 +69,7 @@ steps:
       - --agree
       - check
       - -t
-      - r2c.bandit
+      - bandit
     expected_err: run-single-tool-bandit-after-disable.err
     expected_out: bento-check-bandit-disable.out
     returncode: 2
@@ -89,8 +89,8 @@ steps:
       - --agree
       - enable
       - check
-      - r2c.bandit
-      - B102
+      - bandit
+      - exec-used
     expected_err: reenable-check.err
     expected_out: null
     returncode: 0

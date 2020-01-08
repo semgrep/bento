@@ -7,6 +7,7 @@ from typing import Iterable, Optional
 import attr
 import pymmh3 as mmh3
 
+import bento.constants as constants
 from bento import __version__ as BENTO_VERSION
 from bento.fignore import FileIgnore
 
@@ -44,7 +45,11 @@ class RunCache(object):
         """
 
         # No matter settings of .bentoignore, these are always excluded
-        exclude_files = {".bento", ".bento-whitelist.yml", ".bento.yml"}
+        exclude_files = {
+            ".bento",
+            constants.ARCHIVE_FILE_NAME,
+            constants.CONFIG_FILE_NAME,
+        }
         files_and_times = (
             (e.path, e.dir_entry.stat(follow_symlinks=False).st_mtime_ns)
             for e in self.file_ignore.entries()

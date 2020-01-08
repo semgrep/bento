@@ -33,14 +33,14 @@ def test_archive_updates_whitelist() -> None:
         yml = bento.result.json_to_violation_hashes(whitelist)
 
     expectation = {
-        "r2c.bandit": {
+        "bandit": {
             "6f77d9d773cc5248ae20b83f80a7b26a",
-            "822c79186b1678f5173e166028576865",
+            "e540c501c568dad8d9e2e00abba5740f",
         },
-        "r2c.eslint": {"6daebd293be00a3d97e19de4a1a39fa5"},
-        "r2c.flake8": {
-            "27a91174ddbf5e932a1b2cdbd57da9e0",
-            "77e04010d3b0256fd3a434cd00f2c944",
+        "eslint": {"6daebd293be00a3d97e19de4a1a39fa5"},
+        "flake8": {
+            "23d898269aae05ed6897cf56dfbd3cde",
+            "b849b45f8a969cc5eb46e6ea76d7e809",
         },
     }
 

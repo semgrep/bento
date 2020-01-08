@@ -46,8 +46,8 @@ steps:
       - --agree
       - disable
       - check
-      - r2c.flake8
-      - F401
+      - flake8
+      - unused-module
     expected_err: disable-finding.err
     expected_out: null
     returncode: 0

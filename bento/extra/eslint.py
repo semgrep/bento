@@ -39,17 +39,42 @@ RC_ENVIRONMENTS = "env"
 
 
 class EslintParser(Parser[JsonR]):
+    REACT_PREFIX = "react/"
+    REACT_PREFIX_LEN = len(REACT_PREFIX)
+    IMPORT_PREFIX = "import/"
+    IMPORT_PREFIX_LEN = len(IMPORT_PREFIX)
+    JSX_ALLY_PREFIX = "jsx-a11y/"
+    JSX_ALLY_PREFIX_LEN = len(JSX_ALLY_PREFIX)
+    TS_PREFIX = "@typescript-eslint/"
+    TS_PREFIX_LEN = len(TS_PREFIX)
+
+    @staticmethod
+    def to_link(check_id: str) -> str:
+        if check_id.startswith(EslintParser.REACT_PREFIX):
+            trimmed = check_id[EslintParser.REACT_PREFIX_LEN :]
+            return f"https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/{trimmed}.md"
+        elif check_id.startswith(EslintParser.IMPORT_PREFIX):
+            trimmed = check_id[EslintParser.IMPORT_PREFIX_LEN :]
+            return f"https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/{trimmed}.md"
+        elif check_id.startswith(EslintParser.JSX_ALLY_PREFIX):
+            trimmed = check_id[EslintParser.JSX_ALLY_PREFIX_LEN :]
+            return f"https://github.com/evcohen/eslint-plugin-jsx-a11y/blob/master/docs/rules/{trimmed}.md"
+        elif check_id.startswith(EslintParser.TS_PREFIX):
+            trimmed = check_id[EslintParser.TS_PREFIX_LEN :]
+            return f"https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/{trimmed}.md"
+        else:
+            return f"https://eslint.org/docs/rules/{check_id}"
+
     def to_violation(
         self, result: Dict[str, Any], message: Dict[str, Any]
     ) -> Violation:
         path = self.trim_base(result["filePath"])
         startLine = message["line"]
         endLine = message.get("endLine", startLine)
-        # todo: remove white-space diffs for non-py?
         source = result["source"][startLine - 1 : endLine]  # line numbers are 1-indexed
         check_id = message.get("ruleId", None)
         if check_id:
-            link = f"https://eslint.org/docs/rules/{check_id}"
+            link = self.to_link(check_id)
         else:
             check_id = "error"
             link = ""
@@ -75,7 +100,7 @@ class EslintParser(Parser[JsonR]):
 
 
 class EslintTool(JsTool, JsonTool):
-    ESLINT_TOOL_ID = "r2c.eslint"  # to-do: versioning?
+    ESLINT_TOOL_ID = "eslint"  # to-do: versioning?
     CONFIG_FILE_NAME = ".eslintrc.yml"
     PROJECT_NAME = "node-js"
 

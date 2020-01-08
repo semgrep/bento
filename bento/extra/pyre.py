@@ -51,7 +51,7 @@ class PyreParser(Parser):
 
 
 class PyreTool(StrTool):
-    TOOL_ID = "r2c.pyre"  # to-do: versioning?
+    TOOL_ID = "pyre"  # to-do: versioning?
     PROJECT_NAME = "Python"
 
     @property

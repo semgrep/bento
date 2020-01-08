@@ -46,7 +46,7 @@ def __count_simple_findings(
 def test_tool_parallel_results_no_archive_no_files(monkeypatch: MonkeyPatch) -> None:
     """Validates that tools are run in parallel and return proper finding counts (no archive, no passed files)"""
     counts = __count_simple_findings({}, None, monkeypatch)
-    expectation = {"r2c.bandit": (2, 0), "r2c.eslint": (1, 0), "r2c.flake8": (2, 0)}
+    expectation = {"bandit": (2, 0), "eslint": (1, 0), "flake8": (2, 0)}
 
     assert counts == expectation
 
@@ -59,7 +59,7 @@ def test_tool_parallel_results_with_archive_no_files(monkeypatch: MonkeyPatch) -
         archive = bento.result.json_to_violation_hashes(file)
     counts = __count_simple_findings(archive, None, monkeypatch)
 
-    expectation = {"r2c.bandit": (2, 0), "r2c.eslint": (1, 0), "r2c.flake8": (1, 1)}
+    expectation = {"bandit": (2, 0), "eslint": (1, 0), "flake8": (1, 1)}
 
     assert counts == expectation
 
@@ -67,7 +67,7 @@ def test_tool_parallel_results_with_archive_no_files(monkeypatch: MonkeyPatch) -
 def test_tool_parallel_results_no_archive_es_files(monkeypatch: MonkeyPatch) -> None:
     """Validates that tools are run in parallel and return proper finding counts (no archive, js files only)"""
     counts = __count_simple_findings({}, ["init.js"], monkeypatch)
-    expectation = {"r2c.bandit": (0, 0), "r2c.eslint": (1, 0), "r2c.flake8": (0, 0)}
+    expectation = {"bandit": (0, 0), "eslint": (1, 0), "flake8": (0, 0)}
 
     assert counts == expectation
 
@@ -75,7 +75,7 @@ def test_tool_parallel_results_no_archive_es_files(monkeypatch: MonkeyPatch) -> 
 def test_tool_parallel_results_no_archive_py_files(monkeypatch: MonkeyPatch) -> None:
     """Validates that tools are run in parallel and return proper finding counts (no archive, single py file only)"""
     counts = __count_simple_findings({}, ["foo.py"], monkeypatch)
-    expectation = {"r2c.bandit": (1, 0), "r2c.eslint": (0, 0), "r2c.flake8": (2, 0)}
+    expectation = {"bandit": (1, 0), "eslint": (0, 0), "flake8": (2, 0)}
 
     assert counts == expectation
 
@@ -87,7 +87,7 @@ def test_tool_parallel_results_archive_py_files(monkeypatch: MonkeyPatch) -> Non
     ) as file:
         archive = bento.result.json_to_violation_hashes(file)
     counts = __count_simple_findings(archive, ["foo.py"], monkeypatch)
-    expectation = {"r2c.bandit": (1, 0), "r2c.eslint": (0, 0), "r2c.flake8": (1, 1)}
+    expectation = {"bandit": (1, 0), "eslint": (0, 0), "flake8": (1, 1)}
 
     assert counts == expectation
 

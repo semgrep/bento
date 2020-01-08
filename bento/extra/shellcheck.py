@@ -58,7 +58,7 @@ class ShellcheckTool(JsonTool):
     ANALYZER_NAME = "r2c/shellcheck"
     ANALYZER_VERSION = Version("0.0.1")
     FILE_NAME_FILTER = re.compile(r".*")
-    TOOL_ID = "r2c.shellcheck"
+    TOOL_ID = "shellcheck"
 
     @property
     def parser_type(self) -> Type[Parser]:

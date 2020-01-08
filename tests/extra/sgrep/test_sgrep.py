@@ -17,7 +17,7 @@ def test_run(tmp_path: Path) -> None:
     print(violations)
     expectation = [
         Violation(
-            tool_id="r2c.sgrep",
+            tool_id="sgrep-lint",
             check_id="avoid_hardcoded_config_DEBUG",
             path="flask_configs.py",
             line=33,
@@ -29,7 +29,7 @@ def test_run(tmp_path: Path) -> None:
             link=None,
         ),
         Violation(
-            tool_id="r2c.sgrep",
+            tool_id="sgrep-lint",
             check_id="avoid_hardcoded_config_DEBUG",
             path="flask_configs.py",
             line=31,
@@ -41,7 +41,7 @@ def test_run(tmp_path: Path) -> None:
             link=None,
         ),
         Violation(
-            tool_id="r2c.sgrep",
+            tool_id="sgrep-lint",
             check_id="avoid_hardcoded_config_ENV",
             path="flask_configs.py",
             line=27,
@@ -53,7 +53,7 @@ def test_run(tmp_path: Path) -> None:
             link=None,
         ),
         Violation(
-            tool_id="r2c.sgrep",
+            tool_id="sgrep-lint",
             check_id="avoid_hardcoded_config_ENV",
             path="flask_configs.py",
             line=25,
@@ -65,7 +65,7 @@ def test_run(tmp_path: Path) -> None:
             link=None,
         ),
         Violation(
-            tool_id="r2c.sgrep",
+            tool_id="sgrep-lint",
             check_id="avoid_hardcoded_config_SECRET_KEY",
             path="flask_configs.py",
             line=21,
@@ -77,7 +77,7 @@ def test_run(tmp_path: Path) -> None:
             link=None,
         ),
         Violation(
-            tool_id="r2c.sgrep",
+            tool_id="sgrep-lint",
             check_id="avoid_hardcoded_config_SECRET_KEY",
             path="flask_configs.py",
             line=19,
@@ -89,7 +89,7 @@ def test_run(tmp_path: Path) -> None:
             link=None,
         ),
         Violation(
-            tool_id="r2c.sgrep",
+            tool_id="sgrep-lint",
             check_id="avoid_hardcoded_config_TESTING",
             path="flask_configs.py",
             line=15,
@@ -101,7 +101,7 @@ def test_run(tmp_path: Path) -> None:
             link=None,
         ),
         Violation(
-            tool_id="r2c.sgrep",
+            tool_id="sgrep-lint",
             check_id="avoid_hardcoded_config_TESTING",
             path="flask_configs.py",
             line=13,
@@ -113,7 +113,7 @@ def test_run(tmp_path: Path) -> None:
             link=None,
         ),
         Violation(
-            tool_id="r2c.sgrep",
+            tool_id="sgrep-lint",
             check_id="avoid_hardcoded_config_TESTING",
             path="flask_configs.py",
             line=11,

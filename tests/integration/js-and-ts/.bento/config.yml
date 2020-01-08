@@ -2,7 +2,7 @@ formatter:
 - clippy: {}
 - histo: {}
 tools:
-  r2c.eslint:
+  eslint:
     ignore:
     - '@typescript-eslint/camelcase'
     - '@typescript-eslint/member-delimiter-style'

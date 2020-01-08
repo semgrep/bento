@@ -30,9 +30,4 @@
 # Ignore git items
 .gitignore
 .git/
-:include .gitignore
-
-# Ignore integration tests
-tests/integration/
-tests/acceptance/bad.js
-
+:include ../../../.gitignore

@@ -11,7 +11,7 @@ BASE_PATH = THIS_PATH / ".." / ".." / ".."
 EXPECTATIONS = [
     Violation(
         tool_id="r2c.click",
-        check_id="r2c-click-option-function-argument-check",
+        check_id="option-function-argument-check",
         path="bad_examples.py",
         line=12,
         column=1,
@@ -23,7 +23,7 @@ EXPECTATIONS = [
     ),
     Violation(
         tool_id="r2c.click",
-        check_id="r2c-click-names-are-well-formed",
+        check_id="names-are-well-formed",
         path="bad_examples.py",
         line=19,
         column=1,
@@ -35,7 +35,7 @@ EXPECTATIONS = [
     ),
     Violation(
         tool_id="r2c.click",
-        check_id="r2c-click-names-are-well-formed",
+        check_id="names-are-well-formed",
         line=26,
         path="bad_examples.py",
         column=1,
@@ -47,7 +47,7 @@ EXPECTATIONS = [
     ),
     Violation(
         tool_id="r2c.click",
-        check_id="r2c-click-names-are-well-formed",
+        check_id="names-are-well-formed",
         path="bad_examples.py",
         line=33,
         column=1,
@@ -59,7 +59,7 @@ EXPECTATIONS = [
     ),
     Violation(
         tool_id="r2c.click",
-        check_id="r2c-click-launch-uses-literal",
+        check_id="launch-uses-literal",
         path="bad_examples.py",
         line=41,
         column=5,

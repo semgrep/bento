@@ -50,7 +50,7 @@ class SGrepTool(JsonTool):
 
     @classmethod
     def tool_id(cls) -> str:
-        return "r2c.sgrep"
+        return "sgrep-lint"
 
     @classmethod
     def tool_desc(cls) -> str:

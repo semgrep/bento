@@ -49,7 +49,7 @@ steps:
       - --agree
       - disable
       - check
-      - r2c.eslint
+      - eslint
       - no-use-before-define
     expected_err: disable-finding.err
     expected_out: null
@@ -70,7 +70,7 @@ steps:
       - --agree
       - enable
       - check
-      - r2c.eslint
+      - eslint
       - no-use-before-define
     expected_err: reenable-check.err
     expected_out: null

@@ -19,7 +19,7 @@ def test_parse() -> None:
 
     expectation = [
         Violation(
-            tool_id="r2c.eslint",
+            tool_id="eslint",
             check_id="no-console",
             path="tests/integration/simple/init.js",
             line=0,
@@ -29,7 +29,7 @@ def test_parse() -> None:
             syntactic_context="console.log(3)",
         ),
         Violation(
-            tool_id="r2c.eslint",
+            tool_id="eslint",
             check_id="semi",
             path="tests/integration/simple/init.js",
             line=0,
@@ -69,7 +69,7 @@ def test_run(tmp_path: Path) -> None:
 
     expectation = [
         Violation(
-            tool_id="r2c.eslint",
+            tool_id="eslint",
             check_id="no-console",
             path="init.js",
             line=0,
@@ -79,7 +79,7 @@ def test_run(tmp_path: Path) -> None:
             syntactic_context="console.log(3)",
         ),
         Violation(
-            tool_id="r2c.eslint",
+            tool_id="eslint",
             check_id="semi",
             path="init.js",
             line=0,
@@ -105,7 +105,7 @@ def test_typescript_run(tmp_path: Path) -> None:
 
     expectation = [
         Violation(
-            tool_id="r2c.eslint",
+            tool_id="eslint",
             check_id="@typescript-eslint/no-unused-vars",
             path="foo.ts",
             line=1,
@@ -117,7 +117,7 @@ def test_typescript_run(tmp_path: Path) -> None:
             link="https://eslint.org/docs/rules/@typescript-eslint/no-unused-vars",
         ),
         Violation(
-            tool_id="r2c.eslint",
+            tool_id="eslint",
             check_id="semi",
             path="foo.ts",
             line=1,
@@ -165,7 +165,7 @@ def test_missing_source() -> None:
 
     expectation = [
         Violation(
-            tool_id="r2c.eslint",
+            tool_id="eslint",
             check_id="no-console",
             path="tests/integration/simple/init.js",
             line=0,

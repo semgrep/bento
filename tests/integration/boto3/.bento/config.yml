@@ -2,5 +2,5 @@ formatter:
 - clippy: {}
 - histo: {}
 tools:
-  r2c.requests:
+  r2c.boto3:
     ignore: []

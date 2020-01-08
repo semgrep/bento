@@ -1,75 +1,63 @@
 {
-  "r2c.bandit": {
+  "bandit": {
     "violations": {
-      "1062d649612b2a6f2873bfff0e7c7067": {
-        "tool_id": "r2c.bandit",
-        "check_id": "B602",
-        "path": "bento/extra/hadolint.py",
-        "message": "subprocess call with shell=True identified, security issue.",
-        "severity": 2,
-        "syntactic_context": "f\"docker run --network none --rm -i {self.DOCKER_IMAGE} hadolint --format json - < {file}\",\nshell=True,\ncwd=self.base_path,\nencoding=\"utf8\",\nstdout=subprocess.PIPE,\nstderr=subprocess.PIPE,"
-      },
-      "a2c4503e8a1358b4e417754b97c28048": {
-        "tool_id": "r2c.bandit",
-        "check_id": "B602",
+      "05d0103dac608249b0239f3a66e3a08b": {
+        "tool_id": "bandit",
+        "check_id": "subprocess-popen-with-shell-equals-true",
         "path": "tests/extra/test_python_tool.py",
         "message": "subprocess call with shell=True identified, security issue.",
         "severity": 2,
         "syntactic_context": "env=env,\nshell=True,\nstdout=subprocess.PIPE,\nstderr=subprocess.PIPE,\nencoding=\"utf8\","
       },
-      "a75a4820e9cfb8fe9324dc0f1671bbc8": {
-        "tool_id": "r2c.bandit",
-        "check_id": "B602",
-        "path": "bento/extra/python_tool.py",
-        "message": "subprocess call with shell=True identified, security issue.",
-        "severity": 2,
-        "syntactic_context": "wrapped,\nshell=True,\ncwd=str(self.base_path),\nencoding=\"utf8\",\nexecutable=\"/bin/bash\",\nenv=env,\nstdout=subprocess.PIPE,\nstderr=subprocess.PIPE,"
-      },
-      "b202f5f342f3557c06ec01dd81dd7658": {
-        "tool_id": "r2c.bandit",
-        "check_id": "B602",
+      "1fb52d1337672bf82014f8d2f480bb65": {
+        "tool_id": "bandit",
+        "check_id": "subprocess-popen-with-shell-equals-true",
         "path": "tests/extra/test_python_tool.py",
         "message": "subprocess call with shell=True identified, security issue.",
         "severity": 2,
         "syntactic_context": "proc = subprocess.Popen(\n    cmd, env=env, shell=True, stdout=subprocess.PIPE, encoding=\"utf8\""
       },
-      "b566c3fee7249877763f6eb616ae4d18": {
-        "tool_id": "r2c.bandit",
-        "check_id": "B602",
+      "956a879783c76a2ca909ccdbbf3c740d": {
+        "tool_id": "bandit",
+        "check_id": "subprocess-popen-with-shell-equals-true",
+        "path": "tests/extra/test_python_tool.py",
+        "message": "subprocess call with shell=True identified, security issue.",
+        "severity": 2,
+        "syntactic_context": "proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, encoding=\"utf8\")"
+      },
+      "99a46d0936522fedc8d935f833c1586d": {
+        "tool_id": "bandit",
+        "check_id": "subprocess-popen-with-shell-equals-true",
         "path": "tests/extra/test_python_tool.py",
         "message": "subprocess call with shell=True identified, security issue.",
         "severity": 2,
         "syntactic_context": "proc = subprocess.Popen(\n    cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding=\"utf8\""
       },
-      "c6b42c4f58df6ae2e1d6a0dc31c8a355": {
-        "tool_id": "r2c.bandit",
-        "check_id": "B602",
-        "path": "tests/extra/test_python_tool.py",
+      "b8427b15130db96581ea81495e28e658": {
+        "tool_id": "bandit",
+        "check_id": "subprocess-popen-with-shell-equals-true",
+        "path": "bento/extra/hadolint.py",
         "message": "subprocess call with shell=True identified, security issue.",
         "severity": 2,
-        "syntactic_context": "proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, encoding=\"utf8\")"
-      }
-    }
-  },
-  "r2c.eslint": {
-    "violations": {
-      "c6e0f687a580ef5e681dc3b4a7ed7fce": {
-        "tool_id": "r2c.eslint",
-        "check_id": "no-undef",
-        "path": "tests/acceptance/bad.js",
-        "message": "'x' is not defined.",
+        "syntactic_context": "f\"docker run --network none --rm -i {self.DOCKER_IMAGE} hadolint --format json - < {file}\",\nshell=True,\ncwd=self.base_path,\nencoding=\"utf8\",\nstdout=subprocess.PIPE,\nstderr=subprocess.PIPE,"
+      },
+      "f5a7b2b73b54d1bc196e70d232caaec8": {
+        "tool_id": "bandit",
+        "check_id": "subprocess-popen-with-shell-equals-true",
+        "path": "bento/extra/python_tool.py",
+        "message": "subprocess call with shell=True identified, security issue.",
         "severity": 2,
-        "syntactic_context": "x = \"potato\";"
+        "syntactic_context": "wrapped,\nshell=True,\ncwd=str(self.base_path),\nencoding=\"utf8\",\nexecutable=\"/bin/bash\",\nenv=env,\nstdout=subprocess.PIPE,\nstderr=subprocess.PIPE,"
       }
     }
   },
-  "r2c.flake8": {
+  "flake8": {
     "violations": {}
   },
-  "r2c.hadolint": {
+  "hadolint": {
     "violations": {
       "8228d6515361106e8f40a51d558d6545": {
-        "tool_id": "r2c.hadolint",
+        "tool_id": "hadolint",
         "check_id": "DL3013",
         "path": "tests/acceptance/environments/python36.Dockerfile",
         "message": "Pin versions in pip. Instead of `pip install <package>` use `pip install <package>==<version>`",

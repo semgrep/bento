@@ -14,8 +14,8 @@ class RequestsParser(Flake8Parser):
     def id_to_link(check_id: str) -> str:
         return f"https://checks.bento.dev/en/latest/flake8-requests/{check_id}"
 
-    @staticmethod
-    def id_to_name(check_id: str) -> str:
+    @classmethod
+    def id_to_name(cls, check_id: str) -> str:
         trimmed = check_id[RequestsParser.CHECK_PREFIX_LEN :]
         return trimmed
 

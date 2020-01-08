@@ -21,9 +21,9 @@ def test_install_config() -> None:
         context.config_path.unlink()
         command._install_config_if_not_exists()
         cfg = context.config
-        assert "r2c.eslint" in cfg["tools"]
-        assert "r2c.flake8" in cfg["tools"]
-        assert "r2c.bandit" in cfg["tools"]
+        assert "eslint" in cfg["tools"]
+        assert "flake8" in cfg["tools"]
+        assert "bandit" in cfg["tools"]
 
 
 def test_no_install_empty_project() -> None:
@@ -117,9 +117,9 @@ def test_init_js_only() -> None:
         CliRunner(mix_stderr=False).invoke(init, obj=context)
         config = context.config
 
-    assert "r2c.eslint" in config["tools"]
-    assert "r2c.flake8" not in config["tools"]
-    assert "r2c.bandit" not in config["tools"]
+    assert "eslint" in config["tools"]
+    assert "flake8" not in config["tools"]
+    assert "bandit" not in config["tools"]
 
 
 def test_init_py_only() -> None:
@@ -129,9 +129,9 @@ def test_init_py_only() -> None:
         CliRunner(mix_stderr=False).invoke(init, obj=context)
         config = context.config
 
-    assert "r2c.eslint" not in config["tools"]
-    assert "r2c.flake8" in config["tools"]
-    assert "r2c.bandit" in config["tools"]
+    assert "eslint" not in config["tools"]
+    assert "flake8" in config["tools"]
+    assert "bandit" in config["tools"]
 
 
 def test_init_clean(tmp_path: Path) -> None:

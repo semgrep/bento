@@ -17,7 +17,7 @@ BASE_PATH = THIS_PATH / ".." / ".." / ".."
 #
 #     expectation = [
 #         Violation(
-#             tool_id="r2c.pyre",
+#             tool_id="pyre",
 #             check_id="6",
 #             path="bar.py",
 #             line=10,
@@ -28,7 +28,7 @@ BASE_PATH = THIS_PATH / ".." / ".." / ".."
 #             link="https://pyre-check.org/docs/error-types.html",
 #         ),
 #         Violation(
-#             tool_id="r2c.pyre",
+#             tool_id="pyre",
 #             check_id="6",
 #             path="bar.py",
 #             line=10,
@@ -39,7 +39,7 @@ BASE_PATH = THIS_PATH / ".." / ".." / ".."
 #             link="https://pyre-check.org/docs/error-types.html",
 #         ),
 #         Violation(
-#             tool_id="r2c.pyre",
+#             tool_id="pyre",
 #             check_id="7",
 #             path="bar.py",
 #             line=11,

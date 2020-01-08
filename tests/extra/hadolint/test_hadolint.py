@@ -16,7 +16,7 @@ def test_run(tmp_path: Path) -> None:
     violations = tool.results()
     assert violations == [
         Violation(
-            tool_id="r2c.hadolint",
+            tool_id="hadolint",
             check_id="DL3006",
             path="foo.Dockerfile",
             line=1,
@@ -28,7 +28,7 @@ def test_run(tmp_path: Path) -> None:
             link="https://github.com/hadolint/hadolint/wiki/DL3006",
         ),
         Violation(
-            tool_id="r2c.hadolint",
+            tool_id="hadolint",
             check_id="DL3002",
             path="foo.Dockerfile",
             line=3,
@@ -40,7 +40,7 @@ def test_run(tmp_path: Path) -> None:
             link="https://github.com/hadolint/hadolint/wiki/DL3002",
         ),
         Violation(
-            tool_id="r2c.hadolint",
+            tool_id="hadolint",
             check_id="SC2035",
             path="foo.Dockerfile",
             line=5,

@@ -6,11 +6,18 @@ from bento.extra.flake8 import Flake8Parser, Flake8Tool
 from bento.parser import Parser
 from bento.tool import StrTool
 
+PREFIX = "r2c-click-"
+
 
 class ClickParser(Flake8Parser):
     @staticmethod
     def id_to_link(check_id: str) -> str:
-        return ""
+        page = ClickParser.id_to_name(check_id)
+        return f"https://checks.bento.dev/en/latest/flake8-click/{page}"
+
+    @classmethod
+    def id_to_name(cls, check_id: str) -> str:
+        return check_id.replace(PREFIX, "")
 
     @staticmethod
     def tool() -> Type[StrTool]:
