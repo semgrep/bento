@@ -189,7 +189,9 @@ class Tool(ABC, Generic[R]):
         logging.debug(f"{self.tool_id()}: Command completed in {after - before:2f} s")
         return res
 
-    def results(self, paths: Optional[Iterable[str]] = None) -> List[Violation]:
+    def results(
+        self, paths: Optional[Iterable[str]] = None, use_cache: bool = True
+    ) -> List[Violation]:
         """
         Runs this tool, returning all identified violations
 
@@ -200,6 +202,7 @@ class Tool(ABC, Generic[R]):
 
         Parameters:
             paths (list or None): If defined, an explicit list of paths to run on
+            use_cache (bool): If True, checks for cached results
 
         Raises:
             CalledProcessError: If execution fails
@@ -210,7 +213,7 @@ class Tool(ABC, Generic[R]):
         if paths:
             logging.debug(f"Checking for local cache for {self.tool_id()}")
             cache_repr = self.context.cache.get(self.tool_id(), paths)
-            if cache_repr is None:
+            if not use_cache or cache_repr is None:
                 logging.debug(
                     f"Cache entry invalid for {self.tool_id()}. Running Tool."
                 )

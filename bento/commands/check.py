@@ -10,7 +10,7 @@ from typing import Any, Collection, Dict, Iterable, Iterator, List, Optional, Tu
 import click
 from pre_commit.git import get_staged_files
 from pre_commit.staged_files_only import staged_files_only
-from pre_commit.util import noop_context
+from pre_commit.util import cmd_output, noop_context
 
 import bento.constants
 import bento.formatter
@@ -33,8 +33,20 @@ from bento.util import (
 )
 from bento.violation import Violation
 
-SHOW_ALL = "--show-all"
+
+class Comparison:
+    ROOT = "root"
+    ARCHIVE = "archive"
+    HEAD = "head"
+
+
 OVERRUN_PAGES = 3
+COMPARISONS = {
+    Comparison.ROOT: "Shows all findings",
+    Comparison.ARCHIVE: "Hides archived findings",
+    Comparison.HEAD: "Hides all findings already in git",
+}
+PATCH_CACHE = os.path.join(os.path.expanduser("~"), ".cache", "bento", "patches")
 
 
 def __get_ignores_for_tool(tool: str, config: Dict[str, Any]) -> List[str]:
@@ -62,6 +74,16 @@ def __list_paths(ctx: Any, args: List[str], incomplete: str) -> AutocompleteSugg
         for p in os.listdir(dir_to_list)
         if not path_stub or p.startswith(path_stub)
     ]
+
+
+@contextmanager
+def _staged_files_cleared(context: Context) -> Iterator[None]:
+    tree = cmd_output("git", "write-tree")[1].strip()
+    try:
+        cmd_output("git", "reset", "--hard")
+        yield
+    finally:
+        cmd_output("git", "checkout", tree, "--", ".")
 
 
 @contextmanager
@@ -108,9 +130,7 @@ def _process_paths(
             for p in paths
         ]
     elif staged_only:
-        git_stash = staged_files_only(
-            os.path.join(os.path.expanduser("~"), ".cache", "bento", "patches")
-        )
+        git_stash = staged_files_only(PATCH_CACHE)
         paths = get_staged_files()
     else:
         paths = None
@@ -120,6 +140,40 @@ def _process_paths(
 
     with git_stash:
         yield paths
+
+
+def _calculate_head_comparison(
+    context: Context,
+    paths: Optional[List[str]],
+    staged_only: bool,
+    tools: Iterable[Tool],
+) -> Tuple[bento.result.Baseline, float]:
+    """
+    Calculates a baseline consisting of all findings from the branch head
+
+    :param context: The cli context
+    :param paths: Which paths are being checked, or None for all paths
+    :param staged_only: Whether to use staged files as the list of paths
+    :param tools: Which tools to check
+    :return: The branch head baseline
+    """
+    with _process_paths(context, paths, staged_only) as processed_paths:
+        if processed_paths is None or len(processed_paths) > 0:
+            with staged_files_only(PATCH_CACHE), _staged_files_cleared(context):
+                before = time.time()
+                runner = bento.tool_runner.Runner()
+                comparison_results = runner.parallel_results(
+                    tools, {}, processed_paths, use_cache=False, keep_bars=False
+                )
+                baseline = {
+                    tool_id: {f.syntactic_identifier_str() for f in findings}
+                    for tool_id, findings in comparison_results
+                    if isinstance(findings, list)
+                }
+                elapsed = time.time() - before
+            return baseline, elapsed
+        else:
+            return {}, 0.0
 
 
 @click.command()
@@ -136,10 +190,12 @@ def _process_paths(
     default=True,
 )
 @click.option(
-    SHOW_ALL,
-    help="Show all findings, including those previously archived.",
-    is_flag=True,
-    default=False,
+    "--comparison",
+    help="Define a comparison point. Only new findings introduced since this point will be shown: Use 'root' to show "
+    "all findings, 'archive' to show all unarchived findings, and 'head' to show only findings since the last "
+    "git commit.",
+    type=click.Choice(COMPARISONS.keys()),
+    default=Comparison.ARCHIVE,
 )
 @click.option(
     "--staged-only",
@@ -159,7 +215,7 @@ def check(
     context: Context,
     formatter: Tuple[str, ...] = (),
     pager: bool = True,
-    show_all: bool = False,
+    comparison: str = Comparison.ARCHIVE,
     staged_only: bool = False,
     tool: Optional[str] = None,
     paths: Optional[List[str]] = None,
@@ -188,12 +244,6 @@ def check(
         echo_error("No Bento configuration found. Please run `bento init`.")
         sys.exit(3)
 
-    if not show_all and context.baseline_file_path.exists():
-        with context.baseline_file_path.open() as json_file:
-            baseline = bento.result.json_to_violation_hashes(json_file)
-    else:
-        baseline = {}
-
     config = context.config
     if formatter:
         config["formatter"] = [{f: {}} for f in formatter]
@@ -202,22 +252,34 @@ def check(
 
     click.echo("Running Bento checks...\n", err=True)
 
+    tools: Iterable[Tool[Any]] = context.tools.values()
+    if tool:
+        tools = [context.configured_tools[tool]]
+
+    baseline: bento.result.Baseline = {}
+    elapsed = 0.0
+    if (
+        comparison == Comparison.ARCHIVE or comparison == Comparison.HEAD
+    ) and context.baseline_file_path.exists():
+        with context.baseline_file_path.open() as json_file:
+            baseline = bento.result.json_to_violation_hashes(json_file)
+
+    if comparison == Comparison.HEAD:
+        head_baseline, elapsed = _calculate_head_comparison(
+            context, paths, staged_only, tools
+        )
+        baseline.update(head_baseline)
+
     with _process_paths(context, paths, staged_only) as processed_paths:
         if processed_paths is not None and len(processed_paths) == 0:
             echo_warning("All paths passed to `bento check` are ignored.")
             all_results: Collection[bento.tool_runner.RunResults] = []
             elapsed = 0.0
-
         else:
             before = time.time()
             runner = bento.tool_runner.Runner()
-            tools: Iterable[Tool[Any]] = context.tools.values()
-
-            if tool:
-                tools = [context.configured_tools[tool]]
-
             all_results = runner.parallel_results(tools, baseline, processed_paths)
-            elapsed = time.time() - before
+            elapsed += time.time() - before
 
     # Progress bars terminate on whitespace
     echo_newline()
@@ -285,10 +347,10 @@ You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PA
         echo_success(f"0 findings in {elapsed:.2f} s\n")
 
     n_archived = n_all - n_all_filtered
-    if n_archived > 0 and not show_all:
+    if n_archived > 0 and comparison == Comparison.ARCHIVE:
         echo_next_step(
             f"Not showing {n_archived} archived finding(s). To view",
-            f"bento check {SHOW_ALL}",
+            f"bento check --comparison {Comparison.ROOT}",
         )
 
     if staged_only and not context.autorun_is_blocking:

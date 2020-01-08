@@ -2,4 +2,4 @@ Running Bento checks...
 
 
 ✔ 0 findings in  s
-◦ Not showing 60 archived finding(s). To view, run $ bento check --show-all.
+◦ Not showing 60 archived finding(s). To view, run $ bento check --comparison root.

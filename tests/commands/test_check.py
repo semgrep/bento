@@ -48,17 +48,55 @@ def test_check_specified_paths(monkeypatch: MonkeyPatch) -> None:
     assert len(parsed) == 3
 
 
-def test_check_show_all() -> None:
-    """Validates that check displays archived issues with --show-all"""
+def test_check_compare_to_root() -> None:
+    """Validates that check displays archived issues with --comparison root"""
 
     runner = CliRunner(mix_stderr=False)
     Context(SIMPLE).cache.wipe()
 
     result = runner.invoke(
-        check, ["--formatter", "json", "--show-all"], obj=Context(base_path=SIMPLE)
+        check,
+        ["--formatter", "json", "--comparison", "root"],
+        obj=Context(base_path=SIMPLE),
     )
     parsed = json.loads(result.stdout)
     assert len(parsed) == 5
+
+
+def test_check_compare_to_head_no_diffs() -> None:
+    """Validates that check shows no issues with no diffs with --comparison head"""
+
+    runner = CliRunner(mix_stderr=False)
+    Context(SIMPLE).cache.wipe()
+
+    result = runner.invoke(
+        check,
+        ["--formatter", "json", "--comparison", "head"],
+        obj=Context(base_path=SIMPLE),
+    )
+    parsed = json.loads(result.stdout)
+    assert len(parsed) == 0
+
+
+def test_check_compare_to_head_diffs() -> None:
+    """Validates that check shows issues with diffs with --comparison head"""
+
+    runner = CliRunner(mix_stderr=False)
+    Context(SIMPLE).cache.wipe()
+
+    edited = SIMPLE / "bar.py"
+
+    with mod_file(edited):
+        with edited.open("a") as stream:
+            stream.write("\nprint({'a': 2}).has_key('b')")
+        result = runner.invoke(
+            check,
+            ["--formatter", "json", "--comparison", "head", str(edited)],
+            obj=Context(base_path=SIMPLE),
+        )
+
+    parsed = json.loads(result.stdout)
+    assert [p["check_id"] for p in parsed] == ["W601"]
 
 
 def test_check_specified_paths_and_staged(monkeypatch: MonkeyPatch) -> None:

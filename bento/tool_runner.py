@@ -132,6 +132,7 @@ class Runner:
         self,
         baseline: Baseline,
         paths: Optional[Iterable[str]],
+        use_cache: bool,
         index_and_tool: Tuple[int, Tool],
     ) -> RunResults:
         """Runs a tool and filters out existing findings using baseline"""
@@ -177,7 +178,7 @@ class Runner:
             if self._setup_latch:
                 self._setup_latch.wait_for()
             results = bento.result.filtered(
-                tool.tool_id(), tool.results(paths), baseline
+                tool.tool_id(), tool.results(paths, use_cache), baseline
             )
             with self._lock:
                 self._run[ix] = False
@@ -199,7 +200,12 @@ class Runner:
             return tool.tool_id(), e
 
     def parallel_results(
-        self, tools: Iterable[Tool], baseline: Baseline, paths: Optional[List[str]]
+        self,
+        tools: Iterable[Tool],
+        baseline: Baseline,
+        paths: Optional[List[str]],
+        use_cache: bool = False,
+        keep_bars: bool = True,
     ) -> Collection[RunResults]:
         """Runs all tools in parallel.
 
@@ -211,6 +217,8 @@ class Runner:
         Parameters:
             baseline (set): The set of whitelisted finding hashes
             paths (list): If present, the list of paths to pass to each tool
+            use_cache (bool): If true, reads results from cache
+            keep_bars (bool): If true, progress bars are preserved after run (default True)
 
         Returns:
             (collection): For each tool, a `RunResult`, which is a tuple of (`tool_id`, `findings`)
@@ -236,15 +244,16 @@ class Runner:
 
         with ThreadPool(n_tools) as pool:
             # using partial to pass in multiple arguments to __tool_filter
-            func = partial(Runner._run_single_tool, self, baseline, paths)
+            func = partial(Runner._run_single_tool, self, baseline, paths, use_cache)
             all_results = pool.map(func, indices_and_tools)
 
         self._done = True
         slow_run_thread.join()
 
         if self.show_bars:
-            for _ in self._bars:
-                click.echo("", err=True)
+            if keep_bars:
+                for _ in self._bars:
+                    click.echo("", err=True)
             for b in self._bars:
                 b.close()
 
