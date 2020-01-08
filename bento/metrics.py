@@ -82,6 +82,7 @@ def command_metric(
     command_kwargs: Dict[str, Any],
     exit_code: int,
     duration: float,
+    exception_name: Optional[str],
     user_duration: Optional[float] = None,
 ) -> List[Dict[str, Any]]:
 
@@ -103,6 +104,6 @@ def command_metric(
         "command": command,
         "command_kwargs": command_kwargs,
         "is_ci": bool(os.environ.get("CI", False)),
+        "exception_name": exception_name,
     }
-    # TODO: add exceptions back to telemetry when we have better error handling
     return [d]

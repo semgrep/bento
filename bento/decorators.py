@@ -47,21 +47,34 @@ def with_metrics(f: _AnyCallable) -> _AnyCallable:
         )
         logging.info(f"Executing {command}")
 
+        exc_name = None
         try:
             res = f(*args, **kwargs)
+        except KeyboardInterrupt as e:
+            # KeyboardInterrupt is a BaseException and has no exit code. Use 130 to mimic bash behavior.
+            exit_code = 130
+            exc_name = e.__class__.__name__
         except SystemExit as e:
             exit_code = e.code
+            exc_name = e.__class__.__name__
         except Exception as e:
             exit_code = 3
             __log_exception(e)
+            exc_name = e.__class__.__name__
 
         elapsed = time.time() - before
         user_duration = cli_context.user_duration() if cli_context else None
-        logging.info(f"{command} completed in {elapsed} with exit code {exit_code}")
+
+        if exc_name == "KeyboardInterrupt":
+            logging.info(f"{command} interrupted after running for {elapsed}s")
+        else:
+            logging.info(
+                f"{command} completed in {elapsed}s with exit code {exit_code}"
+            )
 
         bento.network.post_metrics(
             bento.metrics.command_metric(
-                command, timestamp, kwargs, exit_code, elapsed, user_duration
+                command, timestamp, kwargs, exit_code, elapsed, exc_name, user_duration
             )
         )
         if exit_code != 0:
