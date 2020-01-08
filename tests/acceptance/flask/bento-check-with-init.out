@@ -5,15 +5,6 @@ bandit exec-used https://bandit.readthedocs.io/en/latest/plugins/b102_exec_used.
      ╵
      = Use of exec detected.
 
-r2c.click option-function-argument-check https://checks.bento.dev/en/latest/flake8-click/option-function-argument-check
-     > src/flask/cli.py:779
-     ╷
-  779│   @click.command("run", short_help="Run a development server.")
-     ╵
-     = function `run_command` missing parameter `key,reload/__no_reload,debugger
-       /__no_debugger,eager_loading/__lazy_loader,with_threads/__without_threads
-       ` for `@click.option`
-
 bandit B307 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b307-eval
      > src/flask/cli.py:892
      ╷
@@ -118,15 +109,12 @@ bandit flask-debug-true https://bandit.readthedocs.io/en/latest/plugins/b201_fla
        debugger and allows the execution of arbitrary code.
 
 bandit:
-  try-except-pass                    6▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  exec-used                          2▕▬▬▬▬▬▬▬▬▬▬▬▬▬
-  flask-debug-true                   2▕▬▬▬▬▬▬▬▬▬▬▬▬▬
-  B307                               1▕▬▬▬▬▬▬▬
+  try-except-pass              6▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  exec-used                    2▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  flask-debug-true             2▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  B307                         1▕▬▬▬▬▬▬▬▬
 
 r2c.flask:
-  unescaped-file-extension           2▕▬▬▬▬▬▬▬▬▬▬▬▬▬
-  secure-set-cookie                  1▕▬▬▬▬▬▬▬
-
-r2c.click:
-  option-function-argument-check     1▕▬▬▬▬▬▬▬
+  unescaped-file-extension     2▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  secure-set-cookie            1▕▬▬▬▬▬▬▬▬
 

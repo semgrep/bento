@@ -2,7 +2,7 @@ Running Bento archive...
 
 
 Project analyzed with 5 tool(s).
-15 finding(s) were archived, and will be hidden in future Bento runs.
+14 finding(s) were archived, and will be hidden in future Bento runs.
 
 ◦ To view archived results, run $ bento check --show-all.
 

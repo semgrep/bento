@@ -96,7 +96,7 @@ def test_check_compare_to_head_diffs() -> None:
         )
 
     parsed = json.loads(result.stdout)
-    assert [p["check_id"] for p in parsed] == ["W601"]
+    assert [p["check_id"] for p in parsed] == ["deprecated-has-key"]
 
 
 def test_check_specified_paths_and_staged(monkeypatch: MonkeyPatch) -> None:
