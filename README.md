@@ -79,7 +79,7 @@ $ cd <PROJECT DIRECTORY>
 $ rm -r ~/.bento .bento* && bento init
 ```
 
-For Bento 0.8+ no Bento files need to be tracked with Git unless you're using Bento in CI. See [Running in CI/CD](#running-in-ci/cd) for details.
+For Bento 0.8+ no Bento files need to be tracked with Git unless you’re using Bento in CI. See [Running in CI/CD](#running-in-ci/cd) for details.
 
 ### Command Line Options
 ```
@@ -127,14 +127,14 @@ Initialization enables `autorun` behind the scenes, which can be configured usin
 $ bento [ enable|disable ] autorun
 ```
 
-These feature rely on pre-commit Git hooks. If these hooks incorrectly block your commit, you can skip them by passing the `--no-verify` flag to Git at commit-time (please use this sparingly):
+This feature makes use of Git hooks. If the Bento hook incorrectly blocks your commit, you can skip it by passing the `--no-verify` flag to Git at commit-time (please use this sparingly, all hooks will be skipped):
 
 ```bash
 $ git commit --no-verify
 ```
 
 ### Team Use
-To setup Bento for all contributors of a project, add Bento's configuration to Git (it is ignored by default):
+To setup Bento for all project contributors, add Bento's configuration to Git (it’s ignored by default):
 
 ```bash
 $ cd <PROJECT DIRECTORY>
@@ -142,14 +142,14 @@ $ git add --force .bento .bentoignore
 ```
 
 #### Running Locally
-Contributors can run Bento for themselves using the project's configuration via:
+Contributors can run Bento for themselves using the project’s configuration via:
 
 ```bash
 $ bento init
 ```
 
 #### Running in CI/CD
-Running Bento in CI requires the use of several speciality flags due to differences in environment and installation locally versus remotely.
+Running Bento in CI requires using several flags due to differences in environment and installation locally versus remotely.
 
 With your Bento configuration committed, you can script Bento via:
 
@@ -158,7 +158,7 @@ $ pip3 install bento-cli && bento --version
 $ bento --agree --email <YOUR_EMAIL> check --comparison archive
 ```
 
-The `--comparison archive` flag will surface issues that have not been added to the archive using `bento archive`; this behaviour differs from Bento running locally on staged files.
+The `--comparison archive` flag will surface issues that haven’t been added to the archive using `bento archive`; this behaviour differs from Bento running locally on staged files.
 
 If you use CircleCI, the above commands become:
 
@@ -180,7 +180,7 @@ jobs:
 
 `bento check` will exit with a non-zero exit code if it finds issues in your code (see [Exit Codes](#exit-codes)).
 
-If you need help setting up Bento with another CI provider please [open an issue](https://github.com/returntocorp/bento/issues/new?template=feature_request.md). Documentation PRs welcome if you set up Bento with a CI provider that isn't documented here!
+If you need help setting up Bento with another CI provider please [open an issue](https://github.com/returntocorp/bento/issues/new?template=feature_request.md). Documentation PRs welcome if you set up Bento with a CI provider that isn’t documented here!
 
 
 ## Bento Checks
