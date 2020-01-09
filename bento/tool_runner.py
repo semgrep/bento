@@ -4,10 +4,11 @@ import sys
 import threading
 import time
 import traceback
+from contextlib import contextmanager
 from functools import partial
 from multiprocessing import Lock
 from multiprocessing.pool import ThreadPool
-from typing import Collection, Iterable, List, Optional, Tuple, Union
+from typing import Collection, Iterable, Iterator, List, Optional, Tuple, Union
 
 import attr
 import click
@@ -19,7 +20,7 @@ from bento.constants import CONFIG_FILE_NAME, SUPPORT_EMAIL_ADDRESS
 from bento.result import Baseline, Violation
 from bento.tool import Tool
 
-MAX_BAR_VALUE = 30
+DONE_BAR_VALUE = 30
 BAR_UPDATE_INTERVAL = 0.1
 
 SLOW_RUN_SECONDS = 60  # Number of seconds before which a "slow run" warning is printed
@@ -27,14 +28,15 @@ SLOW_RUN_SECONDS = 60  # Number of seconds before which a "slow run" warning is 
 ToolResults = Union[List[Violation], Exception]
 RunResults = Tuple[str, ToolResults]
 
-MIN_BAR_VALUE = int(MAX_BAR_VALUE / 5)
+START_RUN_BAR_VALUE = int(DONE_BAR_VALUE / 5)
 
 
 @attr.s
 class Runner:
     show_bars = attr.ib(type=bool, default=True)
+    use_cache = attr.ib(type=bool, default=True)
+    install_only = attr.ib(type=bool, default=False)
     _lock = attr.ib(type=multiprocessing.synchronize.Lock, factory=Lock, init=False)
-    _setup_latch = attr.ib(type=bento.util.CountDownLatch, default=None, init=False)
     _bars = attr.ib(type=List[tqdm], factory=list, init=False)
     _run = attr.ib(type=List[bool], factory=list, init=False)
     _done = attr.ib(type=bool, default=False, init=False)
@@ -68,7 +70,7 @@ class Runner:
         """
         self._bars = [
             tqdm(
-                total=MAX_BAR_VALUE,
+                total=DONE_BAR_VALUE,
                 position=ix,
                 ascii="□■",
                 mininterval=BAR_UPDATE_INTERVAL,
@@ -81,6 +83,46 @@ class Runner:
             )
             for ix, tool in indices_and_tools
         ]
+
+    @contextmanager
+    def _updating_bar(
+        self,
+        bar: Optional[tqdm],
+        ix: int,
+        min_value: int,
+        max_value: int,
+        start_text: str,
+        done_text: str,
+    ) -> Iterator[None]:
+        """
+        Runs a block with an updating progress bar
+
+        :param bar: The progress bar (or None if no progress bar is displayed for this item)
+        :param ix: The progress bar index
+        :param min_value: Min value to display
+        :param max_value: Max value to display
+        """
+        th: Optional[threading.Thread] = None
+        self._run[ix] = True
+        if bar:
+            with self._lock:
+                bar.set_postfix_str(start_text)
+            th = threading.Thread(
+                name=f"update_{ix}",
+                target=partial(self._update_bars, ix, min_value, max_value),
+            )
+            th.start()
+        try:
+            yield
+        finally:
+            self._run[ix] = False
+            if th:
+                th.join()
+            if bar:
+                with self._lock:
+                    bar.n = max_value
+                    bar.update(0)
+                    bar.set_postfix_str(done_text)
 
     def _echo_slow_run(self) -> None:
         """
@@ -128,72 +170,91 @@ class Runner:
         else:
             logging.debug(f"Bento run completed in less than {SLOW_RUN_SECONDS} s.")
 
+    def _setup_tool(
+        self,
+        bar: Optional[tqdm],
+        ix: int,
+        tool: Tool,
+        max_bar_value: int,
+        end_text: str,
+    ) -> None:
+        """
+        Ensures that a tool is installed.
+
+        :param bar: Any associated progress bar
+        :param ix: The bar index
+        :param tool: The tool
+        """
+        with self._updating_bar(
+            bar, ix, 0, max_bar_value, bento.util.SETUP_TEXT, end_text
+        ):
+            tool.setup()
+
     def _run_single_tool(
+        self,
+        bar: Optional[tqdm],
+        ix: int,
+        tool: Tool,
+        paths: Optional[Iterable[str]],
+        baseline: Baseline,
+    ) -> ToolResults:
+        """
+        Returns results for running a previously installed tool.
+
+        :param bar: The progress bar associated with this tool
+        :param ix: The current tool index
+        :param tool: The tool itself
+        :param paths: Paths to pass to the tool
+        :param baseline: Any baseline to subtract from this tool
+        :return: Tool results
+        """
+        with self._updating_bar(
+            bar,
+            ix,
+            START_RUN_BAR_VALUE,
+            DONE_BAR_VALUE,
+            bento.util.PROGRESS_TEXT,
+            bento.util.DONE_TEXT,
+        ):
+            results = bento.result.filtered(
+                tool.tool_id(), tool.results(paths, self.use_cache), baseline
+            )
+
+        return results
+
+    def _setup_and_run_single_tool(
         self,
         baseline: Baseline,
         paths: Optional[Iterable[str]],
-        use_cache: bool,
         index_and_tool: Tuple[int, Tool],
     ) -> RunResults:
         """Runs a tool and filters out existing findings using baseline"""
 
         ix, tool = index_and_tool
+        end_of_setup_bar_value = (
+            DONE_BAR_VALUE if self.install_only else START_RUN_BAR_VALUE
+        )
+        end_of_setup_text = (
+            bento.util.DONE_TEXT if self.install_only else bento.util.PROGRESS_TEXT
+        )
+        bar = self._bars[ix] if self.show_bars else None
+
         try:
-            th = None
             before = time.time()
-            bar = self._bars[ix] if self.show_bars else None
-            self._run[ix] = True
-
             logging.debug(f"{tool.tool_id()} start")
-            if bar:
-                with self._lock:
-                    bar.set_postfix_str(bento.util.SETUP_TEXT)
-                th = threading.Thread(
-                    name=f"update_{ix}",
-                    target=partial(self._update_bars, ix, 0, MIN_BAR_VALUE),
-                )
-                th.start()
 
-            try:
-                tool.setup()
-                self._run[ix] = False
-                if th:
-                    th.join()
-            finally:
-                if self._setup_latch:
-                    self._setup_latch.count_down()
-            if bar:
-                with self._lock:
-                    bar.n = MIN_BAR_VALUE
-                    bar.set_postfix_str(bento.util.PROGRESS_TEXT)
+            self._setup_tool(bar, ix, tool, end_of_setup_bar_value, end_of_setup_text)
             after_setup = time.time()
 
-            self._run[ix] = True
-            if bar:
-                th = threading.Thread(
-                    name=f"update_{ix}",
-                    target=partial(self._update_bars, ix, MIN_BAR_VALUE, MAX_BAR_VALUE),
-                )
-                th.start()
-            if self._setup_latch:
-                self._setup_latch.wait_for()
-            results = bento.result.filtered(
-                tool.tool_id(), tool.results(paths, use_cache), baseline
-            )
-            with self._lock:
-                self._run[ix] = False
-            if th:
-                th.join()
-            if bar:
-                bar.n = MAX_BAR_VALUE
-                bar.update(0)
-                with self._lock:
-                    bar.set_postfix_str(bento.util.DONE_TEXT)
-            after = time.time()
+            results: ToolResults = []
+            if not self.install_only:
+                results = self._run_single_tool(bar, ix, tool, paths, baseline)
 
+            after = time.time()
             logging.debug(
                 f"{tool.tool_id()} completed in {(after - before):2f} s (setup in {(after_setup - before):2f} s)"
             )
+
             return tool.tool_id(), results
         except Exception as e:
             logging.error(traceback.format_exc())
@@ -204,7 +265,6 @@ class Runner:
         tools: Iterable[Tool],
         baseline: Baseline,
         paths: Optional[List[str]],
-        use_cache: bool = False,
         keep_bars: bool = True,
     ) -> Collection[RunResults]:
         """Runs all tools in parallel.
@@ -244,7 +304,7 @@ class Runner:
 
         with ThreadPool(n_tools) as pool:
             # using partial to pass in multiple arguments to __tool_filter
-            func = partial(Runner._run_single_tool, self, baseline, paths, use_cache)
+            func = partial(Runner._setup_and_run_single_tool, self, baseline, paths)
             all_results = pool.map(func, indices_and_tools)
 
         self._done = True
@@ -256,5 +316,7 @@ class Runner:
                     click.echo("", err=True)
             for b in self._bars:
                 b.close()
+            # Progress bars terminate on whitespace
+            bento.util.echo_newline()
 
         return all_results

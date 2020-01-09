@@ -109,11 +109,19 @@ class InitCommand(object):
         else:
             content.InstallAutorun.install.echo(skip=True)
 
-    def _maybe_clean_tools(self, clean: bool) -> None:
-        """If clean flag is passed, cleans tool installation"""
+    def _install_tools(self, clean: bool) -> None:
+        """
+        Ensures tools are installed
+
+        :param clean: If true, forces tool reinstallation
+        """
+        content.InstallTools.install.echo()
         if clean:
             content.Clean.tools.echo()
             subprocess.run(["rm", "-r", constants.VENV_PATH], check=True)
+        runner = bento.tool_runner.Runner(install_only=True)
+        tools = self.context.tools.values()
+        runner.parallel_results(tools, {}, [])
 
     def _identify_project(self) -> None:
         """Identifies this project"""
@@ -129,19 +137,17 @@ class InitCommand(object):
             return
         content.Identify.success.echo(projects)
 
-    def _next_steps(self) -> None:
+    def _finish(self) -> None:
         if sys.stdin.isatty() and sys.stderr.isatty():
-            content.NextSteps.prompt.echo()
+            content.Finish.prompt.echo()
 
-        content.NextSteps.body.echo()
-
-        if sys.stdin.isatty() and sys.stderr.isatty():
-            content.NextSteps.finish_init.echo()
-
-        content.NextSteps.thank_you.echo()
+        content.Finish.body.echo()
 
     def run(self, ctx: click.Context, clean: bool) -> None:
-        content.run_all.echo()
+        content.Start.banner.echo()
+
+        if sys.stdin.isatty() and sys.stderr.isatty():
+            content.Start.confirm.echo(default=True, show_default=False)
 
         self.context.resource_path.mkdir(exist_ok=True)
         is_first_init = not self.context.config_path.exists()
@@ -155,10 +161,10 @@ class InitCommand(object):
         self._identify_project()
 
         # Perform initial analysis
-        self._maybe_clean_tools(clean)
+        self._install_tools(clean)
 
         # Message next steps
-        self._next_steps()
+        self._finish()
 
 
 @click.command()

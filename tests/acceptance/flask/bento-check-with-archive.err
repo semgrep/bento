@@ -1,5 +1,4 @@
 Running Bento checks...
 
-
 ✔ 0 findings in  s
 ◦ Not showing 14 archived finding(s). To view, run $ bento check --comparison root.

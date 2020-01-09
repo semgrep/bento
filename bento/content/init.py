@@ -60,7 +60,20 @@ class InstallIgnore:
 
 
 class InstallAutorun:
-    install = Progress("Configuring Bento to analyze every commit", extra=-4)
+    install = Progress(
+        Multi(
+            [
+                "Enabling autorun (see $ ",
+                Text("bento enable autorun --help", style={"dim": True, "bold": True}),
+                Text(")", style={"dim": True}),
+            ]
+        ),
+        extra=20,
+    )
+
+
+class InstallTools:
+    install = Echo("Installing tools:\n")
 
 
 class Clean:
@@ -75,7 +88,7 @@ Removing archive due to passed --clean flag.
 class Identify:
     success = Steps(
         Newline(),
-        Echo(Multi(["Detected project with ", Sub(0, style={"bold": True})])),
+        Echo(Multi(["Bento initialized for ", Sub(0, style={"bold": True})])),
         Newline(),
     )
     failure = Steps(
@@ -108,60 +121,13 @@ class Check:
     noninteractive = Warn("Skipping project analysis due to noninteractive terminal.")
 
 
-class NextSteps:
+class Finish:
     prompt = Prompt(
-        "Press ENTER to view next steps",
+        "Press ENTER to finish initialization",
         options={"default": "", "hide_input": True, "show_default": False},
     )
 
     body = Steps(
-        Box("Next Steps"),
-        Echo(
-            Text(
-                "Bento is at its best when it runs automatically, either in CI or as a git hook. To learn "
-                "more about these, see Bento in CI or Bento as a Git Hook in our README.",
-                processor=Processors.wrap_link(
-                    [
-                        Link(
-                            "Bento in CI",
-                            "https://github.com/returntocorp/bento#running-bento-in-ci",
-                        ),
-                        Link(
-                            "Bento as a Git Hook",
-                            "https://github.com/returntocorp/bento#running-bento-as-a-git-hook",
-                        ),
-                    ],
-                    dim=True,
-                ),
-            )
-        ),
-        Newline(),
-        Echo("To use Bento:"),
-        Echo(
-            Multi(
-                [
-                    _step_item("check project", "bento check"),
-                    _step_item("view archived results", "bento check --show-all"),
-                    _step_item("disable a check", "bento disable check [TOOL] [CHECK]"),
-                    _step_item("enable a tool", "bento enable tool [TOOL]"),
-                    _step_item("install commit hook", "bento install-hook"),
-                    _step_item(
-                        "get help for a command", "bento [COMMAND] --help", nl=False
-                    ),
-                ]
-            )
-        ),
-    )
-
-    finish_init = Steps(
-        Newline(),
-        Prompt(
-            "Press ENTER to finish initialization",
-            options={"default": "", "hide_input": True, "show_default": False},
-        ),
-    )
-
-    thank_you = Steps(
         Box("Thank You"),
         Echo(
             Text(
@@ -213,6 +179,17 @@ class NextSteps:
             )
         ),
         Newline(),
+        Echo("Go forth and write great code! To use Bento:"),
+        Echo(
+            Multi(
+                [
+                    _step_item("commit code", "git commit"),
+                    _step_item(
+                        "get help for a command", "bento [COMMAND] --help", nl=False
+                    ),
+                ]
+            )
+        ),
     )
 
 
@@ -221,4 +198,37 @@ class RunArchive:
     post = Newline()
 
 
-run_all = Box("Bento Initialization")
+class Start:
+    banner = Steps(
+        Box("Bento Initialization"),
+        Echo(
+            Text(
+                "Bento configures itself for personal use by default. This means that it:",
+                processor=Processors.wrap(),
+            )
+        ),
+        Newline(),
+        Echo(
+            Text(
+                "1. Automatically checks for issues introduced by your code, as you commit it",
+                processor=Processors.wrap(),
+            )
+        ),
+        Echo(
+            Text(
+                "2. Only affects you; it won’t change anything for other project contributors",
+                processor=Processors.wrap(),
+            )
+        ),
+        Newline(),
+        Echo(
+            Text(
+                "Learn more about personal and team use at bento.dev/workflows.",
+                processor=Processors.wrap_link(
+                    [Link("bento.dev/workflows", "https://bento.dev/workflows")]
+                ),
+            )
+        ),
+        Newline(),
+    )
+    confirm = Steps(Confirm("Press ENTER to add Bento to this project"), Newline())

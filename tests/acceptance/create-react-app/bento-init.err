@@ -2,27 +2,20 @@
 ╭──────────────────────────────────────────────────────────────────────────────╮
 │                             Bento Initialization                             │
 ╰──────────────────────────────────────────────────────────────────────────────╯
+Bento configures itself for personal use by default. This means that it:
+
+1. Automatically checks for issues introduced by your code, as you commit it
+2. Only affects you; it won’t change anything for other project contributors
+
+Learn more about personal and team use at bento.dev/workflows.
+
 Creating default ignore file at .bentoignore․․․․․․․․․․․․․․․․․․․․․ 🍜 Setting up🍱 Done
 Creating default configuration at .bento/config.yml․․․․․․․․․․․․․․ 🍜 Setting up🍱 Done
-Configuring Bento to analyze every commit․․․․․․․․․․․․․․․․․․․․․․․․ 🍜 Setting up🍱 Done
+Enabling autorun (see $ bento enable autorun --help)․․․․․․․․․․․․․ 🍜 Setting up🍱 Done
 
-Detected project with node-js (with jest)
+Bento initialized for node-js (with jest)
 
-
-╭──────────────────────────────────────────────────────────────────────────────╮
-│                                  Next Steps                                  │
-╰──────────────────────────────────────────────────────────────────────────────╯
-Bento is at its best when it runs automatically, either in CI or as a git hook.
-To learn more about these, see Bento in CI or Bento as a Git Hook in our
-README.
-
-To use Bento:
-  check project․․․․․․․․․․․․․․․․․․․․․․․․․․․ $ bento check
-  view archived results․․․․․․․․․․․․․․․․․․․ $ bento check --show-all
-  disable a check․․․․․․․․․․․․․․․․․․․․․․․․․ $ bento disable check [TOOL] [CHECK]
-  enable a tool․․․․․․․․․․․․․․․․․․․․․․․․․․․ $ bento enable tool [TOOL]
-  install commit hook․․․․․․․․․․․․․․․․․․․․․ $ bento install-hook
-  get help for a command․․․․․․․․․․․․․․․․․․ $ bento [COMMAND] --help
+Installing tools:
 
 
 ╭──────────────────────────────────────────────────────────────────────────────╮
@@ -36,4 +29,8 @@ GitHub. We’d love to hear from you!
 
 Community: Join #bento on our community Slack. Get support, talk with other
 users, and share feedback.
+
+Go forth and write great code! To use Bento:
+  commit code․․․․․․․․․․․․․․․․․․․․․․․․․․․․․ $ git commit
+  get help for a command․․․․․․․․․․․․․․․․․․ $ bento [COMMAND] --help
 

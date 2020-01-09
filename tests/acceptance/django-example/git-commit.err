@@ -1,6 +1,5 @@
 Running Bento checks...
 
-
 bandit error
      > failure.py:0
      = syntax error while parsing AST from file

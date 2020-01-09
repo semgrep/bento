@@ -221,7 +221,8 @@ class Tool(ABC, Generic[R]):
                 if not paths_to_run:
                     return []
                 raw = self.run(paths_to_run)
-                self.context.cache.put(self.tool_id(), paths, self.serialize(raw))
+                if use_cache:
+                    self.context.cache.put(self.tool_id(), paths, self.serialize(raw))
             else:
                 raw = self.deserialize(cache_repr)
 

@@ -26,7 +26,6 @@ from bento.tool import Tool
 from bento.util import (
     AutocompleteSuggestions,
     echo_error,
-    echo_newline,
     echo_next_step,
     echo_success,
     echo_warning,
@@ -161,9 +160,9 @@ def _calculate_head_comparison(
         if processed_paths is None or len(processed_paths) > 0:
             with staged_files_only(PATCH_CACHE), _staged_files_cleared(context):
                 before = time.time()
-                runner = bento.tool_runner.Runner()
+                runner = bento.tool_runner.Runner(use_cache=False)
                 comparison_results = runner.parallel_results(
-                    tools, {}, processed_paths, use_cache=False, keep_bars=False
+                    tools, {}, processed_paths, keep_bars=False
                 )
                 baseline = {
                     tool_id: {f.syntactic_identifier_str() for f in findings}
@@ -280,9 +279,6 @@ def check(
             runner = bento.tool_runner.Runner()
             all_results = runner.parallel_results(tools, baseline, processed_paths)
             elapsed += time.time() - before
-
-    # Progress bars terminate on whitespace
-    echo_newline()
 
     is_error = False
 

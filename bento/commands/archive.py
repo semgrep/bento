@@ -40,8 +40,6 @@ def archive(context: Context, show_bars: bool = True) -> None:
     n_found = 0
     n_existing = 0
     found_hashes: Set[str] = set()
-    if show_bars:
-        echo_newline()
 
     for tool_id, vv in all_findings:
         if isinstance(vv, Exception):

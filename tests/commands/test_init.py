@@ -69,27 +69,20 @@ def test_init_already_setup() -> None:
 ╭──────────────────────────────────────────────────────────────────────────────╮
 │                             Bento Initialization                             │
 ╰──────────────────────────────────────────────────────────────────────────────╯
+Bento configures itself for personal use by default. This means that it:
+
+1. Automatically checks for issues introduced by your code, as you commit it
+2. Only affects you; it won’t change anything for other project contributors
+
+Learn more about personal and team use at bento.dev/workflows.
+
 Creating default ignore file at .bentoignore․․․․․․․․․․․․․․․․․․․․․ 👋 Skipped   
 Creating default configuration at .bento/config.yml․․․․․․․․․․․․․․ 👋 Skipped   
-Configuring Bento to analyze every commit․․․․․․․․․․․․․․․․․․․․․․․․ 👋 Skipped   
+Enabling autorun (see $ bento enable autorun --help)․․․․․․․․․․․․․ 👋 Skipped   
 
-Detected project with Python and node-js (with react)
+Bento initialized for Python and node-js (with react)
 
-
-╭──────────────────────────────────────────────────────────────────────────────╮
-│                                  Next Steps                                  │
-╰──────────────────────────────────────────────────────────────────────────────╯
-Bento is at its best when it runs automatically, either in CI or as a git hook.
-To learn more about these, see Bento in CI or Bento as a Git Hook in our
-README.
-
-To use Bento:
-  check project․․․․․․․․․․․․․․․․․․․․․․․․․․․ $ bento check
-  view archived results․․․․․․․․․․․․․․․․․․․ $ bento check --show-all
-  disable a check․․․․․․․․․․․․․․․․․․․․․․․․․ $ bento disable check [TOOL] [CHECK]
-  enable a tool․․․․․․․․․․․․․․․․․․․․․․․․․․․ $ bento enable tool [TOOL]
-  install commit hook․․․․․․․․․․․․․․․․․․․․․ $ bento install-hook
-  get help for a command․․․․․․․․․․․․․․․․․․ $ bento [COMMAND] --help
+Installing tools:
 
 
 ╭──────────────────────────────────────────────────────────────────────────────╮
@@ -103,6 +96,10 @@ GitHub. We’d love to hear from you!
 
 Community: Join #bento on our community Slack. Get support, talk with other
 users, and share feedback.
+
+Go forth and write great code! To use Bento:
+  commit code․․․․․․․․․․․․․․․․․․․․․․․․․․․․․ $ git commit
+  get help for a command․․․․․․․․․․․․․․․․․․ $ bento [COMMAND] --help
 
 """  # noqa - above string purposely contains trailing whitespace
 
@@ -150,8 +147,6 @@ def test_init_clean(tmp_path: Path) -> None:
         CliRunner(mix_stderr=False).invoke(check, obj=context)
         assert not venv_file.exists()
 
-        # Ensure `init --clean` followed by `check` recreates venv
+        # Ensure `init --clean` recreates venv
         CliRunner(mix_stderr=False).invoke(init, obj=context, args=["--clean"])
-        assert not tmp_path.exists()
-        CliRunner(mix_stderr=False).invoke(check, obj=context)
         assert venv_file.exists()
