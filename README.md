@@ -12,7 +12,7 @@
   <span> · </span>
   <a href="#usage">Usage</a>
   <span> · </span>
-  <a href="#integrations">Integrations</a>
+  <a href="#workflows">Workflows</a>
   <span> · </span>
   <a href="#bento-checks">Bento Checks</a>
   <span> · </span>
@@ -66,7 +66,7 @@ From the root directory of a project:
 $ bento init
 ```
 
-Bento is at its best when run automatically. See [Integrations](#integrations) for details.
+This configures Bento for yourself only. See [Team Use](#team-use) to setup Bento for all contributors.
 
 ### Upgrading
 > Docker is a requirement for Bento 0.8+.
@@ -113,9 +113,27 @@ Commands:
 - `2`: Bento ran successfully and found issues in your code
 - `3`: Bento or one of its underlying tools failed to run
 
-## Integrations
+## Workflows
 
-### Running Bento in CI
+### Individual Use
+Bento configures itself for personal use by default. This means that it:
+
+1. Automatically checks for issues introduced by your code, as you commit it
+2. Only affects you; it won’t change anything for other project contributors
+
+Initialization enables `autorun` behind the scenes, which can be configured using:
+
+```shell
+$ bento [ enable|disable ] autorun
+```
+
+These feature rely on pre-commit Git hooks. If these hooks incorrectly block your commit, you can skip them by passing the `--no-verify` flag to Git at commit-time (please use this sparingly):
+
+```bash
+$ git commit --no-verify
+```
+
+### Team Use
 If you use CircleCI, add the following job:
 
 ```yaml
@@ -151,22 +169,6 @@ Otherwise, address the issues or archive them with `bento archive`.
 
 If you need help setting up Bento with another CI provider please [open an issue](https://github.com/returntocorp/bento/issues/new?template=feature_request.md). Documentation PRs welcome if you set up Bento with a CI provider that isn't documented here!
 
-### Running Bento as a Git Hook
-Bento can automatically analyze your staged files when `git commit` is run. Configured as a Git pre-commit hook, Bento ensures every commit to your project is vetted and that no new issues have been introduced to the codebase.
-
-To install Bento as a Git hook:
-
-```bash
-$ bento install-hook
-```
-
-If Git hooks ever incorrectly block your commit, you can skip them by passing the `--no-verify` flag at commit-time (use this sparingly):
-
-```bash
-$ git commit --no-verify
-```
-
-Bento’s Git hook can save the round-trip time involved with fixing a failed build if you’re using [Bento in CI](#running-bento-in-ci). 
 
 ## Bento Checks
 Bento finds common security, correctness, and performance mistakes in projects containing Flask, Requests, and Boto 3. We’re inspired by tools that help ensure correct and safe framework use, like [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react). Learn more about Bento’s speciality checks at [checks.bento.dev](https://checks.bento.dev/).
