@@ -134,7 +134,7 @@ $ git commit --no-verify
 ```
 
 ### Team Use
-To setup Bento for all contributors of a project, add Bento's configuration to Git (which is ignored by default):
+To setup Bento for all contributors of a project, add Bento's configuration to Git (it is ignored by default):
 
 ```bash
 $ cd <PROJECT DIRECTORY>
@@ -142,7 +142,7 @@ $ git add --force .bento .bentoignore
 ```
 
 #### Running Locally
-Contributors can then have Bento run for themselves using the project's configuration via:
+Contributors can run Bento for themselves using the project's configuration via:
 
 ```bash
 $ bento init
@@ -151,7 +151,7 @@ $ bento init
 #### Running in CI/CD
 Running Bento in CI requires the use of several speciality flags due to differences in environment and installation locally versus remotely.
 
-With your Bento configuration committed, you can script Bento:
+With your Bento configuration committed, you can script Bento via:
 
 ```bash
 $ pip3 install bento-cli && bento --version
