@@ -2,7 +2,7 @@
     <img src="https://raw.githubusercontent.com/returntocorp/bento/master/bento-logo.png" height="100" alt="Bento logo"/>
 </p>
 <h3 align="center">
-  Find bugs delightfully fast without changing your workflow
+  Find Python 3 bugs delightfully fast without changing your workflow
 </h3>
 
 <p align="center">
@@ -79,7 +79,7 @@ $ cd <PROJECT DIRECTORY>
 $ rm -r ~/.bento .bento* && bento init
 ```
 
-For Bento 0.8+ no Bento files need to be tracked with Git.
+For Bento 0.8+ no Bento files need to be tracked with Git unless you're using Bento in CI. See [Running in CI/CD](#running-in-ci/cd) for details.
 
 ### Command Line Options
 ```
