@@ -69,14 +69,17 @@ $ bento init
 Bento is at its best when run automatically. See [Integrations](#integrations) for details.
 
 ### Upgrading
+> Docker is a requirement for Bento 0.8+.
+
 Run the following commands to upgrade Bento:
 
 ```bash
 $ pip3 install --upgrade bento-cli
 $ cd <PROJECT DIRECTORY>
-$ rm -r .bento* && bento init
-$ git add .bento* && git commit -m "Upgrade Bento configs"
+$ rm -r ~/.bento .bento* && bento init
 ```
+
+For Bento 0.8+ no Bento files need to be tracked with Git.
 
 ### Command Line Options
 ```
