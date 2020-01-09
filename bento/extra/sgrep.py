@@ -36,8 +36,8 @@ class SGrepParser(Parser[JsonR]):
 
 
 class SGrepTool(JsonTool):
-    ANALYZER_NAME = "r2c/sgrep-lint"
-    ANALYZER_VERSION = Version("0.1.12")
+    ANALYZER_NAME = "r2c/sgrep"
+    ANALYZER_VERSION = Version("0.1.14")
     FILE_NAME_FILTER = re.compile(r".*")
 
     @property
@@ -50,7 +50,7 @@ class SGrepTool(JsonTool):
 
     @classmethod
     def tool_id(cls) -> str:
-        return "sgrep-lint"
+        return "sgrep"
 
     @classmethod
     def tool_desc(cls) -> str:
