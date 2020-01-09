@@ -123,7 +123,7 @@ Bento configures itself for personal use by default. This means that it:
 
 Initialization enables `autorun` behind the scenes, which can be configured using:
 
-```shell
+```bash
 $ bento [ enable|disable ] autorun
 ```
 
@@ -134,7 +134,33 @@ $ git commit --no-verify
 ```
 
 ### Team Use
-If you use CircleCI, add the following job:
+To setup Bento for all contributors of a project, add Bento's configuration to Git (which is ignored by default):
+
+```bash
+$ cd <PROJECT DIRECTORY>
+$ git add --force .bento .bentoignore
+```
+
+#### Running Locally
+Contributors can then have Bento run for themselves using the project's configuration via:
+
+```bash
+$ bento init
+```
+
+#### Running in CI/CD
+Running Bento in CI requires the use of several speciality flags due to differences in environment and installation locally versus remotely.
+
+With your Bento configuration committed, you can script Bento:
+
+```bash
+$ pip3 install bento-cli && bento --version
+$ bento --agree --email <YOUR_EMAIL> check --comparison archive
+```
+
+The `--comparison archive` flag will surface issues that have not been added to the archive using `bento archive`; this behaviour differs from Bento running locally on staged files.
+
+If you use CircleCI, the above commands become:
 
 ```yaml
 version: 2.1
@@ -149,23 +175,10 @@ jobs:
           command: pip3 install bento-cli && bento --version
       - run:
           name: "Run Bento check"
-          command: bento --agree --email <YOUR_EMAIL> check
+          command: bento --agree --email <YOUR_EMAIL> check --comparison archive
 ```
 
-Otherwise, you can simply install and run Bento in CI with the following commands:
-
-```bash
-$ pip3 install bento-cli && bento --version
-$ bento --agree --email <YOUR_EMAIL> check
-```
-
-`bento check` will exit with a non-zero exit code if it finds issues in your code (see [Exit Codes](#exit-codes)). To suppress this behaviour you can pipe its output to `true`:
-
- ```bash
- $ bento --agree --email <YOUR_EMAIL> check || true
- ```
- 
-Otherwise, address the issues or archive them with `bento archive`.
+`bento check` will exit with a non-zero exit code if it finds issues in your code (see [Exit Codes](#exit-codes)).
 
 If you need help setting up Bento with another CI provider please [open an issue](https://github.com/returntocorp/bento/issues/new?template=feature_request.md). Documentation PRs welcome if you set up Bento with a CI provider that isn't documented here!
 
