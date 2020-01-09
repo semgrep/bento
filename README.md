@@ -34,7 +34,7 @@
   </a>
 </p>
 
-Bento is a free bug-finding tool that runs locally when you commit code. It has speciality checks for common Python 3 web frameworks and OSS checks for Docker and shell files.
+Bento is a free bug-finding tool that runs locally when you commit code. It has speciality checks for common Python 3 web frameworks and OSS checks for Python, Docker, and shell files.
 
 - **Find bugs that matter.** Bento runs its [own checks](#bento-checks) and OSS tools to catch actual bugs. Checks are fine-tuned based on performance across thousands of PyPI projects, and Bento never reports style-related issues.
 - **Keep your workflow.** Unlike other tools you won’t have to fix existing bugs to adopt Bento. It takes 30 seconds to get started and coding again.
@@ -49,7 +49,7 @@ Bento is a free bug-finding tool that runs locally when you commit code. It has 
 $ pip3 install bento-cli
 ```
 
-Bento requires [Python 3.6+](https://www.python.org/downloads/) and [Docker](https://docs.docker.com/get-docker/). It's tested on macOS Mojave (10.14) and Ubuntu 18.04+.
+Bento requires [Python 3.6+](https://www.python.org/downloads/) and [Docker](https://docs.docker.com/get-docker/). It's tested on macOS 10.14+ and Ubuntu 18.04+.
 
 ## Motivations
 > See our [Bento introductory blog post](https://bento.dev/blog/2019/our-quest-to-make-world-class-security-and-bugfinding-available-to-all-developers/) to learn the full story.
@@ -66,7 +66,7 @@ From the root directory of a project:
 $ bento init
 ```
 
-This configures Bento for yourself only. See [Team Use](#team-use) to setup Bento for all contributors.
+This configures Bento for you only. See [Team Use](#team-use) to setup Bento for all contributors.
 
 ### Upgrading
 > Docker is a requirement for Bento 0.8+.
