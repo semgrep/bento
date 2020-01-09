@@ -335,6 +335,22 @@ def render_link(
     return text
 
 
+def file_has_text(file: Path, text: str) -> bool:
+    """
+    Returns if a file contains a pattern
+    """
+    with file.open() as fd:
+        return any(text in l for l in fd)
+
+
+def append_text_to_file(file: Path, text: str) -> None:
+    """
+    Adds text to a file
+    """
+    with file.open("a") as fd:
+        fd.write(f"\n{text}\n")
+
+
 # Taken from http://www.madhur.co.in/blog/2015/11/02/countdownlatch-python.html
 class CountDownLatch(object):
     def __init__(self, count: int = 1):

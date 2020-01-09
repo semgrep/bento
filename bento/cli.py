@@ -100,7 +100,7 @@ def cli(
         )
         sys.exit(3)
 
-    registrar = register.Registrar(ctx.obj, agree, email=email)
+    registrar = register.Registrar(ctx, agree, email=email)
     if not registrar.verify():
         logging.error("Could not verify the user's registration.")
         sys.exit(3)

@@ -5,8 +5,10 @@ from pathlib import Path
 from typing import Any, Dict, Optional, Tuple
 
 import attr
+import click
 from packaging.version import InvalidVersion, Version
 
+import bento.commands.autocomplete as autocomplete
 import bento.constants as constants
 import bento.content.register as content
 import bento.decorators
@@ -24,9 +26,10 @@ GLOBAL_GITIGNORE_PATTERN = ".bento/\n.bentoignore"
 
 @attr.s(auto_attribs=True)
 class Registrar(object):
-    context: Context
+    click_context: click.Context
     agree: bool
     is_first_run: bool = False
+    context: Context = attr.ib(init=False)
     global_config: Dict[str, Any] = attr.ib(factory=read_global_config, init=False)
     email: Optional[str] = attr.ib()
 
@@ -35,6 +38,7 @@ class Registrar(object):
         return os.environ.get(constants.BENTO_EMAIL_VAR)
 
     def __attrs_post_init__(self) -> None:
+        self.context = self.click_context.obj
         if self.global_config is None:
             self.is_first_run = True
             self.global_config = {}
@@ -203,10 +207,10 @@ class Registrar(object):
         """
         if update:
             on_done = content.UpdateGitignore.update.echo(ignore_path)
-            with ignore_path.open("a") as fd:
-                fd.write(
-                    f"\n# Ignore bento tool run paths (this line added by `bento init`)\n{GLOBAL_GITIGNORE_PATTERN}\n"
-                )
+            bento.util.append_text_to_file(
+                ignore_path,
+                f"# Ignore bento tool run paths (this line added by `bento init`)\n{GLOBAL_GITIGNORE_PATTERN}",
+            )
             on_done()
             logging.info(f"Added '.bento/' to {ignore_path}")
 
@@ -214,17 +218,23 @@ class Registrar(object):
         """
         Suggests code to add to the user's shell config to set up autocompletion
         """
-        if "SHELL" not in os.environ:
+        shell = os.environ.get("SHELL")
+        if not shell:
             return
 
-        shell = os.environ["SHELL"]
-
-        if shell.endswith("/zsh"):
-            content.SuggestAutocomplete.zsh.echo()
-        elif shell.endswith("/bash"):
-            content.SuggestAutocomplete.bash.echo()
-        else:
-            return
+        self._validate_interactivity()
+        shell_cmd = shell.split("/")[-1]
+        if shell_cmd in autocomplete.SUPPORTED:
+            should_add = content.SuggestAutocomplete.confirm.echo()
+            if should_add:
+                on_done = content.SuggestAutocomplete.install.echo(
+                    autocomplete.SUPPORTED[shell_cmd][0]
+                )
+                self.click_context.invoke(autocomplete.install_autocomplete, [False])
+                on_done()
+                content.SuggestAutocomplete.confirm_yes.echo()
+            else:
+                content.SuggestAutocomplete.confirm_no.echo()
 
     def verify(self) -> bool:
         """

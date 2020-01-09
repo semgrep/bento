@@ -2,6 +2,7 @@ from typing import Set
 
 import click
 
+from bento.commands.autocomplete import install_autocomplete
 from bento.commands.autorun import install_autorun
 from bento.config import (
     ToolCommand,
@@ -73,3 +74,4 @@ def check(context: Context, tool: str, check: str) -> None:
 
 
 enable.add_command(install_autorun)
+enable.add_command(install_autocomplete)

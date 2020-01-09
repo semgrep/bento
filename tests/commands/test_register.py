@@ -1,13 +1,17 @@
 import io
+import os
 import sys
 from contextlib import contextmanager
 from pathlib import Path
 from typing import Iterator
 from unittest.mock import patch
 
+import click
+
 import pytest
 from _pytest.capture import CaptureFixture
 from _pytest.monkeypatch import MonkeyPatch
+from bento.commands.init import init
 from bento.commands.register import Registrar
 from bento.constants import QA_TEST_EMAIL_ADDRESS, TERMS_OF_SERVICE_VERSION
 from bento.context import Context
@@ -17,20 +21,29 @@ INTEGRATION = Path(__file__).parent.parent / "integration"
 
 
 @contextmanager
-def tmp_config(tmp_path: Path) -> Iterator[Context]:
+def tmp_config(tmp_path: Path) -> Iterator[click.Context]:
+    click_context = click.Context(init)
     context = Context(base_path=INTEGRATION / "simple")
+    click_context.obj = context
+    memo = os.environ.get("SHELL")
     with patch("bento.constants.GLOBAL_CONFIG_PATH", tmp_path / "config.yml"):
-        yield (context)
+        try:
+            if memo:
+                del os.environ["SHELL"]
+            yield (click_context)
+        finally:
+            if memo:
+                os.environ["SHELL"] = memo
 
 
 @contextmanager
-def fake_input(tmp_path: Path, input: str) -> Iterator[Context]:
+def fake_input(tmp_path: Path, input: str) -> Iterator[click.Context]:
     stdin = io.StringIO(input)
     with patch.object(stdin, "isatty", lambda: True):
         with patch("sys.stdin", stdin):
             with patch.object(sys.stderr, "isatty", lambda: True):
-                with tmp_config(tmp_path) as context:
-                    yield (context)
+                with tmp_config(tmp_path) as ctx:
+                    yield (ctx)
 
 
 @contextmanager
@@ -46,7 +59,9 @@ def test_register_email_from_env(monkeypatch: MonkeyPatch, tmp_path: Path) -> No
     monkeypatch.setenv("BENTO_EMAIL", "heresjohnny@r2c.dev")
 
     context = Context(base_path=INTEGRATION / "simple")
-    registrar = Registrar(context=context, agree=False)
+    ctx = click.Context(init)
+    ctx.obj = context
+    registrar = Registrar(click_context=ctx, agree=False)
 
     assert registrar.email == "heresjohnny@r2c.dev"
 
@@ -70,8 +85,8 @@ Please either:
 ◦ Run Bento with `--agree --email [EMAIL]`
 """
 
-    with tmp_config(tmp_path) as context:
-        registrar = Registrar(context=context, agree=False, email=None)
+    with tmp_config(tmp_path) as ctx:
+        registrar = Registrar(click_context=ctx, agree=False, email=None)
 
         with pytest.raises(SystemExit) as ex:
             registrar.verify()
@@ -85,8 +100,10 @@ Please either:
 
 def test_register_agree_email(tmp_path: Path, capsys: CaptureFixture) -> None:
     """Asserts registration is skipped with both email and agree"""
-    with tmp_config(tmp_path) as context:
-        registrar = Registrar(context=context, agree=True, email=QA_TEST_EMAIL_ADDRESS)
+    with tmp_config(tmp_path) as ctx:
+        registrar = Registrar(
+            click_context=ctx, agree=True, email=QA_TEST_EMAIL_ADDRESS
+        )
 
         assert registrar.verify()
 
@@ -102,8 +119,8 @@ def test_register_happy_path(tmp_path: Path, capsys: CaptureFixture) -> None:
     tos_question = "Continue and agree to Bento's terms of service and privacy policy?"
 
     with setup_global_gitignore(tmp_path):
-        with fake_input(tmp_path, f"{QA_TEST_EMAIL_ADDRESS}\n\n") as context:
-            registrar = Registrar(context=context, agree=False, email=None)
+        with fake_input(tmp_path, f"{QA_TEST_EMAIL_ADDRESS}\n\n") as ctx:
+            registrar = Registrar(click_context=ctx, agree=False, email=None)
 
             assert registrar.verify()
             assert read_global_config() == {
@@ -121,7 +138,7 @@ def test_already_registered(tmp_path: Path, capsys: CaptureFixture) -> None:
     """Asserts registration skipped if current"""
 
     with setup_global_gitignore(tmp_path):
-        with tmp_config(tmp_path) as context:
+        with tmp_config(tmp_path) as ctx:
             persist_global_config(
                 {
                     "email": QA_TEST_EMAIL_ADDRESS,
@@ -129,7 +146,7 @@ def test_already_registered(tmp_path: Path, capsys: CaptureFixture) -> None:
                 }
             )
             registrar = Registrar(
-                context=context, agree=False, email=QA_TEST_EMAIL_ADDRESS
+                click_context=ctx, agree=False, email=QA_TEST_EMAIL_ADDRESS
             )
             assert registrar.verify()
 
@@ -142,9 +159,9 @@ def test_register_email_option(tmp_path: Path) -> None:
     """Validates registration if email via command line"""
 
     with setup_global_gitignore(tmp_path):
-        with fake_input(tmp_path, "\n") as context:
+        with fake_input(tmp_path, "\n") as ctx:
             registrar = Registrar(
-                context=context, agree=False, email=QA_TEST_EMAIL_ADDRESS
+                click_context=ctx, agree=False, email=QA_TEST_EMAIL_ADDRESS
             )
 
             assert registrar.verify()
@@ -158,9 +175,9 @@ def test_register_setup_gitignore(tmp_path: Path) -> None:
 
     tmp_ignore = tmp_path / ".gitignore"
     with patch("bento.git.global_ignore_path", lambda p: tmp_ignore):
-        with fake_input(tmp_path, "\n\n") as context:
+        with fake_input(tmp_path, "\n\n") as ctx:
             registrar = Registrar(
-                context=context, agree=False, email=QA_TEST_EMAIL_ADDRESS
+                click_context=ctx, agree=False, email=QA_TEST_EMAIL_ADDRESS
             )
             assert registrar.verify()
 
@@ -174,8 +191,8 @@ def test_register_setup_gitignore(tmp_path: Path) -> None:
 def test_register_agree_flag(tmp_path: Path) -> None:
     """Validates registration if agreement in flag"""
 
-    with fake_input(tmp_path, f"{QA_TEST_EMAIL_ADDRESS}\n\n") as context:
-        registrar = Registrar(context=context, agree=True, email=None)
+    with fake_input(tmp_path, f"{QA_TEST_EMAIL_ADDRESS}\n\n") as ctx:
+        registrar = Registrar(click_context=ctx, agree=True, email=None)
 
         assert registrar.verify()
         assert read_global_config() == {"email": QA_TEST_EMAIL_ADDRESS}
@@ -187,8 +204,8 @@ def test_register_no_agree(tmp_path: Path, capsys: CaptureFixture) -> None:
     expectation = """✘ Bento did NOT install. Bento beta users must agree to the terms of service to
 continue. Please reach out to us at support@r2c.dev with questions or concerns."""
 
-    with fake_input(tmp_path, f"{QA_TEST_EMAIL_ADDRESS}\nn\n") as context:
-        registrar = Registrar(context=context, agree=False, email=None)
+    with fake_input(tmp_path, f"{QA_TEST_EMAIL_ADDRESS}\nn\n") as ctx:
+        registrar = Registrar(click_context=ctx, agree=False, email=None)
 
         assert not registrar.verify()
         assert read_global_config() == {"email": QA_TEST_EMAIL_ADDRESS}

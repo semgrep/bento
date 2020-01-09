@@ -143,25 +143,26 @@ class UpdateGitignore:
 
 
 class SuggestAutocomplete:
-    bash = Echo(
-        Multi(
-            [
-                "Bento supports tab autocompletion. To enable, run:\n  $ ",
-                Text(
-                    "echo -e '\neval \"$(_BENTO_COMPLETE=source bento)\"' >> ~/.bashrc",
-                    style={"bold": True},
-                ),
-            ]
-        )
+    confirm = Confirm(
+        Text(
+            "Bento supports tab autocompletion. Do you want to add it to your shell profile now?",
+            processor=Processors.wrap(),
+        ),
+        options={"default": True},
     )
-    zsh = Echo(
+    install = Progress(
+        content=Multi(
+            ["Adding autocompletion to ", Sub(0, style={"bold": True, "dim": True})]
+        ),
+        extra=12,
+    )
+    confirm_yes = Newline()
+    confirm_no = Echo(
         Multi(
             [
-                "Bento supports tab autocompletion. To enable, run:\n  $ ",
-                Text(
-                    "echo -e '\neval \"$(_BENTO_COMPLETE=source_zsh bento)\"' >> ~/.zshrc",
-                    style={"bold": True},
-                ),
+                "\nTo enable autocompletion later, run $ ",
+                Text("bento enable autocomplete", style={"bold": True}),
+                ".\n",
             ]
         )
     )

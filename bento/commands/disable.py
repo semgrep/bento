@@ -2,6 +2,7 @@ from typing import Set
 
 import click
 
+from bento.commands.autocomplete import uninstall_autocomplete
 from bento.commands.autorun import uninstall_autorun
 from bento.config import ToolCommand, get_valid_tools, update_ignores, update_tool_run
 from bento.context import Context
@@ -64,3 +65,4 @@ def check(context: Context, tool: str, check: str) -> None:
 
 
 disable.add_command(uninstall_autorun)
+disable.add_command(uninstall_autocomplete)
