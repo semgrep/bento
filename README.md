@@ -52,7 +52,7 @@ $ pip3 install bento-cli
 Bento requires Python 3.6+ and works on macOS Mojave (10.14) and Ubuntu 18.04+.
 
 ## Motivations
-> See our [Bento introductory blog post](https://medium.com/@ievans/our-quest-to-make-world-class-security-and-bugfinding-available-to-all-developers-for-free-dce9eb7b06d0) to learn the full story.
+> See our [Bento introductory blog post](https://bento.dev/blog/2019/our-quest-to-make-world-class-security-and-bugfinding-available-to-all-developers/) to learn the full story.
 
 r2c is on a quest to make world-class security and bugfinding available to all developers, for free. We’ve learned that most developers have never heard of—let alone tried—tools that find deep flaws in code: like Codenomicon, which found [Heartbleed](http://heartbleed.com/), or Zoncolan at Facebook, which finds more [top-severity security issues](https://cacm.acm.org/magazines/2019/8/238344-scaling-static-analyses-at-facebook/fulltext) than any human effort. These tools find severe issues and also save tons of time, identifying [hundreds of thousands of issues](https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/43322.pdf) before humans can. Bento is a step towards universal access to tools like these.
 
