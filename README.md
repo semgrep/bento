@@ -81,6 +81,8 @@ $ cd <PROJECT DIRECTORY>
 $ rm -r ~/.bento .bento* && bento init
 ```
 
+The last line removes all Bento artifacts as their formats have not yet stabalized between releases, including the Bento archive.
+
 For Bento 0.8+ no Bento files need to be tracked with Git unless you’re using Bento in CI. See [Running in CI/CD](#running-in-ci/cd) for details.
 
 ### Command Line Options
