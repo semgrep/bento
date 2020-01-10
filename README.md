@@ -36,10 +36,10 @@
   </a>
 </p>
 
-Bento is a free bug-finding tool that runs locally when you commit code. It has speciality checks for common Python 3 web frameworks and OSS checks for Python, Docker, and shell files.
+Bento is a free bug-finding tool that runs locally when you commit code. It has specialty checks for common Python 3 web frameworks and OSS checks for Python, Docker, and shell files.
 
 - **Find bugs that matter.** Bento runs its [own checks](#bento-checks) and OSS tools to catch actual bugs. Checks are fine-tuned based on their behavior across thousands of PyPI projects, and Bento never reports style-related issues.
-- **Keep your workflow.** Unlike other tools you won’t have to fix existing bugs to adopt Bento. It takes 30 seconds to get started and coding again.
+- **Keep your workflow.** Unlike other tools, you won’t have to fix existing bugs to adopt Bento. Other project contributors won’t see Bento files or have their workflows changed. It’s just for you.
 - **Go delightfully fast.** Bento runs its tools in parallel, not sequentially, on the code you’ve changed. Its jobs run entirely locally when you commit your code.
 
 <p align="center">
@@ -199,7 +199,7 @@ If you need help setting up Bento with another CI provider please [open an issue
 
 
 ## Bento Checks
-Bento finds common security, correctness, and performance mistakes in projects containing Flask, Requests, and Boto 3. We’re inspired by tools that help ensure correct and safe framework use, like [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react). Learn more about Bento’s speciality checks at [checks.bento.dev](https://checks.bento.dev/).
+Bento finds common security, correctness, and performance mistakes in projects containing Flask, Requests, and Boto 3. We’re inspired by tools that help ensure correct and safe framework use, like [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react). Learn more about Bento’s specialty checks at [checks.bento.dev](https://checks.bento.dev/).
 
 ## Help and Community
 Need help or want to share feedback? We’d love to hear from you!
