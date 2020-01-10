@@ -13,6 +13,8 @@
   <a href="#usage">Usage</a>
   <span> · </span>
   <a href="#workflows">Workflows</a>
+  <br/>
+  <a href="#running-in-ci/cd">Integrations</a>
   <span> · </span>
   <a href="#bento-checks">Bento Checks</a>
   <span> · </span>
@@ -164,7 +166,7 @@ Commit Bento’s configuration to the project:
 $ git add --force .bento .bentoignore
 ```
 
-You can add Bento to your CI scripts:
+You can then add Bento to your CI scripts:
 
 ```bash
 $ pip3 install bento-cli && bento --version
