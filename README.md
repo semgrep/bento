@@ -123,7 +123,7 @@ Bento configures itself for personal use by default. This means that it:
 1. Automatically checks for issues introduced by your code, as you commit it
 2. Only affects you; it won’t change anything for other project contributors or modify Git state
 
-Initialization enables `autorun` behind the scenes, which can be configured using:
+Initialization enables `autorun` behind the scenes, which can be can be enabled or disabled using:
 
 ```bash
 $ bento [ enable|disable ] autorun
