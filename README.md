@@ -149,16 +149,27 @@ $ bento init
 ```
 
 #### Running in CI/CD
-Running Bento in CI requires using several flags due to differences in environment and installation locally versus remotely.
+Bento in CI analyzes your entire project, not just the latest commit. So that you don't have to fix all existing issues before making Bento blocking, it supports a tech debt `archive` where historical issues can be tracked and ignored during CI.
 
-With your Bento configuration committed, you can script Bento via:
+To configure Bento so that it only fails for new issues, first create the archive:
+
+```bash
+$ cd <PROJECT DIRECTORY>
+$ bento archive --comparison archive
+```
+
+Commit Bento's configuration to the project:
+
+```bash
+$ git add --force .bento .bentoignore
+```
+
+You can add Bento to your CI scripts:
 
 ```bash
 $ pip3 install bento-cli && bento --version
 $ bento --agree --email <YOUR_EMAIL> check --comparison archive
 ```
-
-The `--comparison archive` flag will surface issues that haven’t been added to the archive using `bento archive`; this behaviour differs from Bento running locally on staged files.
 
 If you use CircleCI, the above commands become:
 
