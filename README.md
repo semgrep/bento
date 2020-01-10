@@ -127,7 +127,7 @@ Initialization enables `autorun` behind the scenes, which can be configured usin
 $ bento [ enable|disable ] autorun
 ```
 
-This feature makes use of Git hooks. If the Bento hook incorrectly blocks your commit, you can skip it by passing the `--no-verify` flag to Git at commit-time (please use this sparingly, all hooks will be skipped):
+This feature makes use of Git hooks. If the Bento hook incorrectly blocks your commit, you can skip it by passing the `--no-verify` flag to Git at commit-time (please use this sparingly since all hooks will be skipped):
 
 ```bash
 $ git commit --no-verify
@@ -135,7 +135,7 @@ $ git commit --no-verify
 
 ### Team Use
 #### Running Locally
-To setup Bento for all project contributors, add Bento's configuration to Git (it’s ignored by default):
+To setup Bento for all project contributors, add Bento’s configuration to Git (it’s ignored by default):
 
 ```bash
 $ cd <PROJECT DIRECTORY>
@@ -149,7 +149,7 @@ $ bento init
 ```
 
 #### Running in CI/CD
-Bento in CI analyzes your entire project, not just the latest commit. So that you don't have to fix all existing issues before making Bento blocking, it supports a tech debt `archive` where historical issues can be tracked and ignored during CI.
+Bento in CI analyzes your entire project, not just the latest commit. So that you don’t have to fix all existing issues before making Bento blocking, its `archive` feature allows historical issues to be tracked and ignored during CI.
 
 To configure Bento so that it only fails for new issues, first create the archive:
 
@@ -158,7 +158,7 @@ $ cd <PROJECT DIRECTORY>
 $ bento archive --comparison archive
 ```
 
-Commit Bento's configuration to the project:
+Commit Bento’s configuration to the project:
 
 ```bash
 $ git add --force .bento .bentoignore
