@@ -143,6 +143,8 @@ class ShellcheckTool(JsonTool):
                         "-i",
                         container_id,
                         "shellcheck",
+                        "--severity",
+                        "info",
                         "-f",
                         "json",
                         "/dev/fd/0",

@@ -195,26 +195,12 @@ flake8 no-mutable-default-args https://github.com/PyCQA/flake8-bugbear/blob/mast
        this one instance of that data structure, persisting changes between
        them.
 
-shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
-     > push.sh:6
+shellcheck SC2148 https://github.com/koalaman/shellcheck/wiki/SC2148
+     > push.sh:1
      ╷
-    6│   git remote add origin https://${GITHUB_TOKEN}@github.com/instagrambot/instabot.git
+    1│   LAST_COMMIT_MESSAGE="$(git log --no-merges -2 --pretty=%B)"
      ╵
-     = Double quote to prevent globbing and word splitting.
-
-shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
-     > push.sh:13
-     ╷
-   13│   twine upload -u $PYPI_USERNAME -p $PYPI_PASSWORD dist/*
-     ╵
-     = Double quote to prevent globbing and word splitting.
-
-shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
-     > push.sh:13
-     ╷
-   13│   twine upload -u $PYPI_USERNAME -p $PYPI_PASSWORD dist/*
-     ╵
-     = Double quote to prevent globbing and word splitting.
+     = Tips depend on target shell and yours is unknown. Add a shebang.
 
 flake8:
   no-mutable-default-args       12▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
@@ -222,11 +208,11 @@ flake8:
   unused-loop-variable           3▕▬▬▬▬▬▬▬▬▬▬▬
   not-executable                 1▕▬▬▬▬
 
-shellcheck:
-  SC2086                         3▕▬▬▬▬▬▬▬▬▬▬▬
-
 bandit:
   try-except-pass                2▕▬▬▬▬▬▬▬
   B301                           1▕▬▬▬▬
   start-process-with-a-shell     1▕▬▬▬▬
+
+shellcheck:
+  SC2148                         1▕▬▬▬▬
 
