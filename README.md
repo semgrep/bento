@@ -155,7 +155,7 @@ $ bento init
 #### Running in CI/CD
 Bento in CI analyzes your entire project, not just the latest commit. So that you don’t have to fix all existing issues before making Bento blocking, its `archive` feature allows historical issues to be tracked and ignored during CI.
 
-To configure Bento so that it returns a non-zero exit code for new issues, rather than all existing issues, first create the archive:
+To use the `archive` feature so Bento returns a non-zero exit code only for new issues, rather than all existing issues, first create the archive:
 
 ```bash
 $ cd <PROJECT DIRECTORY>
