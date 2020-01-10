@@ -51,7 +51,7 @@ Bento is a free bug-finding tool that runs locally when you commit code. It has 
 $ pip3 install bento-cli
 ```
 
-Bento requires [Python 3.6+](https://www.python.org/downloads/) and [Docker](https://docs.docker.com/get-docker/). It's tested on macOS 10.14+ and Ubuntu 18.04+.
+Bento requires [Python 3.6+](https://www.python.org/downloads/) and [Docker 19.03+](https://docs.docker.com/get-docker/). It runs on macOS, Ubuntu, and most other Linux distributions.
 
 ## Motivations
 > See our [Bento introductory blog post](https://bento.dev/blog/2019/our-quest-to-make-world-class-security-and-bugfinding-available-to-all-developers/) to learn the full story.
