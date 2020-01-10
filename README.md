@@ -2,7 +2,7 @@
     <img src="https://raw.githubusercontent.com/returntocorp/bento/master/bento-logo.png" height="100" alt="Bento logo"/>
 </p>
 <h3 align="center">
-  Find Python 3 bugs delightfully fast without changing your workflow
+  Find Python web app bugs delightfully fast without changing your workflow
 </h3>
 
 <p align="center">
