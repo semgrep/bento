@@ -40,7 +40,7 @@ Bento is a free bug-finding tool that runs locally when you commit code. It has 
 
 - **Find bugs that matter.** Bento runs its [own checks](#bento-checks) and OSS tools to catch actual bugs. Checks are fine-tuned based on their behavior across thousands of PyPI projects, and Bento never reports style-related issues.
 - **Keep your workflow.** Unlike other tools, you won’t have to fix existing bugs to adopt Bento. Other project contributors won’t see Bento files or have their workflows changed. It’s just for you.
-- **Go delightfully fast.** Bento runs its tools in parallel, not sequentially, on the code you’ve changed. Its jobs run entirely locally when you commit your code.
+- **Go delightfully fast.** Bento checks for issues introduced by your new code, as you commit it. Tools run on your machine in parallel, not sequentially.
 
 <p align="center">
     <img src="https://web-assets.r2c.dev/bento-demo.gif" width="100%" alt="Demonstrating Bento running in a terminal"/>
