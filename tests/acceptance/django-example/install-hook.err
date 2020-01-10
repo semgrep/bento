@@ -1,3 +1,3 @@
-✔ Installed Bento autorun in non-blocking mode.
+✔ Installed Bento autorun in blocking mode.
 ◦ To uninstall Bento autorun, run $ bento disable autorun.
-◦ To make autorun blocking, run $ bento enable autorun --block.
+◦ To make autorun non-blocking, run $ bento enable autorun --no-block.

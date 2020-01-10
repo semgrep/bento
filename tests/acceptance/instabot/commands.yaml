@@ -150,4 +150,4 @@ steps:
       - bad
     expected_err: git-commit.err
     expected_out: git-commit.out
-    returncode: 0
+    returncode: 1

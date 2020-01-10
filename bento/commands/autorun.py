@@ -45,7 +45,7 @@ def _notify_install(context: Context, block: bool) -> None:
 @click.command(name="autorun")
 @click.option(
     "--block/--no-block",
-    default=False,
+    default=True,
     help="If --block, commits will fail if Bento finds an issue.",
 )
 @click.pass_obj

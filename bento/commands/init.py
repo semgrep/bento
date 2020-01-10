@@ -104,7 +104,7 @@ class InitCommand(object):
     def _configure_autorun(self, ctx: click.Context, is_first_run: bool) -> None:
         if is_first_run:
             on_done = content.InstallAutorun.install.echo()
-            ctx.invoke(install_autorun, block=False)
+            ctx.invoke(install_autorun, block=True)
             on_done()
         else:
             content.InstallAutorun.install.echo(skip=True)
