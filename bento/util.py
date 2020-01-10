@@ -20,12 +20,14 @@ from typing import (
     Callable,
     Collection,
     Dict,
+    Generic,
     List,
     Optional,
     Pattern,
     TextIO,
     Tuple,
     Type,
+    TypeVar,
     Union,
 )
 
@@ -119,6 +121,27 @@ def is_child_process_of(pattern: Pattern) -> bool:
     parents = me.parents()
     matches = iter(0 for p in parents if pattern.search(p.name()))
     return next(matches, None) is not None
+
+
+M = TypeVar("M", covariant=True)
+
+
+class Memo(Generic[M]):
+    """
+    Creates a (thread-safe) lazily loaded value
+    """
+
+    def __init__(self, load: Callable[[], M]) -> None:
+        self.load = load
+        self._lock = threading.Lock()
+        self._value: Optional[M] = None
+
+    @property
+    def value(self) -> M:
+        with self._lock:
+            if self._value is None:
+                self._value = self.load()
+            return self._value
 
 
 DO_PRINT_LINKS = is_child_process_of(LINK_PRINTER_PATTERN)

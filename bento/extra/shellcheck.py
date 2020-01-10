@@ -1,14 +1,37 @@
+import json
+import logging
 import os
 import re
+import subprocess
 from typing import Any, Dict, Iterable, List, Pattern, Type
 
 from semantic_version import Version
 
 from bento.base_context import BaseContext
+from bento.extra.docker import DOCKER_INSTALLED, get_docker_client
 from bento.parser import Parser
 from bento.tool import JsonR, JsonTool
 from bento.util import fetch_line_in_file
 from bento.violation import Violation
+
+
+def convert(obj: Dict[str, Any], target: str) -> Dict[str, Any]:
+    """
+        Return r2c object
+    """
+    converted: Dict[str, Any] = {}
+    converted["path"] = target
+    converted["start"] = {}
+    converted["start"]["line"] = obj.get("line")
+    converted["start"]["col"] = obj.get("column")
+    converted["end"] = {}
+    converted["end"]["line"] = obj.get("endLine")
+    converted["end"]["col"] = obj.get("endColumn")
+    converted["extra"] = {}
+    converted["extra"]["message"] = obj.get("message")
+    converted["extra"]["level"] = obj.get("level")
+    converted["check_id"] = f"SC{obj.get('code')}"
+    return converted
 
 
 class ShellcheckParser(Parser[JsonR]):
@@ -55,9 +78,10 @@ class ShellcheckParser(Parser[JsonR]):
 
 
 class ShellcheckTool(JsonTool):
-    ANALYZER_NAME = "r2c/shellcheck"
-    ANALYZER_VERSION = Version("0.0.1")
-    FILE_NAME_FILTER = re.compile(r".*")
+    ANALYZER_NAME = "koalaman/shellcheck"
+    ANALYZER_VERSION = Version("0.7.0")
+    FILE_NAME_FILTER = re.compile(r".*\.(sh|bash|ksh|dash)")
+    CONTAINER_NAME = "bento-shell-check-daemon"
     TOOL_ID = "shellcheck"
 
     @property
@@ -80,29 +104,59 @@ class ShellcheckTool(JsonTool):
     def project_name(self) -> str:
         return "Shell"
 
-    def setup(self) -> None:
-        # import inside def for performance
-        from bento.extra.r2c_analyzer import prepull_analyzers
+    def ensure_daemon_running(self) -> str:
+        client = get_docker_client()
 
-        prepull_analyzers(self.ANALYZER_NAME, self.ANALYZER_VERSION)
+        image_id = (
+            f"{self.ANALYZER_NAME}:v{self.ANALYZER_VERSION}"
+        )  # note the v in front of the version
+        running_containers = client.containers.list(
+            filters={"name": self.CONTAINER_NAME, "status": "running"}
+        )
+        if not running_containers:
+            container = client.containers.run(
+                image_id,
+                command="/dev/fd/0",
+                tty=True,
+                name=self.CONTAINER_NAME,
+                auto_remove=True,
+                detach=True,
+            )
+            logging.info(f"started container with id: {container.id}")
+            return container.id
+        else:
+            return running_containers[0].id
+
+    def setup(self) -> None:
+        self.ensure_daemon_running()
 
     def run(self, files: Iterable[str]) -> JsonR:
-        # import inside def for performance
-        from bento.extra.r2c_analyzer import run_analyzer_on_local_code
-
-        targets = [os.path.realpath(p) for p in files]
-
-        ignore_files = {
-            e.path for e in self.context.file_ignores.entries() if not e.survives
-        }
-        return run_analyzer_on_local_code(
-            self.ANALYZER_NAME,
-            self.ANALYZER_VERSION,
-            self.base_path,
-            ignore_files,
-            targets,
-        )
+        results = []
+        targets = {os.path.realpath(p) for p in files}
+        container_id = self.ensure_daemon_running()
+        for target in targets:
+            with open(target, "rb") as stdin_file:
+                r = subprocess.run(
+                    [
+                        "docker",
+                        "exec",
+                        "-i",
+                        container_id,
+                        "shellcheck",
+                        "-f",
+                        "json",
+                        "/dev/fd/0",
+                    ],
+                    stdout=subprocess.PIPE,
+                    stdin=stdin_file,
+                )
+                stdin_file.close()
+                converted_findings = [
+                    convert(finding, target) for finding in json.loads(r.stdout)
+                ]
+                results.extend(converted_findings)
+        return results
 
     @classmethod
     def matches_project(cls, context: BaseContext) -> bool:
-        return cls.project_has_extensions(context, "*.sh")
+        return DOCKER_INSTALLED.value and cls.project_has_extensions(context, "*.sh")

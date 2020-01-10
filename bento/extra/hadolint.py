@@ -5,6 +5,7 @@ import subprocess
 from typing import Any, Dict, Iterable, List, Pattern, Set, Type
 
 from bento.base_context import BaseContext
+from bento.extra.docker import DOCKER_INSTALLED, get_docker_client
 from bento.parser import Parser
 from bento.tool import StrTool
 from bento.util import echo_success, fetch_line_in_file
@@ -102,10 +103,8 @@ class HadolintTool(StrTool):
         return "Docker"
 
     def setup(self) -> None:
-        # import inside def for performance
-        import docker
+        client = get_docker_client()
 
-        client = docker.from_env()
         if not any(i for i in client.images.list() if self.DOCKER_IMAGE in i.tags):
             client.images.pull(self.DOCKER_IMAGE)
             echo_success(f"Retrieved {self.TOOL_ID} Container")
@@ -132,4 +131,6 @@ class HadolintTool(StrTool):
 
     @classmethod
     def matches_project(cls, context: BaseContext) -> bool:
-        return cls.project_has_extensions(context, "Dockerfile")
+        return DOCKER_INSTALLED.value and cls.project_has_extensions(
+            context, "Dockerfile", "dockerfile"
+        )

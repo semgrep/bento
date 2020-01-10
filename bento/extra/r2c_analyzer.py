@@ -16,6 +16,7 @@ from pathlib import Path
 from semantic_version import Version
 import r2c.lib.versioned_analyzer
 
+from bento.extra.docker import get_docker_client
 from bento.tool import JsonR
 
 
@@ -207,13 +208,11 @@ def _should_pull_analyzer(analyzer: SpecifiedAnalyzer) -> bool:
         available locally. Always returns False if the analyzer is a base
         analyzer (exists in SPECIAL_ANALYZERS)
     """
-    # import inside def for performance
-    import docker
 
     if analyzer.versioned_analyzer.name in SPECIAL_ANALYZERS:
         return False
 
-    client = docker.from_env()
+    client = get_docker_client()
     image_id = analyzer.versioned_analyzer.image_id
     return not any(i for i in client.images.list() if image_id in i.tags)
 
@@ -222,10 +221,6 @@ def prepull_analyzers(analyzer_name: str, version: Version) -> None:
     """
         Pulls all needed analyzers to run SPECIFIED_ANALYZER (i.e. dependencies)
     """
-    # import inside def for performance
-    import docker
-
-    check_docker_is_running()
 
     specified_analyzer = SpecifiedAnalyzer(
         VersionedAnalyzer(AnalyzerName(analyzer_name), version)
@@ -233,7 +228,7 @@ def prepull_analyzers(analyzer_name: str, version: Version) -> None:
     registry = RegistryData.from_json(REGISTRY)
 
     deps = registry.sorted_deps(specified_analyzer)
-    client = docker.from_env()
+    client = get_docker_client()
     for dep in deps:
         if _should_pull_analyzer(dep):
             client.images.pull(dep.versioned_analyzer.image_id)
@@ -339,21 +334,6 @@ def _copy_local_input(
         analyzer.upload_output(SpecifiedAnalyzer(va), analyzer_input, mount_folder)
 
 
-def check_docker_is_running() -> None:
-    """Checks that docker client is reachable"""
-    # import inside def for performance
-    import docker
-
-    try:
-        client = docker.from_env()
-        client.info()
-    except Exception as e:
-        logging.debug(e)
-        raise Exception(
-            "Failed to run docker. Please confirm docker is installed and its daemon is running in user mode."
-        )
-
-
 def run_analyzer_on_local_code(
     analyzer_name: str,
     version: Version,
@@ -363,7 +343,7 @@ def run_analyzer_on_local_code(
 ) -> JsonR:
     """Run an analyzer on a local folder.
     """
-    check_docker_is_running()
+    get_docker_client()  # Ensures that docker is running
 
     specified_analyzer = SpecifiedAnalyzer(
         VersionedAnalyzer(AnalyzerName(analyzer_name), version)

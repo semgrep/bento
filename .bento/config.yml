@@ -40,3 +40,9 @@ tools:
     run: true
   r2c.requests:
     ignore: []
+  shellcheck:
+    ignore:
+      - SC1091
+      - SC2034
+      - SC2148
+    run: true

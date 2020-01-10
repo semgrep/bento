@@ -3,7 +3,7 @@ import re
 import subprocess
 import tempfile
 from pathlib import Path
-from typing import Any, Callable, Optional
+from typing import Any, Callable, Mapping, Optional
 
 import yaml
 
@@ -12,6 +12,11 @@ import bento.constants
 BENTO_REPO_ROOT = str(Path(__file__).parent.parent.parent.resolve())
 DYNAMIC_SECONDS = re.compile(r"([\s\S]* \d+ finding.?s.? in )\d+\.\d+( s[\s\S]*)")
 DETACHED_HEAD = re.compile(r"\[detached HEAD ([0-9a-f]+)\]")
+
+PIPE_OUTPUT: Mapping[str, Callable[[subprocess.CompletedProcess], str]] = {
+    "expected_out": lambda r: r.stdout,
+    "expected_err": lambda r: r.stderr,
+}
 
 
 def write_expected_file(filename: str, output: str) -> None:
@@ -98,40 +103,24 @@ def check_command(step: Any, pwd: str, target: str, rewrite: bool) -> None:
             print(f"Run stderr: {runned.stderr}")
         assert runned.returncode == expected_returncode, test_identifier
 
-    if "expected_out" in step:
-        expected_out_file = step.get("expected_out")
-        if rewrite and expected_out_file is not None:
-            write_expected_file(
-                f"tests/acceptance/{target}/{expected_out_file}", runned.stdout
-            )
-        else:
-            if expected_out_file is None:
-                expected_out = ""
+    for pipe in ["expected_out", "expected_err"]:
+        if pipe in step:
+            expectation_file = step.get(pipe)
+            if rewrite and expectation_file is not None:
+                write_expected_file(
+                    f"tests/acceptance/{target}/{expectation_file}",
+                    PIPE_OUTPUT[pipe](runned),
+                )
             else:
-                with open(f"tests/acceptance/{target}/{expected_out_file}") as file:
-                    expected_out = file.read()
+                if expectation_file is None:
+                    expectation = ""
+                else:
+                    with open(f"tests/acceptance/{target}/{expectation_file}") as file:
+                        expectation = file.read()
 
-            assert match_expected(
-                runned.stdout, expected_out
-            ), f"{test_identifier}: stdout"
-
-    if "expected_err" in step:
-        expected_err_file = step.get("expected_err")
-
-        if rewrite and expected_err_file is not None:
-            write_expected_file(
-                f"tests/acceptance/{target}/{expected_err_file}", runned.stderr
-            )
-        else:
-            if expected_err_file is None:
-                expected_err = ""
-            else:
-                with open(f"tests/acceptance/{target}/{expected_err_file}") as file:
-                    expected_err = file.read()
-
-            assert match_expected(
-                runned.stderr, expected_err
-            ), f"{test_identifier}: stderr"
+                assert match_expected(
+                    PIPE_OUTPUT[pipe](runned), expectation
+                ), f"{test_identifier}: {pipe}"
 
 
 def run_repo(

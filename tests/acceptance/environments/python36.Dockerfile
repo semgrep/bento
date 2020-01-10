@@ -27,7 +27,3 @@ RUN git --version
 RUN bento --version
 
 COPY ./tests /tests
-
-RUN pytest -s tests/acceptance/qa.py
-
-USER guest

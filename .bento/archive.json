@@ -56,6 +56,14 @@
   },
   "hadolint": {
     "violations": {
+      "31880ca843ddb065cb8e7fa8c0174fa6": {
+        "tool_id": "hadolint",
+        "check_id": "DL3002",
+        "path": "tests/acceptance/environments/python36.Dockerfile",
+        "message": "Last USER should not be root",
+        "severity": 1,
+        "syntactic_context": "USER root\n"
+      },
       "8228d6515361106e8f40a51d558d6545": {
         "tool_id": "hadolint",
         "check_id": "DL3013",
@@ -67,6 +75,9 @@
     }
   },
   "r2c.requests": {
+    "violations": {}
+  },
+  "shellcheck": {
     "violations": {}
   }
 }

@@ -1284,6 +1284,888 @@ eslint global-require https://eslint.org/docs/rules/global-require
      ╵
      = Unexpected require().
 
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-behavior.sh:13
+     ╷
+   13│   cd "$(dirname "$0")"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2006 https://github.com/koalaman/shellcheck/wiki/SC2006
+     > tasks/e2e-behavior.sh:17
+     ╷
+   17│   temp_app_path=`mktemp -d 2>/dev/null || mktemp -d -t 'temp_app_path'`
+     ╵
+     = Use $(...) notation instead of legacy backticked `...`.
+
+shellcheck SC2009 https://github.com/koalaman/shellcheck/wiki/SC2009
+     > tasks/e2e-behavior.sh:24
+     ╷
+   24│   ps -ef | grep 'react-scripts' | grep -v grep | awk '{print $2}' | xargs kill -9
+     ╵
+     = Consider using pgrep instead of grepping ps output.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-behavior.sh:25
+     ╷
+   25│   cd "$root_path"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-behavior.sh:32
+     ╷
+   32│   echo "$(basename $0): ERROR! An error was encountered executing line $1." 1>&2;
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2048 https://github.com/koalaman/shellcheck/wiki/SC2048
+     > tasks/e2e-behavior.sh:46
+     ╷
+   46│   for f in $*; do
+     ╵
+     = Use "$@" (with quotes) to prevent whitespace problems.
+
+shellcheck SC2173 https://github.com/koalaman/shellcheck/wiki/SC2173
+     > tasks/e2e-behavior.sh:55
+     ╷
+   55│   trap 'set +x; handle_exit' SIGQUIT SIGTERM SIGINT SIGKILL SIGHUP
+     ╵
+     = SIGKILL/SIGSTOP can not be trapped.
+
+shellcheck SC2103 https://github.com/koalaman/shellcheck/wiki/SC2103
+     > tasks/e2e-behavior.sh:61
+     ╷
+   61│   cd ..
+     ╵
+     = Use a ( subshell ) to avoid having to cd back.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-behavior.sh:87
+     ╷
+   87│   cd test/
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:13
+     ╷
+   13│   cd "$(dirname "$0")"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2006 https://github.com/koalaman/shellcheck/wiki/SC2006
+     > tasks/e2e-installs.sh:17
+     ╷
+   17│   temp_app_path=`mktemp -d 2>/dev/null || mktemp -d -t 'temp_app_path'`
+     ╵
+     = Use $(...) notation instead of legacy backticked `...`.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:24
+     ╷
+   24│   cd "$root_path"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-installs.sh:32
+     ╷
+   32│   echo "$(basename $0): ERROR! An error was encountered executing line $1." 1>&2;
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2048 https://github.com/koalaman/shellcheck/wiki/SC2048
+     > tasks/e2e-installs.sh:46
+     ╷
+   46│   for f in $*; do
+     ╵
+     = Use "$@" (with quotes) to prevent whitespace problems.
+
+shellcheck SC2173 https://github.com/koalaman/shellcheck/wiki/SC2173
+     > tasks/e2e-installs.sh:77
+     ╷
+   77│   trap 'set +x; handle_exit' SIGQUIT SIGTERM SIGINT SIGKILL SIGHUP
+     ╵
+     = SIGKILL/SIGSTOP can not be trapped.
+
+shellcheck SC2103 https://github.com/koalaman/shellcheck/wiki/SC2103
+     > tasks/e2e-installs.sh:83
+     ╷
+   83│   cd ..
+     ╵
+     = Use a ( subshell ) to avoid having to cd back.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:111
+     ╷
+  111│   cd "$temp_app_path"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:113
+     ╷
+  113│   cd test-app-dist-tag
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:126
+     ╷
+  126│   cd "$temp_app_path"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:128
+     ╷
+  128│   cd test-app-version-number
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:139
+     ╷
+  139│   cd "$temp_app_path"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:141
+     ╷
+  141│   cd test-use-npm-flag
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:153
+     ╷
+  153│   cd "$temp_app_path"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:155
+     ╷
+  155│   cd test-app-typescript
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:191
+     ╷
+  191│   cd "$temp_app_path"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:193
+     ╷
+  193│   cd test-app-tarball-url
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:204
+     ╷
+  204│   cd "$temp_app_path"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:206
+     ╷
+  206│   cd test-app-fork
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:215
+     ╷
+  215│   cd "$temp_app_path"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2046 https://github.com/koalaman/shellcheck/wiki/SC2046
+     > tasks/e2e-installs.sh:217
+     ╷
+  217│   npx create-react-app test-app-should-not-exist --scripts-version=`date +%s` || true
+     ╵
+     = Quote this to prevent word splitting.
+
+shellcheck SC2006 https://github.com/koalaman/shellcheck/wiki/SC2006
+     > tasks/e2e-installs.sh:217
+     ╷
+  217│   npx create-react-app test-app-should-not-exist --scripts-version=`date +%s` || true
+     ╵
+     = Use $(...) notation instead of legacy backticked `...`.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:226
+     ╷
+  226│   cd "$temp_app_path"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2046 https://github.com/koalaman/shellcheck/wiki/SC2046
+     > tasks/e2e-installs.sh:230
+     ╷
+  230│   npx create-react-app test-app-should-remain --scripts-version=`date +%s` || true
+     ╵
+     = Quote this to prevent word splitting.
+
+shellcheck SC2006 https://github.com/koalaman/shellcheck/wiki/SC2006
+     > tasks/e2e-installs.sh:230
+     ╷
+  230│   npx create-react-app test-app-should-remain --scripts-version=`date +%s` || true
+     ╵
+     = Use $(...) notation instead of legacy backticked `...`.
+
+shellcheck SC2012 https://github.com/koalaman/shellcheck/wiki/SC2012
+     > tasks/e2e-installs.sh:234
+     ╷
+  234│   if [ "$(ls -1 ./test-app-should-remain | wc -l | tr -d '[:space:]')" != "2" ]; then
+     ╵
+     = Use find instead of ls to better handle non-alphanumeric filenames.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:242
+     ╷
+  242│   cd $temp_app_path
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-installs.sh:242
+     ╷
+  242│   cd $temp_app_path
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-installs.sh:244
+     ╷
+  244│   npx create-react-app test-app-scoped-fork-tgz --scripts-version=$temp_app_path/enoah-scripts-0.9.0.tgz
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:245
+     ╷
+  245│   cd test-app-scoped-fork-tgz
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:255
+     ╷
+  255│   cd "$temp_app_path"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:257
+     ╷
+  257│   cd test-app-nested-paths-t1
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:260
+     ╷
+  260│   cd test-app-nested-paths-t1/aa/bb/cc/dd
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:264
+     ╷
+  264│   cd "$temp_app_path"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:266
+     ╷
+  266│   cd test-app-nested-paths-t2/aa/bb/cc/dd
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:270
+     ╷
+  270│   cd "$temp_app_path"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:273
+     ╷
+  273│   cd test-app-nested-paths-t3/aa/bb/cc/dd
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:279
+     ╷
+  279│   cd "$temp_app_path"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-installs.sh:281
+     ╷
+  281│   cd test-app-pnp
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-kitchensink-eject.sh:13
+     ╷
+   13│   cd "$(dirname "$0")"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2006 https://github.com/koalaman/shellcheck/wiki/SC2006
+     > tasks/e2e-kitchensink-eject.sh:17
+     ╷
+   17│   temp_app_path=`mktemp -d 2>/dev/null || mktemp -d -t 'temp_app_path'`
+     ╵
+     = Use $(...) notation instead of legacy backticked `...`.
+
+shellcheck SC2006 https://github.com/koalaman/shellcheck/wiki/SC2006
+     > tasks/e2e-kitchensink-eject.sh:18
+     ╷
+   18│   temp_module_path=`mktemp -d 2>/dev/null || mktemp -d -t 'temp_module_path'`
+     ╵
+     = Use $(...) notation instead of legacy backticked `...`.
+
+shellcheck SC2009 https://github.com/koalaman/shellcheck/wiki/SC2009
+     > tasks/e2e-kitchensink-eject.sh:26
+     ╷
+   26│   ps -ef | grep 'react-scripts' | grep -v grep | awk '{print $2}' | xargs kill -9
+     ╵
+     = Consider using pgrep instead of grepping ps output.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-kitchensink-eject.sh:27
+     ╷
+   27│   cd "$root_path"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-kitchensink-eject.sh:36
+     ╷
+   36│   echo "$(basename $0): ERROR! An error was encountered executing line $1." 1>&2;
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2048 https://github.com/koalaman/shellcheck/wiki/SC2048
+     > tasks/e2e-kitchensink-eject.sh:50
+     ╷
+   50│   for f in $*; do
+     ╵
+     = Use "$@" (with quotes) to prevent whitespace problems.
+
+shellcheck SC2173 https://github.com/koalaman/shellcheck/wiki/SC2173
+     > tasks/e2e-kitchensink-eject.sh:59
+     ╷
+   59│   trap 'set +x; handle_exit' SIGQUIT SIGTERM SIGINT SIGKILL SIGHUP
+     ╵
+     = SIGKILL/SIGSTOP can not be trapped.
+
+shellcheck SC2103 https://github.com/koalaman/shellcheck/wiki/SC2103
+     > tasks/e2e-kitchensink-eject.sh:65
+     ╷
+   65│   cd ..
+     ╵
+     = Use a ( subshell ) to avoid having to cd back.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-kitchensink-eject.sh:91
+     ╷
+   91│   cd $temp_app_path
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-kitchensink-eject.sh:91
+     ╷
+   91│   cd $temp_app_path
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-kitchensink-eject.sh:95
+     ╷
+   95│   cd "$temp_module_path"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-kitchensink-eject.sh:104
+     ╷
+  104│   cd "$temp_app_path/test-kitchensink"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2006 https://github.com/koalaman/shellcheck/wiki/SC2006
+     > tasks/e2e-kitchensink-eject.sh:144
+     ╷
+  144│   tmp_server_log=`mktemp`
+     ╵
+     = Use $(...) notation instead of legacy backticked `...`.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-kitchensink-eject.sh:148
+     ╷
+  148│   nohup yarn start &>$tmp_server_log &
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-kitchensink-eject.sh:149
+     ╷
+  149│   grep -q 'You can now view' <(tail -f $tmp_server_log)
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-kitchensink.sh:13
+     ╷
+   13│   cd "$(dirname "$0")"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2006 https://github.com/koalaman/shellcheck/wiki/SC2006
+     > tasks/e2e-kitchensink.sh:17
+     ╷
+   17│   temp_app_path=`mktemp -d 2>/dev/null || mktemp -d -t 'temp_app_path'`
+     ╵
+     = Use $(...) notation instead of legacy backticked `...`.
+
+shellcheck SC2006 https://github.com/koalaman/shellcheck/wiki/SC2006
+     > tasks/e2e-kitchensink.sh:18
+     ╷
+   18│   temp_module_path=`mktemp -d 2>/dev/null || mktemp -d -t 'temp_module_path'`
+     ╵
+     = Use $(...) notation instead of legacy backticked `...`.
+
+shellcheck SC2009 https://github.com/koalaman/shellcheck/wiki/SC2009
+     > tasks/e2e-kitchensink.sh:26
+     ╷
+   26│   ps -ef | grep 'react-scripts' | grep -v grep | awk '{print $2}' | xargs kill -9
+     ╵
+     = Consider using pgrep instead of grepping ps output.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-kitchensink.sh:27
+     ╷
+   27│   cd "$root_path"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-kitchensink.sh:36
+     ╷
+   36│   echo "$(basename $0): ERROR! An error was encountered executing line $1." 1>&2;
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2048 https://github.com/koalaman/shellcheck/wiki/SC2048
+     > tasks/e2e-kitchensink.sh:50
+     ╷
+   50│   for f in $*; do
+     ╵
+     = Use "$@" (with quotes) to prevent whitespace problems.
+
+shellcheck SC2173 https://github.com/koalaman/shellcheck/wiki/SC2173
+     > tasks/e2e-kitchensink.sh:59
+     ╷
+   59│   trap 'set +x; handle_exit' SIGQUIT SIGTERM SIGINT SIGKILL SIGHUP
+     ╵
+     = SIGKILL/SIGSTOP can not be trapped.
+
+shellcheck SC2103 https://github.com/koalaman/shellcheck/wiki/SC2103
+     > tasks/e2e-kitchensink.sh:65
+     ╷
+   65│   cd ..
+     ╵
+     = Use a ( subshell ) to avoid having to cd back.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-kitchensink.sh:91
+     ╷
+   91│   cd $temp_app_path
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-kitchensink.sh:91
+     ╷
+   91│   cd $temp_app_path
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-kitchensink.sh:95
+     ╷
+   95│   cd "$temp_module_path"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-kitchensink.sh:104
+     ╷
+  104│   cd "$temp_app_path/test-kitchensink"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2006 https://github.com/koalaman/shellcheck/wiki/SC2006
+     > tasks/e2e-kitchensink.sh:129
+     ╷
+  129│   tmp_server_log=`mktemp`
+     ╵
+     = Use $(...) notation instead of legacy backticked `...`.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-kitchensink.sh:133
+     ╷
+  133│   nohup yarn start &>$tmp_server_log &
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-kitchensink.sh:134
+     ╷
+  134│   grep -q 'You can now view' <(tail -f $tmp_server_log)
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-old-node.sh:13
+     ╷
+   13│   cd "$(dirname "$0")"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2006 https://github.com/koalaman/shellcheck/wiki/SC2006
+     > tasks/e2e-old-node.sh:15
+     ╷
+   15│   temp_app_path=`mktemp -d 2>/dev/null || mktemp -d -t 'temp_app_path'`
+     ╵
+     = Use $(...) notation instead of legacy backticked `...`.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-old-node.sh:19
+     ╷
+   19│   cd "$root_path"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-old-node.sh:20
+     ╷
+   20│   rm -rf $temp_app_path
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-old-node.sh:25
+     ╷
+   25│   echo "$(basename $0): ERROR! An error was encountered executing line $1." 1>&2;
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2173 https://github.com/koalaman/shellcheck/wiki/SC2173
+     > tasks/e2e-old-node.sh:41
+     ╷
+   41│   trap 'set +x; handle_exit' SIGQUIT SIGTERM SIGINT SIGKILL SIGHUP
+     ╵
+     = SIGKILL/SIGSTOP can not be trapped.
+
+shellcheck SC2103 https://github.com/koalaman/shellcheck/wiki/SC2103
+     > tasks/e2e-old-node.sh:47
+     ╷
+   47│   cd ..
+     ╵
+     = Use a ( subshell ) to avoid having to cd back.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-old-node.sh:51
+     ╷
+   51│   cd "$root_path"/packages/create-react-app
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-old-node.sh:53
+     ╷
+   53│   cd "$root_path"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-old-node.sh:56
+     ╷
+   56│   cd $temp_app_path
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-old-node.sh:56
+     ╷
+   56│   cd $temp_app_path
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2006 https://github.com/koalaman/shellcheck/wiki/SC2006
+     > tasks/e2e-old-node.sh:57
+     ╷
+   57│   err_output=`node "$root_path"/packages/create-react-app/index.js test-node-version 2>&1 > /dev/null || echo ''`
+     ╵
+     = Use $(...) notation instead of legacy backticked `...`.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-simple.sh:13
+     ╷
+   13│   cd "$(dirname "$0")"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2006 https://github.com/koalaman/shellcheck/wiki/SC2006
+     > tasks/e2e-simple.sh:17
+     ╷
+   17│   temp_app_path=`mktemp -d 2>/dev/null || mktemp -d -t 'temp_app_path'`
+     ╵
+     = Use $(...) notation instead of legacy backticked `...`.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-simple.sh:24
+     ╷
+   24│   cd "$root_path"
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-simple.sh:34
+     ╷
+   34│   echo "$(basename $0): ERROR! An error was encountered executing line $1." 1>&2;
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2048 https://github.com/koalaman/shellcheck/wiki/SC2048
+     > tasks/e2e-simple.sh:48
+     ╷
+   48│   for f in $*; do
+     ╵
+     = Use "$@" (with quotes) to prevent whitespace problems.
+
+shellcheck SC2173 https://github.com/koalaman/shellcheck/wiki/SC2173
+     > tasks/e2e-simple.sh:57
+     ╷
+   57│   trap 'set +x; handle_exit' SIGQUIT SIGTERM SIGINT SIGKILL SIGHUP
+     ╵
+     = SIGKILL/SIGSTOP can not be trapped.
+
+shellcheck SC2103 https://github.com/koalaman/shellcheck/wiki/SC2103
+     > tasks/e2e-simple.sh:63
+     ╷
+   63│   cd ..
+     ╵
+     = Use a ( subshell ) to avoid having to cd back.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-simple.sh:99
+     ╷
+   99│   cd packages/react-error-overlay/
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-simple.sh:101
+     ╷
+  101│   if [ $AGENT_OS != 'Windows_NT' ]; then
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-simple.sh:107
+     ╷
+  107│   cd packages/react-dev-utils/
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-simple.sh:111
+     ╷
+  111│   cd packages/babel-plugin-named-asset-import/
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-simple.sh:115
+     ╷
+  115│   cd packages/confusing-browser-globals/
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-simple.sh:149
+     ╷
+  149│   cd $temp_app_path
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-simple.sh:149
+     ╷
+  149│   cd $temp_app_path
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/e2e-simple.sh:230
+     ╷
+  230│   cd test-app
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2006 https://github.com/koalaman/shellcheck/wiki/SC2006
+     > tasks/local-registry.sh:4
+     ╷
+    4│   original_npm_registry_url=`npm get registry`
+     ╵
+     = Use $(...) notation instead of legacy backticked `...`.
+
+shellcheck SC2006 https://github.com/koalaman/shellcheck/wiki/SC2006
+     > tasks/local-registry.sh:5
+     ╷
+    5│   original_yarn_registry_url=`yarn config get registry`
+     ╵
+     = Use $(...) notation instead of legacy backticked `...`.
+
+shellcheck SC2006 https://github.com/koalaman/shellcheck/wiki/SC2006
+     > tasks/local-registry.sh:10
+     ╷
+   10│   tmp_registry_log=`mktemp`
+     ╵
+     = Use $(...) notation instead of legacy backticked `...`.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/local-registry.sh:12
+     ╷
+   12│   (cd && nohup npx ${VERDACCIO_PACKAGE:-$default_verdaccio_package} -c $1 &>$tmp_registry_log &)
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/local-registry.sh:12
+     ╷
+   12│   (cd && nohup npx ${VERDACCIO_PACKAGE:-$default_verdaccio_package} -c $1 &>$tmp_registry_log &)
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/local-registry.sh:12
+     ╷
+   12│   (cd && nohup npx ${VERDACCIO_PACKAGE:-$default_verdaccio_package} -c $1 &>$tmp_registry_log &)
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/local-registry.sh:14
+     ╷
+   14│   grep -q 'http address' <(tail -f $tmp_registry_log)
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2164 https://github.com/koalaman/shellcheck/wiki/SC2164
+     > tasks/local-test.sh:19
+     ╷
+   19│   cd $(dirname $0)
+     ╵
+     = Use 'cd ... || exit' or 'cd ... || return' in case cd fails.
+
+shellcheck SC2046 https://github.com/koalaman/shellcheck/wiki/SC2046
+     > tasks/local-test.sh:19
+     ╷
+   19│   cd $(dirname $0)
+     ╵
+     = Quote this to prevent word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/local-test.sh:19
+     ╷
+   19│   cd $(dirname $0)
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2006 https://github.com/koalaman/shellcheck/wiki/SC2006
+     > tasks/local-test.sh:22
+     ╷
+   22│   current_git_branch=`git rev-parse --abbrev-ref HEAD`
+     ╵
+     = Use $(...) notation instead of legacy backticked `...`.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/local-test.sh:89
+     ╷
+   89│   if [ ${git_branch} != ${current_git_branch} ]; then
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/local-test.sh:89
+     ╷
+   89│   if [ ${git_branch} != ${current_git_branch} ]; then
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/local-test.sh:122
+     ╷
+  122│   --volume ${PWD}/..:/var/create-react-app \
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2046 https://github.com/koalaman/shellcheck/wiki/SC2046
+     > tasks/local-test.sh:124
+     ╷
+  124│   $([[ ${interactive} == 'true' ]] && echo '--interactive') \
+     ╵
+     = Quote this to prevent word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/local-test.sh:125
+     ╷
+  125│   node:${node_version} \
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/publish.sh:29
+     ╷
+   29│   if [ -z $CI ]; then
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/publish.sh:45
+     ╷
+   45│   if [ -z $CI ]; then
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2162 https://github.com/koalaman/shellcheck/wiki/SC2162
+     > tasks/publish.sh:47
+     ╷
+   47│   read otp
+     ╵
+     = read without -r will mangle backslashes.
+
 eslint import/no-extraneous-dependencies https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
      > tasks/screencast-start.js:12
      ╷
@@ -1347,11 +2229,26 @@ eslint no-useless-catch https://eslint.org/docs/rules/no-useless-catch
      ╵
      = Unnecessary catch clause.
 
+shellcheck SC1071 https://github.com/koalaman/shellcheck/wiki/SC1071
+     > tasks/screencast.sh:1
+     ╷
+    1│   #!/bin/zsh
+     ╵
+     = ShellCheck only supports sh/bash/dash/ksh scripts. Sorry!
+
+shellcheck:
+  SC2164                               54▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  SC2086                               29▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  SC2006                               17▕▬▬▬▬▬▬▬▬▬▬▬▬
+  SC2103                                6▕▬▬▬▬
+  SC2173                                6▕▬▬▬▬
+  Other                                15▕▬▬▬▬▬▬▬▬▬▬
+
 eslint:
-  global-require                       49▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  error                                38▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  import/no-extraneous-dependencies    18▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  import/no-dynamic-require            17▕▬▬▬▬▬▬▬▬▬▬▬▬▬
-  import/named                         15▕▬▬▬▬▬▬▬▬▬▬▬
-  Other                                39▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  global-require                       49▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  error                                38▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
+  import/no-extraneous-dependencies    18▕▬▬▬▬▬▬▬▬▬▬▬▬
+  import/no-dynamic-require            17▕▬▬▬▬▬▬▬▬▬▬▬▬
+  import/named                         15▕▬▬▬▬▬▬▬▬▬▬
+  Other                                39▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 

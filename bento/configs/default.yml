@@ -29,6 +29,7 @@ tools:
       - subprocess-without-shell-equals-true
       - try-except-continue
       - urllib-urlopen
+    run: true
   eslint:
     ignore:
       - "@typescript-eslint/camelcase"
@@ -267,6 +268,7 @@ tools:
       - vars-on-top
       - wrap-regex
       - yoda
+    run: true
   flake8:
     ignore:
       - bad-wildcard-import
@@ -275,6 +277,7 @@ tools:
       - no-setattr
       - unused-module
       - unused-variable
+    run: true
   hadolint:
     ignore:
       - DL3008
@@ -285,10 +288,20 @@ tools:
       - DL3022
       - DL3027
       - DL4001
+    run: true
   r2c.flask:
     ignore: []
+    run: true
   r2c.requests:
     ignore: []
+    run: true
   r2c.click:
     ignore:
       - r2c-click-names-are-well-formed
+    run: true
+  shellcheck:
+    ignore:
+      - SC1091
+      - SC2034
+      - SC2148
+    run: true

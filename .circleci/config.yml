@@ -70,6 +70,7 @@ jobs:
     executor: python-build
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: "Generate cache seeds"
           command: find . -name Pipfile.lock | sort | xargs md5sum > /tmp/checksums

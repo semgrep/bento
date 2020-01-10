@@ -4,3 +4,6 @@ bandit:
 flake8:
   ✔ No issues detected
 
+shellcheck:
+  ✔ No issues detected
+
