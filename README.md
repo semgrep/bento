@@ -134,6 +134,7 @@ $ git commit --no-verify
 ```
 
 ### Team Use
+#### Running Locally
 To setup Bento for all project contributors, add Bento's configuration to Git (it’s ignored by default):
 
 ```bash
@@ -141,7 +142,6 @@ $ cd <PROJECT DIRECTORY>
 $ git add --force .bento .bentoignore
 ```
 
-#### Running Locally
 Contributors can run Bento for themselves using the project’s configuration via:
 
 ```bash
