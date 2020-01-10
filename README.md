@@ -36,7 +36,7 @@
 
 Bento is a free bug-finding tool that runs locally when you commit code. It has speciality checks for common Python 3 web frameworks and OSS checks for Python, Docker, and shell files.
 
-- **Find bugs that matter.** Bento runs its [own checks](#bento-checks) and OSS tools to catch actual bugs. Checks are fine-tuned based on performance across thousands of PyPI projects, and Bento never reports style-related issues.
+- **Find bugs that matter.** Bento runs its [own checks](#bento-checks) and OSS tools to catch actual bugs. Checks are fine-tuned based on their behavior across thousands of PyPI projects, and Bento never reports style-related issues.
 - **Keep your workflow.** Unlike other tools you won’t have to fix existing bugs to adopt Bento. It takes 30 seconds to get started and coding again.
 - **Go delightfully fast.** Bento runs its tools in parallel, not sequentially, on the code you’ve changed. Its jobs run entirely locally when you commit your code.
 
@@ -119,7 +119,7 @@ Commands:
 Bento configures itself for personal use by default. This means that it:
 
 1. Automatically checks for issues introduced by your code, as you commit it
-2. Only affects you; it won’t change anything for other project contributors
+2. Only affects you; it won’t change anything for other project contributors or modify Git state
 
 Initialization enables `autorun` behind the scenes, which can be configured using:
 
