@@ -1410,6 +1410,13 @@ eslint global-require https://eslint.org/docs/rules/global-require
      ╵
      = Unexpected require().
 
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-behavior.sh:32
+     ╷
+   32│   echo "$(basename $0): ERROR! An error was encountered executing line $1." 1>&2;
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
 shellcheck SC2048 https://github.com/koalaman/shellcheck/wiki/SC2048
      > tasks/e2e-behavior.sh:46
      ╷
@@ -1430,6 +1437,13 @@ shellcheck SC2103 https://github.com/koalaman/shellcheck/wiki/SC2103
    61│   cd ..
      ╵
      = Use a ( subshell ) to avoid having to cd back.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-installs.sh:32
+     ╷
+   32│   echo "$(basename $0): ERROR! An error was encountered executing line $1." 1>&2;
+     ╵
+     = Double quote to prevent globbing and word splitting.
 
 shellcheck SC2048 https://github.com/koalaman/shellcheck/wiki/SC2048
      > tasks/e2e-installs.sh:46
@@ -1452,12 +1466,47 @@ shellcheck SC2103 https://github.com/koalaman/shellcheck/wiki/SC2103
      ╵
      = Use a ( subshell ) to avoid having to cd back.
 
+shellcheck SC2046 https://github.com/koalaman/shellcheck/wiki/SC2046
+     > tasks/e2e-installs.sh:217
+     ╷
+  217│   npx create-react-app test-app-should-not-exist --scripts-version=`date +%s` || true
+     ╵
+     = Quote this to prevent word splitting.
+
+shellcheck SC2046 https://github.com/koalaman/shellcheck/wiki/SC2046
+     > tasks/e2e-installs.sh:230
+     ╷
+  230│   npx create-react-app test-app-should-remain --scripts-version=`date +%s` || true
+     ╵
+     = Quote this to prevent word splitting.
+
 shellcheck SC2012 https://github.com/koalaman/shellcheck/wiki/SC2012
      > tasks/e2e-installs.sh:234
      ╷
   234│   if [ "$(ls -1 ./test-app-should-remain | wc -l | tr -d '[:space:]')" != "2" ]; then
      ╵
      = Use find instead of ls to better handle non-alphanumeric filenames.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-installs.sh:242
+     ╷
+  242│   cd $temp_app_path
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-installs.sh:244
+     ╷
+  244│   npx create-react-app test-app-scoped-fork-tgz --scripts-version=$temp_app_path/enoah-scripts-0.9.0.tgz
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-kitchensink-eject.sh:36
+     ╷
+   36│   echo "$(basename $0): ERROR! An error was encountered executing line $1." 1>&2;
+     ╵
+     = Double quote to prevent globbing and word splitting.
 
 shellcheck SC2048 https://github.com/koalaman/shellcheck/wiki/SC2048
      > tasks/e2e-kitchensink-eject.sh:50
@@ -1480,6 +1529,34 @@ shellcheck SC2103 https://github.com/koalaman/shellcheck/wiki/SC2103
      ╵
      = Use a ( subshell ) to avoid having to cd back.
 
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-kitchensink-eject.sh:91
+     ╷
+   91│   cd $temp_app_path
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-kitchensink-eject.sh:148
+     ╷
+  148│   nohup yarn start &>$tmp_server_log &
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-kitchensink-eject.sh:149
+     ╷
+  149│   grep -q 'You can now view' <(tail -f $tmp_server_log)
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-kitchensink.sh:36
+     ╷
+   36│   echo "$(basename $0): ERROR! An error was encountered executing line $1." 1>&2;
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
 shellcheck SC2048 https://github.com/koalaman/shellcheck/wiki/SC2048
      > tasks/e2e-kitchensink.sh:50
      ╷
@@ -1501,6 +1578,41 @@ shellcheck SC2103 https://github.com/koalaman/shellcheck/wiki/SC2103
      ╵
      = Use a ( subshell ) to avoid having to cd back.
 
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-kitchensink.sh:91
+     ╷
+   91│   cd $temp_app_path
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-kitchensink.sh:133
+     ╷
+  133│   nohup yarn start &>$tmp_server_log &
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-kitchensink.sh:134
+     ╷
+  134│   grep -q 'You can now view' <(tail -f $tmp_server_log)
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-old-node.sh:20
+     ╷
+   20│   rm -rf $temp_app_path
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-old-node.sh:25
+     ╷
+   25│   echo "$(basename $0): ERROR! An error was encountered executing line $1." 1>&2;
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
 shellcheck SC2173 https://github.com/koalaman/shellcheck/wiki/SC2173
      > tasks/e2e-old-node.sh:41
      ╷
@@ -1514,6 +1626,20 @@ shellcheck SC2103 https://github.com/koalaman/shellcheck/wiki/SC2103
    47│   cd ..
      ╵
      = Use a ( subshell ) to avoid having to cd back.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-old-node.sh:56
+     ╷
+   56│   cd $temp_app_path
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-simple.sh:34
+     ╷
+   34│   echo "$(basename $0): ERROR! An error was encountered executing line $1." 1>&2;
+     ╵
+     = Double quote to prevent globbing and word splitting.
 
 shellcheck SC2048 https://github.com/koalaman/shellcheck/wiki/SC2048
      > tasks/e2e-simple.sh:48
@@ -1535,6 +1661,111 @@ shellcheck SC2103 https://github.com/koalaman/shellcheck/wiki/SC2103
    63│   cd ..
      ╵
      = Use a ( subshell ) to avoid having to cd back.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-simple.sh:101
+     ╷
+  101│   if [ $AGENT_OS != 'Windows_NT' ]; then
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/e2e-simple.sh:149
+     ╷
+  149│   cd $temp_app_path
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/local-registry.sh:12
+     ╷
+   12│   (cd && nohup npx ${VERDACCIO_PACKAGE:-$default_verdaccio_package} -c $1 &>$tmp_registry_log &)
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/local-registry.sh:12
+     ╷
+   12│   (cd && nohup npx ${VERDACCIO_PACKAGE:-$default_verdaccio_package} -c $1 &>$tmp_registry_log &)
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/local-registry.sh:12
+     ╷
+   12│   (cd && nohup npx ${VERDACCIO_PACKAGE:-$default_verdaccio_package} -c $1 &>$tmp_registry_log &)
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/local-registry.sh:14
+     ╷
+   14│   grep -q 'http address' <(tail -f $tmp_registry_log)
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2046 https://github.com/koalaman/shellcheck/wiki/SC2046
+     > tasks/local-test.sh:19
+     ╷
+   19│   cd $(dirname $0)
+     ╵
+     = Quote this to prevent word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/local-test.sh:19
+     ╷
+   19│   cd $(dirname $0)
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/local-test.sh:89
+     ╷
+   89│   if [ ${git_branch} != ${current_git_branch} ]; then
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/local-test.sh:89
+     ╷
+   89│   if [ ${git_branch} != ${current_git_branch} ]; then
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/local-test.sh:122
+     ╷
+  122│   --volume ${PWD}/..:/var/create-react-app \
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2046 https://github.com/koalaman/shellcheck/wiki/SC2046
+     > tasks/local-test.sh:124
+     ╷
+  124│   $([[ ${interactive} == 'true' ]] && echo '--interactive') \
+     ╵
+     = Quote this to prevent word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/local-test.sh:125
+     ╷
+  125│   node:${node_version} \
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/publish.sh:29
+     ╷
+   29│   if [ -z $CI ]; then
+     ╵
+     = Double quote to prevent globbing and word splitting.
+
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > tasks/publish.sh:45
+     ╷
+   45│   if [ -z $CI ]; then
+     ╵
+     = Double quote to prevent globbing and word splitting.
 
 shellcheck SC2162 https://github.com/koalaman/shellcheck/wiki/SC2162
      > tasks/publish.sh:47
@@ -1650,9 +1881,10 @@ eslint:
   Other                                54▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 
 shellcheck:
+  SC2086                               29▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
   SC2103                                6▕▬▬▬▬
   SC2173                                6▕▬▬▬▬
   SC2048                                5▕▬▬▬
-  SC2012                                1▕▬
-  SC2162                                1▕▬
+  SC2046                                4▕▬▬▬
+  Other                                 2▕▬
 
