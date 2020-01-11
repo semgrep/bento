@@ -235,7 +235,7 @@ def prepull_analyzers(analyzer_name: str, version: Version) -> None:
 
 
 def _ignore_files_factory(
-    ignore_files: Set[str], target_files: Set[str]
+    ignore_files: Set[Path], target_files: Set[str]
 ) -> Callable[[str, List[str]], List[str]]:
     """
         Takes list of absolute paths of files to ignore and returns
@@ -286,10 +286,11 @@ def _ignore_files_factory(
             of files/dirs in the directory and returns a list of files/dirs
             to ignore (a subset of the second argument).
         """
+        rp = Path(root)
         return [
             path
             for path in members
-            if f"{root}/{path}" in ignore_files
+            if rp / path in ignore_files
             or not any(
                 # Suppose there is a file in a/b/c/d.py
                 # LHS: If the target path is a/b/c/d.py we still want a/b to not be ignored to we keep traversing the tree.
@@ -306,7 +307,7 @@ def _copy_local_input(
     analyzer: Analyzer,
     va: VersionedAnalyzer,
     analyzer_input: LocalCode,
-    ignore_files: Set[str],
+    ignore_files: Set[Path],
     target_files: Set[str],
 ) -> None:
     """'Uploads' the local input as the output of the given analyzer.
@@ -338,7 +339,7 @@ def run_analyzer_on_local_code(
     analyzer_name: str,
     version: Version,
     base: Path,
-    ignore_files: Set[str],
+    ignore_files: Set[Path],
     target_files: Iterable[str],
 ) -> JsonR:
     """Run an analyzer on a local folder.

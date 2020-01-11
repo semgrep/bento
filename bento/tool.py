@@ -139,14 +139,14 @@ class Tool(ABC, Generic[R]):
         Returns true iff any unignored files matches at least one extension
         """
         file_matches = (
-            fnmatch(e.path, ext)
+            fnmatch(str(e.path), ext)
             for e in context.file_ignores.entries()
             if e.survives
             for ext in extensions
         )
         return any(file_matches)
 
-    def filter_paths(self, paths: Iterable[str]) -> Set[str]:
+    def filter_paths(self, paths: Iterable[Path]) -> Set[Path]:
         """
         Filters a list of paths to those that should be analyzed by this tool
 
@@ -166,8 +166,8 @@ class Tool(ABC, Generic[R]):
             e.path
             for e in self.context.file_ignores.entries()
             if e.survives
-            and self.file_name_filter.match(os.path.basename(e.path))
-            and any(e.path.startswith(p) for p in abspaths)
+            and self.file_name_filter.match(e.path.name)
+            and any(str(e.path).startswith(p) for p in abspaths)
             and e.dir_entry.is_file()
         }
         return to_run
@@ -190,7 +190,7 @@ class Tool(ABC, Generic[R]):
         return res
 
     def results(
-        self, paths: Optional[Iterable[str]] = None, use_cache: bool = True
+        self, paths: Optional[Iterable[Path]] = None, use_cache: bool = True
     ) -> List[Violation]:
         """
         Runs this tool, returning all identified violations
@@ -208,7 +208,7 @@ class Tool(ABC, Generic[R]):
             CalledProcessError: If execution fails
         """
         if paths is None:
-            paths = [str(self.base_path)]
+            paths = [self.base_path]
 
         if paths:
             logging.debug(f"Checking for local cache for {self.tool_id()}")
@@ -220,7 +220,7 @@ class Tool(ABC, Generic[R]):
                 paths_to_run = self.filter_paths(paths)
                 if not paths_to_run:
                     return []
-                raw = self.run(paths_to_run)
+                raw = self.run([str(p) for p in paths_to_run])
                 if use_cache:
                     self.context.cache.put(self.tool_id(), paths, self.serialize(raw))
             else:

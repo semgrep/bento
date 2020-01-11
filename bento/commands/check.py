@@ -1,16 +1,12 @@
 import logging
-import os
 import subprocess
 import sys
 import threading
 import time
-from contextlib import contextmanager
-from typing import Any, Collection, Dict, Iterable, Iterator, List, Optional, Tuple
+from pathlib import Path
+from typing import Any, Collection, Dict, Iterable, List, Optional, Tuple
 
 import click
-from pre_commit.git import get_staged_files
-from pre_commit.staged_files_only import staged_files_only
-from pre_commit.util import cmd_output, noop_context
 
 import bento.constants
 import bento.formatter
@@ -22,22 +18,11 @@ from bento.config import get_valid_tools, update_tool_run
 from bento.context import Context
 from bento.decorators import with_metrics
 from bento.error import NodeError
+from bento.paths import PathArgument, list_paths, run_context
 from bento.tool import Tool
-from bento.util import (
-    AutocompleteSuggestions,
-    echo_error,
-    echo_next_step,
-    echo_success,
-    echo_warning,
-)
+from bento.tool_runner import Comparison, RunStep
+from bento.util import echo_error, echo_next_step, echo_success, echo_warning
 from bento.violation import Violation
-
-
-class Comparison:
-    ROOT = "root"
-    ARCHIVE = "archive"
-    HEAD = "head"
-
 
 OVERRUN_PAGES = 3
 COMPARISONS = {
@@ -45,7 +30,6 @@ COMPARISONS = {
     Comparison.ARCHIVE: "Hides archived findings",
     Comparison.HEAD: "Hides all findings already in git",
 }
-PATCH_CACHE = os.path.join(os.path.expanduser("~"), ".cache", "bento", "patches")
 
 
 def __get_ignores_for_tool(tool: str, config: Dict[str, Any]) -> List[str]:
@@ -54,96 +38,9 @@ def __get_ignores_for_tool(tool: str, config: Dict[str, Any]) -> List[str]:
     return tool_specific_config.get("ignore", [])
 
 
-def __list_paths(ctx: Any, args: List[str], incomplete: str) -> AutocompleteSuggestions:
-    # Cases for "incomplete" variable:
-    #   - '': Search '.', no filtering
-    #   - 'part_of_file': Search '.', filter
-    #   - 'path/to/dir/': Search 'path/to/dir', no filter
-    #   - 'path/to/dir/part_of_file': Search 'path/to/dir', filter
-    dir_root = os.path.dirname(incomplete)
-    path_stub = incomplete[len(dir_root) :]
-    if path_stub.startswith("/"):
-        path_stub = path_stub[1:]
-    if dir_root == "":
-        dir_to_list = "."
-    else:
-        dir_to_list = dir_root
-    return [
-        os.path.join(dir_root, p)
-        for p in os.listdir(dir_to_list)
-        if not path_stub or p.startswith(path_stub)
-    ]
-
-
-@contextmanager
-def _staged_files_cleared(context: Context) -> Iterator[None]:
-    tree = cmd_output("git", "write-tree")[1].strip()
-    try:
-        cmd_output("git", "reset", "--hard")
-        yield
-    finally:
-        cmd_output("git", "checkout", tree, "--", ".")
-
-
-@contextmanager
-def _process_paths(
-    context: Context, paths: Optional[List[str]], staged_only: bool
-) -> Iterator[Optional[List[str]]]:
-    """
-    Provides a with-expression within which a list of paths to be checked is provided
-
-    This function operates in three different modes, depending on the value of
-    the `paths` and `staged_only` variables:
-
-    `paths` is truthy (a non-empty list), `staged_only` is false:
-        The contents of `paths`, less any ignored paths, are passed to the with-expression
-
-    `paths` is falsey, `staged_only` is true:
-        All non-ignored files staged for git commit are passed to the with-expression
-
-    `paths` is falsey, `staged_only` is false:
-        None is passed to the with-expression (which causes check to run on the base path)
-
-    In any of these modes, this function should be used as follows:
-
-        with _process_paths(context, input_paths, staged_only) as processed_paths:
-            ...
-
-    :param context: The Bento command context
-    :param paths: A list of paths to check, or None to indicate that check should operate
-                  against the base path
-    :param staged_only: Whether to use staged files as the list of paths
-    :return: A Python with-expression
-    :raises Exception: If staged_only is True and paths is truthy
-    """
-    git_stash = noop_context()
-
-    if paths:
-        if staged_only:
-            raise Exception("--staged_only should not be used with explicit paths")
-        paths = [
-            str(
-                context.base_path
-                / os.path.relpath(os.path.abspath(p), context.base_path)
-            )
-            for p in paths
-        ]
-    elif staged_only:
-        git_stash = staged_files_only(PATCH_CACHE)
-        paths = get_staged_files()
-    else:
-        paths = None
-
-    if paths is not None:
-        paths = context.file_ignores.filter_paths(paths)
-
-    with git_stash:
-        yield paths
-
-
 def _calculate_head_comparison(
     context: Context,
-    paths: Optional[List[str]],
+    paths: Optional[List[Path]],
     staged_only: bool,
     tools: Iterable[Tool],
 ) -> Tuple[bento.result.Baseline, float]:
@@ -156,23 +53,44 @@ def _calculate_head_comparison(
     :param tools: Which tools to check
     :return: The branch head baseline
     """
-    with _process_paths(context, paths, staged_only) as processed_paths:
-        if processed_paths is None or len(processed_paths) > 0:
-            with staged_files_only(PATCH_CACHE), _staged_files_cleared(context):
-                before = time.time()
-                runner = bento.tool_runner.Runner(use_cache=False)
-                comparison_results = runner.parallel_results(
-                    tools, {}, processed_paths, keep_bars=False
-                )
-                baseline = {
-                    tool_id: {f.syntactic_identifier_str() for f in findings}
-                    for tool_id, findings in comparison_results
-                    if isinstance(findings, list)
-                }
-                elapsed = time.time() - before
+    with run_context(
+        context, paths, Comparison.HEAD, staged_only, RunStep.BASELINE
+    ) as runner:
+        if len(runner.paths) > 0:
+            before = time.time()
+            comparison_results = runner.parallel_results(tools, {}, keep_bars=False)
+            baseline = {
+                tool_id: {f.syntactic_identifier_str() for f in findings}
+                for tool_id, findings in comparison_results
+                if isinstance(findings, list)
+            }
+            elapsed = time.time() - before
             return baseline, elapsed
         else:
             return {}, 0.0
+
+
+def _calculate_baseline(
+    comparison: str,
+    context: Context,
+    paths: PathArgument,
+    staged: bool,
+    tools: Iterable[Tool],
+) -> Tuple[bento.result.Baseline, float]:
+    baseline: bento.result.Baseline = {}
+    elapsed = 0.0
+
+    if comparison != Comparison.ROOT and context.baseline_file_path.exists():
+        with context.baseline_file_path.open() as json_file:
+            baseline = bento.result.json_to_violation_hashes(json_file)
+
+    if comparison == Comparison.HEAD:
+        head_baseline, elapsed = _calculate_head_comparison(
+            context, paths, staged, tools
+        )
+        baseline.update(head_baseline)
+
+    return baseline, elapsed
 
 
 @click.command()
@@ -194,12 +112,13 @@ def _calculate_head_comparison(
     "all findings, 'archive' to show all unarchived findings, and 'head' to show only findings since the last "
     "git commit.",
     type=click.Choice(COMPARISONS.keys()),
-    default=Comparison.ARCHIVE,
+    default=Comparison.HEAD,
 )
 @click.option(
+    "--staged",
     "--staged-only",
     is_flag=True,
-    help="Only runs over files staged in git. This should not be used with explicit paths.",
+    help="Ignore diffs between the filesystem and the git index.",
 )
 @click.option(
     "-t",
@@ -207,7 +126,7 @@ def _calculate_head_comparison(
     help="Specify a previously configured tool to run",
     autocompletion=get_valid_tools,
 )
-@click.argument("paths", nargs=-1, type=str, autocompletion=__list_paths)
+@click.argument("paths", nargs=-1, type=Path, autocompletion=list_paths)
 @click.pass_obj
 @with_metrics
 def check(
@@ -215,9 +134,9 @@ def check(
     formatter: Tuple[str, ...] = (),
     pager: bool = True,
     comparison: str = Comparison.ARCHIVE,
-    staged_only: bool = False,
+    staged: bool = False,
     tool: Optional[str] = None,
-    paths: Optional[List[str]] = None,
+    paths: PathArgument = None,
 ) -> None:
     """
     Checks for new findings.
@@ -225,10 +144,17 @@ def check(
     Only findings not previously archived will be displayed (use --show-all
     to display archived findings).
 
-    By default, 'bento check' will check the entire project. To run
-    on one or more paths only, run:
+    By default, 'bento check' will check files modified since the last commit.
+
+    To run on one or more paths only, run:
 
       bento check path1 path2 ...
+
+    For example,
+
+      bento check --comparison root .
+
+    will check the whole project.
     """
     if tool and tool not in context.configured_tools:
         click.echo(
@@ -255,29 +181,16 @@ def check(
     if tool:
         tools = [context.configured_tools[tool]]
 
-    baseline: bento.result.Baseline = {}
-    elapsed = 0.0
-    if (
-        comparison == Comparison.ARCHIVE or comparison == Comparison.HEAD
-    ) and context.baseline_file_path.exists():
-        with context.baseline_file_path.open() as json_file:
-            baseline = bento.result.json_to_violation_hashes(json_file)
+    baseline, elapsed = _calculate_baseline(comparison, context, paths, staged, tools)
 
-    if comparison == Comparison.HEAD:
-        head_baseline, elapsed = _calculate_head_comparison(
-            context, paths, staged_only, tools
-        )
-        baseline.update(head_baseline)
-
-    with _process_paths(context, paths, staged_only) as processed_paths:
-        if processed_paths is not None and len(processed_paths) == 0:
+    with run_context(context, paths, comparison, staged, RunStep.CHECK) as runner:
+        if len(runner.paths) == 0:
             echo_warning("All paths passed to `bento check` are ignored.")
             all_results: Collection[bento.tool_runner.RunResults] = []
             elapsed = 0.0
         else:
             before = time.time()
-            runner = bento.tool_runner.Runner()
-            all_results = runner.parallel_results(tools, baseline, processed_paths)
+            all_results = runner.parallel_results(tools, baseline)
             elapsed += time.time() - before
 
     is_error = False
@@ -349,7 +262,7 @@ You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PA
             f"bento check --comparison {Comparison.ROOT}",
         )
 
-    if staged_only and not context.autorun_is_blocking:
+    if staged and not context.autorun_is_blocking:
         return
     elif is_error:
         sys.exit(3)

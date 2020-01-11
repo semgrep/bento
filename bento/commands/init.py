@@ -119,9 +119,9 @@ class InitCommand(object):
         if clean:
             content.Clean.tools.echo()
             subprocess.run(["rm", "-r", constants.VENV_PATH], check=True)
-        runner = bento.tool_runner.Runner(install_only=True)
+        runner = bento.tool_runner.Runner(paths=[], install_only=True, use_cache=False)
         tools = self.context.tools.values()
-        runner.parallel_results(tools, {}, [])
+        runner.parallel_results(tools, {})
 
     def _identify_project(self) -> None:
         """Identifies this project"""

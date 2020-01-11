@@ -29,7 +29,7 @@ def test_archive_updates_whitelist() -> None:
     context = Context(INTEGRATION / "simple")
 
     with mod_file(context.baseline_file_path) as whitelist:
-        runner.invoke(archive, obj=context)
+        runner.invoke(archive, obj=context, args=[str(context.base_path)])
         yml = bento.result.json_to_violation_hashes(whitelist)
 
     expectation = {

@@ -1,8 +1,7 @@
 import json
-import os
 import re
 import subprocess
-from typing import Any, Dict, Iterable, List, Pattern, Set, Type
+from typing import Any, Dict, Iterable, List, Pattern, Type
 
 from bento.base_context import BaseContext
 from bento.extra.docker import DOCKER_INSTALLED, get_docker_client
@@ -82,21 +81,6 @@ class HadolintTool(StrTool):
     @property
     def file_name_filter(self) -> Pattern:
         return self.DOCKERFILE_FILTER
-
-    def filter_paths(self, paths: Iterable[str]) -> Set[str]:
-        """
-            Need to find paths to all Dockerfiles
-        """
-        resolved = [os.path.realpath(p) for p in paths]
-        valid_paths = {
-            e.path
-            for e in self.context.file_ignores.entries()
-            if e.survives
-            if self.file_name_filter.match(os.path.basename(e.path))
-            if any(os.path.realpath(e.path).startswith(r) for r in resolved)
-        }
-
-        return valid_paths
 
     @property
     def project_name(self) -> str:

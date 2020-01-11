@@ -1,6 +1,5 @@
 import json
 import logging
-import os
 from pathlib import Path
 from typing import Iterable, Optional
 
@@ -54,7 +53,7 @@ class RunCache(object):
             (e.path, e.dir_entry.stat(follow_symlinks=False).st_mtime_ns)
             for e in self.file_ignore.entries()
             if e.survives
-            if os.path.basename(e.path) not in exclude_files
+            if e.path.name not in exclude_files
         )
 
         h = 0
@@ -89,7 +88,7 @@ class RunCache(object):
         except OSError:
             pass
 
-    def get(self, tool_id: str, paths: Iterable[str]) -> Optional[str]:
+    def get(self, tool_id: str, paths: Iterable[Path]) -> Optional[str]:
         """
             Returns stored run output if it exists in local run cache and the
             cache entry is still valid (files have not been modified since caching)
@@ -113,12 +112,11 @@ class RunCache(object):
                 return None
 
         cache_hash = metadata.get("hash")
-        cache_paths = sorted(metadata.get("paths"))
+        cache_paths = {Path(p) for p in metadata.get("paths")}
         cache_bento_version = metadata.get("version")
-        sorted_paths = sorted(paths)
 
         if (
-            cache_paths != sorted_paths
+            cache_paths != set(paths)
             or cache_bento_version != BENTO_VERSION
             or cache_hash != self._modified_hash()
         ):
@@ -128,7 +126,7 @@ class RunCache(object):
 
         return cache_data_path.read_text()
 
-    def put(self, tool_id: str, paths: Iterable[str], raw_results: str) -> None:
+    def put(self, tool_id: str, paths: Iterable[Path], raw_results: str) -> None:
         """
             Caches raw_results as the output of running TOOL_ID on PATHS
 
@@ -145,7 +143,11 @@ class RunCache(object):
         cache_data_path.write_text(raw_results)
         hsh = self._modified_hash()
 
-        metadata = {"paths": sorted(paths), "hash": hsh, "version": BENTO_VERSION}
+        metadata = {
+            "paths": [str(p) for p in paths],
+            "hash": hsh,
+            "version": BENTO_VERSION,
+        }
 
         with cache_metadata_path.open("w") as file:
             json.dump(metadata, file)

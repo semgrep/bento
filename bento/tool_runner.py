@@ -5,9 +5,11 @@ import threading
 import time
 import traceback
 from contextlib import contextmanager
+from enum import Enum
 from functools import partial
 from multiprocessing import Lock
 from multiprocessing.pool import ThreadPool
+from pathlib import Path
 from typing import Collection, Iterable, Iterator, List, Optional, Tuple, Union
 
 import attr
@@ -31,10 +33,23 @@ RunResults = Tuple[str, ToolResults]
 START_RUN_BAR_VALUE = int(DONE_BAR_VALUE / 5)
 
 
+class Comparison:
+    ROOT = "root"
+    ARCHIVE = "archive"
+    HEAD = "head"
+
+
+class RunStep(Enum):
+    BASELINE = 1
+    CHECK = 2
+
+
 @attr.s
 class Runner:
+    paths = attr.ib(type=List[Path])
+    use_cache = attr.ib(type=bool)
+    skip_setup = attr.ib(type=bool, default=False)
     show_bars = attr.ib(type=bool, default=True)
-    use_cache = attr.ib(type=bool, default=True)
     install_only = attr.ib(type=bool, default=False)
     _lock = attr.ib(type=multiprocessing.synchronize.Lock, factory=Lock, init=False)
     _bars = attr.ib(type=List[tqdm], factory=list, init=False)
@@ -191,12 +206,7 @@ class Runner:
             tool.setup()
 
     def _run_single_tool(
-        self,
-        bar: Optional[tqdm],
-        ix: int,
-        tool: Tool,
-        paths: Optional[Iterable[str]],
-        baseline: Baseline,
+        self, bar: Optional[tqdm], ix: int, tool: Tool, baseline: Baseline
     ) -> ToolResults:
         """
         Returns results for running a previously installed tool.
@@ -217,16 +227,13 @@ class Runner:
             bento.util.DONE_TEXT,
         ):
             results = bento.result.filtered(
-                tool.tool_id(), tool.results(paths, self.use_cache), baseline
+                tool.tool_id(), tool.results(self.paths, self.use_cache), baseline
             )
 
         return results
 
     def _setup_and_run_single_tool(
-        self,
-        baseline: Baseline,
-        paths: Optional[Iterable[str]],
-        index_and_tool: Tuple[int, Tool],
+        self, baseline: Baseline, index_and_tool: Tuple[int, Tool]
     ) -> RunResults:
         """Runs a tool and filters out existing findings using baseline"""
 
@@ -243,12 +250,15 @@ class Runner:
             before = time.time()
             logging.debug(f"{tool.tool_id()} start")
 
-            self._setup_tool(bar, ix, tool, end_of_setup_bar_value, end_of_setup_text)
+            if not self.skip_setup:
+                self._setup_tool(
+                    bar, ix, tool, end_of_setup_bar_value, end_of_setup_text
+                )
             after_setup = time.time()
 
             results: ToolResults = []
             if not self.install_only:
-                results = self._run_single_tool(bar, ix, tool, paths, baseline)
+                results = self._run_single_tool(bar, ix, tool, baseline)
 
             after = time.time()
             logging.debug(
@@ -261,11 +271,7 @@ class Runner:
             return tool.tool_id(), e
 
     def parallel_results(
-        self,
-        tools: Iterable[Tool],
-        baseline: Baseline,
-        paths: Optional[List[str]],
-        keep_bars: bool = True,
+        self, tools: Iterable[Tool], baseline: Baseline, keep_bars: bool = True
     ) -> Collection[RunResults]:
         """Runs all tools in parallel.
 
@@ -275,9 +281,8 @@ class Runner:
         A progress bar is emitted to stderr for each tool.
 
         Parameters:
+            tools: (iterable): Tools to run
             baseline (set): The set of whitelisted finding hashes
-            paths (list): If present, the list of paths to pass to each tool
-            use_cache (bool): If true, reads results from cache
             keep_bars (bool): If true, progress bars are preserved after run (default True)
 
         Returns:
@@ -304,7 +309,7 @@ class Runner:
 
         with ThreadPool(n_tools) as pool:
             # using partial to pass in multiple arguments to __tool_filter
-            func = partial(Runner._setup_and_run_single_tool, self, baseline, paths)
+            func = partial(Runner._setup_and_run_single_tool, self, baseline)
             all_results = pool.map(func, indices_and_tools)
 
         self._done = True

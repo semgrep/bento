@@ -1,8 +1,5 @@
 Running Bento archive...
 
-Project analyzed with 2 tool(s).
 218 finding(s) were archived, and will be hidden in future Bento runs.
 
-◦ To view archived results, run $ bento check --show-all.
-
-Please check '.bento/archive.json' in to source control.
+◦ To view archived results, run $ bento check --comparison root.

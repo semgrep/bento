@@ -7,6 +7,9 @@ steps:
       - bento
       - --agree
       - check
+      - --comparison
+      - archive
+      - .
     expected_err: noconfig.err
     expected_out: null
     returncode: 3
@@ -36,6 +39,9 @@ steps:
       - bento
       - --agree
       - check
+      - --comparison
+      - archive
+      - .
     expected_err: bento-check-with-init.err
     expected_out: bento-check-with-init.out
     returncode: 2
@@ -57,6 +63,9 @@ steps:
       - bento
       - --agree
       - check
+      - --comparison
+      - archive
+      - .
     expected_err: bento-check-with-disable.err
     expected_out: bento-check-with-disable.out
     returncode: 2
@@ -78,6 +87,9 @@ steps:
       - bento
       - --agree
       - check
+      - --comparison
+      - archive
+      - .
     expected_err: bento-check-reenable.err
     expected_out: bento-check-with-init.out
     returncode: 2
@@ -87,6 +99,7 @@ steps:
       - bento
       - --agree
       - archive
+      - .
     expected_err: bento-archive.err
     expected_out: null
     returncode: 0
@@ -96,6 +109,9 @@ steps:
       - bento
       - --agree
       - check
+      - --comparison
+      - archive
+      - .
     expected_err: bento-check-with-archive.err
     expected_out: bento-check-with-archive.out
     returncode: 0

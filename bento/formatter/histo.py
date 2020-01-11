@@ -126,11 +126,9 @@ class Histo(Formatter):
         )
         out = []
         for tool_hits in sorted(all_hits, key=(lambda h: h.max_count), reverse=True):
-            out.append(click.style(f"{tool_hits.tool_id}:", bold=True))
             if tool_hits.hits:
+                out.append(click.style(f"{tool_hits.tool_id}:", bold=True))
                 for hit in tool_hits.hits:
                     out.append(self._render_hit(hit, max_count, check_width))
-            else:
-                out.append("  ✔ No issues detected")
-            out.append("")
+                out.append("")
         return out

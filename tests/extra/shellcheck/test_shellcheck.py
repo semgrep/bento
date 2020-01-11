@@ -13,8 +13,8 @@ def test_run(tmp_path: Path) -> None:
     base_path = BASE_PATH / "tests" / "integration" / "shell"
     tool = ShellcheckTool(context_for(tmp_path, ShellcheckTool.tool_id(), base_path))
     tool.setup()
-    violations = tool.results()
-    assert violations == [
+    violations = set(tool.results())
+    assert violations == {
         Violation(
             tool_id="shellcheck",
             check_id="SC2068",
@@ -51,4 +51,4 @@ def test_run(tmp_path: Path) -> None:
             filtered=None,
             link="https://github.com/koalaman/shellcheck/wiki/SC1083",
         ),
-    ]
+    }

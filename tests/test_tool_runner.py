@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 
 import bento.cli
@@ -39,7 +40,10 @@ def __count_simple_findings(
     monkeypatch.chdir(os.path.join(BASE_PATH, path))
     context = bento.context.Context()
     tools = context.tools.values()
-    results = bento.tool_runner.Runner().parallel_results(tools, archive, files)
+    paths = [Path(f) for f in files] if files is not None else [context.base_path]
+    results = bento.tool_runner.Runner(paths=paths, use_cache=True).parallel_results(
+        tools, archive
+    )
     return {tid: __violation_counts(vv) for tid, vv in results if isinstance(vv, list)}
 
 
@@ -94,6 +98,6 @@ def test_tool_parallel_results_archive_py_files(monkeypatch: MonkeyPatch) -> Non
 
 def test_tool_runner_no_yml() -> None:
     """Validates that tool runner aborts if there are no tools"""
-    runner = bento.tool_runner.Runner()
+    runner = bento.tool_runner.Runner(use_cache=True, paths=[Path.cwd()])
     args = [runner, [], set(), None]
     pytest.raises(Exception, bento.tool_runner.Runner.parallel_results, *args)

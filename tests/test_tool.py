@@ -10,11 +10,11 @@ from bento.violation import Violation
 THIS_PATH = Path(os.path.dirname(__file__))
 
 
-def result_for(path: str) -> Violation:
+def result_for(path: Path) -> Violation:
     return Violation(
         tool_id="test",
         check_id="test",
-        path=path,
+        path=str(path),
         line=0,
         column=0,
         message="test",
@@ -39,7 +39,7 @@ def context_for(
 
 class ParserFixture(Parser):
     def parse(self, tool_output: str) -> List[Violation]:
-        return [result_for(f) for f in tool_output.split(",")]
+        return [result_for(Path(f)) for f in tool_output.split(",")]
 
 
 class ToolFixture(StrTool):
@@ -82,8 +82,8 @@ class ToolFixture(StrTool):
         return ",".join(files)
 
 
-def _relpath(path: Union[str, Path]) -> str:
-    return str(THIS_PATH / path)
+def _relpath(path: Union[str, Path]) -> Path:
+    return THIS_PATH / path
 
 
 def test_file_path_filter_terminal(tmp_path: Path) -> None:
@@ -120,7 +120,7 @@ def test_tool_run_no_paths(tmp_path: Path) -> None:
 
 def test_tool_run_file(tmp_path: Path) -> None:
     tool = ToolFixture(tmp_path)
-    result = tool.results([str(THIS_PATH / "test_tool.py")])
+    result = tool.results([THIS_PATH / "test_tool.py"])
 
     assert result == [result_for(_relpath("test_tool.py"))]
 

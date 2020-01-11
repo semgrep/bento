@@ -139,12 +139,16 @@ def test_init_clean(tmp_path: Path) -> None:
         venv_file = tmp_path / "flake8" / "bin" / "activate"
 
         # Ensure venv is created
-        CliRunner(mix_stderr=False).invoke(check, obj=context)
+        CliRunner(mix_stderr=False).invoke(
+            check, obj=context, args=["--comparison", "root", str(context.base_path)]
+        )
         assert venv_file.exists()
 
         # Ensure venv is corrupted, and not fixed with standard check
         venv_file.unlink()
-        CliRunner(mix_stderr=False).invoke(check, obj=context)
+        CliRunner(mix_stderr=False).invoke(
+            check, obj=context, args=["--comparison", "root", str(context.base_path)]
+        )
         assert not venv_file.exists()
 
         # Ensure `init --clean` recreates venv

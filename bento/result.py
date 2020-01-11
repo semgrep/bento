@@ -23,7 +23,7 @@ def filtered(
     ]
 
 
-def dump_results(results: List[Violation]) -> ToolResults:
+def dump_results(results: List[Violation]) -> Dict[str, Dict[Hash, Dict[str, Any]]]:
     with_hashes: Dict[str, Dict[str, Any]] = OrderedDict(
         sorted(
             ((v.syntactic_identifier_str(), v.to_dict()) for v in results),
@@ -37,10 +37,13 @@ def write_tool_results(stream: TextIO, results: Mapping[ToolId, ToolResults]) ->
     json.dump(results, stream, indent=2)
 
 
-def json_to_violation_hashes(text: Union[str, TextIO]) -> Baseline:
+def load_baseline(text: Union[str, TextIO]) -> Mapping[str, ToolResults]:
     parsed = json.loads(text) if isinstance(text, str) else json.load(text)
-    if parsed is None:
-        return {}
+    return parsed or {}
+
+
+def json_to_violation_hashes(text: Union[str, TextIO]) -> Baseline:
+    parsed = load_baseline(text)
     out = {}
     for (tool_id, r) in parsed.items():
         violations = r[VIOLATIONS_KEY]

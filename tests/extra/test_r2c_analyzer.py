@@ -128,9 +128,7 @@ def test_ignore_files_factory(tmp_path: Path) -> None:
     shutil.copytree(
         source,
         destination,
-        ignore=_ignore_files_factory(
-            {str(ignored_dir), str(ignored_file)}, {str(source)}
-        ),
+        ignore=_ignore_files_factory({ignored_dir, ignored_file}, {str(source)}),
     )
 
     # Delete source and move back destination for easy comparion
@@ -185,9 +183,7 @@ def test_ignore_files_factory_path(tmp_path: Path) -> None:
     shutil.copytree(
         source,
         destination,
-        ignore=_ignore_files_factory(
-            {str(ignored_dir), str(ignored_file)}, {str(unignored_dir)}
-        ),
+        ignore=_ignore_files_factory({ignored_dir, ignored_file}, {str(unignored_dir)}),
     )
 
     # Delete source and move back destination for easy comparion

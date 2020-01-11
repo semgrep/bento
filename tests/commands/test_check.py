@@ -8,7 +8,6 @@ import bento.constants
 import bento.extra.eslint
 import bento.result
 import bento.tool_runner
-import pytest
 from _pytest.monkeypatch import MonkeyPatch
 from bento.commands.check import check
 from bento.context import Context
@@ -19,17 +18,35 @@ INTEGRATION = BASE / "tests" / "integration"
 SIMPLE = INTEGRATION / "simple"
 
 
-def test_check_happy_path() -> None:
-    """Validates that check discovers issues in normal usage"""
+def test_check_compare_archive() -> None:
+    """Validates that check discovers issues in tech debt mode"""
 
     runner = CliRunner(mix_stderr=False)
     Context(SIMPLE).cache.wipe()
 
     result = runner.invoke(
-        check, ["--formatter", "json"], obj=Context(base_path=SIMPLE)
+        check,
+        ["--formatter", "json", "--comparison", "archive", str(SIMPLE)],
+        obj=Context(base_path=SIMPLE),
     )
     parsed = json.loads(result.stdout)
     assert len(parsed) == 4
+
+
+def test_check_no_diff_noop() -> None:
+    """Validates that bare check with no diffs is noop"""
+
+    runner = CliRunner(mix_stderr=False)
+    Context(SIMPLE).cache.wipe()
+
+    result = runner.invoke(
+        check, ["--formatter", "json"], obj=Context(base_path=SIMPLE), mix_stderr=False
+    )
+
+    parsed = json.loads(result.stdout)
+    assert len(parsed) == 0
+
+    assert "All paths passed to `bento check` are ignored." in result.stderr
 
 
 def test_check_specified_paths(monkeypatch: MonkeyPatch) -> None:
@@ -41,7 +58,7 @@ def test_check_specified_paths(monkeypatch: MonkeyPatch) -> None:
 
     result = runner.invoke(
         check,
-        ["--formatter", "json", "init.js", "foo.py"],
+        ["--formatter", "json", "--comparison", "archive", "init.js", "foo.py"],
         obj=Context(base_path=SIMPLE),
     )
     parsed = json.loads(result.stdout)
@@ -56,7 +73,7 @@ def test_check_compare_to_root() -> None:
 
     result = runner.invoke(
         check,
-        ["--formatter", "json", "--comparison", "root"],
+        ["--formatter", "json", "--comparison", "root", str(SIMPLE)],
         obj=Context(base_path=SIMPLE),
     )
     parsed = json.loads(result.stdout)
@@ -71,7 +88,7 @@ def test_check_compare_to_head_no_diffs() -> None:
 
     result = runner.invoke(
         check,
-        ["--formatter", "json", "--comparison", "head"],
+        ["--formatter", "json", "--comparison", "head", str(SIMPLE)],
         obj=Context(base_path=SIMPLE),
     )
     parsed = json.loads(result.stdout)
@@ -91,30 +108,12 @@ def test_check_compare_to_head_diffs() -> None:
             stream.write("\nprint({'a': 2}).has_key('b')")
         result = runner.invoke(
             check,
-            ["--formatter", "json", "--comparison", "head", str(edited)],
+            ["--formatter", "json", "--comparison", "head"],
             obj=Context(base_path=SIMPLE),
         )
 
     parsed = json.loads(result.stdout)
     assert [p["check_id"] for p in parsed] == ["deprecated-has-key"]
-
-
-def test_check_specified_paths_and_staged(monkeypatch: MonkeyPatch) -> None:
-    """Validates that check errors when --staged-only used with paths"""
-
-    monkeypatch.chdir(SIMPLE)
-    runner = CliRunner(mix_stderr=False)
-    Context(SIMPLE).cache.wipe()
-
-    pytest.raises(
-        Exception,
-        runner.invoke(
-            check,
-            ["--staged-only", "init.js", "foo.py"],
-            obj=Context(base_path=SIMPLE),
-            catch_exceptions=False,
-        ),
-    )
 
 
 def test_check_specified_ignored(monkeypatch: MonkeyPatch) -> None:
@@ -125,7 +124,7 @@ def test_check_specified_ignored(monkeypatch: MonkeyPatch) -> None:
 
     result = runner.invoke(
         check,
-        ["-f", "json", "tests/integration/simple/bar.py"],
+        ["-f", "json", "--comparison", "archive", "tests/integration/simple/bar.py"],
         obj=Context(base_path=BASE),
     )
     parsed = json.loads(result.stdout)
@@ -140,7 +139,9 @@ def test_check_relative_path(monkeypatch: MonkeyPatch) -> None:
     runner = CliRunner(mix_stderr=False)
 
     result = runner.invoke(
-        check, ["-f", "json", "../bar.py"], obj=Context(base_path=SIMPLE)
+        check,
+        ["-f", "json", "--comparison", "archive", "../bar.py"],
+        obj=Context(base_path=SIMPLE),
     )
     parsed = json.loads(result.stdout)
     print(parsed)
@@ -157,7 +158,9 @@ def test_check_no_archive() -> None:
     with mod_file(context.baseline_file_path):
         context.baseline_file_path.unlink()
         result = runner.invoke(
-            check, ["--formatter", "json"], obj=Context(base_path=SIMPLE)
+            check,
+            ["--formatter", "json", "--comparison", "archive", str(SIMPLE)],
+            obj=Context(base_path=SIMPLE),
         )
         parsed = json.loads(result.stdout)
         assert len(parsed) == 5  # Archive contains a single whitelisted finding
@@ -184,6 +187,6 @@ def test_check_tool_error() -> None:
         runner = CliRunner(mix_stderr=False)
         Context(SIMPLE).cache.wipe()
 
-        result = runner.invoke(check, obj=Context(base_path=SIMPLE))
+        result = runner.invoke(check, [str(SIMPLE)], obj=Context(base_path=SIMPLE))
         assert result.exit_code == 3
         assert expectation in result.stderr.splitlines()
