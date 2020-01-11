@@ -19,15 +19,15 @@ from bento.util import echo_success
 @click.group()
 def enable() -> None:
     """
-        Turn ON part of Bento's functionality.
+    Turn ON a Bento feature for this project.
 
-        For example, to enable the check `no-unused-var` from `r2c.eslint`:
+    For example, to enable autorun:
 
-            $ bento enable check r2c.eslint no-unused-var
+        $ bento enable autorun
 
-        To enable the tool `r2c.bandit`:
+    To enable a non-default tool (like `eslint`):
 
-            $ bento enable tool r2c.bandit
+        $ bento enable tool eslint
     """
 
 
@@ -41,13 +41,13 @@ def enable() -> None:
 @click.pass_obj
 def tool(context: Context, tool: str) -> None:
     """
-        Turn ON a tool.
+    Turn ON a tool.
 
-        If the tool was previously enabled, the tool's previous
-        settings will be used. If no configuration exists, smart defaults will
-        be applied.
+    If the tool was previously enabled, the tool's previous
+    settings will be used. If no configuration exists, smart defaults will
+    be applied.
 
-        See `bento enable --help` for more details.
+    See `bento enable --help` for more details.
     """
     update_tool_run(context, tool, True)
     echo_success(f"{tool} enabled")
@@ -60,9 +60,9 @@ def tool(context: Context, tool: str) -> None:
 @click.pass_obj
 def check(context: Context, tool: str, check: str) -> None:
     """
-        Turn ON a check.
+    Turn ON a check.
 
-        See `bento enable --help` for more details.
+    Visit checks.bento.dev to learn about Bento's specialty checks.
     """
 
     def remove(ignores: Set[str]) -> None:

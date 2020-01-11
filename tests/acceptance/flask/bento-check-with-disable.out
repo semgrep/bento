@@ -73,18 +73,16 @@ r2c.flask unescaped-file-extension https://checks.bento.dev/en/latest/flake8-fla
      ╷
    96│   return flask.render_template(
      ╵
-     = Flask does not autoescape templates with the {'txt'} extension by
-       default. Flask only autoescapes .html, .htm, .xml, and .xhtml files. Make
-       sure your variables are escaped using `flask.Markup.escape`.
+     = Flask does not automatically escape Jinja templates unless they have
+       .html, .htm, .xml, or .xhtml extensions. This could lead to XSS attacks.
 
 r2c.flask unescaped-file-extension https://checks.bento.dev/en/latest/flake8-flask/unescaped-file-extension
      > tests/test_templating.py:115
      ╷
   115│   assert flask.render_template("mail.txt", foo="<test>") == "<test> Mail"
      ╵
-     = Flask does not autoescape templates with the {'txt'} extension by
-       default. Flask only autoescapes .html, .htm, .xml, and .xhtml files. Make
-       sure your variables are escaped using `flask.Markup.escape`.
+     = Flask does not automatically escape Jinja templates unless they have
+       .html, .htm, .xml, or .xhtml extensions. This could lead to XSS attacks.
 
 bandit flask-debug-true https://bandit.readthedocs.io/en/latest/plugins/b201_flask_debug_true.html
      > tests/test_templating.py:404

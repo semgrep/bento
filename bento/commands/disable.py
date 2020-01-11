@@ -13,15 +13,15 @@ from bento.util import echo_success
 @click.group()
 def disable() -> None:
     """
-        Turn OFF part of Bento's functionality.
+    Turn OFF a Bento feature for this project.
 
-        For example, to disable the check `no-unused-var` from `r2c.eslint`:
+    For example, to disable the `r2c.flask secure-set-cookie` check:
 
-            $ bento disable check r2c.eslint no-unused-var
+        $ bento disable check r2c.flask secure-set-cookie
 
-        To disable the tool `r2c.bandit`:
+    To disable the tool `bandit`:
 
-            $ bento disable tool r2c.bandit
+        $ bento disable tool bandit
     """
 
 
@@ -35,11 +35,11 @@ def disable() -> None:
 @click.pass_obj
 def tool(context: Context, tool: str) -> None:
     """
-        Turn OFF a tool.
+    Turn OFF a tool.
 
-        Tool-specific configurations are saved, and can be reenabled via `bento enable tool [TOOL]`.
+    Tool-specific configurations are saved, and can be reenabled via `bento enable tool TOOL`.
 
-        Please see `bento disable --help` for more information.
+    Please see `bento disable --help` for more information.
     """
     update_tool_run(context, tool, False)
     echo_success(f"{tool} disabled")
@@ -52,9 +52,9 @@ def tool(context: Context, tool: str) -> None:
 @click.pass_obj
 def check(context: Context, tool: str, check: str) -> None:
     """
-        Turn OFF a check.
+    Turn OFF a check.
 
-        Please see `bento disable --help` for more information.
+    Visit checks.bento.dev to learn about Bento's specialty checks.
     """
 
     def add(ignores: Set[str]) -> None:

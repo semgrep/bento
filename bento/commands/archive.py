@@ -17,6 +17,8 @@ from bento.util import echo_error, echo_newline, echo_next_step
 @click.option(
     "--staged",
     "--staged-only",
+    is_flag=True,
+    default=False,
     help="Ignore diffs betweeen the filesystem and the git index.",
 )
 @click.argument("paths", nargs=-1, type=Path, autocompletion=list_paths)
@@ -26,7 +28,15 @@ def archive(
     context: Context, staged: bool, paths: PathArgument, show_bars: bool = True
 ) -> None:
     """
-    Adds findings to the archive comparison point.
+    Suppress current findings.
+
+    By default, archived findings will not appear in `bento check` results, and will not block commits.
+
+    To view all findings, including archived findings, run:
+
+        $ bento check --comparison root
+
+    Archived findings are saved in `.bento/archive.json`.
     """
     if not context.is_init:
         click.secho("Running Bento archive...\n" "", err=True)
@@ -89,7 +99,7 @@ def archive(
         f"{n_new} finding(s) were archived, and will be hidden in future Bento runs."
     )
     if n_existing > 0:
-        success_str += f"\nBento also kept {n_existing} existing findings"
+        success_str += f"\nBento also kept {n_existing} existing finding(s)."
 
     click.echo(success_str, err=True)
 

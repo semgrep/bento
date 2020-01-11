@@ -109,7 +109,7 @@ def _calculate_baseline(
 @click.option(
     "--comparison",
     help="Define a comparison point. Only new findings introduced since this point will be shown: Use 'root' to show "
-    "all findings, 'archive' to show all unarchived findings, and 'head' to show only findings since the last "
+    "all findings. Use 'archive' to show all unarchived findings. Use 'head' to show only findings since the last "
     "git commit.",
     type=click.Choice(COMPARISONS.keys()),
     default=Comparison.HEAD,
@@ -118,12 +118,14 @@ def _calculate_baseline(
     "--staged",
     "--staged-only",
     is_flag=True,
+    default=False,
     help="Ignore diffs between the filesystem and the git index.",
 )
 @click.option(
     "-t",
     "--tool",
     help="Specify a previously configured tool to run",
+    metavar="TOOL",
     autocompletion=get_valid_tools,
 )
 @click.argument("paths", nargs=-1, type=Path, autocompletion=list_paths)
@@ -141,20 +143,16 @@ def check(
     """
     Checks for new findings.
 
-    Only findings not previously archived will be displayed (use --show-all
-    to display archived findings).
+    By default, only findings introduced since the last commit will be shown.
+    Use `--comparison root` to show all findings.
 
-    By default, 'bento check' will check files modified since the last commit.
+    By default, `bento check` will analyze files modified since the last commit. To force
+    Bento to analyze a path, call `bento check PATH`.
 
-    To run on one or more paths only, run:
+    For example, to check the entire project:
 
-      bento check path1 path2 ...
+        $ bento check .
 
-    For example,
-
-      bento check --comparison root .
-
-    will check the whole project.
     """
     if tool and tool not in context.configured_tools:
         click.echo(
@@ -185,7 +183,13 @@ def check(
 
     with run_context(context, paths, comparison, staged, RunStep.CHECK) as runner:
         if len(runner.paths) == 0:
-            echo_warning("All paths passed to `bento check` are ignored.")
+            echo_warning(
+                "Nothing to check. By default, Bento only analyzes files with diffs."
+            )
+            if staged:
+                echo_next_step("To check unstaged diffs", "bento check")
+            echo_next_step("To check a specific path", "bento check PATH")
+            click.secho("", err=True)
             all_results: Collection[bento.tool_runner.RunResults] = []
             elapsed = 0.0
         else:
@@ -249,9 +253,13 @@ You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PA
     context.stop_user_timer()
 
     if n_all_filtered > 0:
-        echo_warning(f"{n_all_filtered} finding(s) in {elapsed:.2f} s\n")
-        if not context.is_init:
-            echo_next_step("To suppress all findings", "bento archive")
+        echo_warning(f"{n_all_filtered} finding(s) in {elapsed:.2f} s")
+        click.secho("\nPlease fix these issues, or:\n", err=True)
+        staged_text = " --staged" if staged else ""
+        echo_next_step(
+            "To archive findings as tech debt", f"bento archive{staged_text}"
+        )
+        echo_next_step("To disable a specific check", f"bento disable check TOOL CHECK")
     else:
         echo_success(f"0 findings in {elapsed:.2f} s\n")
 

@@ -321,7 +321,8 @@ class Runner:
                     click.echo("", err=True)
             for b in self._bars:
                 b.close()
-            # Progress bars terminate on whitespace
-            bento.util.echo_newline()
+            if keep_bars:
+                # Progress bars terminate on whitespace
+                bento.util.echo_newline()
 
         return all_results

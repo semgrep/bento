@@ -1,4 +1,8 @@
 Running Bento checks...
 
 ⚠ 9 finding(s) in  s
-◦ To suppress all findings, run $ bento archive.
+
+Please fix these issues, or:
+
+◦ To archive findings as tech debt, run $ bento archive.
+◦ To disable a specific check, run $ bento disable check TOOL CHECK.

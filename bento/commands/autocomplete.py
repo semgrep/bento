@@ -49,7 +49,7 @@ def _validate_shell() -> Tuple[Path, str]:
 @with_metrics
 def install_autocomplete(quiet: bool = False) -> None:
     """
-    Enable tab autocompletion in your shell profile
+    Enable tab autocompletion in your shell profile.
     """
     path, text = _validate_shell()
 
@@ -69,7 +69,7 @@ def install_autocomplete(quiet: bool = False) -> None:
 @with_metrics
 def uninstall_autocomplete() -> None:
     """
-    Remove tab autocompletion from your shell profile
+    Remove tab autocompletion from your shell profile.
     """
     path, text = _validate_shell()
 

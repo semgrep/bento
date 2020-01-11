@@ -46,7 +46,10 @@ def test_check_no_diff_noop() -> None:
     parsed = json.loads(result.stdout)
     assert len(parsed) == 0
 
-    assert "All paths passed to `bento check` are ignored." in result.stderr
+    assert (
+        "Nothing to check. By default, Bento only analyzes files with diffs."
+        in result.stderr
+    )
 
 
 def test_check_specified_paths(monkeypatch: MonkeyPatch) -> None:

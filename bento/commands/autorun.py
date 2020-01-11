@@ -54,11 +54,17 @@ def install_autorun(context: Context, block: bool) -> None:
     """
     Configures Bento to automatically run on commits.
 
+    Autorun is configured only for you; it does not affect
+    other contributors to this project.
+
     Autorun is only configured for the project from which this
     command is run.
 
-    By default, Bento will not block commits if it finds an issue.
-    Run this command with --block to block commits.
+    By default, Bento will block commits if it finds an issue.
+    To prevent autorun from blocking commits, run:
+
+        $ bento enable autorun --no-block
+
     """
     import git  # import inside def for performance
 
