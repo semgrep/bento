@@ -184,7 +184,7 @@ def check(
     with run_context(context, paths, comparison, staged, RunStep.CHECK) as runner:
         if len(runner.paths) == 0:
             echo_warning(
-                "Nothing to check. By default, Bento only analyzes files with diffs."
+                "Nothing to check. By default, Bento only analyzes tracked files with diffs."
             )
             if staged:
                 echo_next_step("To check unstaged diffs", "bento check")

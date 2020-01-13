@@ -47,7 +47,7 @@ def test_check_no_diff_noop() -> None:
     assert len(parsed) == 0
 
     assert (
-        "Nothing to check. By default, Bento only analyzes files with diffs."
+        "Nothing to check. By default, Bento only analyzes tracked files with diffs."
         in result.stderr
     )
 

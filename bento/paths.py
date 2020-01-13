@@ -61,7 +61,7 @@ def git_status() -> GitStatus:
     Gets added, removed, and unmerged paths from the git index
     """
     status_output = (
-        cmd_output("git", "status", "--porcelain", "-z")[1].strip().split("\0")
+        cmd_output("git", "status", "--porcelain", "-z")[1].rstrip().split("\0")
     )
     next_is_file = False
     added = []
