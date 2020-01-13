@@ -194,7 +194,7 @@ class Registrar(object):
                     has_ignore = next(filter(lambda l: ".bento" in l, fd), None)
             if has_ignore is None:
                 if content.UpdateGitignore.confirm.echo(gitignore_path):
-                    gitignore_path.parent.resolve().mkdir(exist_ok=True)
+                    gitignore_path.parent.resolve().mkdir(exist_ok=True, parents=True)
                     content.UpdateGitignore.confirm_yes.echo()
                     return gitignore_path, True
                 else:
