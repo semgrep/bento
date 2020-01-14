@@ -5,6 +5,3 @@ flake8 not-executable https://github.com/xuhdev/flake8-executable/blob/master/RE
      ╵
      = Shebang is present but the file is not executable.
 
-flake8:
-  not-executable     1▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-

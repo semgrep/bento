@@ -106,13 +106,3 @@ bandit flask-debug-true https://bandit.readthedocs.io/en/latest/plugins/b201_fla
      = A Flask app appears to be run with debug=True, which exposes the Werkzeug
        debugger and allows the execution of arbitrary code.
 
-bandit:
-  try-except-pass              6▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  exec-used                    2▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  flask-debug-true             2▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  B307                         1▕▬▬▬▬▬▬▬▬
-
-r2c.flask:
-  unescaped-file-extension     2▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  secure-set-cookie            1▕▬▬▬▬▬▬▬▬
-

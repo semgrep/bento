@@ -1872,19 +1872,3 @@ eslint no-useless-catch https://eslint.org/docs/rules/no-useless-catch
      ╵
      = Unnecessary catch clause.
 
-eslint:
-  global-require                       49▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  error                                38▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  no-use-before-define                 23▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  import/no-extraneous-dependencies    18▕▬▬▬▬▬▬▬▬▬▬▬▬
-  import/no-dynamic-require            17▕▬▬▬▬▬▬▬▬▬▬▬▬
-  Other                                54▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-
-shellcheck:
-  SC2086                               29▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  SC2103                                6▕▬▬▬▬
-  SC2173                                6▕▬▬▬▬
-  SC2048                                5▕▬▬▬
-  SC2046                                4▕▬▬▬
-  Other                                 2▕▬
-

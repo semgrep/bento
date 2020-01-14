@@ -223,18 +223,3 @@ shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
      ╵
      = Double quote to prevent globbing and word splitting.
 
-flake8:
-  no-mutable-default-args       12▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  missing-shebang                4▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  unused-loop-variable           3▕▬▬▬▬▬▬▬▬▬▬▬
-  not-executable                 1▕▬▬▬▬
-
-shellcheck:
-  SC2086                         3▕▬▬▬▬▬▬▬▬▬▬▬
-  SC2148                         1▕▬▬▬▬
-
-bandit:
-  try-except-pass                2▕▬▬▬▬▬▬▬
-  B301                           1▕▬▬▬▬
-  start-process-with-a-shell     1▕▬▬▬▬
-
