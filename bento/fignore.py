@@ -107,8 +107,8 @@ class FileIgnore(Mapping[Path, Entry]):
         """
         return WalkEntries(self._walk_cache)
 
-    def filter_paths(self, paths: List[Path]) -> List[Path]:
-        abspaths = (p.absolute() for p in paths)
+    def filter_paths(self, paths: Iterable[Path]) -> List[Path]:
+        abspaths = (p.absolute() for p in paths if p.exists())
         return [
             p
             for p in abspaths

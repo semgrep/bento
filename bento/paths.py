@@ -198,11 +198,19 @@ def run_context(
     else:
         paths = _diffed_paths(context, staged_only=staged)
 
-    paths = context.file_ignores.filter_paths(paths)
-
     with stash_context:
+        # TODO: Avoid recalculation of file ignores unless absolutely necessary
+        # This is an ugly hack to make bento work if a file is deleted on filesystem
+        if staged:
+            with context._ignore_lock:
+                context._ignores = None  # type: ignore
+        filtered = context.file_ignores.filter_paths(paths)
+
         yield Runner(
-            paths=paths, use_cache=use_cache, skip_setup=skip_setup, show_bars=show_bars
+            paths=filtered,
+            use_cache=use_cache,
+            skip_setup=skip_setup,
+            show_bars=show_bars,
         )
 
 
