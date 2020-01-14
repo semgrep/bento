@@ -88,7 +88,9 @@ def _calculate_baseline(
         head_baseline, elapsed = _calculate_head_comparison(
             context, paths, staged, tools
         )
-        baseline.update(head_baseline)
+        for tool_id, hashes in head_baseline.items():
+            hashes.update(baseline.get(tool_id) or set())
+        baseline = head_baseline
 
     return baseline, elapsed
 
