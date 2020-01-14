@@ -78,6 +78,7 @@ def read_user_email() -> Optional[str]:
 
 def command_metric(
     command: str,
+    email: str,
     timestamp: str,
     command_kwargs: Dict[str, Any],
     exit_code: int,
@@ -92,7 +93,6 @@ def command_metric(
         (k, v) for k, v in command_kwargs.items() if k not in kwargs_to_exclude
     )
 
-    email = read_user_email()
     d = {
         "timestamp": timestamp,
         "duration": duration,

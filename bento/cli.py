@@ -91,9 +91,9 @@ def cli(
     is_init = ctx.invoked_subcommand == "init"
     ctx.help_option_names = ["-h", "--help"]
     if base_path is None:
-        ctx.obj = Context(is_init=is_init)
+        ctx.obj = Context(is_init=is_init, email=email)
     else:
-        ctx.obj = Context(base_path=base_path, is_init=is_init)
+        ctx.obj = Context(base_path=base_path, is_init=is_init, email=email)
     if not _is_running_supported_python3():
         echo_error(
             "Bento requires Python 3.6+. Please ensure you have Python 3.6+ and installed Bento via `pip3 install bento-cli`."
