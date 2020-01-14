@@ -2,7 +2,7 @@
     <img src="https://raw.githubusercontent.com/returntocorp/bento/master/bento-logo.png" height="100" alt="Bento logo"/>
 </p>
 <h3 align="center">
-  Find Python web app bugs delightfully fast without changing your workflow
+  Find Python web-app bugs delightfully fast, without changing your workflow
 </h3>
 
 <p align="center">
@@ -128,7 +128,7 @@ Bento configures itself for personal use by default. This means that it:
 Initialization enables `autorun` behind the scenes, which can be can be enabled or disabled using:
 
 ```bash
-$ bento [ enable|disable ] autorun
+$ bento [enable|disable] autorun
 ```
 
 This feature makes use of Git hooks. If the Bento hook incorrectly blocks your commit, you can skip it by passing the `--no-verify` flag to Git at commit-time (please use this sparingly since all hooks will be skipped):
@@ -159,7 +159,7 @@ To use the `archive` feature so Bento returns a non-zero exit code only for new 
 
 ```bash
 $ cd <PROJECT DIRECTORY>
-$ bento archive --comparison root
+$ bento archive .
 ```
 
 Commit Bento’s configuration to the project:
@@ -172,7 +172,7 @@ You can then add Bento to your CI scripts:
 
 ```bash
 $ pip3 install bento-cli && bento --version
-$ bento --agree --email <YOUR_EMAIL> check --comparison archive
+$ bento --agree --email <YOUR_EMAIL> check --comparison archive .
 ```
 
 If you use CircleCI, the above commands become:
@@ -190,7 +190,7 @@ jobs:
           command: pip3 install bento-cli && bento --version
       - run:
           name: "Run Bento check"
-          command: bento --agree --email <YOUR_EMAIL> check --comparison archive
+          command: bento --agree --email <YOUR_EMAIL> check --comparison archive . 2&>1 | cat
 ```
 
 `bento check` will exit with a non-zero exit code if it finds issues in your code (see [Exit Codes](#exit-codes)).
