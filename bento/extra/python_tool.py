@@ -34,27 +34,27 @@ class PythonTool(Generic[R], Tool[R]):
     def required_packages(cls) -> Dict[str, SimpleSpec]:
         return cls.PACKAGES
 
-    @property
-    def __venv_dir(self) -> Path:
-        return constants.VENV_PATH / self.venv_subdir_name()
+    @classmethod
+    def venv_dir(cls) -> Path:
+        return constants.VENV_PATH / cls.venv_subdir_name()
 
     def venv_create(self) -> None:
         """
         Creates a virtual environment for this tool
         """
-        if not self.__venv_dir.exists():
+        if not self.venv_dir().exists():
             logging.info(f"Creating virtual environment for {self.tool_id()}")
             # If we are already in a virtual environment, venv.create() will fail to install pip,
             # but we probably have virtualenv in the path, so try that first.
             try:
                 # Don't litter stdout with virtualenv spam
                 subprocess.run(
-                    ["virtualenv", self.__venv_dir],
+                    ["virtualenv", self.venv_dir()],
                     stdout=subprocess.DEVNULL,
                     check=True,
                 )
             except Exception:
-                venv.create(str(self.__venv_dir), with_pip=True)
+                venv.create(str(self.venv_dir()), with_pip=True)
 
     def venv_exec(self, cmd: List[str], check_output: bool = True) -> str:
         """
@@ -63,8 +63,8 @@ class PythonTool(Generic[R], Tool[R]):
         logging.debug(f"{self.tool_id()}: Running '{cmd}'")
         before = time()
         env = dict(os.environ)
-        env["VIRTUAL_ENV"] = str(self.__venv_dir)
-        env["PATH"] = f"{self.__venv_dir}/bin:" + env["PATH"]
+        env["VIRTUAL_ENV"] = str(self.venv_dir())
+        env["PATH"] = f"{self.venv_dir()}/bin:" + env["PATH"]
         if "PYTHONHOME" in env:
             del env["PYTHONHOME"]
         v = subprocess.Popen(
