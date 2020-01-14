@@ -2,6 +2,82 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.8.0](https://pypi.org/project/bento-cli/0.8.0/) - 2020-01-14
+
+This release represents a major shift in Bento's default behavior: It emphasizes an incremental
+and personal, rather than team-wide, workflow that makes Bento a smaller commitment to use:
+
+1. Other project contributors won’t see Bento files or have their workflows changed.
+2. You no longer need to manually run Bento. After initialization Bento will automatically
+   check for issues in your code as you commit, analyzing only the files that have changed.
+3. You won’t see a project’s old issues (tech debt) during initialization. To view them,
+   run
+
+   ```bash
+   bento check --comparison root .
+   ```
+
+### Migration
+
+Project configurations have changed in version 0.8. In order to migrate a project from
+version 0.7 or earlier:
+
+- Ensure Bento has been upgraded using `pip3 install --upgrade bento-cli`. Run `bento --version`
+  to validate Bento’s version.
+- `rm -r .bento*` (Use `git rm` if you have previously added Bento files to source control).
+- Run `bento init` in the project root.
+
+### New requirements
+
+- Docker must be installed, and the docker client running, to use Bento.
+
+### Changed
+
+How you use Bento has changed significantly in 0.8.
+
+#### Usage changes
+
+- `bento check` with no paths will now only check project diffs.
+  - Use `bento check --comparison archive .` to check the entire project.
+  - Use `bento check --staged` to check only staged diffs.
+- `bento check`, by default, only reports findings introduced since your last commit. To view
+  earlier issues:
+  - Use `bento check --comparison archive .` to view findings since the last `bento archive`.
+  - Use `bento check --comparison root .` to view all findings.
+- `bento archive` with no paths will only archive findings in project diffs:
+
+  - Use `bento archive .` to archive all findings in a project.
+  - Use `bento archive --staged` to archive only findings in staged diffs.
+
+#### Other changes
+
+- `hadolint` and `shellcheck` are now enabled by default.
+- Messages for findings are no longer truncated.
+- `bento init` will now install an empty configuration on a project it can not identify;
+  tools may then be manually enabled using `bento enable tool TOOL`. Use `bento enable tool --help`
+  to list tools.
+- Virtual environments for Python tools are now installed in your home directory, instead of in your
+  project directories.
+- `eslint` is now installed in your project’s `.bento` directory, and will not modify your project’s
+  `package.json`.
+- Tool and check names have been modified to improve readability.
+
+### Added
+
+- On init, Bento will prompt you to ask if you want to add ignore patterns to your global Git ignore file.
+  If you agree, Bento will alter this file to ignore Bento configuration files in your git projects.
+- `bento enable autorun` and `bento disable autorun` will cause Bento to either begin or stop analyzing
+  code on every commit.
+- Tab completion can now be installed by Bento. To install for your shell, run `bento enable autocomplete`.
+  To remove tab completion, run `bento disable autocomplete`.
+
+### Removed
+
+- `bento check --show-all` has been removed. Use `bento check --comparison root` instead.
+- `bento install-hook` has been removed. Use `bento enable autorun` to run Bento on every commit.
+- The histogram formatter is no longer used by default. To show findings with a histogram, run
+  `bento check -f histo`.
+
 ## [0.7.0](https://pypi.org/project/bento-cli/0.7.0/) - 2019-12-11
 
 ### Fixed
