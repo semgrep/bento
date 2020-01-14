@@ -36,6 +36,13 @@ def archive(
 
         $ bento check --comparison root
 
+    By default, `bento archive` will only archive findings in files modified since the last commit. To force
+    Bento to archive all findings in a path, call `bento check PATH`.
+
+    For example, to archive all findings on the project, run:
+
+        $ bento archive .
+
     Archived findings are saved in `.bento/archive.json`.
     """
     if not context.is_init:
