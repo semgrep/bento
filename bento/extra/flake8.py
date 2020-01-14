@@ -186,7 +186,11 @@ class Flake8Tool(PythonTool[str], StrTool):
         return f"--select={RULE_PREFIXES}"
 
     def run(self, paths: Iterable[str]) -> str:
-        cmd = f"""python "$(which flake8)" {self.select_clause()} --format=json '--exclude=.svn,CVS,.bzr,.hg,.git,__pycache__,.tox,.eggs,*.egg' """
-        env, args = PythonTool.sanitize_arguments(paths)
-        cmd += " ".join(args)
-        return self.venv_exec(cmd, env=env, check_output=False)
+        cmd = [
+            "flake8",
+            self.select_clause(),
+            "--format=json",
+            "--exclude=.svn,CVS,.bzr,.hg,.git,__pycache__,.tox,.eggs,*.egg",
+            *paths,
+        ]
+        return self.venv_exec(cmd, check_output=False)

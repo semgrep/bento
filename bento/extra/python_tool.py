@@ -1,24 +1,24 @@
 import json
 import logging
+import os
 import subprocess
 import venv
 from abc import abstractmethod
 from pathlib import Path
 from time import time
-from typing import Dict, Generic, Iterable, List, Tuple
+from typing import Dict, Generic, List
 
 from semantic_version import SimpleSpec, Version
 
 import bento.constants as constants
 from bento.base_context import BaseContext
 from bento.tool import R, Tool
-from bento.util import EMPTY_DICT
 
 
 class PythonTool(Generic[R], Tool[R]):
     # On most environments, just "pip" will point to the wrong Python installation
     # Fix by using the virtual environment's python
-    PIP_CMD = "python -m pip"
+    PIP_CMD = ["python", "-m", "pip"]
     PACKAGES: Dict[str, SimpleSpec] = {}
 
     @classmethod
@@ -56,21 +56,21 @@ class PythonTool(Generic[R], Tool[R]):
             except Exception:
                 venv.create(str(self.__venv_dir), with_pip=True)
 
-    def venv_exec(
-        self, cmd: str, env: Dict[str, str] = EMPTY_DICT, check_output: bool = True
-    ) -> str:
+    def venv_exec(self, cmd: List[str], check_output: bool = True) -> str:
         """
         Executes tool set-up or check within its virtual environment
         """
-        wrapped = f". '{self.__venv_dir}/bin/activate'; {cmd}"
-        logging.debug(f"{self.tool_id()}: Running '{wrapped}'")
+        logging.debug(f"{self.tool_id()}: Running '{cmd}'")
         before = time()
+        env = dict(os.environ)
+        env["VIRTUAL_ENV"] = str(self.__venv_dir)
+        env["PATH"] = f"{self.__venv_dir}/bin:" + env["PATH"]
+        if "PYTHONHOME" in env:
+            del env["PYTHONHOME"]
         v = subprocess.Popen(
-            wrapped,
-            shell=True,
+            cmd,
             cwd=str(self.base_path),
             encoding="utf8",
-            executable="/bin/bash",
             env=env,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
@@ -82,45 +82,9 @@ class PythonTool(Generic[R], Tool[R]):
         logging.debug(f"{self.tool_id()}: stdout[:4000]:\n" + stdout[0:4000])
         if check_output and v.returncode != 0:
             raise subprocess.CalledProcessError(
-                v.returncode, wrapped, output=stdout, stderr=stderr
+                v.returncode, cmd, output=stdout, stderr=stderr
             )
         return stdout
-
-    @staticmethod
-    def sanitize_arguments(
-        arguments: Iterable[str]
-    ) -> Tuple[Dict[str, str], List[str]]:
-        """
-        Sanitizes arguments to be passed into a shell execution.
-
-        Returns (env, args). 'env' should be passed directly to popen's env parameter, and args can
-        be included where desired in the command.
-
-        NOTE: In general, we should avoid shell execution altogether. This utility is provided as a
-        mechanism to prevent shell injection when such execution is unavoidable (e.g., when operating
-        within a Python virtual environment).
-
-        Example:
-            cmd = "echo "
-            bad_args = ['"foo"; rm -rf /']
-
-            # DON'T DO THIS:
-            # subprocess.run(f'{cmd} {" ".join(bad_args)}', shell=True)
-
-            # DO THIS:
-            env, clean_args = PythonTool.sanitize_arguments(bad_args)
-            subprocess.run(f'{cmd} {" ".join(clean_args)}', env=env, shell=True)
-
-        Returns:
-            (dict, str): An environment dictionary, and the new sanitized argument list
-        """
-        env = {}
-        args = []
-        for ix, a in enumerate(arguments):
-            var = f"SANITIZED_{ix}"
-            env[var] = a
-            args.append(f'"${var}"')
-        return env, args
 
     def _packages_installed(self) -> Dict[str, SimpleSpec]:
         """
@@ -130,7 +94,7 @@ class PythonTool(Generic[R], Tool[R]):
         """
         installed: Dict[str, Version] = {}
         for package in json.loads(
-            self.venv_exec(f"{PythonTool.PIP_CMD} list --format json")
+            self.venv_exec([*PythonTool.PIP_CMD, "list", "--format", "json"])
         ):
             try:
                 installed[package["name"]] = Version(package["version"])
@@ -152,5 +116,6 @@ class PythonTool(Generic[R], Tool[R]):
 
         install_list = [f"{p}{s.expression}" for p, s in to_install.items()]
         logging.info(f"Installing Python packages: {', '.join(install_list)}")
-        cmd = f"{PythonTool.PIP_CMD} install -q {' '.join(install_list)}"
-        self.venv_exec(cmd, check_output=True)
+        self.venv_exec(
+            [*PythonTool.PIP_CMD, "install", "-q", *install_list], check_output=True
+        )
