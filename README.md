@@ -90,25 +90,23 @@ For Bento 0.8+ no Bento files need to be tracked with Git unless you’re using 
 ### Command Line Options
 ```
 $ bento --help
-
 Usage: bento [OPTIONS] COMMAND [ARGS]...
 
 Options:
   -h, --help             Show this message and exit.
-  --version              Show current version bento.
+  --version              Show the version and exit.
   --base-path DIRECTORY  Path to the directory containing the code, as well as
-                         the .bento.yml file.
+                         the config.yml file.
   --agree                Automatically agree to terms of service.
   --email TEXT           Email address to use while running this command
                          without global configs e.g. in CI
 
 Commands:
-  archive       Adds all current findings to the whitelist.
-  check         Checks for new findings.
-  disable       Turn OFF a tool or check.
-  enable        Turn ON a tool or check.
-  init          Autodetects and installs tools.
-  install-hook  Installs Bento as a git pre-commit hook.
+  archive  Suppress current findings.
+  check    Checks for new findings.
+  disable  Turn OFF a Bento feature for this project.
+  enable   Turn ON a Bento feature for this project.
+  init     Autodetects and installs tools.
 
   To get help for a specific command, run `bento COMMAND --help`
 ```
