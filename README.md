@@ -133,7 +133,7 @@ Initialization enables `autorun` behind the scenes, which can be can be enabled 
 $ bento [enable|disable] autorun
 ```
 
-`autorun` is commit blocking by default. To make it non-blocking:
+By default `autorun` blocks the commit if Bento returns results. To make it non-blocking:
 
 ```bash
 $ bento enable autorun --no-block
