@@ -9,7 +9,7 @@ from typing import Any, Iterator, List, Optional
 import click
 from pre_commit.git import zsplit
 from pre_commit.staged_files_only import staged_files_only
-from pre_commit.util import cmd_output, noop_context
+from pre_commit.util import CalledProcessError, cmd_output, noop_context
 
 import bento.git
 from bento.context import Context
@@ -167,7 +167,24 @@ def head_context() -> Iterator[None]:
                 cmd_output("git", "checkout", "HEAD", "--", ".")
                 yield
             finally:
-                cmd_output("git", "checkout", tree.strip(), "--", ".")
+                # git checkout will fail if the checked-out index deletes all files in the repo
+                # In this case, we still want to continue without error.
+                # Note that we have no good way of detecting this issue without inspecting the checkout output
+                # message, which means we are fragile with respect to git version here.
+                try:
+                    cmd_output("git", "checkout", tree.strip(), "--", ".")
+                except CalledProcessError as ex:
+                    if (
+                        ex.output
+                        and len(ex.output) >= 2
+                        and ex.output[1].strip()
+                        == "error: pathspec '.' did not match any file(s) known to git"
+                    ):
+                        logging.warning(
+                            "Restoring git index failed due to total repository deletion; skipping checkout"
+                        )
+                    else:
+                        raise ex
                 if removed:
                     cmd_output("git", "rm", *removed)
 
@@ -233,7 +250,7 @@ def run_context(
     with stash_context:
         # TODO: Avoid recalculation of file ignores unless absolutely necessary
         # This is an ugly hack to make bento work if a file is deleted on filesystem
-        if staged:
+        if staged or comparison == Comparison.HEAD and run_step == RunStep.CHECK:
             with context._ignore_lock:
                 context._ignores = None  # type: ignore
         filtered = context.file_ignores.filter_paths(paths)
