@@ -78,7 +78,9 @@ Run the following commands to upgrade Bento:
 ```bash
 $ pip3 install --upgrade bento-cli
 $ cd <PROJECT DIRECTORY>
-$ rm -r ~/.bento .bento* && bento init
+# Use `git rm` and `git commit` if you previously added Bento files to source control:
+$ rm -r .bento*
+$ bento init
 ```
 
 The last line removes all Bento artifacts as their formats have not yet stabalized between releases, including the Bento archive.
