@@ -14,7 +14,7 @@ from pre_commit.util import cmd_output, noop_context
 import bento.git
 from bento.context import Context
 from bento.tool_runner import Comparison, Runner, RunStep
-from bento.util import AutocompleteSuggestions, echo_error
+from bento.util import AutocompleteSuggestions, Colors, echo_error, echo_newline
 
 PATCH_CACHE = str(Path.home() / ".cache" / "bento" / "patches")
 
@@ -102,6 +102,37 @@ def git_status() -> GitStatus:
     return GitStatus(added, removed, unmerged)
 
 
+def _abort_if_untracked_and_removed(removed: List[str]) -> None:
+    """
+    Aborts execution if any path is removed from the git index but also appears
+    in the filesystem.
+
+    :param removed (list): Removed paths
+    :raises SystemExit: If any removed paths are present on filesystem
+    """
+    untracked_removed = [r.replace(" ", r"\ ") for r in removed if Path(r).exists()]
+    if untracked_removed:
+        joined = " ".join(untracked_removed)
+
+        def echo_cmd(cmd: str) -> None:
+            click.echo(f"    $ {click.style(cmd, bold=True)}\n", err=True)
+
+        echo_error(
+            "One or more files deleted from git exist on the filesystem. Aborting to prevent data loss. To "
+            "continue, please stash by running the following two commands:"
+        )
+        echo_newline()
+        echo_cmd(f"git stash -u -- {joined}")
+        echo_cmd(f"git rm {joined}")
+        click.secho(
+            "Stashed changes can later be recovered by running:\n",
+            err=True,
+            fg=Colors.ERROR,
+        )
+        echo_cmd(f"git stash pop")
+        sys.exit(3)
+
+
 @contextmanager
 def head_context() -> Iterator[None]:
     """
@@ -129,6 +160,7 @@ def head_context() -> Iterator[None]:
 
         with staged_files_only(PATCH_CACHE):
             tree = cmd_output("git", "write-tree")[1].strip()
+            _abort_if_untracked_and_removed(removed)
             try:
                 for a in added:
                     Path(a).unlink()
