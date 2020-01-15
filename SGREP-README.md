@@ -42,7 +42,7 @@ $ bento enable tool sgrep
 You can run sgrep independently with the following command:
 
 ```
-$ bento check -t sgrep
+$ bento check -t sgrep .
 ```
 
 
