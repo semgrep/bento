@@ -133,6 +133,12 @@ Initialization enables `autorun` behind the scenes, which can be can be enabled 
 $ bento [enable|disable] autorun
 ```
 
+`autorun` is commit blocking by default. To make it non-blocking:
+
+```bash
+$ bento enable autorun --no-block
+```
+
 This feature makes use of Git hooks. If the Bento hook incorrectly blocks your commit, you can skip it by passing the `--no-verify` flag to Git at commit-time (please use this sparingly since all hooks will be skipped):
 
 ```bash
