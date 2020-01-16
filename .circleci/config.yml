@@ -113,7 +113,7 @@ jobs:
           command: (cd tests/integration/react && npm install)
       - run:
           name: "Running bento check"
-          command: pipenv run bento --agree --email test@returntocorp.com check --no-pager 2>&1 | cat
+          command: pipenv run bento --agree --email=test@returntocorp.com check --comparison=archive . 2>&1 | cat
       - store_artifacts:
           path: "/home/circleci/.bento/last.log"
 
