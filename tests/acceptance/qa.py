@@ -4,7 +4,7 @@ import subprocess
 import sys
 import tempfile
 from pathlib import Path
-from typing import Any, Callable, Mapping, Optional
+from typing import Any, Callable, List, Mapping, Optional
 
 import yaml
 
@@ -19,7 +19,7 @@ ALL_TESTS = [
 
 BENTO_REPO_ROOT = str(Path(__file__).parent.parent.parent.resolve())
 DYNAMIC_SECONDS = re.compile(r"([\s\S]* \d+ finding.?s.? in )\d+\.\d+( s[\s\S]*)")
-DETACHED_HEAD = re.compile(r"\[(detached HEAD|master) ([0-9a-f]+)\]")
+BRANCH_COMMIT = re.compile(r"^\[(\w+) ([0-9a-f]+)\]")
 
 PIPE_OUTPUT: Mapping[str, Callable[[subprocess.CompletedProcess], str]] = {
     "expected_out": lambda r: r.stdout,
@@ -45,7 +45,7 @@ def remove_timing_seconds(string: str) -> str:
 
 
 def remove_commit_hash(string: str) -> str:
-    return re.sub(DETACHED_HEAD, r"[\1 ]", string)
+    return re.sub(BRANCH_COMMIT, r"[\1 ]", string)
 
 
 def match_expected(output: str, expected: str) -> bool:
@@ -133,6 +133,12 @@ def check_command(step: Any, pwd: str, target: str, rewrite: bool) -> None:
                 ), f"{test_identifier}: {pipe}"
 
 
+def expand_include(step: Mapping[str, Any]) -> List[Mapping[str, Any]]:
+    include = step["include"]
+    with open(f"tests/acceptance/{include}") as file:
+        return yaml.safe_load(file)
+
+
 def run_repo(
     target: str, pre: Optional[Callable[[Path], None]] = None, rewrite: bool = False
 ) -> None:
@@ -148,6 +154,7 @@ def run_repo(
     target_repo = info.get("target_repo")
     target_hash = info.get("target_hash")
     steps = info["steps"]
+    steps = [i for s in steps for i in (expand_include(s) if "include" in s else [s])]
 
     with tempfile.TemporaryDirectory() as target_dir:
 
