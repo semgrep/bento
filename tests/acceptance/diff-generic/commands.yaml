@@ -1,0 +1,114 @@
+steps:
+  - name: init
+    description: initialize a git repo
+    command:
+      - bash
+      - -c
+      - git init && git config user.email test@r2c.dev && git config user.name Test
+  - name: base commit
+    description: create a root git commit
+    command:
+      - bash
+      - -c
+      - echo "x = y" > foo.py && git add foo.py && git commit -m base && git checkout -b master
+  - name: create branch
+    description: create test branch
+    command: git branch test-a
+  - name: bento register
+    description: fake bento registration
+    command:
+      - bash
+      - -c
+      - 'if [[ ! -e ~/.bento/config.yml ]]; then mkdir -p ~/.bento && echo -e "email: test@r2c.dev\nterms_of_service: 0.3.0" > ~/.bento/config.yml; fi'
+  - name: bento init
+    description: initialize bento
+    command: bento --agree --email test@r2c.dev init
+    returncode: 0
+    expected_out: null
+    expected_err: bento-init.err
+  #
+  # CHANGES TO INDEX ONLY
+  #
+  # diff addition, no staged
+  # fails check, commits nothing
+  - name: diff add
+    description: create a new file with findings
+    command:
+      - bash
+      - -c
+      - echo "y = z" > bar.py
+  - name: check diff add
+    description: bento check with a new file with findings
+    command: bento check
+    returncode: 0
+    expected_out: null
+    expected_err: check-diff-add.err
+  - name: commit diff add
+    description: attempt to commit nothing
+    command: git commit -m foo
+    returncode: 1
+    expected_out: commit-diff-add.out
+    expected_err: commit-diff-add.err
+  - name: status diff add
+    description: ensure git status shows untracked file
+    command: git status --porcelain -uno
+    returncode: 0
+    expected_out: null
+  - name: reset diff add
+    description: restore filesystem
+    command: rm bar.py
+  #
+  # diff modification, no staged
+  # fails check, commits nothing
+  - name: diff modify
+    description: modify file
+    command:
+      - bash
+      - -c
+      - echo "x = z" > foo.py
+  - name: check diff modify
+    description: bento check with a modified file with findings
+    command: bento check
+    returncode: 2
+    expected_out: check-diff-modify.out
+    expected_err: check-diff-modify.err
+  - name: commit diff modify
+    description: attempt to commit nothing
+    command: git commit -m foo
+    returncode: 1
+    expected_out: commit-diff-modify.out
+    expected_err: commit-diff-modify.err
+  - name: status diff modify
+    description: ensure git status shows modified file
+    command: git status --porcelain -uno
+    returncode: 0
+    expected_out: status-diff-modify.out
+  - name: reset diff modify
+    description: restore git index
+    command: git reset --hard
+    #
+    # diff deletion, no staged
+    # passes check, commits nothing
+  - name: diff delete
+    description: delete file
+    command: rm foo.py
+  - name: check diff delete
+    description: bento check with a deleted file with findings
+    command: bento check
+    returncode: 0
+    expected_out: null
+    expected_err: check-diff-delete.err
+  - name: status diff delete
+    description: ensure git status shows deleted file
+    command: git status --porcelain -uno
+    returncode: 0
+    expected_out: status-diff-delete.out
+  - name: commit diff delete
+    description: attempt to commit a deletion with findings
+    command: git commit -m foo
+    returncode: 1
+    expected_out: commit-diff-delete.out
+    expected_err: commit-diff-delete.err
+  - name: reset diff delete
+    description: restore git index
+    command: git reset --hard

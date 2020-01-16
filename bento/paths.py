@@ -177,8 +177,8 @@ def head_context() -> Iterator[None]:
                     if (
                         ex.output
                         and len(ex.output) >= 2
-                        and ex.output[1].strip()
-                        == "error: pathspec '.' did not match any file(s) known to git"
+                        and "pathspec '.' did not match any file(s) known to git"
+                        in ex.output[1].strip()
                     ):
                         logging.warning(
                             "Restoring git index failed due to total repository deletion; skipping checkout"

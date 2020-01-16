@@ -1,0 +1,7 @@
+Running Bento checks...
+
+⚠ No staged files to check.
+◦ To check unstaged diffs, run $ bento check.
+◦ To check a specific path, run $ bento check PATH.
+
+✔ 0 findings in  s

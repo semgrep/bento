@@ -1,0 +1,15 @@
+Running Bento checks...
+
+flake8 undefined-name https://lintlyci.github.io/Flake8Rules/rules/F821.html
+     > bar.py:1
+     ╷
+    1│   y = z
+     ╵
+     = undefined name 'z'
+
+⚠ 1 finding(s) in  s
+
+Please fix these issues, or:
+
+◦ To archive findings as tech debt, run $ bento archive --staged.
+◦ To disable a specific check, run $ bento disable check TOOL CHECK.
