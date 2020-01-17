@@ -149,7 +149,7 @@ class Context(BaseContext):
         Returns this project's configured formatter
         """
         if "formatter" not in self.config:
-            return [bento.formatter.stylish.Stylish()]
+            return [bento.formatter.stylish.Stylish(self, {})]
         else:
             FormatterConfig = Dict[str, Any]
             FormatterSpec = Tuple[str, FormatterConfig]
@@ -165,4 +165,4 @@ class Context(BaseContext):
             else:
                 it = (next(iter(f.items())) for f in cfg)
 
-            return [bento.formatter.for_name(f_class, cfg) for f_class, cfg in it]
+            return [bento.formatter.for_name(f_class, self, cfg) for f_class, cfg in it]

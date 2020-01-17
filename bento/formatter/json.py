@@ -1,5 +1,5 @@
 import json
-from typing import Collection
+from typing import Any, Collection, Mapping, Sequence
 
 from bento.formatter.base import FindingsMap, Formatter
 
@@ -7,8 +7,9 @@ from bento.formatter.base import FindingsMap, Formatter
 class Json(Formatter):
     """Formats output as a single JSON blob."""
 
-    def dump(self, findings: FindingsMap) -> Collection[str]:
-        json_obj = [
+    @staticmethod
+    def to_py(findings: FindingsMap) -> Sequence[Mapping[str, Any]]:
+        return [
             {
                 "tool_id": violation.tool_id,
                 "check_id": violation.check_id,
@@ -21,4 +22,6 @@ class Json(Formatter):
             for violations in findings.values()
             for violation in violations
         ]
-        return [json.dumps(json_obj)]
+
+    def dump(self, findings: FindingsMap) -> Collection[str]:
+        return [json.dumps(self.to_py(findings))]

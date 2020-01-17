@@ -1,6 +1,7 @@
 import json
 
 import bento.formatter
+from bento.base_context import BaseContext
 from bento.violation import Violation
 from tests.util import strip_ansi
 
@@ -32,8 +33,11 @@ VIOLATIONS = {
 }
 
 
+NULL_CONTEXT = BaseContext()
+
+
 def test_stylish_formatter() -> None:
-    stylish = bento.formatter.for_name("stylish", {})
+    stylish = bento.formatter.for_name("stylish", NULL_CONTEXT, {})
     output = [strip_ansi(line) for line in stylish.dump(VIOLATIONS)]
     expectation = [
         "bento/test/integration/init.js",
@@ -46,7 +50,7 @@ def test_stylish_formatter() -> None:
 
 
 def test_clippy_formatter() -> None:
-    clippy = bento.formatter.for_name("clippy", {})
+    clippy = bento.formatter.for_name("clippy", NULL_CONTEXT, {})
     output = [strip_ansi(line) for line in clippy.dump(VIOLATIONS)]
     expectation = [
         "r2c.eslint semi https://eslint.org/docs/rules/semi",
@@ -69,7 +73,7 @@ def test_clippy_formatter() -> None:
 
 
 def test_json_formatter() -> None:
-    json_formatter = bento.formatter.for_name("json", {})
+    json_formatter = bento.formatter.for_name("json", NULL_CONTEXT, {})
     json_formatter.config = {}
     output = json.loads(next(iter(json_formatter.dump(VIOLATIONS))))
     assert output == [
@@ -100,7 +104,7 @@ def test_histo_formatter() -> None:
   semi           1▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
 """
 
-    histo_formatter = bento.formatter.for_name("histo", {})
+    histo_formatter = bento.formatter.for_name("histo", NULL_CONTEXT, {})
     output = "\n".join(histo_formatter.dump(VIOLATIONS))
 
     assert strip_ansi(output) == expectation
