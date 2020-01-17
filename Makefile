@@ -1,15 +1,14 @@
 .PHONY: build
 build:
-	PIPENV_IGNORE_VIRTUALENVS=1 pipenv run pipenv_to_requirements
-	pipenv run pip3 install -e .
+	poetry install
 
 .PHONY: test
 test:
-	pipenv run pytest
+	poetry run pytest
 
 .PHONY: qa-test
 qa-test: build
-	pipenv run pytest -s tests/acceptance/qa.py
+	poetry run pytest -s tests/acceptance/qa.py
 
 .PHONY: env-test
 env-test:
@@ -18,15 +17,14 @@ env-test:
 
 .PHONY: clean
 clean:
-	rm -rf *.egg-info dist build
+	rm -rf dist
 
 .PHONY: package
 package:
 	@echo "Building Bento"
-	PIPENV_IGNORE_VIRTUALENVS=1 pipenv run pipenv_to_requirements
-	python3 setup.py sdist bdist_wheel
+	poetry build
 
 .PHONY: release
 release: package
 	@echo "Releasing Bento"
-	python3 -m twine upload dist/*
+	poetry publish

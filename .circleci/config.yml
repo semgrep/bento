@@ -8,24 +8,24 @@ jobs:
       - setup_remote_docker
       - run:
           name: "Generate cache seeds"
-          command: find . -name Pipfile.lock | sort | xargs md5sum > /tmp/checksums
+          command: find . -name poetry.lock | sort | xargs md5sum > /tmp/checksums
       - restore_cache:
-          key: deps-2-{{ checksum "/tmp/checksums" }}
+          key: deps-3-{{ checksum "/tmp/checksums" }}
       - run:
           command: pwd && ls
       - run:
           name: "Install deps"
-          command: pip3 --no-cache install pipenv && pipenv install --dev --deploy
+          command: pip install --user poetry==1.0.0 && poetry install
       - save_cache:
-          key: deps-2-{{ checksum "/tmp/checksums" }}
+          key: deps-3-{{ checksum "/tmp/checksums" }}
           paths:
-            - "/root/.local/share/virtualenvs"
+            - "/root/.cache/pypoetry/virtualenvs"
       - run:
           name: "PyTest"
           command: |
-            PYTHONPATH=. pipenv run coverage run --source . -m pytest -vv
-            PYTHONPATH=. pipenv run coverage report
-            PYTHONPATH=. pipenv run coverage html
+            poetry run coverage run --source . -m pytest -vv
+            poetry run coverage report
+            poetry run coverage html
       - store_test_results:
           path: test-reports
           prefix: tests
@@ -47,19 +47,19 @@ jobs:
       - checkout
       - run:
           name: "Generate cache seeds"
-          command: find . -name Pipfile.lock | sort | xargs md5sum > /tmp/checksums
+          command: find . -name poetry.lock | sort | xargs md5sum > /tmp/checksums
       - restore_cache:
-          key: deps-2-{{ checksum "/tmp/checksums" }}
+          key: deps-3-{{ checksum "/tmp/checksums" }}
       - run:
           name: "Install deps"
-          command: pip3 --no-cache install pipenv && pipenv install --dev --deploy
+          command: pip install --user poetry==1.0.0 && poetry install
       - save_cache:
-          key: deps-2-{{ checksum "/tmp/checksums" }}
+          key: deps-3-{{ checksum "/tmp/checksums" }}
           paths:
             - "/root/.local/share/virtualenvs"
       - run:
           name: "mypy"
-          command: pipenv run mypy bento
+          command: poetry run mypy bento
       - store_test_results:
           path: test-reports
           prefix: tests
@@ -73,16 +73,16 @@ jobs:
       - setup_remote_docker
       - run:
           name: "Generate cache seeds"
-          command: find . -name Pipfile.lock | sort | xargs md5sum > /tmp/checksums
+          command: find . -name poetry.lock | sort | xargs md5sum > /tmp/checksums
       - restore_cache:
-          key: deps-2-{{ checksum "/tmp/checksums" }}
+          key: deps-3-{{ checksum "/tmp/checksums" }}
       - run:
           name: "Install deps"
-          command: pip3 --no-cache install pipenv && pipenv install --dev --deploy
+          command: pip install --user poetry==1.0.0 && poetry install
       - save_cache:
-          key: deps-2-{{ checksum "/tmp/checksums" }}
+          key: deps-3-{{ checksum "/tmp/checksums" }}
           paths:
-            - "/root/.local/share/virtualenvs"
+            - "/root/.cache/pypoetry/virtualenvs/virtualenvs"
       - run:
           name: "QA Tests"
           command: make qa-test
@@ -104,16 +104,16 @@ jobs:
       - checkout
       - run:
           name: "Configure pipenv"
-          command: pipenv install --dev
+          command: pip install --user poetry==1.0.0 && poetry install
       - run:
           name: "Make bento"
-          command: pipenv run make -B build && pipenv run bento --version --agree
+          command: poetry run make -B build && poetry run bento --version --agree
       - run:
           name: "Install react"
           command: (cd tests/integration/react && npm install)
       - run:
           name: "Running bento check"
-          command: pipenv run bento --agree --email=test@returntocorp.com check --comparison=archive . 2>&1 | cat
+          command: poetry run bento --agree --email=test@returntocorp.com check --comparison=archive . 2>&1 | cat
       - store_artifacts:
           path: "/home/circleci/.bento/last.log"
 
