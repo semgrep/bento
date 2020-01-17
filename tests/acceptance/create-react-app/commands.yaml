@@ -36,6 +36,17 @@ steps:
     expected_err: null
     expected_out: null
     returncode: 0
+  - name: bento-enable-eslint
+    description: enable eslint tool
+    command:
+      - bento
+      - --agree
+      - enable
+      - tool
+      - eslint
+    expected_err: enable-eslint.err
+    expected_out: null
+    returncode: 0
   - name: bento-check-with-init
     description: bento check after init has findings
     command:
