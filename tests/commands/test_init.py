@@ -140,14 +140,14 @@ def test_init_clean(tmp_path: Path) -> None:
 
         # Ensure venv is created
         CliRunner(mix_stderr=False).invoke(
-            check, obj=context, args=["--comparison", "root", str(context.base_path)]
+            check, obj=context, args=["--comparison", "archive", str(context.base_path)]
         )
         assert venv_file.exists()
 
         # Ensure venv is corrupted, and not fixed with standard check
         venv_file.unlink()
         CliRunner(mix_stderr=False).invoke(
-            check, obj=context, args=["--comparison", "root", str(context.base_path)]
+            check, obj=context, args=["--comparison", "archive", str(context.base_path)]
         )
         assert not venv_file.exists()
 

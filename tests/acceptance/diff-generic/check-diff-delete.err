@@ -1,6 +1,7 @@
-Running Bento checks...
+Running Bento checks on changes since last commit...
 
 ⚠ Nothing to check. By default, Bento only analyzes tracked files with diffs.
-◦ To check a specific path, run $ bento check PATH.
+◦ To check a specific path, run $ bento check PATH
 
 ✔ 0 findings in  s
+◦ To show all findings in the project, run $ bento check --comparison=archive .

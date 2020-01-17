@@ -26,9 +26,13 @@ from bento.violation import Violation
 
 OVERRUN_PAGES = 3
 COMPARISONS = {
-    Comparison.ROOT: "Shows all findings",
-    Comparison.ARCHIVE: "Hides archived findings",
-    Comparison.HEAD: "Hides all findings already in git",
+    Comparison.ARCHIVE: "Show all unarchived findings",
+    Comparison.HEAD: "Show new findings since last commit",
+}
+
+COMPARISON_PREAMBLE_TEXT = {
+    Comparison.ARCHIVE: "Running Bento checks",
+    Comparison.HEAD: "Running Bento checks on changes since last commit",
 }
 
 
@@ -113,9 +117,8 @@ def _calculate_baseline(
 )
 @click.option(
     "--comparison",
-    help="Define a comparison point. Only new findings introduced since this point will be shown: Use 'root' to show "
-    "all findings. Use 'archive' to show all unarchived findings. Use 'head' to show only findings since the last "
-    "git commit.",
+    help="Define a comparison point. Only new findings introduced since this point will be shown: Use 'archive' to "
+    "show all unarchived findings. Use 'head' (default) to show only findings since the last git commit.",
     type=click.Choice(COMPARISONS.keys()),
     default=Comparison.HEAD,
 )
@@ -149,7 +152,7 @@ def check(
     Checks for new findings.
 
     By default, only findings introduced since the last commit will be shown.
-    Use `--comparison root` to show all findings.
+    Use `--comparison=archive .` to show all unarchived findings.
 
     By default, `bento check` will analyze files modified since the last commit. To force
     Bento to analyze a path, call `bento check PATH`.
@@ -178,7 +181,7 @@ def check(
     fmts = context.formatters
     findings_to_log: List[Any] = []
 
-    click.echo("Running Bento checks...\n", err=True)
+    click.echo(f"{COMPARISON_PREAMBLE_TEXT[comparison]}...\n", err=True)
 
     tools: Iterable[Tool[Any]] = context.tools.values()
     if tool:
@@ -259,8 +262,10 @@ You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PA
     bento.util.less(dumped, pager=pager, overrun_pages=OVERRUN_PAGES)
     context.stop_user_timer()
 
+    in_suffix = "" if (comparison == Comparison.HEAD) else "since last commit "
+
     if n_all_filtered > 0:
-        echo_warning(f"{n_all_filtered} finding(s) in {elapsed:.2f} s")
+        echo_warning(f"{n_all_filtered} finding(s) {in_suffix}in {elapsed:.2f} s")
         click.secho("\nPlease fix these issues, or:\n", err=True)
         staged_text = " --staged" if staged else ""
         echo_next_step(
@@ -268,13 +273,17 @@ You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PA
         )
         echo_next_step("To disable a specific check", f"bento disable check TOOL CHECK")
     else:
-        echo_success(f"0 findings in {elapsed:.2f} s\n")
+        echo_success(f"0 findings {in_suffix}in {elapsed:.2f} s\n")
 
     n_archived = n_all - n_all_filtered
     if n_archived > 0 and comparison == Comparison.ARCHIVE:
         echo_next_step(
             f"Not showing {n_archived} archived finding(s). To view",
-            f"bento check --comparison {Comparison.ROOT}",
+            "cat .bento/archive.json",
+        )
+    if comparison == Comparison.HEAD:
+        echo_next_step(
+            "To show all findings in the project", "bento check --comparison=archive ."
         )
 
     if staged and not context.autorun_is_blocking:

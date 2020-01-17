@@ -32,18 +32,15 @@ def archive(
 
     By default, archived findings will not appear in `bento check` results, and will not block commits.
 
-    To view all findings, including archived findings, run:
-
-        $ bento check --comparison root
+    All archived findings are viewable in `.bento/archive.json`
 
     By default, `bento archive` will only archive findings in files modified since the last commit. To force
-    Bento to archive all findings in a path, call `bento check PATH`.
+    Bento to archive all findings in a path, call `bento archive PATH`.
 
     For example, to archive all findings on the project, run:
 
         $ bento archive .
 
-    Archived findings are saved in `.bento/archive.json`.
     """
     if not context.is_init:
         click.secho("Running Bento archive...\n" "", err=True)
@@ -112,4 +109,4 @@ def archive(
 
     if not context.is_init:
         echo_newline()
-        echo_next_step("To view archived results", "bento check --comparison root")
+        echo_next_step("To view archived results", "cat .bento/archive.json")

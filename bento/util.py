@@ -289,7 +289,7 @@ def echo_next_step(desc: str, cmd: str) -> None:
     :param desc: The step description
     :param cmd: The command that the user should run
     """
-    echo_styles("◦ ", style(f"{desc}, run $ ", dim=True), cmd, style(".", dim=True))
+    echo_styles("◦ ", style(f"{desc}, run $ ", dim=True), cmd)
 
 
 def echo_wrap(text: str, **kwargs: Any) -> None:

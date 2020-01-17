@@ -1,8 +1,8 @@
 Running Bento checks...
 
-⚠ 28 finding(s) in  s
+⚠ 28 finding(s) since last commit in  s
 
 Please fix these issues, or:
 
-◦ To archive findings as tech debt, run $ bento archive.
-◦ To disable a specific check, run $ bento disable check TOOL CHECK.
+◦ To archive findings as tech debt, run $ bento archive
+◦ To disable a specific check, run $ bento disable check TOOL CHECK

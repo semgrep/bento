@@ -68,21 +68,6 @@ def test_check_specified_paths(monkeypatch: MonkeyPatch) -> None:
     assert len(parsed) == 3
 
 
-def test_check_compare_to_root() -> None:
-    """Validates that check displays archived issues with --comparison root"""
-
-    runner = CliRunner(mix_stderr=False)
-    Context(SIMPLE).cache.wipe()
-
-    result = runner.invoke(
-        check,
-        ["--formatter", "json", "--comparison", "root", str(SIMPLE)],
-        obj=Context(base_path=SIMPLE),
-    )
-    parsed = json.loads(result.stdout)
-    assert len(parsed) == 5
-
-
 def test_check_compare_to_head_no_diffs() -> None:
     """Validates that check shows no issues with no diffs with --comparison head"""
 

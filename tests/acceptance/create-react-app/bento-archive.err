@@ -2,4 +2,4 @@ Running Bento archive...
 
 251 finding(s) were archived, and will be hidden in future Bento runs.
 
-◦ To view archived results, run $ bento check --comparison root.
+◦ To view archived results, run $ cat .bento/archive.json

@@ -1,7 +1,8 @@
-Running Bento checks...
+Running Bento checks on changes since last commit...
 
 ⚠ No staged files to check.
-◦ To check unstaged diffs, run $ bento check.
-◦ To check a specific path, run $ bento check PATH.
+◦ To check unstaged diffs, run $ bento check
+◦ To check a specific path, run $ bento check PATH
 
 ✔ 0 findings in  s
+◦ To show all findings in the project, run $ bento check --comparison=archive .
