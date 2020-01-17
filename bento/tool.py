@@ -95,6 +95,10 @@ class Tool(ABC, Generic[R]):
         """Returns a pattern that determines whether a terminal path should be run through this tool"""
         pass
 
+    @property
+    def shebang_pattern(self) -> Optional[Pattern]:
+        return None
+
     @abstractmethod
     def setup(self) -> None:
         """
@@ -146,6 +150,25 @@ class Tool(ABC, Generic[R]):
         )
         return any(file_matches)
 
+    def _file_contains_shebang_pattern(self, file_path: Path) -> bool:
+        """
+            Checks if the first line of file_path matches self.shebang_pattern.
+
+            Returns False if a "first line" does not make sense for file_path
+            i.e. file_path is a binary or is an empty file
+        """
+        assert self.shebang_pattern is not None
+
+        with open(file_path) as file:
+            try:
+                line: str = next(file)
+            except StopIteration:  # Empty file
+                return False
+            except UnicodeDecodeError:  # Binary file
+                return False
+
+        return self.shebang_pattern.match(line) is not None
+
     def filter_paths(self, paths: Iterable[Path]) -> Set[Path]:
         """
         Filters a list of paths to those that should be analyzed by this tool
@@ -153,6 +176,8 @@ class Tool(ABC, Generic[R]):
         In it's default behavior, this method:
           - Filters terminal paths (files) that match file_name_filter.
           - Filters non-terminal paths (directories) that include at least one matching path.
+          - If shebang_pattern is defined filters files that do not match file_name_filter but
+            said file's first line matches shebang_pattern
 
         Parameters:
             paths (list): List of candidate paths
@@ -160,15 +185,19 @@ class Tool(ABC, Generic[R]):
         Returns:
             A set of valid paths
         """
-
         abspaths = [os.path.abspath(p) for p in paths]
         to_run = {
             e.path
             for e in self.context.file_ignores.entries()
             if e.survives
-            and self.file_name_filter.match(e.path.name)
             and any(str(e.path).startswith(p) for p in abspaths)
             and e.dir_entry.is_file()
+            and (
+                self.file_name_filter.match(e.path.name)
+                or (
+                    self.shebang_pattern and self._file_contains_shebang_pattern(e.path)
+                )
+            )
         }
         return to_run
 
