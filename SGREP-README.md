@@ -72,6 +72,21 @@ Each rule object has these fields:
 |languages	|array<string>	|Languages the check is relevant for. Can be python or javascript.	|Y	|
 |severity	|string	|Case sensitive string equal to WARNING, ERROR, OK	|Y	|
 
+Rules can also span multiple lines:
+  
+```
+rules:
+  - id: double_goto_fail
+    pattern: | 
+       $(COND):
+           goto $FAIL
+           goto $FAIL
+    message: "The second goto is unconditional and will break out of the switch block"
+    languages: [c]
+    severity: WARNING
+```  
+
+
 ## Get in Touch!
 
 Have suggestions, feature requests, or bug reports? Send us a note at [support@r2c.dev](mailto:support@r2c.dev). You can also [file an issue](https://github.com/returntocorp/bento/issues/new?assignees=&labels=bug&template=bug_report.md&title=), [submit a feature request](https://github.com/returntocorp/bento/issues/new?assignees=&labels=feature-request&template=feature_request.md&title=), or [join our community Slack](https://join.slack.com/t/r2c-community/shared_invite/enQtNjU0NDYzMjAwODY4LWE3NTg1MGNhYTAwMzk5ZGRhMjQ2MzVhNGJiZjI1ZWQ0NjQ2YWI4ZGY3OGViMGJjNzA4ODQ3MjEzOWExNjZlNTA).
