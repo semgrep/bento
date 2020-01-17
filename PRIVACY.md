@@ -123,7 +123,7 @@ The following is a sample of the results data we collect:
 | duration | How long the command took to run | Understanding performance issues
 | is_ci | A boolean determining whether Bento was running in CI | Understanding if Bento is adopted in CI pipeline or is used locally
 | ua	| user agent| 	Reserved for future Bento variants
-| client_ip	| IP address	| We record IP addresses to understand 
+| client_ip	| IP address	| Provide timely support based on timezones and understand geographic difference in use
 | tool	| The underlying tool whose results a telemetry event contains [r2c.eslint, r2c.flake8]| 	Improving underlying OSS tools and excluding unwanted checks
 | timestamp| 	Time when the event fired	| Understanding tool usage over time
 | repository	| SHA256 hash of the repository name| 	Understanding if results we're receiving are associated with the same codebase
