@@ -3,7 +3,7 @@ import logging
 import os
 import re
 import subprocess
-from typing import Any, Dict, Iterable, List, Pattern, Type
+from typing import Any, Dict, Iterable, List, Optional, Pattern, Type
 
 from semantic_version import Version
 
@@ -83,6 +83,11 @@ class ShellcheckTool(JsonTool):
     FILE_NAME_FILTER = re.compile(r".*\.(sh|bash|ksh|dash)")
     CONTAINER_NAME = "bento-shell-check-daemon"
     TOOL_ID = "shellcheck"
+    SHEBANG_PATTERN = re.compile(r"^#!(.*/|.*env +)(sh|bash|ksh)")
+
+    @property
+    def shebang_pattern(self) -> Optional[Pattern]:
+        return self.SHEBANG_PATTERN
 
     @property
     def parser_type(self) -> Type[Parser]:
