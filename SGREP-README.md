@@ -31,16 +31,16 @@ $ bento init
 
 ## Usage in Bento
 
-[Bento](http://bento.dev/) has a suite of tools and checks it runs by default: **sgrep is not currently enabled by default**. You can run sgrep independently with the following command:
+[Bento](http://bento.dev/) has a suite of tools and checks it runs by default: **sgrep is not currently enabled by default**. To enable it to run alongside of Bento’s default tools:
 
 ```
-$ bento check -t r2c.sgrep
+$ bento enable tool sgrep
 ```
 
-To enable it to run alongside of Bento’s default tools:
+You can run sgrep independently with the following command:
 
 ```
-$ bento enable tool r2c.sgrep
+$ bento check -t sgrep --comparison=archive .
 ```
 
 ## Writing Bento Checks
