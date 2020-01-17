@@ -187,7 +187,8 @@ class Flake8Tool(PythonTool[str], StrTool):
 
     def run(self, paths: Iterable[str]) -> str:
         cmd = [
-            "flake8",
+            "python",
+            str(self.venv_dir() / "bin" / "flake8"),
             self.select_clause(),
             "--format=json",
             "--exclude=.svn,CVS,.bzr,.hg,.git,__pycache__,.tox,.eggs,*.egg",

@@ -13,7 +13,7 @@ Creating default ignore file at .bentoignore․․․․․․․․․․․․
 Creating default configuration at .bento/config.yml․․․․․․․․․․․․․․ 🍜 Setting up🍱 Done
 Enabling autorun (see $ bento enable autorun --help)․․․․․․․․․․․․․ 🍜 Setting up🍱 Done
 
-Bento initialized for Shell
+Bento initialized for Python
 
 Installing tools:
 

@@ -1,4 +1,5 @@
 import json
+import logging
 import re
 import subprocess
 from typing import Any, Dict, Iterable, List, Pattern, Type
@@ -7,7 +8,7 @@ from bento.base_context import BaseContext
 from bento.extra.docker import DOCKER_INSTALLED, get_docker_client
 from bento.parser import Parser
 from bento.tool import StrTool
-from bento.util import echo_success, fetch_line_in_file
+from bento.util import fetch_line_in_file
 from bento.violation import Violation
 
 
@@ -91,7 +92,7 @@ class HadolintTool(StrTool):
 
         if not any(i for i in client.images.list() if self.DOCKER_IMAGE in i.tags):
             client.images.pull(self.DOCKER_IMAGE)
-            echo_success(f"Retrieved {self.TOOL_ID} Container")
+            logging.info(f"Retrieved {self.TOOL_ID} Container")
 
     def run(self, files: Iterable[str]) -> str:
         outputs: List[Dict[str, Any]] = []
@@ -116,5 +117,5 @@ class HadolintTool(StrTool):
     @classmethod
     def matches_project(cls, context: BaseContext) -> bool:
         return DOCKER_INSTALLED.value and cls.project_has_extensions(
-            context, "Dockerfile", "dockerfile"
+            context, "*.Dockerfile", "*.dockerfile", "*/Dockerfile", "*/dockerfile"
         )

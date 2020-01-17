@@ -72,9 +72,22 @@ def with_metrics(f: _AnyCallable) -> _AnyCallable:
                 f"{command} completed in {elapsed}s with exit code {exit_code}"
             )
 
+        email = (
+            cli_context.email
+            if cli_context and cli_context.email
+            else bento.metrics.read_user_email()
+        )
+
         bento.network.post_metrics(
             bento.metrics.command_metric(
-                command, timestamp, kwargs, exit_code, elapsed, exc_name, user_duration
+                command,
+                email,
+                timestamp,
+                kwargs,
+                exit_code,
+                elapsed,
+                exc_name,
+                user_duration,
             )
         )
         if exit_code != 0:

@@ -236,5 +236,12 @@ class BanditTool(PythonTool[str], StrTool):
         return BanditTool.FILE_NAME_FILTER
 
     def run(self, paths: Iterable[str]) -> str:
-        cmd = ["bandit", "-f", "json", "-r", *paths]
+        cmd = [
+            "python",
+            str(self.venv_dir() / "bin" / "bandit"),
+            "-f",
+            "json",
+            "-r",
+            *paths,
+        ]
         return self.venv_exec(cmd, check_output=False)

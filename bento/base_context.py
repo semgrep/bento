@@ -1,7 +1,7 @@
 import logging
 from pathlib import Path
 from threading import Lock
-from typing import Any, Dict, Union
+from typing import Any, Dict, Optional, Union
 
 import attr
 import yaml
@@ -23,6 +23,7 @@ class BaseContext:
     # file. Tools will also be run from here.
     base_path: Path = attr.ib(converter=_clean_path)
     is_init = attr.ib(type=bool, default=False)
+    email = attr.ib(type=Optional[str], default=None)
     cache_path = attr.ib(type=Path, default=None)
     _config = attr.ib(type=Dict[str, Any], default=None)
     _resource_path = attr.ib(type=Path, default=None)

@@ -88,9 +88,12 @@ def _calculate_baseline(
         head_baseline, elapsed = _calculate_head_comparison(
             context, paths, staged, tools
         )
-        for tool_id, hashes in head_baseline.items():
-            hashes.update(baseline.get(tool_id) or set())
-        baseline = head_baseline
+        for t in tools:
+            tool_id = t.tool_id()
+            if tool_id not in baseline:
+                baseline[tool_id] = head_baseline.get(tool_id, set())
+            else:
+                baseline[tool_id].update(head_baseline.get(tool_id, set()))
 
     return baseline, elapsed
 
@@ -185,11 +188,13 @@ def check(
 
     with run_context(context, paths, comparison, staged, RunStep.CHECK) as runner:
         if len(runner.paths) == 0:
-            echo_warning(
-                "Nothing to check. By default, Bento only analyzes tracked files with diffs."
-            )
             if staged:
+                echo_warning("No staged files to check.")
                 echo_next_step("To check unstaged diffs", "bento check")
+            else:
+                echo_warning(
+                    f"Nothing to check. By default, Bento only analyzes tracked files with diffs."
+                )
             echo_next_step("To check a specific path", "bento check PATH")
             click.secho("", err=True)
             all_results: Collection[bento.tool_runner.RunResults] = []
