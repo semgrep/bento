@@ -12,7 +12,7 @@ from bento.fignore import FileIgnore
 
 
 @attr.s
-class RunCache(object):
+class RunCache:
     """
         Acts as a local cache for tool run output
 

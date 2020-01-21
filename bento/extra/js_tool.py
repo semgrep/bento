@@ -17,7 +17,7 @@ VersionDict = Dict[str, Version]
 
 
 @attr.s(auto_attribs=True)
-class NpmDeps(object):
+class NpmDeps:
     """Represents top-level npm package dependencies for a project"""
 
     main: Dict[str, NpmSpec]

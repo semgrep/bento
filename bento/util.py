@@ -375,7 +375,7 @@ def append_text_to_file(file: Path, text: str) -> None:
 
 
 # Taken from http://www.madhur.co.in/blog/2015/11/02/countdownlatch-python.html
-class CountDownLatch(object):
+class CountDownLatch:
     def __init__(self, count: int = 1):
         self.count = count
         self.lock = threading.Condition()

@@ -24,7 +24,7 @@ def _dim_filename(path: Union[Path, str]) -> str:
 
 
 @attr.s(auto_attribs=True)
-class InitCommand(object):
+class InitCommand:
     context: Context
 
     def _install_config_if_not_exists(self) -> bool:

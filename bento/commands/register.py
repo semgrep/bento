@@ -25,7 +25,7 @@ GLOBAL_GITIGNORE_PATTERN = ".bento/\n.bentoignore"
 
 
 @attr.s(auto_attribs=True)
-class Registrar(object):
+class Registrar:
     click_context: click.Context
     agree: bool
     is_first_run: bool = False

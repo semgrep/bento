@@ -19,7 +19,7 @@ COMMENT_START_REGEX = re.compile(r"(?P<ignore_pattern>.*?)(?:\s+|^)#.*")
 
 
 @attr.s
-class Entry(object):
+class Entry:
     path = attr.ib(type=Path)
     dir_entry = attr.ib(type=os.DirEntry)
     survives = attr.ib(type=bool)
@@ -129,7 +129,7 @@ class FileIgnore(Mapping[Path, Entry]):
 
 
 @attr.s(auto_attribs=True)
-class Parser(object):
+class Parser:
     r"""
     A parser for bentoignore syntax.
 
@@ -217,7 +217,7 @@ class Parser(object):
 
 
 @attr.s(auto_attribs=True)
-class Processor(object):
+class Processor:
     """
     A post-processor for parsed bentoignore files.
 
