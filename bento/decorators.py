@@ -20,7 +20,7 @@ def __log_exception(e: Exception) -> None:
     if isinstance(e, subprocess.CalledProcessError):
         cmd = e.cmd
         if isinstance(e.cmd, list):
-            cmd = " ".join(e.cmd)
+            cmd = " ".join([str(part) for part in e.cmd])
         echo_warning(f'Could not execute "{cmd}":\n{e.stderr}')
         logging.error(e.stdout)
         logging.error(e.stderr)
