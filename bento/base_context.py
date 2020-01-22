@@ -7,6 +7,7 @@ import attr
 import yaml
 
 import bento.constants as constants
+import bento.git
 from bento.fignore import FileIgnore, open_ignores
 from bento.run_cache import RunCache
 
@@ -37,10 +38,7 @@ class BaseContext:
 
         This starts at the current directory, then recurses upwards looking for
         a directory with the necessary config file. This function will not recurse
-        at or beyond the user's home directory.
-
-        The returned path is relative to the current working directory, so that
-        when printed in log messages and such it looks readable.
+        at or beyond the git project root or the user's home directory.
 
         If one isn't found, returns the current working directory. This
         behavior is so that you can construct a Context in a directory that
@@ -49,11 +47,20 @@ class BaseContext:
 
         """
         cwd = Path.cwd()
+
+        repo_root = None
+        repo_root_obj = bento.git.repo()
+        if repo_root_obj is not None:
+            repo_root = Path(repo_root_obj.working_tree_dir)
+
         for base_path in [cwd, *cwd.parents]:
             config_path = base_path / constants.RESOURCE_PATH
             if config_path == constants.GLOBAL_RESOURCE_PATH:  # Don't go past user home
                 break
             if (config_path / constants.CONFIG_FILE_NAME).is_file():
+                return base_path
+            # Stop at root of git repository
+            if base_path == repo_root:
                 return base_path
         return cwd
 
