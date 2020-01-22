@@ -1,7 +1,6 @@
 import logging
 import os
 import shutil
-import subprocess
 import sys
 from pathlib import Path
 from typing import Union
@@ -118,7 +117,7 @@ class InitCommand(object):
         content.InstallTools.install.echo()
         if clean:
             content.Clean.tools.echo()
-            subprocess.run(["rm", "-r", constants.VENV_PATH], check=True)
+            shutil.rmtree(constants.VENV_PATH, ignore_errors=True)
         runner = bento.tool_runner.Runner(paths=[], install_only=True, use_cache=False)
         tools = self.context.tools.values()
         runner.parallel_results(tools, {})
