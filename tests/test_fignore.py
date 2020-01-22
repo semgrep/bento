@@ -149,6 +149,7 @@ def test_ignores_from_ignore_file(monkeypatch: MonkeyPatch) -> None:
         "tests/integration/simple/package.json",
         "tests/integration/simple/bar.py",
         "tests/integration/simple/foo.py",
+        "tests/integration/simple/jinja-template.html",
     }
 
     rejects = {str(e.path) for e in fi.entries() if not e.survives}
