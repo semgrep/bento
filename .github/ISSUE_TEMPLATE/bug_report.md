@@ -24,5 +24,5 @@ assignees: ''
 
 ## Additional Context
 Bento version (run `bento --version`):
-Operation system (e.g. Ubuntu 18.04):
+Operating system (e.g., Ubuntu 18.04):
 Any other context that would help us reproduce or understand the issue: 
