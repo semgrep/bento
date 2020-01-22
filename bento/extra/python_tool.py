@@ -2,6 +2,7 @@ import json
 import logging
 import os
 import subprocess
+import sys
 import venv
 from abc import abstractmethod
 from pathlib import Path
@@ -17,8 +18,9 @@ from bento.tool import R, Tool
 
 class PythonTool(Generic[R], Tool[R]):
     # On most environments, just "pip" will point to the wrong Python installation
-    # Fix by using the virtual environment's python
-    PIP_CMD = ["python", "-m", "pip"]
+    # Fix by using the virtual environment's python3
+    # we hard code to python3
+    PIP_CMD = ["python3", "-m", "pip"]
     PACKAGES: Dict[str, SimpleSpec] = {}
 
     @classmethod
@@ -48,8 +50,9 @@ class PythonTool(Generic[R], Tool[R]):
             # but we probably have virtualenv in the path, so try that first.
             try:
                 # Don't litter stdout with virtualenv spam
+                # Create virtualenv using same version as currently running executable
                 subprocess.run(
-                    ["virtualenv", self.venv_dir()],
+                    ["virtualenv", f"--python={sys.executable}", self.venv_dir()],
                     stdout=subprocess.DEVNULL,
                     check=True,
                 )
