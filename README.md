@@ -131,7 +131,7 @@ Initialization enables `autorun` behind the scenes. By default `autorun` blocks 
 $ bento enable autorun --no-block
 ```
 
-You can always manually run Bento on files or directories with diffs (i.e. those that are listed via `git status`) via:
+You can always manually run Bento on files or directories with diffs (i.e. those that are listed using `git status`) via:
 
 ```bash
 $ bento check
