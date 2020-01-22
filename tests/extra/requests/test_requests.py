@@ -27,16 +27,40 @@ def test_run_flask_violations(tmp_path: Path) -> None:
     expectation = [
         Violation(
             tool_id="r2c.requests",
+            check_id="use-timeout",
+            path="bad.py",
+            line=3,
+            column=5,
+            message="requests will hang forever without a timeout. Consider adding a timeout (recommended 10 sec).",
+            severity=2,
+            syntactic_context="r = requests.get('http://MYURL.com', auth=('user', 'pass'))",
+            filtered=None,
+            link="https://checks.bento.dev/en/latest/flake8-requests/use-timeout",
+        ),
+        Violation(
+            tool_id="r2c.requests",
             check_id="no-auth-over-http",
             path="bad.py",
-            line=2,
+            line=3,
             column=5,
             message="auth is possibly used over http://, which could expose credentials. possible_urls: ['http://MYURL.com']",
             severity=2,
             syntactic_context="r = requests.get('http://MYURL.com', auth=('user', 'pass'))",
             filtered=None,
-            link="https://checks.bento.dev/en/latest/flake8-requests/r2c-requests-no-auth-over-http",
-        )
+            link="https://checks.bento.dev/en/latest/flake8-requests/no-auth-over-http",
+        ),
     ]
 
-    assert violations == expectation
+    violations_important_info = set(
+        map(
+            lambda viol: (viol.tool_id, viol.check_id, viol.line, viol.column),
+            violations,
+        )
+    )
+    expectation_important_info = set(
+        map(
+            lambda viol: (viol.tool_id, viol.check_id, viol.line, viol.column),
+            expectation,
+        )
+    )
+    assert violations_important_info == expectation_important_info
