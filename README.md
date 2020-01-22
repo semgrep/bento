@@ -143,6 +143,12 @@ This feature makes use of Git hooks. If the Bento hook incorrectly blocks your c
 $ git commit --no-verify
 ```
 
+We recommend using Bento on new code you're writing with autorun, but if you'd like to see findings Bento outputs on a directory in your project, run:
+
+```
+$ bento check --comparison=archive <directory>
+```
+
 ### Team Use
 #### Running Locally
 To setup Bento for all project contributors, add Bento’s configuration to Git (it’s ignored by default):
