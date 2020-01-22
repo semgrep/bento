@@ -125,16 +125,22 @@ Bento configures itself for personal use by default. This means that it:
 1. Automatically checks for issues introduced by your code, as you commit it
 2. Only affects you; it won’t change anything for other project contributors or modify Git state
 
-Initialization enables `autorun` behind the scenes, which can be can be enabled or disabled using:
-
-```bash
-$ bento [enable|disable] autorun
-```
-
-By default `autorun` blocks the commit if Bento returns results. To make it non-blocking:
+Initialization enables `autorun` behind the scenes. By default `autorun` blocks the commit if Bento returns results. To make it non-blocking:
 
 ```bash
 $ bento enable autorun --no-block
+```
+
+You can always manually run Bento on files or directories with diffs (i.e. those that are listed using `git status`) via:
+
+```bash
+$ bento check
+```
+
+This will show only new results since HEAD. To show all results that are not archived, use the `--comparison=archive` flag with an explicit path:
+
+```bash
+$ bento check --comparison=archive <PATH>
 ```
 
 This feature makes use of Git hooks. If the Bento hook incorrectly blocks your commit, you can skip it by passing the `--no-verify` flag to Git at commit-time (please use this sparingly since all hooks will be skipped):
