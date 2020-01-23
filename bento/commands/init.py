@@ -16,6 +16,7 @@ import bento.tool_runner
 from bento.commands.autorun import install_autorun
 from bento.context import Context
 from bento.decorators import with_metrics
+from bento.util import echo_error
 
 
 def _dim_filename(path: Union[Path, str]) -> str:
@@ -122,6 +123,14 @@ class InitCommand(object):
         tools = self.context.tools.values()
         runner.parallel_results(tools, {})
 
+    def _identify_git(self) -> None:
+        repo = bento.git.repo(self.context.base_path)
+        if repo is None:
+            echo_error(
+                "Current directory is not part of a Git project. Bento only works for Git projects."
+            )
+            sys.exit(3)
+
     def _identify_project(self) -> None:
         """Identifies this project"""
         tools = self.context.tools.values()
@@ -150,6 +159,8 @@ class InitCommand(object):
 
         self.context.resource_path.mkdir(exist_ok=True)
         is_first_init = not self.context.config_path.exists()
+        # Perform git identification
+        self._identify_git()
 
         # Perform configuration
         self._install_ignore_if_not_exists()
