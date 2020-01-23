@@ -25,7 +25,7 @@ from bento.tool import StrTool
 #
 
 # Only these prefixes will be inspected
-RULE_PREFIXES = "B,C90,E113,E7,E9,EXE,F,T100,W6"
+RULE_PREFIXES = "B,C90,E113,E74,E9,EXE,F,T100,W6"
 
 FLAKE8_TO_BENTO = {
     "B001": "bare-except-bugbear",

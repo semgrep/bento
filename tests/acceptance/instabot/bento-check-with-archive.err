@@ -1,4 +1,4 @@
 Running Bento checks...
 
 ✔ 0 findings since last commit in  s
-◦ Not showing 64 archived finding(s). To view, run $ cat .bento/archive.json
+◦ Not showing 61 archived finding(s). To view, run $ cat .bento/archive.json
