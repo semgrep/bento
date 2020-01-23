@@ -244,6 +244,21 @@ def run_context(
             context.base_path / p.resolve().absolute().relative_to(context.base_path)
             for p in (input_paths or [])
         ]
+
+        # If comparison is HEAD then only run on files that are different
+        # and are a subpath of anything in input_paths
+        if comparison == Comparison.HEAD:
+            paths_with_diff = [
+                context.base_path
+                / p.resolve().absolute().relative_to(context.base_path)
+                for p in _diffed_paths(context, staged_only=staged)
+            ]
+            paths = [
+                diff_path
+                for diff_path in paths_with_diff
+                # diff_path is a subpath of some element of input_paths
+                if any(path in diff_path.parents for path in paths)
+            ]
     else:
         paths = _diffed_paths(context, staged_only=staged)
 

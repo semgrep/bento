@@ -167,14 +167,20 @@ def test_check_no_init() -> None:
 def test_check_tool_error() -> None:
     expectation = "✘ Error while running r2c.foo: test"
 
-    with patch.object(
-        bento.tool_runner.Runner,
-        "parallel_results",
-        return_value=[("r2c.foo", Exception("test"))],
-    ):
-        runner = CliRunner(mix_stderr=False)
-        Context(SIMPLE).cache.wipe()
+    # Have to touch file since only diffs are analyzed
+    edited = SIMPLE / "bar.py"
+    with mod_file(edited):
+        with edited.open("a") as stream:
+            stream.write("\n")
 
-        result = runner.invoke(check, [str(SIMPLE)], obj=Context(base_path=SIMPLE))
-        assert result.exit_code == 3
-        assert expectation in result.stderr.splitlines()
+        with patch.object(
+            bento.tool_runner.Runner,
+            "parallel_results",
+            return_value=[("r2c.foo", Exception("test"))],
+        ):
+            runner = CliRunner(mix_stderr=False)
+            Context(SIMPLE).cache.wipe()
+
+            result = runner.invoke(check, [str(SIMPLE)], obj=Context(base_path=SIMPLE))
+            assert result.exit_code == 3
+            assert expectation in result.stderr.splitlines()
