@@ -34,8 +34,6 @@ BENTO_TEST_VAR = "BENTO_TEST"
 QA_TEST_EMAIL_ADDRESS = "test@returntocorp.com"
 SUPPORT_EMAIL_ADDRESS = "support@r2c.dev"
 
-SLACK_SIGNUP_LINK = "https://join.slack.com/t/r2c-community/shared_invite/enQtNjU0NDYzMjAwODY4LWE3NTg1MGNhYTAwMzk5ZGRhMjQ2MzVhNGJiZjI1ZWQ0NjQ2YWI4ZGY3OGViMGJjNzA4ODQ3MjEzOWExNjZlNTA"
-
 # Metrics constants
 
 ARGS_TO_EXCLUDE_FROM_METRICS = {"check": {"paths"}}

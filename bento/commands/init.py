@@ -4,7 +4,6 @@ import shutil
 import subprocess
 import sys
 from pathlib import Path
-from typing import Union
 
 import attr
 import click
@@ -17,10 +16,6 @@ import bento.tool_runner
 from bento.commands.autorun import install_autorun
 from bento.context import Context
 from bento.decorators import with_metrics
-
-
-def _dim_filename(path: Union[Path, str]) -> str:
-    return f"{click.style(str(path), bold=True, dim=True)}"
 
 
 @attr.s(auto_attribs=True)

@@ -300,7 +300,6 @@ class Runner:
             self._setup_bars(indices_and_tools)
         self._run = [True for _, _ in indices_and_tools]
         self._done = False
-        self._setup_latch = bento.util.CountDownLatch(n_tools)
 
         slow_run_thread = threading.Thread(
             name="slow_run_timer", target=self._echo_slow_run
