@@ -4,46 +4,50 @@ from typing import Any, Dict, Set
 
 import click
 
+import bento.orchestrator
 import bento.result
 from bento.context import Context
 from bento.decorators import with_metrics
-from bento.paths import PathArgument, list_paths, run_context
+from bento.paths import PathArgument, list_paths
 from bento.result import VIOLATIONS_KEY
-from bento.tool_runner import Comparison, RunStep
 from bento.util import echo_error, echo_newline, echo_next_step
 
 
 @click.command()
 @click.option(
-    "--staged",
-    "--staged-only",
+    "--all",
+    "all_",
     is_flag=True,
     default=False,
-    help="Ignore diffs betweeen the filesystem and the git index.",
+    help="Archive findings for all tracked files.",
 )
 @click.argument("paths", nargs=-1, type=Path, autocompletion=list_paths)
 @click.pass_obj
 @with_metrics
-def archive(
-    context: Context, staged: bool, paths: PathArgument, show_bars: bool = True
-) -> None:
+def archive(context: Context, all_: bool, paths: PathArgument) -> None:
     """
     Suppress current findings.
 
-    By default, archived findings will not appear in `bento check` results, and will not block commits.
+    By default, only results introduced by currently staged changes will be
+    added to the archive (`.bento/archive.json`). Archived findings will
+    not appear in future `bento check` output and will not block commits if
+    `autorun` is enabled.
 
-    All archived findings are viewable in `.bento/archive.json`
+    Use `--all` to archive findings in all Git tracked files, not just those
+    that are staged:
 
-    By default, `bento archive` will only archive findings in files modified since the last commit. To force
-    Bento to archive all findings in a path, call `bento archive PATH`.
+        $ bento archive --all [PATHS]
 
-    For example, to archive all findings on the project, run:
+    Optional PATHS can be specified to archive results from specific directories
+    or files.
 
-        $ bento archive .
-
+    Archived findings are viewable in `.bento/archive.json`.
     """
     if not context.is_init:
-        click.secho("Running Bento archive...\n" "", err=True)
+        if all_:
+            click.echo(f"Running Bento archive on all tracked files...\n", err=True)
+        else:
+            click.echo(f"Running Bento archive on staged files...\n", err=True)
 
     if not context.config_path.exists():
         echo_error("No Bento configuration found. Please run `bento init`.")
@@ -64,15 +68,9 @@ def archive(
     new_baseline: Dict[str, Dict[str, Dict[str, Any]]] = {}
     tools = context.tools.values()
 
-    with run_context(
-        context,
-        paths,
-        comparison=Comparison.ROOT,
-        staged=staged,
-        run_step=RunStep.BASELINE,
-        show_bars=show_bars,
-    ) as runner:
-        all_findings = runner.parallel_results(tools, {})
+    all_findings, elapsed = bento.orchestrator.orchestrate(
+        context, paths, not all_, tools
+    )
 
     n_found = 0
     n_existing = 0
@@ -81,6 +79,8 @@ def archive(
     for tool_id, vv in all_findings:
         if isinstance(vv, Exception):
             raise vv
+        # Remove filtered
+        vv = [f for f in vv if not f.filtered]
         n_found += len(vv)
         new_baseline[tool_id] = bento.result.dump_results(vv)
         if tool_id in old_baseline:
@@ -99,9 +99,8 @@ def archive(
     with context.baseline_file_path.open("w") as json_file:
         bento.result.write_tool_results(json_file, new_baseline)
 
-    success_str = (
-        f"{n_new} finding(s) were archived, and will be hidden in future Bento runs."
-    )
+    finding_source_text = "in this project" if all_ else "due to staged changes"
+    success_str = f"{n_new} finding(s) {finding_source_text} were archived, and will be hidden in future Bento runs."
     if n_existing > 0:
         success_str += f"\nBento also kept {n_existing} existing finding(s)."
 

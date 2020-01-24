@@ -67,9 +67,10 @@ def _is_running_supported_python3() -> bool:
 )
 @click.option(
     "--base-path",
-    help=f"Path to the directory containing the code, as well as the {constants.CONFIG_FILE_NAME} file.",
+    help=f"Path to the project to run bento in.",
     type=click.Path(exists=True, file_okay=False),
     default=None,
+    hidden=True,
 )
 @click.option(
     "--agree",

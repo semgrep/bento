@@ -15,7 +15,7 @@ steps:
     description: bento check with a new file with findings
     command: bento check
     returncode: 0
-    expected_out: null
+    expected_out: check-diff-add.out
     expected_err: check-diff-add.err
   - name: commit diff add
     description: attempt to commit nothing
@@ -43,7 +43,7 @@ steps:
   - name: check diff modify
     description: bento check with a modified file with findings
     command: bento check
-    returncode: 2
+    returncode: 0
     expected_out: check-diff-modify.out
     expected_err: check-diff-modify.err
   - name: commit diff modify

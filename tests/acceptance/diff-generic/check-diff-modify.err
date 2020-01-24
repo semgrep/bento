@@ -1,9 +1,6 @@
-Running Bento checks on changes since last commit...
+Running Bento checks on staged files...
 
-⚠ 1 finding(s) in  s
+⚠ Nothing to check or archive. Please confirm that changes are staged and not
+excluded by `.bentoignore`. To check all Git tracked files, use `--all`.
 
-Please fix these issues, or:
-
-◦ To archive findings as tech debt, run $ bento archive
-◦ To disable a specific check, run $ bento disable check TOOL CHECK
-◦ To show all findings in the project, run $ bento check --comparison=archive .
+✔ 0 findings due to staged changes in  s

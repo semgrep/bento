@@ -223,7 +223,8 @@ def run_context(
     :return: A Python with-expression, which is passed a Runner object
     :raises Exception: If comparison is not HEAD and run_step is not CHECK
     """
-    is_explicit_paths = input_paths is not None and len(input_paths) > 0
+    if input_paths is None or len(input_paths) == 0:
+        input_paths = [Path(context.base_path)]
 
     if comparison == Comparison.HEAD and run_step == RunStep.BASELINE:
         stash_context = head_context()
@@ -239,28 +240,25 @@ def run_context(
         use_cache = True
         skip_setup = False
 
-    if is_explicit_paths:
-        paths = [
-            context.base_path / p.resolve().absolute().relative_to(context.base_path)
-            for p in (input_paths or [])
-        ]
+    # resolve given paths relative to base_path
+    paths = [
+        context.base_path / p.resolve().absolute().relative_to(context.base_path)
+        for p in (input_paths or [])
+    ]
 
-        # If comparison is HEAD then only run on files that are different
-        # and are a subpath of anything in input_paths
-        if comparison == Comparison.HEAD:
-            paths_with_diff = [
-                context.base_path
-                / p.resolve().absolute().relative_to(context.base_path)
-                for p in _diffed_paths(context, staged_only=staged)
-            ]
-            paths = [
-                diff_path
-                for diff_path in paths_with_diff
-                # diff_path is a subpath of some element of input_paths
-                if any(path in diff_path.parents for path in paths)
-            ]
-    else:
-        paths = _diffed_paths(context, staged_only=staged)
+    # If staged then only run on files that are different
+    # and are a subpath of anything in input_paths
+    if staged:
+        targets = [
+            context.base_path / p.resolve().absolute().relative_to(context.base_path)
+            for p in _diffed_paths(context, staged_only=staged)
+        ]
+        paths = [
+            diff_path
+            for diff_path in targets
+            # diff_path is a subpath of some element of input_paths
+            if any((diff_path == path or path in diff_path.parents) for path in paths)
+        ]
 
     with stash_context:
         # TODO: Avoid recalculation of file ignores unless absolutely necessary

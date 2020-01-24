@@ -12,8 +12,7 @@ steps:
       - bento
       - --agree
       - check
-      - --comparison
-      - archive
+      - --all
       - .
     expected_err: noconfig.err
     expected_out: null
@@ -53,8 +52,7 @@ steps:
       - bento
       - --agree
       - check
-      - --comparison
-      - archive
+      - --all
       - .
     expected_err: bento-check-with-init.err
     expected_out: bento-check-with-init.out
@@ -77,8 +75,7 @@ steps:
       - bento
       - --agree
       - check
-      - --comparison
-      - archive
+      - --all
       - .
     expected_err: bento-check-with-disable.err
     expected_out: bento-check-with-disable.out
@@ -101,8 +98,7 @@ steps:
       - bento
       - --agree
       - check
-      - --comparison
-      - archive
+      - --all
       - .
     expected_err: bento-check-reenable.err
     expected_out: bento-check-with-init.out
@@ -113,6 +109,7 @@ steps:
       - bento
       - --agree
       - archive
+      - --all
       - .
     expected_err: bento-archive.err
     expected_out: null
@@ -123,8 +120,7 @@ steps:
       - bento
       - --agree
       - check
-      - --comparison
-      - archive
+      - --all
       - .
     expected_err: bento-check-with-archive.err
     expected_out: bento-check-with-archive.out

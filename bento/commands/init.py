@@ -146,9 +146,6 @@ class InitCommand(object):
         content.Identify.success.echo(projects)
 
     def _finish(self) -> None:
-        if sys.stdin.isatty() and sys.stderr.isatty():
-            content.Finish.prompt.echo()
-
         content.Finish.body.echo()
 
     def run(self, ctx: click.Context, clean: bool) -> None:
