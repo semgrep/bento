@@ -1,6 +1,6 @@
 # sgrep README
 
-The goal of `sgrep` is to allow programmers to express complex code *patterns* with a familiar syntax. The idea is to mix the convenience of grep with the correctness and precision of a compiler frontend. Using sgrep via [Bento](http://bento.dev/) to allow developers and security engineers to easily develop and run custom checks on every commit.
+The goal of `sgrep` is to allow programmers to express complex code _patterns_ with a familiar syntax. The idea is to mix the convenience of grep with the correctness and precision of a compiler frontend. Using sgrep via [Bento](http://bento.dev/) to allow developers and security engineers to easily develop and run custom checks on every commit.
 
 Sgrep was recently presented at a meetup hosted at r2c: [the slides from the meetup are the best way to get a quick introduction](https://r2c.dev/sgrep-public.pdf).
 
@@ -14,12 +14,12 @@ sgrep’s design follows 3 principles:
 
 ## Installation
 
-`sgrep` has good support for Python and JavaScript, with some support for Java and C, and more languages on the way! 
+`sgrep` has good support for Python and JavaScript, with some support for Java and C, and more languages on the way!
 
 System requirements:
 
-* Python 3.6+
-* Docker
+- Python 3.6+
+- Docker
 
 On macOS and Ubuntu:
 
@@ -28,8 +28,6 @@ $ pip3 install bento-cli
 # now change directory to a project of interest
 $ bento init
 ```
-
-
 
 ## Usage in Bento
 
@@ -44,8 +42,6 @@ You can run sgrep independently with the following command:
 ```
 $ bento check -t sgrep --comparison=archive .
 ```
-
-
 
 ## Writing Bento Checks
 
@@ -64,13 +60,13 @@ rules:
 
 Each rule object has these fields:
 
-|Field	|Type	|Description	|Required	|
-|---	|---	|---	|---	|
-|id	|string	|None unique check-id that should be descriptive and understandable in isolation by the user. e.g. `no-unused-var`.	|Y	|
-|pattern	|string	|See Example Patterns below.	|Y	|
-|message	|string	|Description of the rule that will be output when a match is found.	|Y	|
-|languages	|array<string>	|Languages the check is relevant for. Can be python or javascript.	|Y	|
-|severity	|string	|Case sensitive string equal to WARNING, ERROR, OK	|Y	|
+| Field     | Type          | Description                                                                                                        | Required |
+| --------- | ------------- | ------------------------------------------------------------------------------------------------------------------ | -------- |
+| id        | string        | None unique check-id that should be descriptive and understandable in isolation by the user. e.g. `no-unused-var`. | Y        |
+| pattern   | string        | See Example Patterns below.                                                                                        | Y        |
+| message   | string        | Description of the rule that will be output when a match is found.                                                 | Y        |
+| languages | array<string> | Languages the check is relevant for. Can be python or javascript.                                                  | Y        |
+| severity  | string        | Case sensitive string equal to WARNING, ERROR, OK                                                                  | Y        |
 
 Rules can also span multiple lines:
   
@@ -135,8 +131,6 @@ pattern: ￼$X == $X
 1+2 == 1+2
 ```
 
-
-
 ### Function Calls
 
 ```
@@ -160,7 +154,6 @@ foo(1, "extra stuff", False)
 foo(1) # matches no arguments as well
 ```
 
-
 **With Arguments Before a Match**
 
 ```
@@ -173,7 +166,6 @@ foo(2, 1)
 foo(2, 3, 1)
 ```
 
-
 **Object with Method Call**
 
 ```
@@ -184,11 +176,10 @@ pattern: $X.get(..., None)
 json_data.get('success', None)
 ```
 
-
 **Keyword Arguments in Any Order **
 
 ```
-pattern: foo(kwd1=$X, err=$Y) 
+pattern: foo(kwd1=$X, err=$Y)
 
 # CODE EXAMPLES (keyword arguments in arbitrary order)
 
@@ -243,7 +234,7 @@ if __name__ == "__main__":
     bar()
 ```
 
-Note you can’t match a half statement; both of the examples above must specify the contents of the condition’s body (e.g. `$Y` and `...`),  otherwise they are not valid AST elements.
+Note you can’t match a half statement; both of the examples above must specify the contents of the condition’s body (e.g. `$Y` and `...`), otherwise they are not valid AST elements.
 
 ### In a statement context, a Metavariable can also match any statement
 
@@ -257,7 +248,7 @@ if 1:
 
 if 2:
   return 1
-   
+
 if 3:     # matches a “block” (a single statement containing multiple statements)
   foo()
   bar()
@@ -276,8 +267,6 @@ import subprocess as s
 s.Popen()
 ```
 
-
-
 ## Limitations
 
 ### sgrep is not grep
@@ -294,8 +283,6 @@ import foo
 
 because in the above, foo is not an expression, but rather a name part of an import statement.
 ```
-
-
 
 ### You can not use a half expression or half statement pattern
 

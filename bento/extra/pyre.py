@@ -51,7 +51,7 @@ class PyreParser(Parser):
 
 
 class PyreTool(StrTool):
-    TOOL_ID = "r2c.pyre"  # to-do: versioning?
+    TOOL_ID = "pyre"  # to-do: versioning?
     PROJECT_NAME = "Python"
 
     @property
@@ -95,16 +95,7 @@ class PyreTool(StrTool):
         # TODO: may need to do this *in parallel* for multiple subprojects inside a monorepo
 
         ALL_SOURCE_DIRS = [f"--source-directory={source_dir}" for source_dir in files]
-
-        ignores = (
-            e.path for e in self.context.file_ignores.entries() if not e.survives
-        )
-
-        ALL_EXCLUDES = [f"--exclude={os.path.abspath(p)}" for p in ignores]
         cmd = (
-            ["pyre", "--noninteractive", "--output=json"]
-            + ALL_EXCLUDES
-            + ALL_SOURCE_DIRS
-            + ["check"]
+            ["pyre", "--noninteractive", "--output=json"] + ALL_SOURCE_DIRS + ["check"]
         )
         return self.execute(cmd, capture_output=True).stdout

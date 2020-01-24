@@ -10,6 +10,7 @@ from typing import Any, Dict, Iterable, List, Pattern, Type
 import yaml
 from semantic_version import Version
 
+import bento.constants as constants
 from bento.base_context import BaseContext
 from bento.extra.js_tool import JsTool, NpmDeps
 from bento.parser import Parser
@@ -38,17 +39,42 @@ RC_ENVIRONMENTS = "env"
 
 
 class EslintParser(Parser[JsonR]):
+    REACT_PREFIX = "react/"
+    REACT_PREFIX_LEN = len(REACT_PREFIX)
+    IMPORT_PREFIX = "import/"
+    IMPORT_PREFIX_LEN = len(IMPORT_PREFIX)
+    JSX_ALLY_PREFIX = "jsx-a11y/"
+    JSX_ALLY_PREFIX_LEN = len(JSX_ALLY_PREFIX)
+    TS_PREFIX = "@typescript-eslint/"
+    TS_PREFIX_LEN = len(TS_PREFIX)
+
+    @staticmethod
+    def to_link(check_id: str) -> str:
+        if check_id.startswith(EslintParser.REACT_PREFIX):
+            trimmed = check_id[EslintParser.REACT_PREFIX_LEN :]
+            return f"https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/{trimmed}.md"
+        elif check_id.startswith(EslintParser.IMPORT_PREFIX):
+            trimmed = check_id[EslintParser.IMPORT_PREFIX_LEN :]
+            return f"https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/{trimmed}.md"
+        elif check_id.startswith(EslintParser.JSX_ALLY_PREFIX):
+            trimmed = check_id[EslintParser.JSX_ALLY_PREFIX_LEN :]
+            return f"https://github.com/evcohen/eslint-plugin-jsx-a11y/blob/master/docs/rules/{trimmed}.md"
+        elif check_id.startswith(EslintParser.TS_PREFIX):
+            trimmed = check_id[EslintParser.TS_PREFIX_LEN :]
+            return f"https://github.com/typescript-eslint/typescript-eslint/blob/master/packages/eslint-plugin/docs/rules/{trimmed}.md"
+        else:
+            return f"https://eslint.org/docs/rules/{check_id}"
+
     def to_violation(
         self, result: Dict[str, Any], message: Dict[str, Any]
     ) -> Violation:
         path = self.trim_base(result["filePath"])
         startLine = message["line"]
         endLine = message.get("endLine", startLine)
-        # todo: remove white-space diffs for non-py?
         source = result["source"][startLine - 1 : endLine]  # line numbers are 1-indexed
         check_id = message.get("ruleId", None)
         if check_id:
-            link = f"https://eslint.org/docs/rules/{check_id}"
+            link = self.to_link(check_id)
         else:
             check_id = "error"
             link = ""
@@ -61,7 +87,7 @@ class EslintParser(Parser[JsonR]):
             column=message["column"],
             message=message["message"],
             severity=message["severity"],
-            syntactic_context="\n".join(source).strip(),
+            syntactic_context="\n".join(source).rstrip(),
             link=link,
         )
 
@@ -74,9 +100,13 @@ class EslintParser(Parser[JsonR]):
 
 
 class EslintTool(JsTool, JsonTool):
-    ESLINT_TOOL_ID = "r2c.eslint"  # to-do: versioning?
+    ESLINT_TOOL_ID = "eslint"  # to-do: versioning?
     CONFIG_FILE_NAME = ".eslintrc.yml"
     PROJECT_NAME = "node-js"
+
+    JS_NAME_PATTERN = re.compile(r".*\.(?:js|jsx|ts|tsx)\b")
+
+    MANIFEST_PATH: Path = Path(__file__).parent.resolve() / "eslint"
 
     # Packages we always need no matter what.
     ALWAYS_NEEDED = {
@@ -87,10 +117,10 @@ class EslintTool(JsTool, JsonTool):
         "eslint-plugin-react": Version("7.14.3"),
         "eslint-plugin-react-hooks": Version("1.7.0"),
     }
-    MIN_ESLINT_PLUGIN_REACT_VERSION = Version("7.14.3")
     TYPESCRIPT_PACKAGES = {
         "@typescript-eslint/parser": Version("2.3.3"),
         "@typescript-eslint/eslint-plugin": Version("2.3.3"),
+        "typescript": Version("3.6.4"),
     }
 
     # Never fire on 'window', etc.
@@ -131,12 +161,16 @@ class EslintTool(JsTool, JsonTool):
         return "Identifies and reports on patterns in JavaScript and TypeScript"
 
     @property
+    def install_location(self) -> Path:
+        return self.base_path / constants.RESOURCE_PATH / "eslint"
+
+    @property
     def project_name(self) -> str:
-        deps = self._dependencies()
-        all_used = [g for g in self.POSSIBLE_GLOBALS if g in deps]
-        if self.__uses_typescript(deps):
+        project_deps = self._dependencies(location=self.base_path)
+        all_used = [g for g in self.POSSIBLE_GLOBALS if g in project_deps]
+        if self.__uses_typescript(project_deps):
             all_used.append("TypeScript")
-        if self.__uses_react(deps):
+        if self.__uses_react(project_deps):
             all_used.append("react")
 
         if all_used:
@@ -146,20 +180,19 @@ class EslintTool(JsTool, JsonTool):
 
     @property
     def file_name_filter(self) -> Pattern:
-        return re.compile(r".*\.(?:js|jsx|ts|tsx)\b")
+        return self.JS_NAME_PATTERN
 
     @property
     def eslintrc_path(self) -> Path:
-        return self.base_path / EslintTool.CONFIG_FILE_NAME
+        return self.install_location / EslintTool.CONFIG_FILE_NAME
 
     @classmethod
     def matches_project(cls, context: BaseContext) -> bool:
         return (context.base_path / "package.json").exists()
 
     def __uses_typescript(self, deps: NpmDeps) -> bool:
-        return (
-            "typescript" in deps
-        )  # ts dependency shouldn't be in main deps, but, if it is, ok
+        # ts dependency shouldn't be in main deps, but, if it is, ok
+        return "typescript" in deps
 
     def __uses_react(self, deps: NpmDeps) -> bool:
         return "react" in deps.main  # react dependency must be in main deps
@@ -171,11 +204,15 @@ class EslintTool(JsTool, JsonTool):
     def __copy_eslintrc(self, identifier: str) -> None:
         logging.info(f"Using {identifier} .eslintrc configuration")
         shutil.copy(
-            os.path.join(
-                os.path.dirname(__file__), f"eslint/.eslintrc-{identifier}.yml"
-            ),
-            self.eslintrc_path,
+            self.MANIFEST_PATH / f".eslintrc-{identifier}.yml", self.eslintrc_path
         )
+
+    def _setup_env(self) -> None:
+        self.install_location.mkdir(exist_ok=True, parents=True)
+        eslint_package_path = self.install_location / "package.json"
+        if not eslint_package_path.exists():
+            logging.info("Creating eslint environment")
+            shutil.copy(self.MANIFEST_PATH / "package.json", eslint_package_path)
 
     def __add_globals(self, deps: NpmDeps) -> None:
         """Adds global environments to eslintrc"""
@@ -191,16 +228,13 @@ class EslintTool(JsTool, JsonTool):
             yaml.safe_dump(rc, stream)
 
     def setup(self) -> None:
-        needed_packages = self.ALWAYS_NEEDED.copy()
-        deps = self._dependencies()
-        project_has_typescript = self.__uses_typescript(deps)
-        project_has_react = self.__uses_react(deps)
-        if project_has_react:
-            needed_packages[
-                "eslint-plugin-react"
-            ] = EslintTool.MIN_ESLINT_PLUGIN_REACT_VERSION
+        self._setup_env()
+        needed_packages: Dict[str, Version] = self.ALWAYS_NEEDED.copy()
+        project_deps = self._dependencies(location=self.base_path)
+        project_has_typescript = self.__uses_typescript(project_deps)
+        project_has_react = self.__uses_react(project_deps)
         if project_has_typescript:
-            needed_packages.update(EslintTool.TYPESCRIPT_PACKAGES)
+            needed_packages.update(self.TYPESCRIPT_PACKAGES)
 
         self._ensure_packages(needed_packages)
         self._ensure_node_version()
@@ -218,7 +252,7 @@ class EslintTool(JsTool, JsonTool):
             else:
                 self.__copy_eslintrc("default")
 
-            self.__add_globals(deps)
+            self.__add_globals(project_deps)
 
     @staticmethod
     def raise_failure(cmd: List[str], result: subprocess.CompletedProcess) -> None:
@@ -228,34 +262,31 @@ class EslintTool(JsTool, JsonTool):
         )
 
     def run(self, files: Iterable[str]) -> JsonR:
-        ignores = [
-            arg
-            for p in self.context.file_ignores.patterns
-            for arg in ["--ignore-pattern", p]
-        ]
         disables = [
             arg
             for d in self.config.get("ignore", [])
             for arg in ["--rule", f"{d}: off"]
         ]
-        cmd = (
-            [
-                "./node_modules/eslint/bin/eslint.js",
-                "--no-eslintrc",
-                "-c",
-                EslintTool.CONFIG_FILE_NAME,
-                "-f",
-                "json",
-                "--ext",
-                "js,jsx,ts,tsx",
-            ]
-            + ignores
-            + disables
-        )
+        cmd = [
+            "./node_modules/eslint/bin/eslint.js",
+            "--no-eslintrc",
+            "--no-ignore",
+            "-c",
+            str(self.eslintrc_path),
+            "-f",
+            "json",
+            "--ext",
+            "js,jsx,ts,tsx",
+            "--ignore-pattern",
+            ".bento/",
+            "--ignore-pattern",
+            "node_modules/",
+        ] + disables
         for f in files:
-            cmd.append(f)
+            cmd.append(os.path.abspath(f))
         result = self.execute(
             cmd,
+            cwd=self.install_location,
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
             env={"TIMING": "1", **os.environ},

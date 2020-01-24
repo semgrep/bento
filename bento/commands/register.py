@@ -1,13 +1,16 @@
 import logging
 import os
 import sys
-from typing import Any, Dict, Optional
+from pathlib import Path
+from typing import Any, Dict, Optional, Tuple
 
 import attr
 import click
 from packaging.version import InvalidVersion, Version
 
+import bento.commands.autocomplete as autocomplete
 import bento.constants as constants
+import bento.content.register as content
 import bento.decorators
 import bento.extra
 import bento.git
@@ -16,24 +19,26 @@ import bento.tool_runner
 import bento.util
 from bento.context import Context
 from bento.network import post_metrics
-from bento.renderer import Renderer
 from bento.util import echo_newline, persist_global_config, read_global_config
+
+GLOBAL_GITIGNORE_PATTERN = ".bento/\n.bentoignore"
 
 
 @attr.s(auto_attribs=True)
 class Registrar(object):
-    context: Context
+    click_context: click.Context
     agree: bool
     is_first_run: bool = False
-    global_config: Dict[str, Any] = attr.ib(default=read_global_config(), init=False)
+    context: Context = attr.ib(init=False)
+    global_config: Dict[str, Any] = attr.ib(factory=read_global_config, init=False)
     email: Optional[str] = attr.ib()
-    renderer: Renderer = Renderer(constants.REGISTRATION_CONTENT_PATH)
 
     @email.default
     def _get_email_from_environ(self) -> Optional[str]:
         return os.environ.get(constants.BENTO_EMAIL_VAR)
 
     def __attrs_post_init__(self) -> None:
+        self.context = self.click_context.obj
         if self.global_config is None:
             self.is_first_run = True
             self.global_config = {}
@@ -46,7 +51,7 @@ class Registrar(object):
         """
         is_interactive = sys.stdin.isatty() and sys.stderr.isatty()
         if not is_interactive:
-            self.renderer.echo("not-registered")
+            content.not_registered.echo()
             sys.exit(3)
 
     def _show_welcome_message(self) -> None:
@@ -64,7 +69,7 @@ class Registrar(object):
             or not self.agree
             and constants.TERMS_OF_SERVICE_KEY not in self.global_config
         ):
-            self.renderer.echo("welcome")
+            content.welcome.echo()
 
     def _update_email(self) -> None:
         """
@@ -75,32 +80,26 @@ class Registrar(object):
         # import inside def for performance
         from validate_email import validate_email
 
-        valid_configured_email = False
-        if "email" in self.global_config:
-            configured_email = self.global_config.get("email")
-            if configured_email is not None:
-                valid_configured_email = validate_email(configured_email)
+        if not self.email:
+            self.email = self.global_config.get("email")
 
-        if (
-            not self.email or not validate_email(self.email)
-        ) and not valid_configured_email:
-            self.renderer.echo("update-email", "leader")
+        if not self.email or not validate_email(self.email):
+            content.UpdateEmail.leader.echo()
 
             email = None
             while not (email and validate_email(email)):
                 self.context.start_user_timer()
                 self._validate_interactivity()
-                email = click.prompt(
-                    self.renderer.text_at("update-email", "prompt"),
-                    type=str,
-                    default=bento.git.user_email(),
+                email = content.UpdateEmail.prompt.echo(
+                    type=str, default=bento.git.user_email()
                 )
                 self.context.stop_user_timer()
                 echo_newline()
 
-            r = self._post_email_to_mailchimp(email)
-            if not r:
-                self.renderer.echo("update-email", "failure")
+            if email != constants.QA_TEST_EMAIL_ADDRESS:
+                r = self._post_email_to_mailchimp(email)
+                if not r:
+                    content.UpdateEmail.failure.echo()
 
             self.global_config["email"] = email
             persist_global_config(self.global_config)
@@ -138,7 +137,7 @@ class Registrar(object):
         :return: If the user has agreed to the updated ToS
         """
         if constants.TERMS_OF_SERVICE_KEY not in self.global_config:
-            self.renderer.echo("confirm-tos", "fresh")
+            content.ConfirmTos.fresh.echo()
         else:
             # We care that the user has agreed to the current terms of service
             tos_version = self.global_config[constants.TERMS_OF_SERVICE_KEY]
@@ -149,17 +148,14 @@ class Registrar(object):
                     logging.info("User ToS agreement is current")
                     return True
             except InvalidVersion:
-                self.renderer.echo("confirm-tos", "invalid-version")
+                content.ConfirmTos.invalid_version.echo()
                 sys.exit(3)
 
-            self.renderer.echo("confirm-tos", "upgrade")
+            content.ConfirmTos.upgrade.echo()
 
         self.context.start_user_timer()
         self._validate_interactivity()
-        agreed = click.confirm(
-            "Continue and agree to Bento's terms of service and privacy policy?",
-            default=True,
-        )
+        agreed = content.ConfirmTos.prompt.echo()
         echo_newline()
         self.context.stop_user_timer()
 
@@ -171,24 +167,82 @@ class Registrar(object):
             persist_global_config(self.global_config)
             return True
         else:
-            self.renderer.echo("confirm-tos", "error")
+            content.ConfirmTos.error.echo()
             return False
+
+    def _query_gitignore_update(self) -> Tuple[Path, bool]:
+        """
+        Determines if gitignore should be updated by init
+
+        Requirements:
+        - Interactive terminal
+        - bento/ not in ignore file
+        - User hasn't previously opted out
+        - User agrees
+
+        :return: A tuple of (the path to the global git ignore, whether to update the file)
+        """
+
+        gitignore_path = (
+            bento.git.global_ignore_path(self.context.base_path)
+            or constants.DEFAULT_GLOBAL_GIT_IGNORE_PATH
+        )
+
+        if sys.stderr.isatty() and sys.stdin.isatty():
+            opt_out_value = self.global_config.get(constants.GLOBAL_GIT_IGNORE_OPT_OUT)
+            user_opted_out = opt_out_value is not None and opt_out_value is True
+            if user_opted_out:
+                return gitignore_path, False
+            has_ignore = None
+            if gitignore_path.exists():
+                with gitignore_path.open("r") as fd:
+                    has_ignore = next(filter(lambda l: ".bento" in l, fd), None)
+            if has_ignore is None:
+                if content.UpdateGitignore.confirm.echo(gitignore_path):
+                    gitignore_path.parent.resolve().mkdir(exist_ok=True, parents=True)
+                    content.UpdateGitignore.confirm_yes.echo()
+                    return gitignore_path, True
+                else:
+                    self.global_config[constants.GLOBAL_GIT_IGNORE_OPT_OUT] = True
+
+                    persist_global_config(self.global_config)
+                    content.UpdateGitignore.confirm_no.echo()
+        return gitignore_path, False
+
+    def _update_gitignore_if_necessary(self, ignore_path: Path, update: bool) -> None:
+        """
+        Adds bento patterns to global git ignore if _query_gitignore_update returned a path
+        """
+        if update:
+            on_done = content.UpdateGitignore.update.echo(ignore_path)
+            bento.util.append_text_to_file(
+                ignore_path,
+                f"# Ignore bento tool run paths (this line added by `bento init`)\n{GLOBAL_GITIGNORE_PATTERN}",
+            )
+            on_done()
+            logging.info(f"Added '.bento/' to {ignore_path}")
 
     def _suggest_autocomplete(self) -> None:
         """
         Suggests code to add to the user's shell config to set up autocompletion
         """
-        if "SHELL" not in os.environ:
+        shell = os.environ.get("SHELL")
+        if not shell:
             return
 
-        shell = os.environ["SHELL"]
-
-        if shell.endswith("/zsh"):
-            self.renderer.echo("suggest-autocomplete", "zsh")
-        elif shell.endswith("/bash"):
-            self.renderer.echo("suggest-autocomplete", "bash")
-        else:
-            return
+        self._validate_interactivity()
+        shell_cmd = shell.split("/")[-1]
+        if shell_cmd in autocomplete.SUPPORTED:
+            should_add = content.SuggestAutocomplete.confirm.echo()
+            if should_add:
+                on_done = content.SuggestAutocomplete.install.echo(
+                    autocomplete.SUPPORTED[shell_cmd][0]
+                )
+                self.click_context.invoke(autocomplete.install_autocomplete, [False])
+                on_done()
+                content.SuggestAutocomplete.confirm_yes.echo()
+            else:
+                content.SuggestAutocomplete.confirm_no.echo()
 
     def verify(self) -> bool:
         """
@@ -209,6 +263,11 @@ class Registrar(object):
 
         if not self.agree and not self._confirm_tos_update():
             return False
+
+        # only ask about updating gitignore in init
+        if not self.agree and self.click_context.command.name == "init":
+            ignore_path, update_ignore = self._query_gitignore_update()
+            self._update_gitignore_if_necessary(ignore_path, update_ignore)
 
         if self.is_first_run and not self.agree:
             self._suggest_autocomplete()

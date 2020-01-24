@@ -1,0 +1,9 @@
+On branch master
+Changes not staged for commit:
+	deleted:    foo.py
+
+Untracked files:
+	.bento/
+	.bentoignore
+
+no changes added to commit

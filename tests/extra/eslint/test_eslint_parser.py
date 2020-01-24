@@ -3,7 +3,6 @@ import os
 import subprocess
 from pathlib import Path
 
-from _pytest.tmpdir import tmp_path_factory
 from bento.extra.eslint import EslintParser, EslintTool
 from bento.violation import Violation
 from tests.test_tool import context_for
@@ -20,7 +19,7 @@ def test_parse() -> None:
 
     expectation = [
         Violation(
-            tool_id="r2c.eslint",
+            tool_id="eslint",
             check_id="no-console",
             path="tests/integration/simple/init.js",
             line=0,
@@ -30,7 +29,7 @@ def test_parse() -> None:
             syntactic_context="console.log(3)",
         ),
         Violation(
-            tool_id="r2c.eslint",
+            tool_id="eslint",
             check_id="semi",
             path="tests/integration/simple/init.js",
             line=0,
@@ -58,11 +57,9 @@ def test_line_move() -> None:
     ]
 
 
-def test_run(tmp_path_factory: tmp_path_factory) -> None:
+def test_run(tmp_path: Path) -> None:
     base_path = BASE_PATH / "tests/integration/simple"
-    tool = EslintTool(
-        context_for(tmp_path_factory, EslintTool.ESLINT_TOOL_ID, base_path)
-    )
+    tool = EslintTool(context_for(tmp_path, EslintTool.ESLINT_TOOL_ID, base_path))
     tool.setup()
     try:
         violations = tool.results()
@@ -72,7 +69,7 @@ def test_run(tmp_path_factory: tmp_path_factory) -> None:
 
     expectation = [
         Violation(
-            tool_id="r2c.eslint",
+            tool_id="eslint",
             check_id="no-console",
             path="init.js",
             line=0,
@@ -82,7 +79,7 @@ def test_run(tmp_path_factory: tmp_path_factory) -> None:
             syntactic_context="console.log(3)",
         ),
         Violation(
-            tool_id="r2c.eslint",
+            tool_id="eslint",
             check_id="semi",
             path="init.js",
             line=0,
@@ -96,21 +93,19 @@ def test_run(tmp_path_factory: tmp_path_factory) -> None:
     assert violations == expectation
 
 
-def test_typescript_run(tmp_path_factory: tmp_path_factory) -> None:
+def test_typescript_run(tmp_path: Path) -> None:
     base_path = BASE_PATH / "tests/integration/js-and-ts"
-    tool = EslintTool(
-        context_for(tmp_path_factory, EslintTool.ESLINT_TOOL_ID, base_path)
-    )
+    tool = EslintTool(context_for(tmp_path, EslintTool.ESLINT_TOOL_ID, base_path))
     tool.setup()
     try:
-        violations = tool.results(["foo.ts"])
+        violations = tool.results([str(base_path / "foo.ts")])
     except subprocess.CalledProcessError as e:
         print(e.stderr)
         raise e
 
     expectation = [
         Violation(
-            tool_id="r2c.eslint",
+            tool_id="eslint",
             check_id="@typescript-eslint/no-unused-vars",
             path="foo.ts",
             line=1,
@@ -122,7 +117,7 @@ def test_typescript_run(tmp_path_factory: tmp_path_factory) -> None:
             link="https://eslint.org/docs/rules/@typescript-eslint/no-unused-vars",
         ),
         Violation(
-            tool_id="r2c.eslint",
+            tool_id="eslint",
             check_id="semi",
             path="foo.ts",
             line=1,
@@ -138,11 +133,9 @@ def test_typescript_run(tmp_path_factory: tmp_path_factory) -> None:
     assert violations == expectation
 
 
-def test_jsx_run(tmp_path_factory: tmp_path_factory) -> None:
+def test_jsx_run(tmp_path: Path) -> None:
     base_path = BASE_PATH / "tests/integration/react"
-    tool = EslintTool(
-        context_for(tmp_path_factory, EslintTool.ESLINT_TOOL_ID, base_path)
-    )
+    tool = EslintTool(context_for(tmp_path, EslintTool.ESLINT_TOOL_ID, base_path))
     tool.setup()
     try:
         violations = tool.results([])
@@ -153,10 +146,8 @@ def test_jsx_run(tmp_path_factory: tmp_path_factory) -> None:
     assert violations == []
 
 
-def test_file_match(tmp_path_factory: tmp_path_factory) -> None:
-    f = EslintTool(
-        context_for(tmp_path_factory, EslintTool.ESLINT_TOOL_ID)
-    ).file_name_filter
+def test_file_match(tmp_path: Path) -> None:
+    f = EslintTool(context_for(tmp_path, EslintTool.ESLINT_TOOL_ID)).file_name_filter
 
     assert f.match("js") is None
     assert f.match("foo.js") is not None
@@ -174,7 +165,7 @@ def test_missing_source() -> None:
 
     expectation = [
         Violation(
-            tool_id="r2c.eslint",
+            tool_id="eslint",
             check_id="no-console",
             path="tests/integration/simple/init.js",
             line=0,

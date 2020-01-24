@@ -20,12 +20,14 @@ from typing import (
     Callable,
     Collection,
     Dict,
+    Generic,
     List,
     Optional,
     Pattern,
     TextIO,
     Tuple,
     Type,
+    TypeVar,
     Union,
 )
 
@@ -78,7 +80,7 @@ def read_global_config() -> Optional[Dict[str, Any]]:
 
 
 def persist_global_config(global_config: Dict[str, Any]) -> None:
-    os.makedirs(constants.GLOBAL_CONFIG_DIR, exist_ok=True)
+    os.makedirs(constants.GLOBAL_RESOURCE_PATH, exist_ok=True)
     with open(constants.GLOBAL_CONFIG_PATH, "w+") as yaml_file:
         yaml.safe_dump(global_config, yaml_file)
 
@@ -119,6 +121,27 @@ def is_child_process_of(pattern: Pattern) -> bool:
     parents = me.parents()
     matches = iter(0 for p in parents if pattern.search(p.name()))
     return next(matches, None) is not None
+
+
+M = TypeVar("M", covariant=True)
+
+
+class Memo(Generic[M]):
+    """
+    Creates a (thread-safe) lazily loaded value
+    """
+
+    def __init__(self, load: Callable[[], M]) -> None:
+        self.load = load
+        self._lock = threading.Lock()
+        self._value: Optional[M] = None
+
+    @property
+    def value(self) -> M:
+        with self._lock:
+            if self._value is None:
+                self._value = self.load()
+            return self._value
 
 
 DO_PRINT_LINKS = is_child_process_of(LINK_PRINTER_PATTERN)
@@ -266,52 +289,7 @@ def echo_next_step(desc: str, cmd: str) -> None:
     :param desc: The step description
     :param cmd: The command that the user should run
     """
-    echo_styles("◦ ", style(f"{desc}, run $ ", dim=True), cmd, style(".", dim=True))
-
-
-def wrap_link(text: str, extra: int, *links: Tuple[str, str], **kwargs: Any) -> str:
-    """
-    Wraps text. Text may include one or more links.
-
-    :param text: Unlinked text
-    :param links: Tuples of (anchor text, target)
-    :param extra: Any extra width to apply
-    :param kwargs: Styling rules passed to text
-    """
-
-    wrapped = wrap(text, extra)
-
-    def find_loc(anchor: str) -> Tuple[int, str]:
-        """
-        Finds the position of the anchor string in the wrapped text
-
-        Note that the anchor string itself may be wrapped, so we return
-        both the position, and the value of the (possibly wrapped) anchor string.
-        """
-        pos = wrapped.find(anchor)
-        if pos < 0:
-            # Text was likely wrapped
-            anchor_it = [
-                f"{anchor[:ix].rstrip()}\n{anchor[ix:]}" for ix in range(len(anchor))
-            ]
-            pos_it = ((wrapped.find(a), a) for a in anchor_it)
-            pos, anchor = next(((p, a) for p, a in pos_it if p > 0), (-1, anchor))
-            if pos < 0:
-                raise ValueError(f"'{anchor}' does not appear in '{text}'")
-        return pos, anchor
-
-    with_locs = sorted(
-        [(find_loc(anchor), href) for anchor, href in links], key=(lambda t: t[0][0])
-    )
-    out = ""
-    current = 0
-    for loc_anchor, href in with_locs:
-        loc, anchor = loc_anchor
-        out += style(wrapped[current:loc], **kwargs)
-        out += render_link(anchor, href, print_alternative=False, pipe=sys.stderr)
-        current = loc + len(anchor)
-    out += style(wrapped[current:], **kwargs)
-    return out
+    echo_styles("◦ ", style(f"{desc}, run $ ", dim=True), cmd)
 
 
 def echo_wrap(text: str, **kwargs: Any) -> None:
@@ -378,6 +356,22 @@ def render_link(
         text = style(text, fg=Colors.LINK)
 
     return text
+
+
+def file_has_text(file: Path, text: str) -> bool:
+    """
+    Returns if a file contains a pattern
+    """
+    with file.open() as fd:
+        return any(text in l for l in fd)
+
+
+def append_text_to_file(file: Path, text: str) -> None:
+    """
+    Adds text to a file
+    """
+    with file.open("a") as fd:
+        fd.write(f"\n{text}\n")
 
 
 # Taken from http://www.madhur.co.in/blog/2015/11/02/countdownlatch-python.html

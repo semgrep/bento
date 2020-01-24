@@ -10,11 +10,11 @@ BASE_PATH = THIS_PATH / ".."
 
 def test_tool_from_config_found() -> None:
     """Validates that existing tools are parsed from the config file"""
-    config: Dict[str, Any] = {"tools": {"r2c.eslint": {"ignore": []}}}
+    config: Dict[str, Any] = {"tools": {"eslint": {"ignore": []}}}
     context = bento.context.Context(config=config)
     tools = context.tools
     assert len(tools) == 1
-    assert tools.keys() == {"r2c.eslint"}
+    assert tools.keys() == {"eslint"}
 
 
 def test_tool_from_config_missing() -> None:

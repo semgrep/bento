@@ -65,20 +65,19 @@ def test_run_analyzer_on_local_code(tmp_path: Path) -> None:
         to output and we verify that output matches
     """
     file = tmp_path / "output.json"
-    input_json = json.dumps(
-        {
-            "results": [
-                {
-                    "check_id": "checked_return",
-                    "path": "./checkedreturn.js",
-                    "start": {"line": 25, "col": 3},
-                    "end": {"line": 25, "col": 15},
-                    "extra": {},
-                }
-            ]
-        }
-    )
-    file.write_text(input_json)
+    input_json = {
+        "results": [
+            {
+                "check_id": "checked_return",
+                "path": "./checkedreturn.js",
+                "start": {"line": 25, "col": 3},
+                "end": {"line": 25, "col": 15},
+                "extra": {},
+            }
+        ]
+    }
+
+    file.write_text(json.dumps(input_json))
     output_json = run_analyzer_on_local_code(
         "r2c/testonly-cat-output-json",
         Version("1.0.2"),
@@ -86,7 +85,7 @@ def test_run_analyzer_on_local_code(tmp_path: Path) -> None:
         set(),
         {str(tmp_path)},
     )
-    assert input_json == output_json
+    assert input_json["results"] == output_json
 
 
 def test_ignore_files_factory(tmp_path: Path) -> None:
@@ -129,9 +128,7 @@ def test_ignore_files_factory(tmp_path: Path) -> None:
     shutil.copytree(
         source,
         destination,
-        ignore=_ignore_files_factory(
-            {str(ignored_dir), str(ignored_file)}, {str(source)}
-        ),
+        ignore=_ignore_files_factory({ignored_dir, ignored_file}, {str(source)}),
     )
 
     # Delete source and move back destination for easy comparion
@@ -186,9 +183,7 @@ def test_ignore_files_factory_path(tmp_path: Path) -> None:
     shutil.copytree(
         source,
         destination,
-        ignore=_ignore_files_factory(
-            {str(ignored_dir), str(ignored_file)}, {str(unignored_dir)}
-        ),
+        ignore=_ignore_files_factory({ignored_dir, ignored_file}, {str(unignored_dir)}),
     )
 
     # Delete source and move back destination for easy comparion

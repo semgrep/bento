@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 
-from _pytest.tmpdir import tmp_path_factory
 from bento.extra.click import ClickParser, ClickTool
 from bento.violation import Violation
 from tests.test_tool import context_for
@@ -12,7 +11,7 @@ BASE_PATH = THIS_PATH / ".." / ".." / ".."
 EXPECTATIONS = [
     Violation(
         tool_id="r2c.click",
-        check_id="r2c-click-option-function-argument-check",
+        check_id="option-function-argument-check",
         path="bad_examples.py",
         line=12,
         column=1,
@@ -24,7 +23,7 @@ EXPECTATIONS = [
     ),
     Violation(
         tool_id="r2c.click",
-        check_id="r2c-click-names-are-well-formed",
+        check_id="names-are-well-formed",
         path="bad_examples.py",
         line=19,
         column=1,
@@ -36,7 +35,7 @@ EXPECTATIONS = [
     ),
     Violation(
         tool_id="r2c.click",
-        check_id="r2c-click-names-are-well-formed",
+        check_id="names-are-well-formed",
         line=26,
         path="bad_examples.py",
         column=1,
@@ -48,7 +47,7 @@ EXPECTATIONS = [
     ),
     Violation(
         tool_id="r2c.click",
-        check_id="r2c-click-names-are-well-formed",
+        check_id="names-are-well-formed",
         path="bad_examples.py",
         line=33,
         column=1,
@@ -60,7 +59,7 @@ EXPECTATIONS = [
     ),
     Violation(
         tool_id="r2c.click",
-        check_id="r2c-click-launch-uses-literal",
+        check_id="launch-uses-literal",
         path="bad_examples.py",
         line=41,
         column=5,
@@ -81,18 +80,18 @@ def test_parse() -> None:
     assert result == EXPECTATIONS
 
 
-def test_run_no_base_violations(tmp_path_factory: tmp_path_factory) -> None:
+def test_run_no_base_violations(tmp_path: Path) -> None:
     base_path = BASE_PATH / "tests/integration/simple"
-    tool = ClickTool(context_for(tmp_path_factory, ClickTool.TOOL_ID, base_path))
+    tool = ClickTool(context_for(tmp_path, ClickTool.TOOL_ID, base_path))
     tool.setup()
     violations = tool.results()
 
     assert not violations
 
 
-def test_run_click_violations(tmp_path_factory: tmp_path_factory) -> None:
+def test_run_click_violations(tmp_path: Path) -> None:
     base_path = BASE_PATH / "tests/integration/click"
-    tool = ClickTool(context_for(tmp_path_factory, ClickTool.TOOL_ID, base_path))
+    tool = ClickTool(context_for(tmp_path, ClickTool.TOOL_ID, base_path))
     tool.setup()
     violations = tool.results()
     assert violations == EXPECTATIONS

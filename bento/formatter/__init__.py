@@ -1,17 +1,19 @@
 from typing import Any, Dict
 
 import bento.util
-from bento.formatter import base, clippy, histo, json, stylish
+from bento.base_context import BaseContext
+from bento.formatter import base, clippy, histo, json, reporter, stylish
 
 FORMATTERS = {
     "stylish": stylish.Stylish,
     "json": json.Json,
     "clippy": clippy.Clippy,
     "histo": histo.Histo,
+    "reporter": reporter.Reporter,
 }
 
 
-def for_name(name: str, config: Dict[str, Any]) -> base.Formatter:
+def for_name(name: str, context: BaseContext, config: Dict[str, Any]) -> base.Formatter:
     """
     Reflectively instantiates a formatter from a preset name or python identifier
 
@@ -27,8 +29,7 @@ def for_name(name: str, config: Dict[str, Any]) -> base.Formatter:
     tpe = FORMATTERS.get(name.lower(), None)
     if tpe is None:
         tpe = bento.util.for_name(name)
-    fmt = tpe()  # type: ignore
-    fmt.config = config or {}
+    fmt = tpe(context, config)  # type: ignore
     return fmt
 
 

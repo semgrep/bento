@@ -47,3 +47,7 @@ app.config["ENV"] = os.environ["development"]
 # For `DEBUG`
 app.config["DEBUG"] = os.environ["DEBUG"] or True
 app.config["DEBUG"] = os.environ["DEBUG"] or False
+
+# Test async does not trigger an exception
+# TODO: actually write sgrep rule that leverages `async def`
+def foo(a, *, b=1): pass

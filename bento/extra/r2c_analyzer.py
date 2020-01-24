@@ -5,6 +5,7 @@
 """
 
 import logging
+import json
 import os
 import pathlib
 import shutil
@@ -14,6 +15,9 @@ from pathlib import Path
 
 from semantic_version import Version
 import r2c.lib.versioned_analyzer
+
+from bento.extra.docker import get_docker_client
+from bento.tool import JsonR
 
 
 class MonkeyPatchVersionedAnalyzer(r2c.lib.versioned_analyzer.VersionedAnalyzer):
@@ -135,20 +139,60 @@ REGISTRY: Dict[str, AnalyzerDataJson] = {
         },
         "public": False,
     },
-    "r2c/sgrep-lint": {
+    "r2c/sgrep": {
         "versions": {
-            "0.1.12": {
+            "0.1.14": {
                 "manifest": {
-                    "analyzer_name": "r2c/sgrep-lint",
+                    "analyzer_name": "r2c/sgrep",
                     "author_name": "pad",
                     "author_email": "pad@returntocorp.com",
-                    "version": "0.1.12",
+                    "version": "0.1.14",
                     "spec_version": "1.2.0",
                     "dependencies": {"public/source-code": "*"},
                     "type": "commit",
                     "output": {"type": "json"},
                     "deterministic": True,
-                    "readme": "# Analyzer name: sgrep-lint\n\n# Author name: pad\n\n# Description: TODO\n",
+                    "readme": "# Analyzer name: sgrep\n\n# Author name: pad\n\n# Description: TODO\n",
+                },
+                "pending": False,
+            }
+        },
+        "public": False,
+    },
+    "r2c/pyre-taint": {
+        "versions": {
+            "0.0.9": {
+                "manifest": {
+                    "analyzer_name": "r2c/pyre-taint",
+                    "author_name": "pad",
+                    "author_email": "pad@returntocorp.com",
+                    "version": "0.0.9",
+                    "spec_version": "1.2.0",
+                    "dependencies": {"public/source-code": "*"},
+                    "type": "commit",
+                    "output": {"type": "json"},
+                    "deterministic": True,
+                    "readme": "# TODO\n",
+                },
+                "pending": False,
+            }
+        },
+        "public": False,
+    },
+    "r2c/shellcheck": {
+        "versions": {
+            "0.0.1": {
+                "manifest": {
+                    "analyzer_name": "r2c/shellcheck",
+                    "author_name": "brendon",
+                    "author_email": "brendon.go@gmail.com",
+                    "version": "0.0.1",
+                    "spec_version": "1.2.0",
+                    "dependencies": {"public/source-code": "*"},
+                    "type": "commit",
+                    "output": {"type": "json"},
+                    "deterministic": True,
+                    "readme": "# Analyzer name: shellcheck\n\n# Description\n\nr2c wrapper around koalaman/shellcheck https://github.com/koalaman/shellcheck\n",
                 },
                 "pending": False,
             }
@@ -164,13 +208,11 @@ def _should_pull_analyzer(analyzer: SpecifiedAnalyzer) -> bool:
         available locally. Always returns False if the analyzer is a base
         analyzer (exists in SPECIAL_ANALYZERS)
     """
-    # import inside def for performance
-    import docker
 
     if analyzer.versioned_analyzer.name in SPECIAL_ANALYZERS:
         return False
 
-    client = docker.from_env()
+    client = get_docker_client()
     image_id = analyzer.versioned_analyzer.image_id
     return not any(i for i in client.images.list() if image_id in i.tags)
 
@@ -179,10 +221,6 @@ def prepull_analyzers(analyzer_name: str, version: Version) -> None:
     """
         Pulls all needed analyzers to run SPECIFIED_ANALYZER (i.e. dependencies)
     """
-    # import inside def for performance
-    import docker
-
-    check_docker_is_running()
 
     specified_analyzer = SpecifiedAnalyzer(
         VersionedAnalyzer(AnalyzerName(analyzer_name), version)
@@ -190,14 +228,14 @@ def prepull_analyzers(analyzer_name: str, version: Version) -> None:
     registry = RegistryData.from_json(REGISTRY)
 
     deps = registry.sorted_deps(specified_analyzer)
-    client = docker.from_env()
+    client = get_docker_client()
     for dep in deps:
         if _should_pull_analyzer(dep):
             client.images.pull(dep.versioned_analyzer.image_id)
 
 
 def _ignore_files_factory(
-    ignore_files: Set[str], target_files: Set[str]
+    ignore_files: Set[Path], target_files: Set[str]
 ) -> Callable[[str, List[str]], List[str]]:
     """
         Takes list of absolute paths of files to ignore and returns
@@ -248,10 +286,11 @@ def _ignore_files_factory(
             of files/dirs in the directory and returns a list of files/dirs
             to ignore (a subset of the second argument).
         """
+        rp = Path(root)
         return [
             path
             for path in members
-            if f"{root}/{path}" in ignore_files
+            if rp / path in ignore_files
             or not any(
                 # Suppose there is a file in a/b/c/d.py
                 # LHS: If the target path is a/b/c/d.py we still want a/b to not be ignored to we keep traversing the tree.
@@ -268,7 +307,7 @@ def _copy_local_input(
     analyzer: Analyzer,
     va: VersionedAnalyzer,
     analyzer_input: LocalCode,
-    ignore_files: Set[str],
+    ignore_files: Set[Path],
     target_files: Set[str],
 ) -> None:
     """'Uploads' the local input as the output of the given analyzer.
@@ -296,31 +335,16 @@ def _copy_local_input(
         analyzer.upload_output(SpecifiedAnalyzer(va), analyzer_input, mount_folder)
 
 
-def check_docker_is_running() -> None:
-    """Checks that docker client is reachable"""
-    # import inside def for performance
-    import docker
-
-    try:
-        client = docker.from_env()
-        client.info()
-    except Exception as e:
-        logging.debug(e)
-        raise Exception(
-            "Failed to run docker. Please confirm docker is installed and its daemon is running in user mode."
-        )
-
-
 def run_analyzer_on_local_code(
     analyzer_name: str,
     version: Version,
     base: Path,
-    ignore_files: Set[str],
+    ignore_files: Set[Path],
     target_files: Iterable[str],
-) -> str:
+) -> JsonR:
     """Run an analyzer on a local folder.
     """
-    check_docker_is_running()
+    get_docker_client()  # Ensures that docker is running
 
     specified_analyzer = SpecifiedAnalyzer(
         VersionedAnalyzer(AnalyzerName(analyzer_name), version)
@@ -379,6 +403,7 @@ def run_analyzer_on_local_code(
     output = json_output_store.read(analyzer_input, specified_analyzer)
     if output is None:
         output = ""
+    output_json = json.loads(output).get("results", [])
 
     # Cleanup state
     json_output_store.delete_all()  # type: ignore
@@ -386,4 +411,4 @@ def run_analyzer_on_local_code(
     log_store.delete_all()  # type: ignore
     stats_store.delete_all()  # type: ignore
 
-    return output
+    return output_json

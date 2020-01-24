@@ -1,4 +1,5 @@
 import json
+import subprocess
 from pathlib import Path
 from unittest.mock import patch
 
@@ -8,71 +9,128 @@ import bento.constants
 import bento.extra.eslint
 import bento.result
 import bento.tool_runner
-import pytest
-import util
+from _pytest.monkeypatch import MonkeyPatch
 from bento.commands.check import check
 from bento.context import Context
+from tests.util import mod_file
 
-INTEGRATION = Path(__file__).parent.parent / "integration"
-SIMPLE = Path(__file__).parent.parent / "integration/simple"
-
-
-def test_check_happy_path() -> None:
-    """Validates that check discovers issues in normal usage"""
-
-    runner = CliRunner(mix_stderr=False)
-    Context(SIMPLE).cache.wipe()
-
-    result = runner.invoke(
-        check, ["--formatter", "json"], obj=Context(base_path=SIMPLE)
-    )
-    parsed = json.loads(result.stdout)
-    assert len(parsed) == 4
+BASE = Path(__file__).parent.parent.parent
+INTEGRATION = BASE / "tests" / "integration"
+SIMPLE = INTEGRATION / "simple"
 
 
-def test_check_specified_paths() -> None:
-    """Validates that check discovers issues in specified paths"""
+def test_check_compare_archive() -> None:
+    """Validates that check discovers issues in tech debt mode"""
 
     runner = CliRunner(mix_stderr=False)
     Context(SIMPLE).cache.wipe()
 
     result = runner.invoke(
         check,
-        ["--formatter", "json", "init.js", "foo.py"],
+        ["--formatter", "json", "--all", str(SIMPLE)],
+        obj=Context(base_path=SIMPLE),
+    )
+    parsed = json.loads(result.stdout)
+    assert len(parsed) == 4
+
+
+def test_check_no_diff_noop() -> None:
+    """Validates that bare check with no diffs is noop"""
+
+    runner = CliRunner(mix_stderr=False)
+    Context(SIMPLE).cache.wipe()
+
+    result = runner.invoke(
+        check, ["--formatter", "json"], obj=Context(base_path=SIMPLE), mix_stderr=False
+    )
+
+    parsed = json.loads(result.stdout)
+    assert len(parsed) == 0
+
+    assert (
+        "Nothing to check or archive. Please confirm that changes are staged and not"
+        in result.stderr
+    )
+
+
+def test_check_specified_paths(monkeypatch: MonkeyPatch) -> None:
+    """Validates that check discovers issues in specified paths"""
+
+    monkeypatch.chdir(SIMPLE)
+    runner = CliRunner(mix_stderr=False)
+    Context(SIMPLE).cache.wipe()
+
+    result = runner.invoke(
+        check,
+        ["--formatter", "json", "--all", "init.js", "foo.py"],
         obj=Context(base_path=SIMPLE),
     )
     parsed = json.loads(result.stdout)
     assert len(parsed) == 3
 
 
-def test_check_show_all() -> None:
-    """Validates that check displays archived issues with --show-all"""
+def test_check_compare_to_head_no_diffs() -> None:
+    """Validates that check shows no issues with no diffs with --comparison head"""
 
     runner = CliRunner(mix_stderr=False)
     Context(SIMPLE).cache.wipe()
 
     result = runner.invoke(
-        check, ["--formatter", "json", "--show-all"], obj=Context(base_path=SIMPLE)
+        check, ["--formatter", "json", str(SIMPLE)], obj=Context(base_path=SIMPLE)
     )
     parsed = json.loads(result.stdout)
-    assert len(parsed) == 5
+    assert len(parsed) == 0
 
 
-def test_check_specified_paths_and_staged() -> None:
-    """Validates that check errors when --staged-only used with paths"""
-
+def test_check_compare_to_head_diffs() -> None:
+    """Validates that check shows issues in staged changes"""
     runner = CliRunner(mix_stderr=False)
     Context(SIMPLE).cache.wipe()
 
-    pytest.raises(
-        Exception,
-        runner.invoke(
-            check,
-            ["--staged-only", "init.js", "foo.py"],
-            obj=Context(base_path=SIMPLE),
-            catch_exceptions=False,
-        ),
+    edited = SIMPLE / "bar.py"
+
+    with mod_file(edited):
+        with edited.open("a") as stream:
+            stream.write("\nprint({'a': 2}).has_key('b')")
+
+        subprocess.run(["git", "add", str(edited)], check=True)
+        result = runner.invoke(
+            check, ["--formatter", "json", str(SIMPLE)], obj=Context(base_path=SIMPLE)
+        )
+        subprocess.run(["git", "reset", "HEAD", str(edited)])
+
+    parsed = json.loads(result.stdout)
+    assert [p["check_id"] for p in parsed] == ["deprecated-has-key"]
+
+
+def test_check_specified_ignored(monkeypatch: MonkeyPatch) -> None:
+    """Validates that check does not check specified, ignored paths"""
+
+    monkeypatch.chdir(BASE)
+    runner = CliRunner(mix_stderr=False)
+
+    result = runner.invoke(
+        check,
+        ["-f", "json", "--all", "tests/integration/simple/bar.py"],
+        obj=Context(base_path=BASE),
     )
+    parsed = json.loads(result.stdout)
+    print(parsed)
+    assert not parsed
+
+
+def test_check_relative_path(monkeypatch: MonkeyPatch) -> None:
+    """Validates that check works with relative specified paths when not run from project root"""
+
+    monkeypatch.chdir(SIMPLE / "dist")
+    runner = CliRunner(mix_stderr=False)
+
+    result = runner.invoke(
+        check, ["-f", "json", "--all", "../bar.py"], obj=Context(base_path=SIMPLE)
+    )
+    parsed = json.loads(result.stdout)
+    print(parsed)
+    assert len(parsed) == 1
 
 
 def test_check_no_archive() -> None:
@@ -82,10 +140,12 @@ def test_check_no_archive() -> None:
     context = Context(base_path=SIMPLE)
     context.cache.wipe()
 
-    with util.mod_file(context.baseline_file_path):
+    with mod_file(context.baseline_file_path):
         context.baseline_file_path.unlink()
         result = runner.invoke(
-            check, ["--formatter", "json"], obj=Context(base_path=SIMPLE)
+            check,
+            ["--formatter", "json", "--all", str(SIMPLE)],
+            obj=Context(base_path=SIMPLE),
         )
         parsed = json.loads(result.stdout)
         assert len(parsed) == 5  # Archive contains a single whitelisted finding
@@ -112,6 +172,9 @@ def test_check_tool_error() -> None:
         runner = CliRunner(mix_stderr=False)
         Context(SIMPLE).cache.wipe()
 
-        result = runner.invoke(check, obj=Context(base_path=SIMPLE))
+        result = runner.invoke(
+            check, ["--all", str(SIMPLE)], obj=Context(base_path=SIMPLE)
+        )
+        print(result.stderr)
         assert result.exit_code == 3
         assert expectation in result.stderr.splitlines()

@@ -1,38 +1,28 @@
 import logging
-import os
 import subprocess
 import sys
 import threading
-import time
+from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Tuple
 
 import click
-from pre_commit.git import get_staged_files
-from pre_commit.staged_files_only import staged_files_only
-from pre_commit.util import noop_context
 
 import bento.constants
 import bento.formatter
 import bento.metrics
 import bento.network
+import bento.orchestrator
 import bento.result
 import bento.tool_runner
 from bento.config import get_valid_tools, update_tool_run
 from bento.context import Context
 from bento.decorators import with_metrics
 from bento.error import NodeError
+from bento.paths import PathArgument, list_paths
 from bento.tool import Tool
-from bento.util import (
-    AutocompleteSuggestions,
-    echo_error,
-    echo_newline,
-    echo_next_step,
-    echo_success,
-    echo_warning,
-)
+from bento.util import echo_error, echo_next_step, echo_success, echo_warning
 from bento.violation import Violation
 
-SHOW_ALL = "--show-all"
 OVERRUN_PAGES = 3
 
 
@@ -42,33 +32,19 @@ def __get_ignores_for_tool(tool: str, config: Dict[str, Any]) -> List[str]:
     return tool_specific_config.get("ignore", [])
 
 
-def __list_paths(ctx: Any, args: List[str], incomplete: str) -> AutocompleteSuggestions:
-    # Cases for "incomplete" variable:
-    #   - '': Search '.', no filtering
-    #   - 'part_of_file': Search '.', filter
-    #   - 'path/to/dir/': Search 'path/to/dir', no filter
-    #   - 'path/to/dir/part_of_file': Search 'path/to/dir', filter
-    dir_root = os.path.dirname(incomplete)
-    path_stub = incomplete[len(dir_root) :]
-    if path_stub.startswith("/"):
-        path_stub = path_stub[1:]
-    if dir_root == "":
-        dir_to_list = "."
-    else:
-        dir_to_list = dir_root
-    return [
-        os.path.join(dir_root, p)
-        for p in os.listdir(dir_to_list)
-        if not path_stub or p.startswith(path_stub)
-    ]
-
-
 @click.command()
+@click.option(
+    "--all",
+    "all_",
+    is_flag=True,
+    default=False,
+    help="Show unarchived findings for all tracked files.",
+)
 @click.option(
     "-f",
     "--formatter",
     type=click.Choice(bento.formatter.FORMATTERS.keys()),
-    help="Which output format to use. Falls back to the formatter(s) configured in `.bento.yml`.",
+    help=f"Which output format to use. Falls back to the formatter(s) configured in `{bento.constants.CONFIG_FILE_NAME}`.",
     multiple=True,
 )
 @click.option(
@@ -77,48 +53,43 @@ def __list_paths(ctx: Any, args: List[str], incomplete: str) -> AutocompleteSugg
     default=True,
 )
 @click.option(
-    SHOW_ALL,
-    help="Show all findings, including those previously archived.",
-    is_flag=True,
-    default=False,
-)
-@click.option(
-    "--staged-only",
-    is_flag=True,
-    help="Only runs over files staged in git. This should not be used with explicit paths.",
-)
-@click.option(
     "-t",
     "--tool",
-    help="Specify a previously configured tool to run",
+    help="Specify a previously configured tool to run.",
+    metavar="TOOL",
     autocompletion=get_valid_tools,
 )
-@click.argument("paths", nargs=-1, type=str, autocompletion=__list_paths)
+@click.option("--staged-only", is_flag=True, default=False, hidden=True)
+@click.argument("paths", nargs=-1, type=Path, autocompletion=list_paths)
 @click.pass_obj
 @with_metrics
 def check(
     context: Context,
+    all_: bool = False,
     formatter: Tuple[str, ...] = (),
     pager: bool = True,
-    show_all: bool = False,
-    staged_only: bool = False,
     tool: Optional[str] = None,
-    paths: Optional[List[str]] = None,
+    staged_only: bool = False,  # Should not be used. Legacy support for old pre-commit hooks
+    paths: PathArgument = None,
 ) -> None:
     """
     Checks for new findings.
 
-    Only findings not previously archived will be displayed (use --show-all
-    to display archived findings).
+    By default, only staged files are checked. New findings introduced by
+    these staged changes AND that are not in the archive (`.bento/archive.json`)
+    will be shown.
 
-    By default, 'bento check' will check the entire project. To run
-    on one or more paths only, run:
+    Use `--all` to check all Git tracked files, not just those that are staged:
 
-      bento check path1 path2 ...
+        $ bento check --all [PATHS]
+
+    Optional PATHS can be specified to check specific directories or files.
+
+    See `bento archive --help` to learn about suppressing findings.
     """
     if tool and tool not in context.configured_tools:
         click.echo(
-            f"{tool} has not been configured. Adding default configuration for tool to .bento.yml"
+            f"{tool} has not been configured. Adding default configuration for tool to {bento.constants.CONFIG_FILE_NAME}"
         )
         update_tool_run(context, tool, False)
         # Set configured_tools to None so that future calls will
@@ -129,45 +100,24 @@ def check(
         echo_error("No Bento configuration found. Please run `bento init`.")
         sys.exit(3)
 
-    if not show_all and context.baseline_file_path.exists():
-        with context.baseline_file_path.open() as json_file:
-            baseline = bento.result.yml_to_violation_hashes(json_file)
-    else:
-        baseline = {}
-
     config = context.config
     if formatter:
         config["formatter"] = [{f: {}} for f in formatter]
     fmts = context.formatters
     findings_to_log: List[Any] = []
 
-    click.echo("Running Bento checks...\n", err=True)
-
-    ctx = noop_context()
-    if paths and len(paths) > 0:
-        if staged_only:
-            raise Exception("--staged_only should not be used with explicit paths")
-    elif staged_only:
-        ctx = staged_files_only(
-            os.path.join(os.path.expanduser("~"), ".cache", "bento", "patches")
-        )
-        paths = get_staged_files()
+    if all_:
+        click.echo(f"Running Bento checks on all tracked files...\n", err=True)
     else:
-        paths = None
+        click.echo(f"Running Bento checks on staged files...\n", err=True)
 
-    with ctx:
-        before = time.time()
-        runner = bento.tool_runner.Runner()
-        tools: Iterable[Tool[Any]] = context.tools.values()
+    tools: Iterable[Tool[Any]] = context.tools.values()
+    if tool:
+        tools = [context.configured_tools[tool]]
 
-        if tool:
-            tools = [context.configured_tools[tool]]
-
-        all_results = runner.parallel_results(tools, baseline, paths)
-        elapsed = time.time() - before
-
-    # Progress bars terminate on whitespace
-    echo_newline()
+    all_results, elapsed = bento.orchestrator.orchestrate(
+        context, paths, not all_, tools
+    )
 
     is_error = False
 
@@ -219,26 +169,32 @@ You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PA
     stats_thread = threading.Thread(name="stats", target=post_metrics)
     stats_thread.start()
 
-    if n_all_filtered > 0:
-        dumped = [f.dump(filtered_findings) for f in fmts]
-        context.start_user_timer()
-        bento.util.less(dumped, pager=pager, overrun_pages=OVERRUN_PAGES)
-        context.stop_user_timer()
+    dumped = [f.dump(filtered_findings) for f in fmts]
+    context.start_user_timer()
+    bento.util.less(dumped, pager=pager, overrun_pages=OVERRUN_PAGES)
+    context.stop_user_timer()
 
-        echo_warning(f"{n_all_filtered} finding(s) in {elapsed:.2f} s\n")
-        if not context.is_init:
-            echo_next_step("To suppress all findings", "bento archive")
+    finding_source_text = "in this project" if all_ else "due to staged changes"
+    if n_all_filtered > 0:
+        echo_warning(
+            f"{n_all_filtered} finding(s) {finding_source_text} in {elapsed:.2f} s"
+        )
+        click.secho("\nPlease fix these issues, or:\n", err=True)
+        echo_next_step("To archive findings as tech debt", f"bento archive")
+        echo_next_step("To disable a specific check", f"bento disable check TOOL CHECK")
     else:
-        echo_success(f"0 findings in {elapsed:.2f} s\n")
+        echo_success(f"0 findings {finding_source_text} in {elapsed:.2f} s\n")
 
     n_archived = n_all - n_all_filtered
-    if n_archived > 0 and not show_all:
+    if n_archived > 0:
         echo_next_step(
             f"Not showing {n_archived} archived finding(s). To view",
-            f"bento check {SHOW_ALL}",
+            "cat .bento/archive.json",
         )
 
-    if is_error:
+    if not all_ and not context.autorun_is_blocking:
+        return
+    elif is_error:
         sys.exit(3)
     elif n_all_filtered > 0:
         sys.exit(2)
