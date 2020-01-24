@@ -134,16 +134,22 @@ Bento configures itself for personal use by default. This means that it:
 1. Automatically checks for issues introduced by your code, as you commit it
 2. Only affects you; it won’t change anything for other project contributors or modify Git state
 
-Initialization enables `autorun` behind the scenes, which can be can be enabled or disabled using:
-
-```bash
-$ bento [enable|disable] autorun
-```
-
-By default `autorun` blocks the commit if Bento returns results. To make it non-blocking:
+Initialization enables `autorun` behind the scenes. By default `autorun` blocks the commit if Bento returns findings. To make it non-blocking:
 
 ```bash
 $ bento enable autorun --no-block
+```
+
+You can always manually run Bento on staged files or directories via:
+
+```bash
+$ bento check [PATHS]
+```
+
+This will show only new findings introduced by these files AND that are not in the archive (`.bento/archive.json`). Use `--all` to check all Git tracked files, not just those that are staged:
+
+```bash
+$ bento check --all [PATHS]
 ```
 
 This feature makes use of Git hooks. If the Bento hook incorrectly blocks your commit, you can skip it by passing the `--no-verify` flag to Git at commit-time (please use this sparingly since all hooks will be skipped):
@@ -190,10 +196,10 @@ You can then add Bento to your CI scripts:
 
 ```bash
 $ pip3 install bento-cli && bento --version
-$ bento --agree --email=<YOUR_EMAIL> check --comparison=archive . 2>&1 | cat
+$ bento --agree --email=<YOUR_EMAIL> check --all 2>&1 | cat
 ```
 
-We pipe through `cat` to disable Bento's interactive tty features (e.g. progress bars, using a pager for many results).
+We pipe through `cat` to disable Bento's interactive tty features (e.g. progress bars, using a pager for many findings).
 
 If you use CircleCI, the above commands become:
 
@@ -210,7 +216,7 @@ jobs:
         command: pip3 install bento-cli && bento --version
     - run:
         name: "Run Bento check"
-        command: bento --agree --email=<YOUR_EMAIL> check --comparison=archive . 2>&1 | cat
+        command: bento --agree --email=<YOUR_EMAIL> check --all 2>&1 | cat
 ```
 
 `bento check` will exit with a non-zero exit code if it finds issues in your code (see [Exit Codes](#exit-codes)).
