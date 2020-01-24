@@ -24,6 +24,7 @@ GREP_CONFIG_FILE_NAME = "grep-config.yml"
 
 TERMS_OF_SERVICE_KEY = "terms_of_service"
 TERMS_OF_SERVICE_VERSION = "0.3.0"
+GLOBAL_GIT_IGNORE_OPT_OUT = "opt_out_global_git_ignore"
 
 # Identifiers
 

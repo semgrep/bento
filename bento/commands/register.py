@@ -177,6 +177,7 @@ class Registrar(object):
         Requirements:
         - Interactive terminal
         - bento/ not in ignore file
+        - User hasn't previously opted out
         - User agrees
 
         :return: A tuple of (the path to the global git ignore, whether to update the file)
@@ -188,6 +189,10 @@ class Registrar(object):
         )
 
         if sys.stderr.isatty() and sys.stdin.isatty():
+            opt_out_value = self.global_config.get(constants.GLOBAL_GIT_IGNORE_OPT_OUT)
+            user_opted_out = opt_out_value is not None and opt_out_value is True
+            if user_opted_out:
+                return gitignore_path, False
             has_ignore = None
             if gitignore_path.exists():
                 with gitignore_path.open("r") as fd:
@@ -198,6 +203,9 @@ class Registrar(object):
                     content.UpdateGitignore.confirm_yes.echo()
                     return gitignore_path, True
                 else:
+                    self.global_config[constants.GLOBAL_GIT_IGNORE_OPT_OUT] = True
+
+                    persist_global_config(self.global_config)
                     content.UpdateGitignore.confirm_no.echo()
         return gitignore_path, False
 
@@ -256,7 +264,8 @@ class Registrar(object):
         if not self.agree and not self._confirm_tos_update():
             return False
 
-        if not self.agree:
+        # only ask about updating gitignore in init
+        if not self.agree and self.click_context.command.name == "init":
             ignore_path, update_ignore = self._query_gitignore_update()
             self._update_gitignore_if_necessary(ignore_path, update_ignore)
 
