@@ -94,7 +94,7 @@ def test_modified_hash_ignore(tmp_path: Path) -> None:
 def test_get(tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
     _, file = __setup_test_dir(tmp_path)
 
-    paths = [str(tmp_path)]
+    paths = [tmp_path]
 
     with tempfile.TemporaryDirectory() as tmpdir:
         cache_path = Path(tmpdir)

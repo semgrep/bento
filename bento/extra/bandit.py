@@ -82,6 +82,53 @@ from bento.util import fetch_line_in_file
 #   ]
 # }
 
+BANDIT_TO_BENTO = {
+    "B101": "assert-used",
+    "B102": "exec-used",
+    "B103": "set-bad-file-permissions",
+    "B104": "hardcoded-bind-all-interfaces",
+    "B105": "hardcoded-password-string",
+    "B106": "hardcoded-password-funcarg",
+    "B107": "hardcoded-password-default",
+    "B108": "hardcoded-tmp-directory",
+    "B110": "try-except-pass",
+    "B112": "try-except-continue",
+    "B201": "flask-debug-true",
+    "B303": "md5",
+    "B310": "urllib-urlopen",
+    "B311": "random",
+    "B322": "python2-input",
+    "B403": "import-pickle",
+    "B404": "import-subprocess",
+    "B405": "import_xml-etree",
+    "B406": "import-xml-sax",
+    "B407": "import-xml-expat",
+    "B408": "import-xml-minidom",
+    "B409": "import-xml-pulldom",
+    "B410": "import-lxml",
+    "B501": "request-with-no-cert-validation",
+    "B502": "ssl-with-bad-version",
+    "B503": "ssl-with-bad-defaults",
+    "B504": "ssl-with-no-version",
+    "B505": "weak-cryptographic-key",
+    "B506": "yaml-load",
+    "B507": "ssh-no-host-key-verification",
+    "B601": "paramiko-calls",
+    "B602": "subprocess-popen-with-shell-equals-true",
+    "B603": "subprocess-without-shell-equals-true",
+    "B604": "any-other-function-with-shell-equals-true",
+    "B605": "start-process-with-a-shell",
+    "B606": "start-process-with-no-shell",
+    "B607": "start-process-with-partial-path",
+    "B608": "hardcoded-sql-expressions",
+    "B609": "linux-commands-wildcard-injection",
+    "B610": "django-extra-used",
+    "B611": "django-rawsql-used",
+    "B701": "jinja2-autoescape-false",
+    "B702": "use-of-mako-templates",
+    "B703": "django-mark-safe",
+}
+
 
 class BanditParser(Parser[str]):
     SEVERITY = {"LOW": 0, "MEDIUM": 1, "HIGH": 2}
@@ -106,6 +153,9 @@ class BanditParser(Parser[str]):
 
         # Remove bandit line numbers, empty lines, and leading / trailing whitespace
         bandit_source = result["code"].rstrip()  # Remove trailing whitespace
+
+        test_id = result["test_id"]
+        check_id = BANDIT_TO_BENTO.get(test_id, test_id)
 
         line_range = result["line_range"]
 
@@ -136,7 +186,7 @@ class BanditParser(Parser[str]):
             )
 
         return Violation(
-            check_id=result["test_id"],
+            check_id=check_id,
             tool_id=BanditTool.TOOL_ID,
             path=path,
             line=result["line_number"],
@@ -155,7 +205,7 @@ class BanditParser(Parser[str]):
 
 
 class BanditTool(PythonTool[str], StrTool):
-    TOOL_ID = "r2c.bandit"  # to-do: versioning?
+    TOOL_ID = "bandit"  # to-do: versioning?
     VENV_DIR = "bandit"
     PROJECT_NAME = "Python"
     FILE_NAME_FILTER = re.compile(r".*\.py\b")
@@ -186,7 +236,12 @@ class BanditTool(PythonTool[str], StrTool):
         return BanditTool.FILE_NAME_FILTER
 
     def run(self, paths: Iterable[str]) -> str:
-        cmd = f"""python "$(which bandit)" --f json -x {self._ignore_param()} -r """
-        env, args = PythonTool.sanitize_arguments(paths)
-        cmd += " ".join(args)
-        return self.venv_exec(cmd, env=env, check_output=False)
+        cmd = [
+            "python",
+            str(self.venv_dir() / "bin" / "bandit"),
+            "-f",
+            "json",
+            "-r",
+            *paths,
+        ]
+        return self.venv_exec(cmd, check_output=False)

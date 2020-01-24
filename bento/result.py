@@ -1,14 +1,17 @@
-from typing import Any, Dict, List, Set, TextIO, Union
+import json
+from collections import OrderedDict
+from typing import Any, Dict, List, Mapping, Set, TextIO, Union
 
 import attr
-import yaml
 
 from bento.violation import Violation
 
 VIOLATIONS_KEY = "violations"
 
 Hash = str
+ToolId = str
 Baseline = Dict[str, Set[Hash]]
+ToolResults = Mapping[str, Mapping[Hash, Mapping[str, Any]]]
 
 
 def filtered(
@@ -20,18 +23,27 @@ def filtered(
     ]
 
 
-def tool_results_to_yml(tool_id: str, results: List[Violation]) -> str:
-    with_hashes: Dict[str, Dict[str, Any]] = {
-        v.syntactic_identifier_str(): v.to_dict() for v in results
-    }
-    results_dict = {tool_id: {VIOLATIONS_KEY: with_hashes}}
-    return yaml.safe_dump(results_dict, default_flow_style=False)
+def dump_results(results: List[Violation]) -> Dict[str, Dict[Hash, Dict[str, Any]]]:
+    with_hashes: Dict[str, Dict[str, Any]] = OrderedDict(
+        sorted(
+            ((v.syntactic_identifier_str(), v.to_dict()) for v in results),
+            key=(lambda vv: vv[0]),
+        )
+    )
+    return {VIOLATIONS_KEY: with_hashes}
 
 
-def yml_to_violation_hashes(yml: Union[str, TextIO]) -> Baseline:
-    parsed = yaml.safe_load(yml)
-    if parsed is None:
-        return {}
+def write_tool_results(stream: TextIO, results: Mapping[ToolId, ToolResults]) -> None:
+    json.dump(results, stream, indent=2)
+
+
+def load_baseline(text: Union[str, TextIO]) -> Mapping[str, ToolResults]:
+    parsed = json.loads(text) if isinstance(text, str) else json.load(text)
+    return parsed or {}
+
+
+def json_to_violation_hashes(text: Union[str, TextIO]) -> Baseline:
+    parsed = load_baseline(text)
     out = {}
     for (tool_id, r) in parsed.items():
         violations = r[VIOLATIONS_KEY]

@@ -15,8 +15,8 @@ class Boto3Parser(Flake8Parser):
         page = Boto3Parser.id_to_name(check_id)
         return f"https://checks.bento.dev/en/latest/flake8-boto3/{page}"
 
-    @staticmethod
-    def id_to_name(check_id: str) -> str:
+    @classmethod
+    def id_to_name(cls, check_id: str) -> str:
         return check_id.replace(PREFIX, "")
 
     @staticmethod
@@ -30,7 +30,7 @@ class Boto3Tool(Flake8Tool):
     PACKAGES = {
         "flake8": SimpleSpec("~=3.7.0"),
         "flake8-json": SimpleSpec("~=19.8.0"),
-        "flake8-boto3": SimpleSpec("~=0.2.4"),
+        "flake8-boto3": SimpleSpec("==0.2.4"),
     }
 
     @property

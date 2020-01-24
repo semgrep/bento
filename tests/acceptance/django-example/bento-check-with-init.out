@@ -1,11 +1,7 @@
-==> Bento Summary
-error: r2c.flake8.EXE001 https://lintlyci.github.io/Flake8Rules/rules/EXE001.html
-     --> manage.py:1:1
-      |
-    1 |   #!/usr/bin/env python
-      |
-      = note: Shebang is present but the file is not executable.
+flake8 not-executable https://github.com/xuhdev/flake8-executable/blob/master/README.md#flake8-executable
+     > manage.py:1
+     ╷
+    1│   #!/usr/bin/env python
+     ╵
+     = Shebang is present but the file is not executable.
 
-
-r2c.flake8:
-  EXE001         1▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬

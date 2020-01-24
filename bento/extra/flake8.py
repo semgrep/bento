@@ -1,6 +1,6 @@
 import json
 import re
-from typing import Any, Dict, Iterable, List, Pattern, Type
+from typing import Any, Dict, Iterable, List, Mapping, Pattern, Type
 
 from semantic_version import SimpleSpec
 
@@ -24,21 +24,98 @@ from bento.tool import StrTool
 # }
 #
 
+# Only these prefixes will be inspected
+RULE_PREFIXES = "B,C90,E113,E74,E9,EXE,F,T100,W6"
+
+FLAKE8_TO_BENTO = {
+    "B001": "bare-except-bugbear",
+    "B002": "unsupported-unary-increment",
+    "B003": "assignment-to-environ",
+    "B004": "unreliable-hasattr-call",
+    "B005": "no-multicharacter-strip",
+    "B006": "no-mutable-default-args",
+    "B007": "unused-loop-variable",
+    "B008": "no-call-in-default-args",
+    "B009": "no-getattr",
+    "B010": "no-setattr",
+    "B011": "no-assert-false",
+    "B012": "escaped-finally",
+    "B301": "no-iter-methods",
+    "B302": "no-view-methods",
+    "B303": "no-metaclass",
+    "B304": "no-maxint",
+    "B305": "no-next-method",
+    "B306": "no-exception-message-method",
+    "C90": "too-complex",
+    "E113": "indentation-error",
+    "E701": "multiple-statements-colon",
+    "E702": "multiple-statements-semicolon",
+    "E703": "ending-semicolon",
+    "E704": "multiple-statements-def",
+    "E711": "none-comparison",
+    "E712": "true-comparison",
+    "E713": "membership-test",
+    "E714": "identity-test",
+    "E721": "type-comparison",
+    "E722": "bare-except",
+    "E731": "no-assign-lambda",
+    "E741": "ambiguous-variable-name",
+    "E742": "ambiguous-class-name",
+    "E743": "ambiguous-function-name",
+    "E901": "syntax-error",
+    "E902": "io-error",
+    "E999": "parse-error",
+    "EXE001": "not-executable",
+    "EXE002": "missing-shebang",
+    "EXE003": "not-python",
+    "EXE004": "whitespace-before-shebang",
+    "EXE005": "lines-before-shebang",
+    "F401": "unused-module",
+    "F402": "shadowed-import",
+    "F403": "wildcard-import",
+    "F404": "future-import-order",
+    "F405": "undefined-module-name",
+    "F406": "bad-wildcard-import",
+    "F811": "redefined-unused-name",
+    "F812": "redefined-name",
+    "F821": "undefined-name",
+    "F822": "undefined-name-in-all",
+    "F823": "unassigned-variable",
+    "F831": "duplicated-argument",
+    "F841": "unused-variable",
+    "T100": "debugger",
+    "W601": "deprecated-has-key",
+    "W602": "deprecated-raise",
+    "W603": "deprecated-inequality",
+    "W604": "deprecated-backticks",
+    "W605": "invalid-escape",
+}
+
 
 class Flake8Parser(Parser[str]):
+    @classmethod
+    def to_bento(cls) -> Mapping[str, str]:
+        return FLAKE8_TO_BENTO
+
     @staticmethod
     def id_to_link(check_id: str) -> str:
         if check_id == "E999":
             link = ""
-        elif check_id in ("E722", "E306", "E117"):
+        elif check_id.startswith("B"):
+            link = "https://github.com/PyCQA/flake8-bugbear/blob/master/README.rst#list-of-warnings"
+        elif check_id == "T100":
+            link = "https://github.com/JBKahn/flake8-debugger/blob/master/README.md"
+        elif check_id.startswith("EXE"):
+            link = "https://github.com/xuhdev/flake8-executable/blob/master/README.md#flake8-executable"
+        elif check_id in ("E722", "E306", "E117", "E113"):
             link = "https://pycodestyle.readthedocs.io/en/latest/intro.html#error-codes"
         else:
             link = f"https://lintlyci.github.io/Flake8Rules/rules/{check_id}.html"
         return link
 
-    @staticmethod
-    def id_to_name(check_id: str) -> str:
-        return check_id
+    @classmethod
+    def id_to_name(cls, check_id: str) -> str:
+        return cls.to_bento().get(check_id, check_id)
 
     @staticmethod
     def tool() -> Type[StrTool]:
@@ -68,7 +145,7 @@ class Flake8Parser(Parser[str]):
 
 
 class Flake8Tool(PythonTool[str], StrTool):
-    TOOL_ID = "r2c.flake8"  # to-do: versioning?
+    TOOL_ID = "flake8"  # to-do: versioning?
     VENV_DIR = "flake8"
     PROJECT_NAME = "Python"
     PACKAGES = {
@@ -106,10 +183,15 @@ class Flake8Tool(PythonTool[str], StrTool):
 
     def select_clause(self) -> str:
         """Returns a --select argument to identify which checks flake8 should run"""
-        return ""
+        return f"--select={RULE_PREFIXES}"
 
     def run(self, paths: Iterable[str]) -> str:
-        cmd = f"""python "$(which flake8)" {self.select_clause()} --format=json --exclude={self._ignore_param().replace(" ", "*")} """  # stupid hack to deal with spaces in flake8 exclude see https://stackoverflow.com/a/53176372
-        env, args = PythonTool.sanitize_arguments(paths)
-        cmd += " ".join(args)
-        return self.venv_exec(cmd, env=env, check_output=False)
+        cmd = [
+            "python",
+            str(self.venv_dir() / "bin" / "flake8"),
+            self.select_clause(),
+            "--format=json",
+            "--exclude=.svn,CVS,.bzr,.hg,.git,__pycache__,.tox,.eggs,*.egg",
+            *paths,
+        ]
+        return self.venv_exec(cmd, check_output=False)

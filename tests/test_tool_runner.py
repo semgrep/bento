@@ -1,4 +1,5 @@
 import os
+from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
 
 import bento.cli
@@ -39,14 +40,17 @@ def __count_simple_findings(
     monkeypatch.chdir(os.path.join(BASE_PATH, path))
     context = bento.context.Context()
     tools = context.tools.values()
-    results = bento.tool_runner.Runner().parallel_results(tools, archive, files)
+    paths = [Path(f) for f in files] if files is not None else [context.base_path]
+    results = bento.tool_runner.Runner(paths=paths, use_cache=True).parallel_results(
+        tools, archive
+    )
     return {tid: __violation_counts(vv) for tid, vv in results if isinstance(vv, list)}
 
 
 def test_tool_parallel_results_no_archive_no_files(monkeypatch: MonkeyPatch) -> None:
     """Validates that tools are run in parallel and return proper finding counts (no archive, no passed files)"""
     counts = __count_simple_findings({}, None, monkeypatch)
-    expectation = {"r2c.bandit": (2, 0), "r2c.eslint": (1, 0), "r2c.flake8": (2, 0)}
+    expectation = {"bandit": (2, 0), "eslint": (1, 0), "flake8": (2, 0)}
 
     assert counts == expectation
 
@@ -54,12 +58,12 @@ def test_tool_parallel_results_no_archive_no_files(monkeypatch: MonkeyPatch) -> 
 def test_tool_parallel_results_with_archive_no_files(monkeypatch: MonkeyPatch) -> None:
     """Validates that tools are run in parallel and return proper finding counts (archive, no passed files)"""
     with open(
-        os.path.join(BASE_PATH, "tests/integration/simple/.bento-whitelist.yml")
+        os.path.join(BASE_PATH, "tests/integration/simple/.bento/archive.json")
     ) as file:
-        archive = bento.result.yml_to_violation_hashes(file)
+        archive = bento.result.json_to_violation_hashes(file)
     counts = __count_simple_findings(archive, None, monkeypatch)
 
-    expectation = {"r2c.bandit": (2, 0), "r2c.eslint": (1, 0), "r2c.flake8": (1, 1)}
+    expectation = {"bandit": (2, 0), "eslint": (1, 0), "flake8": (1, 1)}
 
     assert counts == expectation
 
@@ -67,7 +71,7 @@ def test_tool_parallel_results_with_archive_no_files(monkeypatch: MonkeyPatch) -
 def test_tool_parallel_results_no_archive_es_files(monkeypatch: MonkeyPatch) -> None:
     """Validates that tools are run in parallel and return proper finding counts (no archive, js files only)"""
     counts = __count_simple_findings({}, ["init.js"], monkeypatch)
-    expectation = {"r2c.bandit": (0, 0), "r2c.eslint": (1, 0), "r2c.flake8": (0, 0)}
+    expectation = {"bandit": (0, 0), "eslint": (1, 0), "flake8": (0, 0)}
 
     assert counts == expectation
 
@@ -75,7 +79,7 @@ def test_tool_parallel_results_no_archive_es_files(monkeypatch: MonkeyPatch) -> 
 def test_tool_parallel_results_no_archive_py_files(monkeypatch: MonkeyPatch) -> None:
     """Validates that tools are run in parallel and return proper finding counts (no archive, single py file only)"""
     counts = __count_simple_findings({}, ["foo.py"], monkeypatch)
-    expectation = {"r2c.bandit": (1, 0), "r2c.eslint": (0, 0), "r2c.flake8": (2, 0)}
+    expectation = {"bandit": (1, 0), "eslint": (0, 0), "flake8": (2, 0)}
 
     assert counts == expectation
 
@@ -83,17 +87,17 @@ def test_tool_parallel_results_no_archive_py_files(monkeypatch: MonkeyPatch) -> 
 def test_tool_parallel_results_archive_py_files(monkeypatch: MonkeyPatch) -> None:
     """Validates that tools are run in parallel and return proper finding counts (archive, passed files)"""
     with open(
-        os.path.join(BASE_PATH, "tests/integration/simple/.bento-whitelist.yml")
+        os.path.join(BASE_PATH, "tests/integration/simple/.bento/archive.json")
     ) as file:
-        archive = bento.result.yml_to_violation_hashes(file)
+        archive = bento.result.json_to_violation_hashes(file)
     counts = __count_simple_findings(archive, ["foo.py"], monkeypatch)
-    expectation = {"r2c.bandit": (1, 0), "r2c.eslint": (0, 0), "r2c.flake8": (1, 1)}
+    expectation = {"bandit": (1, 0), "eslint": (0, 0), "flake8": (1, 1)}
 
     assert counts == expectation
 
 
 def test_tool_runner_no_yml() -> None:
     """Validates that tool runner aborts if there are no tools"""
-    runner = bento.tool_runner.Runner()
+    runner = bento.tool_runner.Runner(use_cache=True, paths=[Path.cwd()])
     args = [runner, [], set(), None]
     pytest.raises(Exception, bento.tool_runner.Runner.parallel_results, *args)

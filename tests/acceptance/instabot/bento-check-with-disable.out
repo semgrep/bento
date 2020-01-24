@@ -1,180 +1,201 @@
-==> Bento Summary
-advice: r2c.bandit.B605 https://bandit.readthedocs.io/en/latest/plugins/b605_start_process_with_a_shell.html
-     --> examples/multi_script_CLI.py:42:0
-      |
-   42 |            os.system("cls")
-      |
-      = note: Starting a process with a shell: Seems safe, but may be changed in the future, consider rewriting without shell                                                                                         
+bandit start-process-with-a-shell https://bandit.readthedocs.io/en/latest/plugins/b605_start_process_with_a_shell.html
+     > examples/multi_script_CLI.py:42
+     ╷
+   42│   os.system("cls")
+     ╵
+     = Starting a process with a shell: Seems safe, but may be changed in the
+       future, consider rewriting without shell
 
+bandit try-except-pass https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+     > instabot/api/api.py:538
+     ╷
+  538│   except Exception:
+     ╵
+     = Try, Except, Pass detected.
 
-advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
-     --> instabot/api/api.py:538:0
-      |
-  538 |                except Exception:
-      |
-      = note: Try, Except, Pass detected.                                                                                                                                                                             
+flake8 no-mutable-default-args https://github.com/PyCQA/flake8-bugbear/blob/master/README.rst#list-of-warnings
+     > instabot/api/api.py:673
+     ╷
+  673│   def get_timeline_feed(self, options=[]):
+     ╵
+     = Do not use mutable data structures for argument defaults.  They are
+       created during function definition time. All calls to the function reuse
+       this one instance of that data structure, persisting changes between
+       them.
 
-error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
-     --> instabot/api/api.py:673:41
-      |
-  673 |       def get_timeline_feed(self, options=[]):
-      |
-      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+flake8 no-mutable-default-args https://github.com/PyCQA/flake8-bugbear/blob/master/README.rst#list-of-warnings
+     > instabot/api/api.py:736
+     ╷
+  736│   options={},
+     ╵
+     = Do not use mutable data structures for argument defaults.  They are
+       created during function definition time. All calls to the function reuse
+       this one instance of that data structure, persisting changes between
+       them.
 
-error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
-     --> instabot/api/api.py:736:17
-      |
-  736 |           options={},
-      |
-      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+flake8 no-mutable-default-args https://github.com/PyCQA/flake8-bugbear/blob/master/README.rst#list-of-warnings
+     > instabot/api/api.py:777
+     ╷
+  777│   self, video, caption=None, upload_id=None, thumbnail=None, options={}
+     ╵
+     = Do not use mutable data structures for argument defaults.  They are
+       created during function definition time. All calls to the function reuse
+       this one instance of that data structure, persisting changes between
+       them.
 
-error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
-     --> instabot/api/api.py:777:76
-      |
-  777 |           self, video, caption=None, upload_id=None, thumbnail=None, options={}
-      |
-      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+flake8 no-mutable-default-args https://github.com/PyCQA/flake8-bugbear/blob/master/README.rst#list-of-warnings
+     > instabot/api/api.py:817
+     ╷
+  817│   options={},
+     ╵
+     = Do not use mutable data structures for argument defaults.  They are
+       created during function definition time. All calls to the function reuse
+       this one instance of that data structure, persisting changes between
+       them.
 
-error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
-     --> instabot/api/api.py:817:17
-      |
-  817 |           options={},
-      |
-      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+flake8 no-mutable-default-args https://github.com/PyCQA/flake8-bugbear/blob/master/README.rst#list-of-warnings
+     > instabot/api/api_photo.py:107
+     ╷
+  107│   options={},
+     ╵
+     = Do not use mutable data structures for argument defaults.  They are
+       created during function definition time. All calls to the function reuse
+       this one instance of that data structure, persisting changes between
+       them.
 
+flake8 no-mutable-default-args https://github.com/PyCQA/flake8-bugbear/blob/master/README.rst#list-of-warnings
+     > instabot/api/api_video.py:102
+     ╷
+  102│   options={}
+     ╵
+     = Do not use mutable data structures for argument defaults.  They are
+       created during function definition time. All calls to the function reuse
+       this one instance of that data structure, persisting changes between
+       them.
 
-error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
-     --> instabot/api/api_photo.py:107:13
-      |
-  107 |       options={},
-      |
-      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+flake8 no-mutable-default-args https://github.com/PyCQA/flake8-bugbear/blob/master/README.rst#list-of-warnings
+     > instabot/api/api_video.py:234
+     ╷
+  234│   options={}
+     ╵
+     = Do not use mutable data structures for argument defaults.  They are
+       created during function definition time. All calls to the function reuse
+       this one instance of that data structure, persisting changes between
+       them.
 
-error: r2c.flake8.B007 https://lintlyci.github.io/Flake8Rules/rules/B007.html
-     --> instabot/api/api_photo.py:179:13
-      |
-  179 |           for attempt in range(4):
-      |
-      = note: Loop control variable 'attempt' not used within the loop body. If this is intended, start the name with an underscore.                                                                                  
+flake8 not-executable https://github.com/xuhdev/flake8-executable/blob/master/README.md#flake8-executable
+     > instabot/api/prepare.py:1
+     ╷
+    1│   #!/usr/bin/env python
+     ╵
+     = Shebang is present but the file is not executable.
 
+flake8 missing-shebang https://github.com/xuhdev/flake8-executable/blob/master/README.md#flake8-executable
+     > instabot/bot/bot.py:0
+     = The file is executable but no shebang is present.
 
-error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
-     --> instabot/api/api_video.py:102:13
-      |
-  102 |       options={}
-      |
-      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+flake8 no-mutable-default-args https://github.com/PyCQA/flake8-bugbear/blob/master/README.rst#list-of-warnings
+     > instabot/bot/bot.py:170
+     ╷
+  170│   blacklist_hashtags=["#shop", "#store", "#free"],
+     ╵
+     = Do not use mutable data structures for argument defaults.  They are
+       created during function definition time. All calls to the function reuse
+       this one instance of that data structure, persisting changes between
+       them.
 
-error: r2c.flake8.B007 https://lintlyci.github.io/Flake8Rules/rules/B007.html
-     --> instabot/api/api_video.py:202:17
-      |
-  202 |               for attempt in range(4):
-      |
-      = note: Loop control variable 'attempt' not used within the loop body. If this is intended, start the name with an underscore.                                                                                  
+flake8 no-mutable-default-args https://github.com/PyCQA/flake8-bugbear/blob/master/README.rst#list-of-warnings
+     > instabot/bot/bot.py:752
+     ╷
+  752│   options={}
+     ╵
+     = Do not use mutable data structures for argument defaults.  They are
+       created during function definition time. All calls to the function reuse
+       this one instance of that data structure, persisting changes between
+       them.
 
-error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
-     --> instabot/api/api_video.py:234:13
-      |
-  234 |       options={}
-      |
-      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+flake8 no-mutable-default-args https://github.com/PyCQA/flake8-bugbear/blob/master/README.rst#list-of-warnings
+     > instabot/bot/bot.py:780
+     ╷
+  780│   def upload_video(self, video, caption="", thumbnail=None, options={}):
+     ╵
+     = Do not use mutable data structures for argument defaults.  They are
+       created during function definition time. All calls to the function reuse
+       this one instance of that data structure, persisting changes between
+       them.
 
+bandit B301 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b301-pickle
+     > instabot/bot/bot_checkpoint.py:66
+     ╷
+   66│   checkpoint = pickle.load(f)
+     ╵
+     = Pickle and modules that wrap it can be unsafe when used to deserialize
+       untrusted data, possible security issue.
 
-error: r2c.flake8.EXE001 https://lintlyci.github.io/Flake8Rules/rules/EXE001.html
-     --> instabot/api/prepare.py:1:1
-      |
-    1 |   #!/usr/bin/env python
-      |
-      = note: Shebang is present but the file is not executable.                                                                                                                                                      
+bandit try-except-pass https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
+     > instabot/bot/bot_checkpoint.py:71
+     ╷
+   71│   except Exception:
+     ╵
+     = Try, Except, Pass detected.
 
-error: r2c.flake8.B007 https://lintlyci.github.io/Flake8Rules/rules/B007.html
-     --> instabot/api/prepare.py:37:26
-      |
-   37 |           for ind, (login, password) in enumerate(lines):
-      |
-      = note: Loop control variable 'password' not used within the loop body. If this is intended, start the name with an underscore.                                                                                 
+flake8 missing-shebang https://github.com/xuhdev/flake8-executable/blob/master/README.md#flake8-executable
+     > instabot/bot/bot_filter.py:0
+     = The file is executable but no shebang is present.
 
+flake8 missing-shebang https://github.com/xuhdev/flake8-executable/blob/master/README.md#flake8-executable
+     > instabot/bot/bot_follow.py:0
+     = The file is executable but no shebang is present.
 
-error: r2c.flake8.EXE002 https://lintlyci.github.io/Flake8Rules/rules/EXE002.html
-     --> instabot/bot/bot.py:0:1
-      = note: The file is executable but no shebang is present.                                                                                                                                                       
+flake8 missing-shebang https://github.com/xuhdev/flake8-executable/blob/master/README.md#flake8-executable
+     > instabot/bot/bot_like.py:0
+     = The file is executable but no shebang is present.
 
-error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
-     --> instabot/bot/bot.py:170:28
-      |
-  170 |           blacklist_hashtags=["#shop", "#store", "#free"],
-      |
-      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+flake8 no-mutable-default-args https://github.com/PyCQA/flake8-bugbear/blob/master/README.rst#list-of-warnings
+     > instabot/bot/bot_photo.py:13
+     ╷
+   13│   options={}
+     ╵
+     = Do not use mutable data structures for argument defaults.  They are
+       created during function definition time. All calls to the function reuse
+       this one instance of that data structure, persisting changes between
+       them.
 
-error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
-     --> instabot/bot/bot.py:752:17
-      |
-  752 |           options={}
-      |
-      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+flake8 no-mutable-default-args https://github.com/PyCQA/flake8-bugbear/blob/master/README.rst#list-of-warnings
+     > instabot/bot/bot_video.py:4
+     ╷
+    4│   def upload_video(self, video, caption="", thumbnail=None, options={}):
+     ╵
+     = Do not use mutable data structures for argument defaults.  They are
+       created during function definition time. All calls to the function reuse
+       this one instance of that data structure, persisting changes between
+       them.
 
-error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
-     --> instabot/bot/bot.py:780:71
-      |
-  780 |       def upload_video(self, video, caption="", thumbnail=None, options={}):
-      |
-      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
+shellcheck SC2148 https://github.com/koalaman/shellcheck/wiki/SC2148
+     > push.sh:1
+     ╷
+    1│   LAST_COMMIT_MESSAGE="$(git log --no-merges -2 --pretty=%B)"
+     ╵
+     = Tips depend on target shell and yours is unknown. Add a shebang.
 
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > push.sh:6
+     ╷
+    6│   git remote add origin https://${GITHUB_TOKEN}@github.com/instagrambot/instabot.git
+     ╵
+     = Double quote to prevent globbing and word splitting.
 
-warning: r2c.bandit.B301 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b301-pickle
-     --> instabot/bot/bot_checkpoint.py:66:0
-      |
-   66 |                checkpoint = pickle.load(f)
-      |
-      = note: Pickle and modules that wrap it can be unsafe when used to deserialize untrusted data, possible security issue.                                                                                         
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > push.sh:13
+     ╷
+   13│   twine upload -u $PYPI_USERNAME -p $PYPI_PASSWORD dist/*
+     ╵
+     = Double quote to prevent globbing and word splitting.
 
-advice: r2c.bandit.B110 https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
-     --> instabot/bot/bot_checkpoint.py:71:0
-      |
-   71 |        except Exception:
-      |
-      = note: Try, Except, Pass detected.                                                                                                                                                                             
-
-
-error: r2c.flake8.EXE002 https://lintlyci.github.io/Flake8Rules/rules/EXE002.html
-     --> instabot/bot/bot_filter.py:0:1
-      = note: The file is executable but no shebang is present.                                                                                                                                                       
-
-
-error: r2c.flake8.EXE002 https://lintlyci.github.io/Flake8Rules/rules/EXE002.html
-     --> instabot/bot/bot_follow.py:0:1
-      = note: The file is executable but no shebang is present.                                                                                                                                                       
-
-
-error: r2c.flake8.EXE002 https://lintlyci.github.io/Flake8Rules/rules/EXE002.html
-     --> instabot/bot/bot_like.py:0:1
-      = note: The file is executable but no shebang is present.                                                                                                                                                       
-
-
-error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
-     --> instabot/bot/bot_photo.py:13:13
-      |
-   13 |       options={}
-      |
-      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
-
-
-error: r2c.flake8.B006 https://lintlyci.github.io/Flake8Rules/rules/B006.html
-     --> instabot/bot/bot_video.py:4:67
-      |
-    4 |   def upload_video(self, video, caption="", thumbnail=None, options={}):
-      |
-      = note: Do not use mutable data structures for argument defaults.  They are created during function definition time. All calls to the function reuse this one instance of that data structure, persisting cha...
-
-
-r2c.flake8:
-  B006          12▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  EXE002         4▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  B007           3▕▬▬▬▬▬▬▬▬▬▬▬▬▬▬▬
-  EXE001         1▕▬▬▬▬▬
-
-r2c.bandit:
-  B110           2▕▬▬▬▬▬▬▬▬▬▬
-  B301           1▕▬▬▬▬▬
-  B605           1▕▬▬▬▬▬
+shellcheck SC2086 https://github.com/koalaman/shellcheck/wiki/SC2086
+     > push.sh:13
+     ╷
+   13│   twine upload -u $PYPI_USERNAME -p $PYPI_PASSWORD dist/*
+     ╵
+     = Double quote to prevent globbing and word splitting.
 

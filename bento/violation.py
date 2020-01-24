@@ -1,4 +1,5 @@
 import binascii
+import textwrap
 from typing import Any, Dict, Optional
 
 import attr
@@ -21,19 +22,15 @@ class Violation(object):
     column = attr.ib(type=int, hash=None, cmp=False)
     message = attr.ib(type=str, hash=None, cmp=False)
     severity = attr.ib(type=int, hash=None, cmp=False)
-    syntactic_context = attr.ib(type=str)
+    syntactic_context = attr.ib(type=str, converter=textwrap.dedent)
     semantic_context = None
     filtered = attr.ib(type=Optional[bool], default=None, hash=None, cmp=False)
     link = attr.ib(type=Optional[str], default=None, hash=None, cmp=False, kw_only=True)
 
     def syntactic_identifier_int(self) -> int:
-        # todo: move to library
         # Use murmur3 hash to minimize collisions
-        clean_syntactic_context = "\n".join(
-            (s.strip() for s in self.syntactic_context.split("\n"))
-        )
 
-        str_id = str((self.check_id, self.path, clean_syntactic_context))
+        str_id = str((self.check_id, self.path, self.syntactic_context))
         return mmh3.hash128(str_id)
 
     def syntactic_identifier_str(self) -> str:

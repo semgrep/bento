@@ -95,6 +95,10 @@ class Tool(ABC, Generic[R]):
         """Returns a pattern that determines whether a terminal path should be run through this tool"""
         pass
 
+    @property
+    def shebang_pattern(self) -> Optional[Pattern]:
+        return None
+
     @abstractmethod
     def setup(self) -> None:
         """
@@ -139,20 +143,41 @@ class Tool(ABC, Generic[R]):
         Returns true iff any unignored files matches at least one extension
         """
         file_matches = (
-            fnmatch(e.path, ext)
+            fnmatch(str(e.path), ext)
             for e in context.file_ignores.entries()
             if e.survives
             for ext in extensions
         )
         return any(file_matches)
 
-    def filter_paths(self, paths: Iterable[str]) -> Set[str]:
+    def _file_contains_shebang_pattern(self, file_path: Path) -> bool:
+        """
+            Checks if the first line of file_path matches self.shebang_pattern.
+
+            Returns False if a "first line" does not make sense for file_path
+            i.e. file_path is a binary or is an empty file
+        """
+        assert self.shebang_pattern is not None
+
+        with open(file_path) as file:
+            try:
+                line: str = next(file)
+            except StopIteration:  # Empty file
+                return False
+            except UnicodeDecodeError:  # Binary file
+                return False
+
+        return self.shebang_pattern.match(line) is not None
+
+    def filter_paths(self, paths: Iterable[Path]) -> Set[Path]:
         """
         Filters a list of paths to those that should be analyzed by this tool
 
         In it's default behavior, this method:
           - Filters terminal paths (files) that match file_name_filter.
           - Filters non-terminal paths (directories) that include at least one matching path.
+          - If shebang_pattern is defined filters files that do not match file_name_filter but
+            said file's first line matches shebang_pattern
 
         Parameters:
             paths (list): List of candidate paths
@@ -160,23 +185,21 @@ class Tool(ABC, Generic[R]):
         Returns:
             A set of valid paths
         """
-
-        def add_path(out: Set[str], p: str) -> None:
-            if os.path.isdir(p):
-                # Adds path if any file matches filter
-                for _, _, files in os.walk(p):
-                    for f in files:
-                        if self.file_name_filter.match(f):
-                            out.add(p)
-                            return
-            elif self.file_name_filter.match(p):
-                out.add(p)
-
-        out: Set[str] = set()
-        for p in paths:
-            add_path(out, p)
-
-        return out
+        abspaths = [os.path.abspath(p) for p in paths]
+        to_run = {
+            e.path
+            for e in self.context.file_ignores.entries()
+            if e.survives
+            and any(str(e.path).startswith(p) for p in abspaths)
+            and e.dir_entry.is_file()
+            and (
+                self.file_name_filter.match(e.path.name)
+                or (
+                    self.shebang_pattern and self._file_contains_shebang_pattern(e.path)
+                )
+            )
+        }
+        return to_run
 
     def execute(self, command: List[str], **kwargs: Any) -> subprocess.CompletedProcess:
         """
@@ -195,7 +218,9 @@ class Tool(ABC, Generic[R]):
         logging.debug(f"{self.tool_id()}: Command completed in {after - before:2f} s")
         return res
 
-    def results(self, paths: Optional[Iterable[str]] = None) -> List[Violation]:
+    def results(
+        self, paths: Optional[Iterable[Path]] = None, use_cache: bool = True
+    ) -> List[Violation]:
         """
         Runs this tool, returning all identified violations
 
@@ -206,23 +231,27 @@ class Tool(ABC, Generic[R]):
 
         Parameters:
             paths (list or None): If defined, an explicit list of paths to run on
+            use_cache (bool): If True, checks for cached results
 
         Raises:
             CalledProcessError: If execution fails
         """
         if paths is None:
-            paths = [str(self.base_path)]
-        paths = self.filter_paths(paths)
+            paths = [self.base_path]
 
         if paths:
             logging.debug(f"Checking for local cache for {self.tool_id()}")
             cache_repr = self.context.cache.get(self.tool_id(), paths)
-            if cache_repr is None:
+            if not use_cache or cache_repr is None:
                 logging.debug(
                     f"Cache entry invalid for {self.tool_id()}. Running Tool."
                 )
-                raw = self.run(paths)
-                self.context.cache.put(self.tool_id(), paths, self.serialize(raw))
+                paths_to_run = self.filter_paths(paths)
+                if not paths_to_run:
+                    return []
+                raw = self.run([str(p) for p in paths_to_run])
+                if use_cache:
+                    self.context.cache.put(self.tool_id(), paths, self.serialize(raw))
             else:
                 raw = self.deserialize(cache_repr)
 

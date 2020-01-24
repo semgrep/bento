@@ -63,13 +63,14 @@ def no_auth_post(
     json: Any = EMPTY_DICT,
     params: Dict[str, str] = EMPTY_DICT,
     headers: Dict[str, str] = EMPTY_DICT,
+    timeout: float = TIMEOUT,
 ) -> "Response":
     # import inside def for performance
     import requests
 
     """Perform a requests.post and default headers set"""
     headers = {**_get_default_headers(), **headers}
-    r = requests.post(url, headers=headers, params=params, json=json, timeout=TIMEOUT)
+    r = requests.post(url, headers=headers, params=params, json=json, timeout=timeout)
     return r
 
 
@@ -93,6 +94,7 @@ def post_metrics(data: PostData, is_finding: bool = False) -> bool:
         url = f"{_get_base_url()}/bento/api/v4/metrics/"
         if is_finding:
             url = f"{url}finding/"
+        # logging.debug(data)  # This spams the log when many findings
         r = no_auth_post(url, json=data)
         r.raise_for_status()
         return True

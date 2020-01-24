@@ -23,7 +23,7 @@ jobs:
       - run:
           name: "PyTest"
           command: |
-            PYTHONPATH=. pipenv run coverage run --source . -m pytest
+            PYTHONPATH=. pipenv run coverage run --source . -m pytest -vv
             PYTHONPATH=. pipenv run coverage report
             PYTHONPATH=. pipenv run coverage html
       - store_test_results:
@@ -70,6 +70,7 @@ jobs:
     executor: python-build
     steps:
       - checkout
+      - setup_remote_docker
       - run:
           name: "Generate cache seeds"
           command: find . -name Pipfile.lock | sort | xargs md5sum > /tmp/checksums
@@ -99,6 +100,7 @@ jobs:
     working_directory: ~/circleci
     executor: python-build
     steps:
+      - setup_remote_docker
       - checkout
       - run:
           name: "Configure pipenv"
@@ -111,7 +113,9 @@ jobs:
           command: (cd tests/integration/react && npm install)
       - run:
           name: "Running bento check"
-          command: pipenv run bento --agree --email test@returntocorp.com check --no-pager
+          command: pipenv run bento --agree --email test@returntocorp.com check --no-pager --all 2>&1 | cat
+      - store_artifacts:
+          path: "/home/circleci/.bento/last.log"
 
 workflows:
   build-and-deploy:

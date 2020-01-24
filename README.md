@@ -47,6 +47,7 @@ Bento is a free bug-finding tool that runs locally when you commit code. It has 
 </p>
 
 ## Installation
+
 ```bash
 $ pip3 install bento-cli
 ```
@@ -54,6 +55,7 @@ $ pip3 install bento-cli
 Bento requires [Python 3.6+](https://www.python.org/downloads/) and [Docker 19.03+](https://docs.docker.com/get-docker/). It runs on macOS and Linux.
 
 ## Motivations
+
 > See our [Bento introductory blog post](https://bento.dev/blog/2019/our-quest-to-make-world-class-security-and-bugfinding-available-to-all-developers/) to learn the full story.
 
 r2c is on a quest to make world-class security and bugfinding available to all developers, for free. We’ve learned that most developers have never heard of—let alone tried—tools that find deep flaws in code: like Codenomicon, which found [Heartbleed](http://heartbleed.com/), or Zoncolan at Facebook, which finds more [top-severity security issues](https://cacm.acm.org/magazines/2019/8/238344-scaling-static-analyses-at-facebook/fulltext) than any human effort. These tools find severe issues and also save tons of time, identifying [hundreds of thousands of issues](https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/43322.pdf) before humans can. Bento is a step towards universal access to tools like these.
@@ -61,7 +63,9 @@ r2c is on a quest to make world-class security and bugfinding available to all d
 We’re also big proponents of opinionated tools like Black and Prettier. This has two implications: Bento ignores style-related issues and the bikeshedding that comes with them, and it ships with a curated set of checks that we believe are high signal and bug-worthy. See [Three things your linter shouldn’t tell you](https://bento.dev/blog/2019/three-things-your-linter-shouldnt-tell-you/) for more details on our decision making process.
 
 ## Usage
+
 ### Getting Started
+
 From the root directory of a project:
 
 ```bash
@@ -71,6 +75,7 @@ $ bento init
 This configures Bento for you only. See [Team Use](#team-use) to setup Bento for all contributors.
 
 ### Upgrading
+
 > Docker is a requirement for Bento 0.8+.
 
 Run the following commands to upgrade Bento:
@@ -88,6 +93,7 @@ The last line removes all Bento artifacts as their formats have not yet stabaliz
 For Bento 0.8+ no Bento files need to be tracked with Git unless you’re using Bento in CI. See [Running in CI/CD](#running-in-cicd) for details.
 
 ### Command Line Options
+
 ```
 $ bento --help
 Usage: bento [OPTIONS] COMMAND [ARGS]...
@@ -112,7 +118,9 @@ Commands:
 ```
 
 ### Exit Codes
-`bento check` may exit with the following exit codes: 
+
+`bento check` may exit with the following exit codes:
+
 - `0`: Bento ran successfully and found no errors
 - `2`: Bento ran successfully and found issues in your code
 - `3`: Bento or one of its underlying tools failed to run
@@ -120,6 +128,7 @@ Commands:
 ## Workflows
 
 ### Individual Use
+
 Bento configures itself for personal use by default. This means that it:
 
 1. Automatically checks for issues introduced by your code, as you commit it
@@ -150,7 +159,9 @@ $ git commit --no-verify
 ```
 
 ### Team Use
+
 #### Running Locally
+
 To setup Bento for all project contributors, add Bento’s configuration to Git (it’s ignored by default):
 
 ```bash
@@ -165,6 +176,7 @@ $ bento init
 ```
 
 #### Running in CI/CD
+
 Bento in CI analyzes your entire project, not just the latest commit. So that you don’t have to fix all existing issues before making Bento blocking, its `archive` feature allows historical issues to be tracked and ignored during CI.
 
 To use the `archive` feature so Bento returns a non-zero exit code only for new issues, rather than all existing issues, first create the archive:
@@ -195,34 +207,35 @@ If you use CircleCI, the above commands become:
 version: 2.1
 
 jobs:
-    bentoCheck:
-    executor: circleci/python:3.7.4-stretch-node
-    steps:
-      - checkout
-      - run:
-          name: "Install Bento"
-          command: pip3 install bento-cli && bento --version
-      - run:
-          name: "Run Bento check"
-          command: bento --agree --email=<YOUR_EMAIL> check --all 2>&1 | cat
+  bentoCheck:
+  executor: circleci/python:3.7.4-stretch-node
+  steps:
+    - checkout
+    - run:
+        name: "Install Bento"
+        command: pip3 install bento-cli && bento --version
+    - run:
+        name: "Run Bento check"
+        command: bento --agree --email=<YOUR_EMAIL> check --all 2>&1 | cat
 ```
 
 `bento check` will exit with a non-zero exit code if it finds issues in your code (see [Exit Codes](#exit-codes)).
 
 If you need help setting up Bento with another CI provider please [open an issue](https://github.com/returntocorp/bento/issues/new?template=feature_request.md). Documentation PRs welcome if you set up Bento with a CI provider that isn’t documented here!
 
-
 ## Bento Checks
+
 Bento finds common security, correctness, and performance mistakes in projects containing Flask, Requests, and Boto 3. We’re inspired by tools that help ensure correct and safe framework use, like [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react). Learn more about Bento’s specialty checks at [checks.bento.dev](https://checks.bento.dev/).
 
 ## Help and Community
+
 Need help or want to share feedback? We’d love to hear from you!
 
 - Email us at [support@r2c.dev](mailto:support@r2c.dev)
 - Join #bento in our [community Slack](https://join.slack.com/t/r2c-community/shared_invite/enQtNjU0NDYzMjAwODY4LWE3NTg1MGNhYTAwMzk5ZGRhMjQ2MzVhNGJiZjI1ZWQ0NjQ2YWI4ZGY3OGViMGJjNzA4ODQ3MjEzOWExNjZlNTA)
 - [File an issue](https://github.com/returntocorp/bento/issues/new?assignees=&labels=bug&template=bug_report.md&title=) or [submit a feature request](https://github.com/returntocorp/bento/issues/new?assignees=&labels=feature-request&template=feature_request.md&title=) directly on GitHub &mdash; we welcome them all!
 
-We’re constantly shipping new features and improvements. 
+We’re constantly shipping new features and improvements.
 
 - [Sign up for the Bento newsletter](http://eepurl.com/gDeFvL) &mdash; we promise not to spam and you can unsubscribe at any time
 - See past announcements, releases, and issues [here](https://us18.campaign-archive.com/home/?u=ee2dc8f77e27d3739cf4df9ef&id=d13f5e938e)
@@ -230,6 +243,7 @@ We’re constantly shipping new features and improvements.
 We’re fortunate to benefit from the contributions of the open source community and great projects such as [Bandit](https://pypi.org/project/bandit/), [ESLint](https://eslint.org/), [Flake8](https://pypi.org/project/flake8/), and their plugins. 🙏
 
 ## License and Legal
+
 Please refer to the [terms and privacy document](https://github.com/returntocorp/bento/blob/master/PRIVACY.md).
 
 </br>

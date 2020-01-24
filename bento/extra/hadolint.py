@@ -1,13 +1,14 @@
 import json
-import os
+import logging
 import re
 import subprocess
-from typing import Any, Dict, Iterable, List, Pattern, Set, Type
+from typing import Any, Dict, Iterable, List, Pattern, Type
 
 from bento.base_context import BaseContext
+from bento.extra.docker import DOCKER_INSTALLED, get_docker_client
 from bento.parser import Parser
 from bento.tool import StrTool
-from bento.util import echo_success, fetch_line_in_file
+from bento.util import fetch_line_in_file
 from bento.violation import Violation
 
 
@@ -42,6 +43,9 @@ class HadolintParser(Parser[str]):
             fetch_line_in_file(self.base_path / path, start_line) or "<no source found>"
         )
 
+        if check_id == "DL1000":
+            message = "Dockerfile parse error. Invalid docker instruction."
+
         return Violation(
             tool_id=HadolintTool.TOOL_ID,
             check_id=check_id,
@@ -62,7 +66,7 @@ class HadolintParser(Parser[str]):
 
 
 class HadolintTool(StrTool):
-    TOOL_ID = "r2c.hadolint"
+    TOOL_ID = "hadolint"
     DOCKER_IMAGE = "hadolint/hadolint:v1.17.2-8-g65736cb"
     DOCKERFILE_FILTER = re.compile(".*Dockerfile.*", re.IGNORECASE)
 
@@ -82,33 +86,16 @@ class HadolintTool(StrTool):
     def file_name_filter(self) -> Pattern:
         return self.DOCKERFILE_FILTER
 
-    def filter_paths(self, paths: Iterable[str]) -> Set[str]:
-        """
-            Need to find paths to all Dockerfiles
-        """
-        resolved = [os.path.realpath(p) for p in paths]
-        valid_paths = {
-            e.path
-            for e in self.context.file_ignores.entries()
-            if e.survives
-            if self.file_name_filter.match(os.path.basename(e.path))
-            if any(os.path.realpath(e.path).startswith(r) for r in resolved)
-        }
-
-        return valid_paths
-
     @property
     def project_name(self) -> str:
         return "Docker"
 
     def setup(self) -> None:
-        # import inside def for performance
-        import docker
+        client = get_docker_client()
 
-        client = docker.from_env()
         if not any(i for i in client.images.list() if self.DOCKER_IMAGE in i.tags):
             client.images.pull(self.DOCKER_IMAGE)
-            echo_success(f"Retrieved {self.TOOL_ID} Container")
+            logging.info(f"Retrieved {self.TOOL_ID} Container")
 
     def run(self, files: Iterable[str]) -> str:
         outputs: List[Dict[str, Any]] = []
@@ -132,4 +119,6 @@ class HadolintTool(StrTool):
 
     @classmethod
     def matches_project(cls, context: BaseContext) -> bool:
-        return cls.project_has_extensions(context, "Dockerfile")
+        return DOCKER_INSTALLED.value and cls.project_has_extensions(
+            context, "*.Dockerfile", "*.dockerfile", "*/Dockerfile", "*/dockerfile"
+        )

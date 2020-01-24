@@ -1,7 +1,6 @@
 import os
 from pathlib import Path
 
-from _pytest.tmpdir import tmp_path_factory
 from bento.extra.flask import FlaskParser, FlaskTool
 from bento.violation import Violation
 from tests.test_tool import context_for
@@ -34,18 +33,18 @@ def test_parse() -> None:
     assert result == expectation
 
 
-def test_run_no_base_violations(tmp_path_factory: tmp_path_factory) -> None:
+def test_run_no_base_violations(tmp_path: Path) -> None:
     base_path = BASE_PATH / "tests/integration/simple"
-    tool = FlaskTool(context_for(tmp_path_factory, FlaskTool.TOOL_ID, base_path))
+    tool = FlaskTool(context_for(tmp_path, FlaskTool.TOOL_ID, base_path))
     tool.setup()
     violations = tool.results()
 
     assert not violations
 
 
-def test_run_flask_violations(tmp_path_factory: tmp_path_factory) -> None:
+def test_run_flask_violations(tmp_path: Path) -> None:
     base_path = BASE_PATH / "tests/integration/flask"
-    tool = FlaskTool(context_for(tmp_path_factory, FlaskTool.TOOL_ID, base_path))
+    tool = FlaskTool(context_for(tmp_path, FlaskTool.TOOL_ID, base_path))
     tool.setup()
     violations = tool.results()
 

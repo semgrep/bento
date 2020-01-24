@@ -1,11 +1,13 @@
 import logging
 from pathlib import Path
 from threading import Lock
-from typing import Any, ClassVar, Dict, Union
+from typing import Any, Dict, Optional, Union
 
 import attr
 import yaml
 
+import bento.constants as constants
+import bento.git
 from bento.fignore import FileIgnore, open_ignores
 from bento.run_cache import RunCache
 
@@ -22,6 +24,7 @@ class BaseContext:
     # file. Tools will also be run from here.
     base_path: Path = attr.ib(converter=_clean_path)
     is_init = attr.ib(type=bool, default=False)
+    email = attr.ib(type=Optional[str], default=None)
     cache_path = attr.ib(type=Path, default=None)
     _config = attr.ib(type=Dict[str, Any], default=None)
     _resource_path = attr.ib(type=Path, default=None)
@@ -29,21 +32,13 @@ class BaseContext:
     _ignores = attr.ib(type=FileIgnore, default=None, init=False)
     _ignore_lock = attr.ib(type=Lock, factory=Lock, init=False)
 
-    CONFIG_FILE: ClassVar[str] = ".bento.yml"
-    RESOURCE_DIR: ClassVar[str] = ".bento"
-    LOCAL_RUN_CACHE: ClassVar[str] = ".bento/cache"
-    BASELINE_FILE_PATH: ClassVar[str] = ".bento-whitelist.yml"
-    IGNORE_FILE_PATH: ClassVar[str] = ".bentoignore"
-
     @base_path.default
     def _find_base_path(self) -> Path:
         """Find the path to the nearest containing directory with bento config.
 
         This starts at the current directory, then recurses upwards looking for
-        a directory with the necessary config file.
-
-        The returned path is relative to the current working directory, so that
-        when printed in log messages and such it looks readable.
+        a directory with the necessary config file. This function will not recurse
+        at or beyond the git project root or the user's home directory.
 
         If one isn't found, returns the current working directory. This
         behavior is so that you can construct a Context in a directory that
@@ -52,28 +47,40 @@ class BaseContext:
 
         """
         cwd = Path.cwd()
+
+        repo_root = None
+        repo_root_obj = bento.git.repo()
+        if repo_root_obj is not None:
+            repo_root = Path(repo_root_obj.working_tree_dir)
+
         for base_path in [cwd, *cwd.parents]:
-            if (base_path / self.CONFIG_FILE).is_file():
+            config_path = base_path / constants.RESOURCE_PATH
+            if config_path == constants.GLOBAL_RESOURCE_PATH:  # Don't go past user home
+                break
+            if (config_path / constants.CONFIG_FILE_NAME).is_file():
+                return base_path
+            # Stop at root of git repository
+            if base_path == repo_root:
                 return base_path
         return cwd
 
     @property
     def config_path(self) -> Path:
-        return self.base_path / self.CONFIG_FILE
+        return self.base_path / constants.RESOURCE_PATH / constants.CONFIG_FILE_NAME
 
     @property
     def resource_path(self) -> Path:
         if not self._resource_path:
-            self._resource_path = self.base_path / self.RESOURCE_DIR
+            self._resource_path = self.base_path / constants.RESOURCE_PATH
         return self._resource_path
 
     @property
     def baseline_file_path(self) -> Path:
-        return self.base_path / self.BASELINE_FILE_PATH
+        return self.resource_path / constants.ARCHIVE_FILE_NAME
 
     @property
     def ignore_file_path(self) -> Path:
-        return self.base_path / self.IGNORE_FILE_PATH
+        return self.base_path / constants.IGNORE_FILE_NAME
 
     def pretty_path(self, path: Path) -> Path:
         try:
@@ -98,6 +105,13 @@ class BaseContext:
         self._config = config
 
     @property
+    def autorun_is_blocking(self) -> bool:
+        """
+        Returns whether `bento check --staged-only` should block commits
+        """
+        return self.config.get("autorun", {}).get("block", False)
+
+    @property
     def file_ignores(self) -> FileIgnore:
         with self._ignore_lock:
             # Only initialize the file ignores once. Since this uses system calls,
@@ -111,7 +125,7 @@ class BaseContext:
     @property
     def cache(self) -> RunCache:
         if self._cache is None:
-            cp = self.cache_path or (self.base_path / self.LOCAL_RUN_CACHE)
+            cp = self.cache_path or (self.resource_path / constants.CACHE_PATH)
             self._cache = RunCache(cache_dir=cp, file_ignore=self.file_ignores)
         return self._cache
 

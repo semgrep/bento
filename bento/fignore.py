@@ -4,10 +4,11 @@ import os
 import re
 import time
 from pathlib import Path
-from typing import Collection, Iterable, Iterator, Set, TextIO
+from typing import Collection, Dict, Iterable, Iterator, List, Mapping, Set, TextIO
 
 import attr
 
+import bento.constants as constants
 from bento.util import echo_warning
 
 CONTROL_REGEX = re.compile(r"(?!<\\):")  # Matches unescaped colons
@@ -19,17 +20,31 @@ COMMENT_START_REGEX = re.compile(r"(?P<ignore_pattern>.*?)(?:\s+|^)#.*")
 
 @attr.s
 class Entry(object):
-    path = attr.ib(type=str)
+    path = attr.ib(type=Path)
     dir_entry = attr.ib(type=os.DirEntry)
     survives = attr.ib(type=bool)
 
 
+@attr.s(auto_attribs=True)
+class WalkEntries(Collection[Entry]):
+    cache: Dict[Path, Entry]
+
+    def __len__(self) -> int:
+        return len(self.cache)
+
+    def __iter__(self) -> Iterator[Entry]:
+        return iter(self.cache.values())
+
+    def __contains__(self, item: object) -> bool:
+        return isinstance(item, Entry) and item.path in self.cache
+
+
 @attr.s
-class FileIgnore(object):
+class FileIgnore(Mapping[Path, Entry]):
     base_path = attr.ib(type=Path)
     patterns = attr.ib(type=Set[str])
     _processed_patterns = attr.ib(type=Set[str], init=False)
-    _walk_cache: Collection[Entry] = attr.ib(default=None, init=False)
+    _walk_cache: Dict[Path, Entry] = attr.ib(default=None, init=False)
 
     def __attrs_post_init__(self) -> None:
         self._processed_patterns = Processor(self.base_path).process(self.patterns)
@@ -65,31 +80,52 @@ class FileIgnore(object):
             if e.is_symlink():
                 continue
             elif (not directories_only or e.is_dir()) and self._survives(root_path, e):
-                filename = os.path.join(this_path, e.name)
-                yield Entry(filename, e, True)
+                filename = Path(this_path) / e.name
+                yield Entry(Path(filename), e, True)
                 if e.is_dir():
                     before = time.time()
                     for ee in self._walk(e.path, root_path, directories_only):
                         yield ee
                     logging.debug(f"Scanned {filename} in {time.time() - before} s")
             else:
-                filename = os.path.join(this_path, e.name)
+                filename = Path(this_path) / e.name
                 yield Entry(filename, e, False)
 
     def _init_cache(self) -> None:
         pretty_patterns = "\n".join(self.patterns)
         logging.info(f"Ignored patterns are:\n{pretty_patterns}")
         before = time.time()
-        self._walk_cache = list(
-            self._walk(str(self.base_path), str(self.base_path), directories_only=False)
+        entries = self._walk(
+            str(self.base_path), str(self.base_path), directories_only=False
         )
+        self._walk_cache = dict((e.path, e) for e in entries)
         logging.info(f"Loaded file ignore cache in {time.time() - before} s.")
 
     def entries(self) -> Collection[Entry]:
         """
         Returns all files that are not ignored, relative to the base path.
         """
-        return self._walk_cache
+        return WalkEntries(self._walk_cache)
+
+    def filter_paths(self, paths: Iterable[Path]) -> List[Path]:
+        abspaths = (p.absolute() for p in paths if p.exists())
+        return [
+            p
+            for p in abspaths
+            if p in self and self[p].survives or p.samefile(self.base_path)
+        ]
+
+    def __getitem__(self, item: Path) -> Entry:
+        return self._walk_cache[item]
+
+    def __iter__(self) -> Iterator[Path]:
+        return iter(self._walk_cache)
+
+    def __len__(self) -> int:
+        return len(self._walk_cache)
+
+    def __contains__(self, item: object) -> bool:
+        return item in self._walk_cache
 
 
 @attr.s(auto_attribs=True)
@@ -250,10 +286,12 @@ def open_ignores(
         if not is_init:
             echo_warning(
                 f"""'{os.path.relpath(ignore_path, os.getcwd())}' not found; using default ignore patterns.
-Please run 'bento init' to configure a .bentoignore for your project.
+Please run 'bento init' to configure a {constants.IGNORE_FILE_NAME} for your project.
 """
             )
-        ignore_path = Path(os.path.dirname(__file__)) / "configs" / ".bentoignore"
+        ignore_path = (
+            Path(os.path.dirname(__file__)) / "configs" / constants.IGNORE_FILE_NAME
+        )
 
     logging.info(f"Loading bento file ignores from {os.path.abspath(ignore_path)}")
 

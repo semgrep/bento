@@ -1,4 +1,3 @@
-import json
 import os
 import re
 from typing import Iterable, List, Pattern, Type
@@ -7,15 +6,14 @@ from semantic_version import Version
 
 from bento.base_context import BaseContext
 from bento.parser import Parser
-from bento.tool import StrTool
+from bento.tool import JsonR, JsonTool
 from bento.violation import Violation
 
 
-class SGrepParser(Parser):
-    def parse(self, results: str) -> List[Violation]:
+class SGrepParser(Parser[JsonR]):
+    def parse(self, results: JsonR) -> List[Violation]:
         violations: List[Violation] = []
-        checks = json.loads(results).get("results", [])
-        for check in checks:
+        for check in results:
             path = self.trim_base(check["path"])
             start_line = check["start"]["line"]
             start_col = check["start"]["col"]
@@ -37,9 +35,9 @@ class SGrepParser(Parser):
         return violations
 
 
-class SGrepTool(StrTool):
-    ANALYZER_NAME = "r2c/sgrep-lint"
-    ANALYZER_VERSION = Version("0.1.12")
+class SGrepTool(JsonTool):
+    ANALYZER_NAME = "r2c/sgrep"
+    ANALYZER_VERSION = Version("0.1.14")
     FILE_NAME_FILTER = re.compile(r".*")
 
     @property
@@ -52,7 +50,7 @@ class SGrepTool(StrTool):
 
     @classmethod
     def tool_id(cls) -> str:
-        return "r2c.sgrep"
+        return "sgrep"
 
     @classmethod
     def tool_desc(cls) -> str:
@@ -64,7 +62,7 @@ class SGrepTool(StrTool):
 
         prepull_analyzers(self.ANALYZER_NAME, self.ANALYZER_VERSION)
 
-    def run(self, files: Iterable[str]) -> str:
+    def run(self, files: Iterable[str]) -> JsonR:
         # import inside def for performance
         from bento.extra.r2c_analyzer import run_analyzer_on_local_code
 

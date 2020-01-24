@@ -15,8 +15,8 @@ class FlaskParser(Flake8Parser):
         page = FlaskParser.id_to_name(check_id)
         return f"https://checks.bento.dev/en/latest/flake8-flask/{page}"
 
-    @staticmethod
-    def id_to_name(check_id: str) -> str:
+    @classmethod
+    def id_to_name(cls, check_id: str) -> str:
         return check_id.replace(PREFIX, "")
 
     @staticmethod
@@ -30,7 +30,7 @@ class FlaskTool(Flake8Tool):
     PACKAGES = {
         "flake8": SimpleSpec("~=3.7.0"),
         "flake8-json": SimpleSpec("~=19.8.0"),
-        "flake8-flask": SimpleSpec("~=0.7.1"),
+        "flake8-flask": SimpleSpec("~=0.9.0"),
     }
 
     @property

@@ -13,7 +13,8 @@ qa-test: build
 
 .PHONY: env-test
 env-test:
-	docker build -f tests/acceptance/environments/python36.Dockerfile .
+	docker build -f tests/acceptance/environments/python36.Dockerfile -t bento-env-36 .
+	docker run -v /var/run/docker.sock:/var/run/docker.sock bento-env-36 pytest tests/acceptance/qa.py
 
 .PHONY: clean
 clean:
@@ -22,6 +23,7 @@ clean:
 .PHONY: package
 package:
 	@echo "Building Bento"
+	PIPENV_IGNORE_VIRTUALENVS=1 pipenv run pipenv_to_requirements
 	python3 setup.py sdist bdist_wheel
 
 .PHONY: release

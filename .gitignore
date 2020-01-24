@@ -127,5 +127,5 @@ dmypy.json
 # Node
 node_modules/
 
-# Ignore bento tool run paths (this line added by `bento init`)
-.bento/
+**/.bento/cache/
+**/.bento/eslint/

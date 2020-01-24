@@ -1,285 +1,390 @@
-from pathlib import Path
-from typing import Any, Callable, Dict, List, Mapping, Optional
+import sys
+from abc import ABC, abstractmethod
+from typing import Any, Callable, Dict, Generic, List, Tuple, TypeVar, Union, cast
 
 import attr
-import yaml
 from click import confirm, prompt, secho, style
 
 import bento.util
 
-Content = Dict[str, Any]
+# Return type for renderer
+R = TypeVar("R", covariant=True)
+
+# Represents a text transformation
+Processor = Callable[[str], str]
 
 
-class Keys:
-    RENDER = "render"
-
-    ANCHOR = "anchor"
-    CHARACTER = "character"
-    CONTENT = "content"
-    EXTRA_WIDTH = "extra-width"
-    HREF = "href"
-    LINKS = "links"
-    NEWLINE = "newline"
-    OPTIONS = "options"
-    PROCESSOR = "processor"
-    STYLE = "style"
-    TEXT = "text"
-
-
-def process_ljust(text: str, value: Content) -> str:
+@attr.s(auto_attribs=True)
+class Link(object):
     """
-    Left-justifies text, filling width with specified character
+    Represents a link definition
 
-    If content includes an integer "extra-width" value, that many characters are added to
-    (or subtracted from) the print width.
+    :param anchor: Link anchor text
+    :param href: Link target
     """
-    extra = value.get(Keys.EXTRA_WIDTH, 0)
-    char = value.get(Keys.CHARACTER, " ")
-    return text.ljust(bento.util.PRINT_WIDTH + extra, char)
+
+    anchor: str
+    href: str
 
 
-def process_wrap(text: str, value: Content) -> str:
-    """
-    Wraps text to print width
+class Processors:
+    identity: Processor = lambda text: text
 
-    If content includes an integer "extra-width" value, that many characters are added to
-    (or subtracted from) the print width. This is useful when the content is known to include
-    ANSI escape sequences (each escape sequence consumes 4 characters of width).
-    """
-    extra = value.get(Keys.EXTRA_WIDTH, 0)
-    return bento.util.wrap(text, extra)
+    @staticmethod
+    def ljust(extra: int = 0, char: str = " ") -> Processor:
+        """
+        Left-justifies text, filling width with specified character
 
+        :param extra: Number of extra characters to add to justification (useful for
+                      accommodating ANSI control characters
+        :param char: The fill character
+        """
+        return lambda text: text.ljust(bento.util.PRINT_WIDTH + extra, char)
 
-def process_wrap_link(text: str, value: Content) -> str:
-    """
-    Per wrap, except links are rendered without affecting the wrap width.
+    @staticmethod
+    def wrap(extra: int = 0) -> Processor:
+        """
+        Wraps text to print width
 
-    In addition to the specification of process_wrap, a sequence of "link" values controls link processing.
+        :param extra: Number of extra characters to add to margin (useful for
+                      accommodating ANSI control characters
+        """
+        return lambda text: bento.util.wrap(text, extra)
 
-    Each "link" value should contain a string "anchor" value. All instances of this value are replaced with
-    a rendered link, directing to the value of the link's "href" entry.
+    @staticmethod
+    def wrap_link(links: List[Link], extra: int = 0, **kwargs: Any) -> Processor:
+        """
+        Per wrap, except links are rendered without affecting the wrap width.
 
-    Links are only rendered if the terminal is a known supporting terminal for OSC8 links. If not,
-    links are rendered as their anchor text only.
-    """
-    extra_width = value.get(Keys.EXTRA_WIDTH, 0)
-    links = [(v[Keys.ANCHOR], v[Keys.HREF]) for v in value.get(Keys.LINKS, [])]
-    styling = value.get(Keys.STYLE, {})
-    return bento.util.wrap_link(text, extra_width, *links, **styling)
+        In addition to the specification of process_wrap, a sequence of "link" values controls link processing.
 
+        Links are only rendered if the terminal is a known supporting terminal for OSC8 links. If not,
+        links are rendered as their anchor text only.
 
-PROCESSORS = {
-    "ljust": process_ljust,
-    "wrap": process_wrap,
-    "wrap-link": process_wrap_link,
-}
+        :param links: Link definitions
+        :param extra: Any extra width to apply
+        :param kwargs: Styling rules passed to text
+        """
 
+        def _wrap_link(text: str) -> str:
+            wrapped = bento.util.wrap(text, extra)
 
-def _expand_text(value: Content, *args: Any, apply_style: bool = False) -> str:
-    """
-    Appends a sequence of styled text elements.
+            def find_loc(anchor: str) -> Tuple[int, str]:
+                """
+                Finds the position of the anchor string in the wrapped text
 
-    Styling is not applied to top-level elements; this is left to the renderer.
-    This can be modified by calling with apply_style = True.
+                Note that the anchor string itself may be wrapped, so we return
+                both the position, and the value of the (possibly wrapped) anchor string.
+                """
+                pos = wrapped.find(anchor)
+                if pos < 0:
+                    # Text was likely wrapped
+                    anchor_it = [
+                        f"{anchor[:ix].rstrip()}\n{anchor[ix:]}"
+                        for ix in range(len(anchor))
+                    ]
+                    pos_it = ((wrapped.find(a), a) for a in anchor_it)
+                    pos, anchor = next(
+                        ((p, a) for p, a in pos_it if p > 0), (-1, anchor)
+                    )
+                    if pos < 0:
+                        raise ValueError(f"'{anchor}' does not appear in '{text}'")
+                return pos, anchor
 
-    See the help for render_echo for more information.
-    """
-    content = value.get(Keys.CONTENT)
-    processor = value.get(Keys.PROCESSOR)
-
-    if isinstance(content, list):
-        items = (_expand_text(c, *args, apply_style=True) for c in content)
-        text = "".join(items)
-    elif isinstance(content, str):
-        text = content
-    elif isinstance(content, int):
-        if len(args) <= content:
-            raise ValueError(
-                f"Not enough elements in {args} to read argument {content}"
+            with_locs = sorted(
+                [(find_loc(link.anchor), link.href) for link in links],
+                key=(lambda t: t[0][0]),
             )
-        text = str(args[content])
-    else:
-        text = ""
+            out = ""
+            current = 0
+            for loc_anchor, href in with_locs:
+                loc, anchor = loc_anchor
+                out += style(wrapped[current:loc], **kwargs)
+                out += bento.util.render_link(
+                    anchor, href, print_alternative=False, pipe=sys.stderr
+                )
+                current = loc + len(anchor)
+            out += style(wrapped[current:], **kwargs)
 
-    if processor:
-        if processor not in PROCESSORS:
-            raise ValueError(
-                f"Unknown processor {processor} (known processors are {', '.join(PROCESSORS.keys())})"
-            )
-        text = PROCESSORS[processor](text, value)
+            return out
 
-    if apply_style:
-        styling = value.get(Keys.STYLE, {})
-        return style(text, **styling)
-    else:
-        return text
+        return _wrap_link
 
 
-def render_box(text: str, value: Content, **kwargs: Any) -> None:
+class Content(ABC):
+    """
+    Represents styled, processed, textual content
+
+    Each implementation of this class should define the following keyword arguments:
+    :param processor: The text processor to apply
+    :param style: Style rules to apply
+    """
+
+    def __init__(self) -> None:
+        self.processor = Processors.identity
+        self.style: Dict[str, Any] = {}
+
+    @abstractmethod
+    def make(self, *args: Any) -> str:
+        pass
+
+    def expand(self, *args: Any, apply_style: bool = False) -> str:
+        text = self.processor(self.make(*args))
+        if apply_style:
+            return style(text, **self.style)
+        else:
+            return text
+
+
+@attr.s()
+class Sub(Content):
+    """
+    Represents text taken from an argument
+
+    Substitution uses the argument's `str` value.
+
+    :param index: The index of the argument list to substitute
+    """
+
+    index = attr.ib(type=int)
+    style = attr.ib(type=Dict[str, Any], kw_only=True, default={})
+    processor = attr.ib(
+        type=Callable[[str], str], kw_only=True, default=Processors.identity
+    )
+
+    def make(self, *args: Any) -> str:
+        return str(args[self.index])
+
+
+@attr.s()
+class Text(Content):
+    """
+    Represents literal text
+
+    :param text: The text
+    """
+
+    text = attr.ib(type=str)
+    style = attr.ib(type=Dict[str, Any], kw_only=True, default={})
+    processor = attr.ib(
+        type=Callable[[str], str], kw_only=True, default=Processors.identity
+    )
+
+    def make(self, *args: Any) -> str:
+        return self.text
+
+
+@attr.s()
+class Multi(Content):
+    """
+    Represents a concatenation of other content
+
+    :param items: The wrapped content; a literal string may also be used instead of unstyled, unprocessed Text content
+    """
+
+    items = attr.ib(type=List[Union[str, Content]])
+    style = attr.ib(type=Dict[str, Any], kw_only=True, default={})
+    processor = attr.ib(
+        type=Callable[[str], str], kw_only=True, default=Processors.identity
+    )
+
+    def make(self, *args: Any) -> str:
+        converted = (c if isinstance(c, Content) else Text(c) for c in self.items)
+        parts = (c.expand(*args, apply_style=True) for c in converted)
+        return "".join(parts)
+
+
+@attr.s
+class Renderer(ABC, Generic[R]):
+    """
+    Renders content from a YAML file
+
+    To create, use:
+
+      [RendererType](content, ...)
+
+    To use, invoke:
+
+      renderer.echo(*args, **kwargs)
+
+    `args` are a list of arguments to be used in substitution content;
+    `kwargs` are passed directly to the renderer, and their allowed values depend
+    on the renderer in question.
+
+    :param content: A Content object, defaults to empty text
+    :param styling: A styling dictionary, defaults to no styling
+    """
+
+    content = attr.ib(type=Union[str, Content], default=Text(""))
+    styling = attr.ib(type=Dict[str, Any], init=False)
+
+    def __attrs_post_init__(self) -> None:
+        if isinstance(self.content, str):
+            self.content = Text(self.content)
+        self.styling = self.content.style
+
+    @abstractmethod
+    def render(self, text: str, **kwargs: Any) -> R:
+        """
+        Renders content
+
+        :param text: The styled and processed content
+        :param kwargs: Any keyword arguments to be used by this renderer
+        :return: This renderer's return value
+        """
+        pass
+
+    def text(self, *args: Any) -> str:
+        """
+        Returns un-rendered (but styled) content text
+
+        :param args: Arguments for substitution content
+        """
+        return cast(Content, self.content).expand(*args, apply_style=True)
+
+    def echo(self, *args: Any, **kwargs: Any) -> R:
+        """
+        Renders content
+
+        :param args: Arguments for substitution content
+        :param kwargs: Renderer-specific arguments (see help for that renderer's `render` method)
+        """
+        text = cast(Content, self.content).expand(*args, apply_style=False)
+        return self.render(text, **kwargs)
+
+
+@attr.s
+class Box(Renderer[None]):
     """
     Renders content in a Unicode-drawn box to stderr
     """
-    bento.util.echo_box(text)
+
+    def render(self, text: str, **kwargs: Any) -> None:
+        bento.util.echo_box(text)
 
 
-def render_confirm(text: str, value: Content, **kwargs: Any) -> bool:
+@attr.s(auto_attribs=True)
+class Confirm(Renderer[bool]):
     """
     Renders a confirmation prompt, and returns confirmation state.
+
+    :param options: Arguments to be passed to click.confirm
     """
-    styling = value.get(Keys.STYLE, {})
-    options = {**value.get(Keys.OPTIONS, {}), **kwargs}
-    return confirm(style(text, **styling), err=True, **options)
+
+    options: Dict[str, Any] = {}
+
+    def render(self, text: str, **kwargs: Any) -> bool:
+        """
+        :param kwargs: Arguments passed to click.confirm (in addition to self.options)
+        :return: The entered value
+        """
+        options = {**self.options, **kwargs}
+        return confirm(style(text, **self.styling), err=True, **options)
 
 
-def render_prompt(text: str, value: Content, **kwargs: Any) -> str:
+@attr.s(auto_attribs=True)
+class Prompt(Renderer[str]):
     """
-    Renders a confirmation prompt, and returns confirmation state.
+    Renders a text prompt, and returns text state.
+
+    :param options: Arguments to be passed to click.prompt
     """
-    styling = value.get(Keys.STYLE, {})
-    options = {**value.get(Keys.OPTIONS, {}), **kwargs}
-    return prompt(style(text, **styling), err=True, **options)
+
+    options: Dict[str, Any] = {}
+
+    def render(self, text: str, **kwargs: Any) -> str:
+        """
+        :param kwargs: Arguments passed to click.prompt (in addition to self.options)
+        :return: The entered value
+        """
+        options = {**self.options, **kwargs}
+        return prompt(style(text, **self.styling), err=True, **options)
 
 
-def render_echo(text: str, value: Content, **kwargs: Any) -> None:
+@attr.s(auto_attribs=True)
+class Echo(Renderer[None]):
     """
     Renders content, appended together, to stderr
 
-    Content must include a "content" key, whose value is one of:
-      - a string, which is rendered verbatim
-      - a sequence of mapping; each mapping must contain a string "text" value, and may also include a "style"
-    mapping, which is passed directly to click.style
-      - an integer, which indexes a passed argument
-
-    Content may also include a "style" mapping, which is passed (for all content), to click.secho.
-
-    Content may also include a boolean "newline" value. If False, no newline is emitted at the end of
-    the text.
+    :param newline: Whether to render a newline at the end of content (default True)
     """
-    newline = value.get(Keys.NEWLINE, True)
-    styling = value.get(Keys.STYLE, {})
-    secho(text, err=True, nl=newline, **styling)
+
+    newline: bool = True
+
+    def render(self, text: str, **kwargs: Any) -> None:
+        secho(text, err=True, nl=self.newline, **self.styling)
 
 
-def render_error(text: str, value: Content, **kwargs: Any) -> None:
+@attr.s(auto_attribs=True)
+class Error(Renderer[None]):
     """
     Renders error content to stderr
     """
-    bento.util.echo_error(text)
+
+    def render(self, text: str, **kwargs: Any) -> None:
+        bento.util.echo_error(text)
 
 
-def render_newline(text: str, value: Content, **kwargs: Any) -> None:
+@attr.s(auto_attribs=True)
+class Newline(Renderer[None]):
     """
-    Renders a blank line to stderr
+    Renders a newline
+
+    :raises ValueError: If content is not empty text
     """
-    bento.util.echo_newline()
+
+    def __attrs_post_init__(self) -> None:
+        if not isinstance(self.content, Text) or self.content.text:
+            raise ValueError("Newline renderer should not have content")
+
+    def render(self, text: str, **kwargs: Any) -> None:
+        bento.util.echo_newline()
 
 
-def render_success(text: str, value: Content, **kwargs: Any) -> None:
+@attr.s(auto_attribs=True)
+class Success(Renderer[None]):
     """
     Renders success content to stderr
     """
-    bento.util.echo_success(text)
+
+    def render(self, text: str, **kwargs: Any) -> None:
+        bento.util.echo_success(text)
 
 
-def render_warning(text: str, value: Content, **kwargs: Any) -> None:
+@attr.s(auto_attribs=True)
+class Warn(Renderer[None]):
     """
     Renders warning content to stderr
     """
-    bento.util.echo_warning(text)
+
+    def render(self, text: str, **kwargs: Any) -> None:
+        bento.util.echo_warning(text)
 
 
-def render_progress(text: str, value: Content, **kwargs: Any) -> Callable[[], None]:
+@attr.s(auto_attribs=True)
+class Progress(Renderer[Callable[[], None]]):
     """
     Renders a progress bar
 
     For more information, see bento.util.echo_progress.
 
-    The content's "extra-width" value is passed to the "extra" argument of echo_progress.
-
+    :param extra: Extra width to pass to `echo_progress`
     :return: The progress done callback
     """
-    extra_width = value.get(Keys.EXTRA_WIDTH, 0)
-    return bento.util.echo_progress(text, extra_width, **kwargs)
+
+    extra: int = 0
+
+    def render(self, text: str, **kwargs: Any) -> Callable[[], None]:
+        return bento.util.echo_progress(text, self.extra, **kwargs)
 
 
-PRINTERS: Mapping[str, Any] = {
-    "box": render_box,
-    "confirm": render_confirm,
-    "echo": render_echo,
-    "error": render_error,
-    "newline": render_newline,
-    "progress": render_progress,
-    "prompt": render_prompt,
-    "success": render_success,
-    "warning": render_warning,
-}
-DEFAULT_PRINTER = render_echo
-
-
-@attr.s
-class Renderer(object):
+class Steps(object):
     """
-    Renders content from a YAML file
-
-    To use, invoke:
-
-      renderer.echo(path, ...)
-
-    where path is a sequence of string keys within the YAML file that point to
-    a sequence valid content descriptions.
-
-    Each content description contains, at least, a "render" key, that indicates which
-    rendering function will be used to render that piece of content. To see what keys
-    each function uses, please see the documentation for that function. By convention,
-    the rendering function symbol is "render_...", where the ellipses are filled with
-    the value of the "render" item.
-
-    If the content description does _not_ have a "render" key, then render_echo is used
-    to render the content.
-
-    :param content_path: Path to the YAML content file
+    Successively renders multiple Renderer objects
     """
 
-    content_path = attr.ib(type=Path)
-    content = attr.ib(type=Dict[str, Any], init=False, default=False)
+    def __init__(self, *steps: Renderer) -> None:
+        self.steps = steps
 
-    def __attrs_post_init__(self) -> None:
-        with self.content_path.open() as stream:
-            self.content = yaml.safe_load(stream)
-
-    def content_at(self, *path: str) -> List[Content]:
-        """Returns the content specification at the specified YAML entry"""
-        content: Any = self.content
-        pp = path
-        while pp:
-            content = content[pp[0]]
-            pp = pp[1:]
-        return content
-
-    def text_at(self, *path: str, args: Optional[List[Any]] = None) -> str:
-        """Returns un-rendered (but styled) content text at the specified YAML entry"""
-        args = [] if args is None else args
-        return "".join(
-            _expand_text(c, *args, apply_style=True) for c in self.content_at(*path)
-        )
-
-    def echo(self, *path: str, args: Optional[List[Any]] = None, **kwargs: Any) -> Any:
-        """
-        Renders content at the specified YAML entry
-
-        :returns: First non-None render-function output
-        """
-        out: Any = None
-        args = [] if args is None else args
-        for c in self.content_at(*path):
-            render_value = c.get(Keys.RENDER, "echo")
-            printer = PRINTERS.get(render_value)
-            if not printer:
-                raise ValueError(
-                    f"No renderer found for '{render_value}' (possible values are {', '.join(PRINTERS.keys())})"
-                )
-            text = _expand_text(c, *args)
-            res = printer(text, c, **kwargs)
-            if not out:
-                out = res
-        return out
+    def echo(self, *args: Any, **kwargs: Any) -> List[Any]:
+        return [s.echo(*args, **kwargs) for s in self.steps]
