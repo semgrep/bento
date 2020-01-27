@@ -11,12 +11,51 @@ steps:
       - bash
       - -c
       - echo "y = z" > bar.py && git add bar.py
+  # If check stage add is failing after regenerating qa tests note that
+  # the next three steps must have the same output
   - name: check stage add
     description: bento check with a new file with findings
     command: bento check
     returncode: 2
     expected_out: check-stage-add.out
     expected_err: check-stage-add.err
+  - name: check stage add with . path
+    description: bento check . with a new file with findings
+    command: bento check .
+    returncode: 2
+    expected_out: check-stage-add.out
+    expected_err: check-stage-add.err
+  - name: check stage add with direct path
+    description: bento check bar.py with a new file with findings
+    command: bento check bar.py
+    returncode: 2
+    expected_out: check-stage-add.out
+    expected_err: check-stage-add.err
+  - name: check stage add with path to no stage
+    description: bento check foo.py with a new file with findings
+    command: bento check foo.py
+    returncode: 0
+    expected_out: check-stage-none.out
+    expected_err: check-stage-none.err
+  # Next three tests should have same output
+  - name: check stage add --all
+    description: bento check --all with a new file with findings
+    command: bento check --all
+    returncode: 2
+    expected_out: check-stage-all.out
+    expected_err: check-stage-all.err
+  - name: check stage add --all .
+    description: bento check --all with a new file with findings
+    command: bento check --all .
+    returncode: 2
+    expected_out: check-stage-all.out
+    expected_err: check-stage-all.err
+  - name: check stage add --all paths
+    description: bento check --all foo.py bar.py with a new file with findings
+    command: bento check --all foo.py bar.py
+    returncode: 2
+    expected_out: check-stage-all.out
+    expected_err: check-stage-all.err
   - name: commit stage add
     description: attempt to commit a new file with findings
     command: git commit -m foo
