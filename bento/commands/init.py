@@ -152,7 +152,9 @@ class InitCommand(object):
         content.Start.banner.echo()
 
         if sys.stdin.isatty() and sys.stderr.isatty():
+            ctx.obj.start_user_timer()
             content.Start.confirm.echo(default=True, show_default=False)
+            ctx.obj.stop_user_timer()
 
         self.context.resource_path.mkdir(exist_ok=True)
         is_first_init = not self.context.config_path.exists()
