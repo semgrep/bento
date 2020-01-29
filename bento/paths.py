@@ -223,18 +223,17 @@ def run_context(
     if input_paths is None or len(input_paths) == 0:
         input_paths = [Path(context.base_path)]
 
+    use_cache = False
+    skip_setup = True
     if staged and run_step == RunStep.BASELINE:
         stash_context = head_context()
+        use_cache = True
     elif staged:
+        # run_step = RunStep.CHECK
         stash_context = staged_files_only(PATCH_CACHE)
     else:
+        # staged is False
         stash_context = noop_context()
-
-    if staged and run_step == RunStep.CHECK:
-        use_cache = False
-        skip_setup = True
-    else:
-        use_cache = True
         skip_setup = False
 
     # resolve given paths relative to base_path
