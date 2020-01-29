@@ -81,7 +81,7 @@ def _get_base_url() -> str:
 def fetch_latest_version() -> Tuple[Optional[str], Optional[str]]:
     try:
         url = f"{_get_base_url()}/bento/api/v1/version"
-        r = no_auth_get(url, timeout=0.25)
+        r = no_auth_get(url)
         response_json = r.json()
         return response_json.get("latest", None), response_json.get("uploadTime", None)
     except Exception as e:
