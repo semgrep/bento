@@ -14,18 +14,15 @@ from bento.constants import IGNORE_FILE_NAME
 from bento.context import Context
 from bento.paths import PathArgument, run_context
 from bento.tool import Tool
-from bento.tool_runner import Comparison, RunResults, RunStep
+from bento.tool_runner import RunResults, RunStep
 from bento.util import echo_warning
 
 
 def orchestrate(
     context: Context, paths: PathArgument, staged: bool, tools: Iterable[Tool]
 ) -> Tuple[Collection[RunResults], float]:
-    # TODO backwards compatible delta. Clean up here
-    comparison = Comparison.HEAD if staged else Comparison.ARCHIVE
-
-    baseline, elapsed = _calculate_baseline(comparison, context, paths, staged, tools)
-    with run_context(context, paths, comparison, staged, RunStep.CHECK) as runner:
+    baseline, elapsed = _calculate_baseline(context, paths, staged, tools)
+    with run_context(context, paths, staged, RunStep.CHECK) as runner:
         if len(runner.paths) == 0:
             echo_warning(
                 f"Nothing to check or archive. Please confirm that changes are staged and not excluded by `{IGNORE_FILE_NAME}`. To check all Git tracked files, use `--all`."
@@ -42,23 +39,17 @@ def orchestrate(
 
 
 def _calculate_baseline(
-    comparison: str,
-    context: Context,
-    paths: PathArgument,
-    staged: bool,
-    tools: Iterable[Tool],
+    context: Context, paths: PathArgument, staged: bool, tools: Iterable[Tool]
 ) -> Tuple[bento.result.Baseline, float]:
     baseline: bento.result.Baseline = {}
     elapsed = 0.0
 
-    if comparison != Comparison.ROOT and context.baseline_file_path.exists():
+    if context.baseline_file_path.exists():
         with context.baseline_file_path.open() as json_file:
             baseline = bento.result.json_to_violation_hashes(json_file)
 
-    if comparison == Comparison.HEAD:
-        head_baseline, elapsed = _calculate_head_comparison(
-            context, paths, staged, tools
-        )
+    if staged:
+        head_baseline, elapsed = _calculate_head_comparison(context, paths, tools)
         for t in tools:
             tool_id = t.tool_id()
             if tool_id not in baseline:
@@ -70,23 +61,17 @@ def _calculate_baseline(
 
 
 def _calculate_head_comparison(
-    context: Context,
-    paths: Optional[List[Path]],
-    staged_only: bool,
-    tools: Iterable[Tool],
+    context: Context, paths: Optional[List[Path]], tools: Iterable[Tool]
 ) -> Tuple[bento.result.Baseline, float]:
     """
     Calculates a baseline consisting of all findings from the branch head
 
     :param context: The cli context
     :param paths: Which paths are being checked, or None for all paths
-    :param staged_only: Whether to use staged files as the list of paths
     :param tools: Which tools to check
     :return: The branch head baseline
     """
-    with run_context(
-        context, paths, Comparison.HEAD, staged_only, RunStep.BASELINE
-    ) as runner:
+    with run_context(context, paths, True, RunStep.BASELINE) as runner:
         if len(runner.paths) > 0:
             before = time.time()
             comparison_results = runner.parallel_results(tools, {}, keep_bars=False)

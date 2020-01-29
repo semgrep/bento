@@ -13,7 +13,7 @@ from pre_commit.util import CalledProcessError, cmd_output, noop_context
 
 import bento.git
 from bento.context import Context
-from bento.tool_runner import Comparison, Runner, RunStep
+from bento.tool_runner import Runner, RunStep
 from bento.util import AutocompleteSuggestions, Colors, echo_error, echo_newline
 
 PATCH_CACHE = str(Path.home() / ".cache" / "bento" / "patches")
@@ -193,7 +193,6 @@ def head_context() -> Iterator[None]:
 def run_context(
     context: Context,
     input_paths: PathArgument,
-    comparison: str,
     staged: bool,
     run_step: RunStep,
     show_bars: bool = True,
@@ -204,7 +203,6 @@ def run_context(
     This context obeys the following behaviors:
 
         Filesystem modifications:
-            comparison is head, running baseline - files are reset to head git index
             staged is true - file diffs are removed
             otherwise - no changes
 
@@ -216,7 +214,6 @@ def run_context(
     :param context: The Bento command context
     :param input_paths: A list of paths to check, or None to indicate that check should operate
                   against the base path
-    :param comparison: Which archive comparison is in use
     :param staged: Whether to use remove file diffs
     :param run_step: Which run step is in use (baseline if tool is determining baseline, check if tool is finding new results)
     :param show_bars: If true, attempts to configure Runner to display progress bars (these may not be displayed if not supported by environment)
@@ -226,14 +223,14 @@ def run_context(
     if input_paths is None or len(input_paths) == 0:
         input_paths = [Path(context.base_path)]
 
-    if comparison == Comparison.HEAD and run_step == RunStep.BASELINE:
+    if staged and run_step == RunStep.BASELINE:
         stash_context = head_context()
     elif staged:
         stash_context = staged_files_only(PATCH_CACHE)
     else:
         stash_context = noop_context()
 
-    if comparison == Comparison.HEAD and run_step == RunStep.CHECK:
+    if staged and run_step == RunStep.CHECK:
         use_cache = False
         skip_setup = True
     else:
@@ -263,7 +260,7 @@ def run_context(
     with stash_context:
         # TODO: Avoid recalculation of file ignores unless absolutely necessary
         # This is an ugly hack to make bento work if a file is deleted on filesystem
-        if staged or comparison == Comparison.HEAD and run_step == RunStep.CHECK:
+        if staged and run_step == RunStep.CHECK:
             with context._ignore_lock:
                 context._ignores = None  # type: ignore
         filtered = context.file_ignores.filter_paths(paths)
