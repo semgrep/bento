@@ -4,10 +4,9 @@ import sys
 from collections import namedtuple
 from contextlib import contextmanager
 from pathlib import Path
-from typing import Any, Iterator, List, Optional
+from typing import Any, Iterator, List
 
 import click
-from pre_commit.git import zsplit
 from pre_commit.staged_files_only import staged_files_only
 from pre_commit.util import CalledProcessError, cmd_output, noop_context
 
@@ -26,31 +25,6 @@ class StatusCode:
     Unmerged = "U"
     Untracked = "?"
     Ignored = "!"
-
-
-PathArgument = Optional[List[Path]]
-
-
-def _diffed_paths(context: Context, staged_only: bool) -> List[Path]:
-    repo = bento.git.repo()
-    if not repo:
-        return []
-    cmd = [
-        "git",
-        "diff",
-        "--name-only",
-        "--no-ext-diff",
-        "-z",
-        # Everything except for D
-        "--diff-filter=ACMRTUXB",
-        "--relative",
-        "--staged" if staged_only else "HEAD",
-        "--",
-        str(context.base_path),
-    ]
-    result = repo.git.execute(cmd)
-    str_paths = zsplit(result)
-    return [Path(p) for p in str_paths]
 
 
 GitStatus = namedtuple("GitStatus", ["added", "removed", "unmerged"])
@@ -192,7 +166,7 @@ def head_context() -> Iterator[None]:
 @contextmanager
 def run_context(
     context: Context,
-    input_paths: PathArgument,
+    target_paths: List[Path],
     staged: bool,
     run_step: RunStep,
     show_bars: bool = True,
@@ -220,9 +194,6 @@ def run_context(
     :return: A Python with-expression, which is passed a Runner object
     :raises Exception: If comparison is not HEAD and run_step is not CHECK
     """
-    if input_paths is None or len(input_paths) == 0:
-        input_paths = [Path(context.base_path)]
-
     use_cache = False
     skip_setup = True
     if staged and run_step == RunStep.BASELINE:
@@ -236,36 +207,9 @@ def run_context(
         stash_context = noop_context()
         skip_setup = False
 
-    # resolve given paths relative to base_path
-    paths = [
-        context.base_path / p.resolve().absolute().relative_to(context.base_path)
-        for p in (input_paths or [])
-    ]
-
-    # If staged then only run on files that are different
-    # and are a subpath of anything in input_paths
-    if staged:
-        targets = [
-            context.base_path / p.resolve().absolute().relative_to(context.base_path)
-            for p in _diffed_paths(context, staged_only=staged)
-        ]
-        paths = [
-            diff_path
-            for diff_path in targets
-            # diff_path is a subpath of some element of input_paths
-            if any((diff_path == path or path in diff_path.parents) for path in paths)
-        ]
-
     with stash_context:
-        # TODO: Avoid recalculation of file ignores unless absolutely necessary
-        # This is an ugly hack to make bento work if a file is deleted on filesystem
-        if staged and run_step == RunStep.CHECK:
-            with context._ignore_lock:
-                context._ignores = None  # type: ignore
-        filtered = context.file_ignores.filter_paths(paths)
-
         yield Runner(
-            paths=filtered,
+            paths=target_paths,
             use_cache=use_cache,
             skip_setup=skip_setup,
             show_bars=show_bars,

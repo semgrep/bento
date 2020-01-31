@@ -1,6 +1,6 @@
 import sys
 from pathlib import Path
-from typing import Any, Dict, Set
+from typing import Any, Dict, Set, Tuple
 
 import click
 
@@ -8,8 +8,9 @@ import bento.orchestrator
 import bento.result
 from bento.context import Context
 from bento.decorators import with_metrics
-from bento.paths import PathArgument, list_paths
+from bento.paths import list_paths
 from bento.result import VIOLATIONS_KEY
+from bento.target_file_manager import TargetFileManager
 from bento.util import echo_error, echo_newline, echo_next_step
 
 
@@ -24,7 +25,7 @@ from bento.util import echo_error, echo_newline, echo_next_step
 @click.argument("paths", nargs=-1, type=Path, autocompletion=list_paths)
 @click.pass_obj
 @with_metrics
-def archive(context: Context, all_: bool, paths: PathArgument) -> None:
+def archive(context: Context, all_: bool, paths: Tuple[Path, ...]) -> None:
     """
     Suppress current findings.
 
@@ -43,6 +44,12 @@ def archive(context: Context, all_: bool, paths: PathArgument) -> None:
 
     Archived findings are viewable in `.bento/archive.json`.
     """
+    # Default to no path filter
+    if len(paths) < 1:
+        path_list = [context.base_path]
+    else:
+        path_list = list(paths)
+
     if not context.is_init:
         if all_:
             click.echo(f"Running Bento archive on all tracked files...\n", err=True)
@@ -68,8 +75,12 @@ def archive(context: Context, all_: bool, paths: PathArgument) -> None:
     new_baseline: Dict[str, Dict[str, Dict[str, Any]]] = {}
     tools = context.tools.values()
 
+    target_file_manager = TargetFileManager(
+        context.base_path, path_list, not all_, context.ignore_file_path
+    )
+    target_paths = target_file_manager.get_target_files()
     all_findings, elapsed = bento.orchestrator.orchestrate(
-        context, paths, not all_, tools
+        context, target_paths, not all_, tools
     )
 
     n_found = 0

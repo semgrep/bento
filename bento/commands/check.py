@@ -18,7 +18,8 @@ from bento.config import get_valid_tools, update_tool_run
 from bento.context import Context
 from bento.decorators import with_metrics
 from bento.error import NodeError
-from bento.paths import PathArgument, list_paths
+from bento.paths import list_paths
+from bento.target_file_manager import TargetFileManager
 from bento.tool import Tool
 from bento.util import echo_error, echo_next_step, echo_success, echo_warning
 from bento.violation import Violation
@@ -70,7 +71,7 @@ def check(
     pager: bool = True,
     tool: Optional[str] = None,
     staged_only: bool = False,  # Should not be used. Legacy support for old pre-commit hooks
-    paths: PathArgument = None,
+    paths: Tuple[Path, ...] = (),
 ) -> None:
     """
     Checks for new findings.
@@ -87,6 +88,19 @@ def check(
 
     See `bento archive --help` to learn about suppressing findings.
     """
+
+    # Fail out if not configured
+    if not context.config_path.exists():
+        echo_error("No Bento configuration found. Please run `bento init`.")
+        sys.exit(3)
+
+    # Default to no path filter
+    if len(paths) < 1:
+        path_list = [context.base_path]
+    else:
+        path_list = list(paths)
+
+    # Handle specified tool that is not configured
     if tool and tool not in context.configured_tools:
         click.echo(
             f"{tool} has not been configured. Adding default configuration for tool to {bento.constants.CONFIG_FILE_NAME}"
@@ -96,15 +110,9 @@ def check(
         # update and include newly added tool
         context._configured_tools = None
 
-    if not context.config_path.exists():
-        echo_error("No Bento configuration found. Please run `bento init`.")
-        sys.exit(3)
-
-    config = context.config
+    # Handle specified formatters
     if formatter:
-        config["formatter"] = [{f: {}} for f in formatter]
-    fmts = context.formatters
-    findings_to_log: List[Any] = []
+        context.config["formatter"] = [{f: {}} for f in formatter]
 
     if all_:
         click.echo(f"Running Bento checks on all tracked files...\n", err=True)
@@ -115,12 +123,17 @@ def check(
     if tool:
         tools = [context.configured_tools[tool]]
 
+    target_file_manager = TargetFileManager(
+        context.base_path, path_list, not all_, context.ignore_file_path
+    )
+    target_paths = target_file_manager.get_target_files()
     all_results, elapsed = bento.orchestrator.orchestrate(
-        context, paths, not all_, tools
+        context, target_paths, not all_, tools
     )
 
+    fmts = context.formatters
+    findings_to_log: List[Any] = []
     is_error = False
-
     n_all = 0
     n_all_filtered = 0
     filtered_findings: Dict[str, List[Violation]] = {}
@@ -153,7 +166,7 @@ You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PA
                 tool_id,
                 context.timestamp,
                 findings,
-                __get_ignores_for_tool(tool_id, config),
+                __get_ignores_for_tool(tool_id, context.config),
             )
             filtered = [f for f in findings if not f.filtered]
             filtered_findings[tool_id] = filtered
