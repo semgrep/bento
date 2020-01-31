@@ -82,8 +82,9 @@ def test_check_compare_to_head_no_diffs() -> None:
     assert len(parsed) == 0
 
 
-def test_check_compare_to_head_diffs() -> None:
+def test_check_compare_to_head_diffs(monkeypatch: MonkeyPatch) -> None:
     """Validates that check shows issues in staged changes"""
+    monkeypatch.chdir(SIMPLE)
     runner = CliRunner(mix_stderr=False)
     Context(SIMPLE).cache.wipe()
 
@@ -115,7 +116,6 @@ def test_check_specified_ignored(monkeypatch: MonkeyPatch) -> None:
         obj=Context(base_path=BASE),
     )
     parsed = json.loads(result.stdout)
-    print(parsed)
     assert not parsed
 
 

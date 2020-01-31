@@ -7,13 +7,23 @@ from tests.test_tool import context_for
 
 THIS_PATH = Path(os.path.dirname(__file__))
 BASE_PATH = THIS_PATH / ".." / ".." / ".."
+SHELL_INTEGRATION_PATH = BASE_PATH / "tests/integration/shell"
+SHELL_TARGET = [
+    SHELL_INTEGRATION_PATH / "bar",
+    SHELL_INTEGRATION_PATH / "baz",
+    SHELL_INTEGRATION_PATH / "foo",
+    SHELL_INTEGRATION_PATH / "foo.sh",
+    SHELL_INTEGRATION_PATH / "should_be_ignored",
+    SHELL_INTEGRATION_PATH / "test.sh",
+]
 
 
 def test_run(tmp_path: Path) -> None:
-    base_path = BASE_PATH / "tests" / "integration" / "shell"
-    tool = ShellcheckTool(context_for(tmp_path, ShellcheckTool.tool_id(), base_path))
+    tool = ShellcheckTool(
+        context_for(tmp_path, ShellcheckTool.tool_id(), SHELL_INTEGRATION_PATH)
+    )
     tool.setup()
-    violations = set(tool.results())
+    violations = set(tool.results(SHELL_TARGET))
     assert violations == {
         Violation(
             tool_id="shellcheck",

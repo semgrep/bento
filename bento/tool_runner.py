@@ -33,12 +33,6 @@ RunResults = Tuple[str, ToolResults]
 START_RUN_BAR_VALUE = int(DONE_BAR_VALUE / 5)
 
 
-class Comparison:
-    ROOT = "root"
-    ARCHIVE = "archive"
-    HEAD = "head"
-
-
 class RunStep(Enum):
     BASELINE = 1
     CHECK = 2

@@ -4,7 +4,7 @@ import sys
 import time
 from datetime import datetime
 from functools import update_wrapper
-from typing import Any, Callable
+from typing import Any, Callable, List
 
 import click
 
@@ -35,17 +35,24 @@ def with_metrics(f: _AnyCallable) -> _AnyCallable:
 
         context = click.get_current_context()
 
-        if context.parent and context.parent.parent:
-            # this is a command with a subcommand e.g. `bento disable check <tool> <check>`
-            command = context.parent.command.name
-        else:
-            command = context.command.name
+        commands: List[str] = [context.command.name]
+        current_context = context
+        while current_context.parent:
+            current_context = current_context.parent
+
+            # Don't include "cli" in the command string. This is a quirk in click command nesting
+            if current_context.command.name != "cli":
+                commands.insert(0, current_context.command.name)
+
+        command_str: str = " ".join(commands)
+
+        logging.info(f"command: {command_str}")
 
         cli_context = context.obj
         timestamp = (
             cli_context.timestamp if cli_context else datetime.utcnow().isoformat("T")
         )
-        logging.info(f"Executing {command}")
+        logging.info(f"Executing {command_str}")
 
         exc_name = None
         try:
@@ -66,10 +73,10 @@ def with_metrics(f: _AnyCallable) -> _AnyCallable:
         user_duration = cli_context.user_duration() if cli_context else None
 
         if exc_name == "KeyboardInterrupt":
-            logging.info(f"{command} interrupted after running for {elapsed}s")
+            logging.info(f"{command_str} interrupted after running for {elapsed}s")
         else:
             logging.info(
-                f"{command} completed in {elapsed}s with exit code {exit_code}"
+                f"{command_str} completed in {elapsed}s with exit code {exit_code}"
             )
 
         email = (
@@ -80,7 +87,7 @@ def with_metrics(f: _AnyCallable) -> _AnyCallable:
 
         bento.network.post_metrics(
             bento.metrics.command_metric(
-                command,
+                command_str,
                 email,
                 timestamp,
                 kwargs,

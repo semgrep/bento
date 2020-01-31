@@ -13,7 +13,7 @@ def test_run(tmp_path: Path) -> None:
     base_path = BASE_PATH / "tests/integration/sgrep"
     tool = SGrepTool(context_for(tmp_path, SGrepTool.tool_id(), base_path))
     tool.setup()
-    violations = tool.results()
+    violations = tool.results([base_path / "flask_configs.py"])
     print(violations)
     expectation = [
         Violation(

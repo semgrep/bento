@@ -5,7 +5,6 @@ from pathlib import Path
 from typing import Tuple
 
 from _pytest.monkeypatch import MonkeyPatch
-from bento.base_context import BaseContext
 from bento.run_cache import RunCache
 
 TOOL_ID = "tool_name_here"
@@ -22,15 +21,9 @@ def __ensure_ubuntu_mtime_change() -> None:
     time.sleep(1e-2)
 
 
-def __cache(cache_path: Path, run_path: Path) -> RunCache:
-    context = BaseContext(base_path=run_path)
-    ignore = context.file_ignores
-    return RunCache(ignore, cache_path)
-
-
-def __hash(tmp_path: Path) -> str:
+def __hash(tmp_file: Path) -> str:
     with tempfile.TemporaryDirectory() as cache_dir:
-        return __cache(cache_path=Path(cache_dir), run_path=tmp_path)._modified_hash()
+        return RunCache(cache_dir)._modified_hash([tmp_file])
 
 
 def __setup_test_dir(
@@ -41,17 +34,17 @@ def __setup_test_dir(
     file = subdir / "hello.txt"
     if touch_file:
         file.touch()
-    hsh = __hash(tmp_path)
+    hsh = __hash(file)
     return hsh, file
 
 
 def test_modified_hash_no_changes(tmp_path: Path) -> None:
     """modified_hash should not change if no files change"""
 
-    hsh, _ = __setup_test_dir(tmp_path)
+    hsh, file = __setup_test_dir(tmp_path)
     __ensure_ubuntu_mtime_change()
 
-    assert hsh == __hash(tmp_path)
+    assert hsh == __hash(file)
 
 
 def test_modified_hash_new_file_subdir(tmp_path: Path) -> None:
@@ -60,7 +53,7 @@ def test_modified_hash_new_file_subdir(tmp_path: Path) -> None:
 
     file.touch()
 
-    assert hsh != __hash(tmp_path)
+    assert hsh != __hash(file)
 
 
 def test_modified_hash_touch(tmp_path: Path) -> None:
@@ -70,7 +63,7 @@ def test_modified_hash_touch(tmp_path: Path) -> None:
     __ensure_ubuntu_mtime_change()
     file.touch()
 
-    assert hsh != __hash(tmp_path)
+    assert hsh != __hash(file)
 
 
 def test_modified_hash_remove(tmp_path: Path) -> None:
@@ -79,37 +72,28 @@ def test_modified_hash_remove(tmp_path: Path) -> None:
     hsh, file = __setup_test_dir(tmp_path)
     file.unlink()
 
-    assert hsh != __hash(tmp_path)
-
-
-def test_modified_hash_ignore(tmp_path: Path) -> None:
-    """modifed_hash should ignore changes in exclude dirs"""
-    hsh, file = __setup_test_dir(tmp_path, subdir_name=".bento", touch_file=False)
-
-    file.touch()
-
-    assert hsh == __hash(tmp_path)
+    assert hsh != __hash(file)
 
 
 def test_get(tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
     _, file = __setup_test_dir(tmp_path)
 
-    paths = [tmp_path]
+    paths = [file]
 
     with tempfile.TemporaryDirectory() as tmpdir:
         cache_path = Path(tmpdir)
 
         # Check cache is retrievable
-        cache = __cache(cache_path=cache_path, run_path=tmp_path)
+        cache = RunCache(cache_path)
         assert cache.get(TOOL_ID, paths) is None
         cache.put(TOOL_ID, paths, TOOL_OUTPUT)
 
-        cache = __cache(cache_path=cache_path, run_path=tmp_path)
+        cache = RunCache(cache_path)
         assert cache.get(TOOL_ID, paths) == TOOL_OUTPUT
 
         # Check that modifying file invalidates cache
         __ensure_ubuntu_mtime_change()
         file.touch()
 
-        cache = __cache(cache_path=cache_path, run_path=tmp_path)
+        cache = RunCache(cache_path)
         assert cache.get(TOOL_ID, paths) is None

@@ -97,7 +97,7 @@ def test_file_path_filter_terminal(tmp_path: Path) -> None:
 
 def test_file_path_match(tmp_path: Path) -> None:
     tool = ToolFixture(tmp_path)
-    result = tool.filter_paths([_relpath(".")])
+    result = tool.filter_paths([_relpath("test_tool.py")])
     expectation = {_relpath("test_tool.py")}
 
     assert result == expectation
@@ -111,13 +111,6 @@ def test_file_path_no_match(tmp_path: Path) -> None:
     assert not result
 
 
-def test_tool_run_no_paths(tmp_path: Path) -> None:
-    tool = ToolFixture(tmp_path)
-    result = tool.results()
-
-    assert result == [result_for(_relpath("test_tool.py"))]
-
-
 def test_tool_run_file(tmp_path: Path) -> None:
     tool = ToolFixture(tmp_path)
     result = tool.results([THIS_PATH / "test_tool.py"])
@@ -127,6 +120,6 @@ def test_tool_run_file(tmp_path: Path) -> None:
 
 def test_tool_run_ignores(tmp_path: Path) -> None:
     tool = ToolFixture(tmp_path, config={"ignore": ["test"]})
-    result = tool.results()
+    result = tool.results([_relpath("test_tool.py")])
 
     assert not result
