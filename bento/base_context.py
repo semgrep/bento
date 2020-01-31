@@ -113,6 +113,7 @@ class BaseContext:
 
     @property
     def file_ignores(self) -> FileIgnore:
+        # Deprecating use of this. For now it is only used in init, sgrep, checked_return
         with self._ignore_lock:
             # Only initialize the file ignores once. Since this uses system calls,
             # multiple attempts at initialization do nothing but slow down the CLI.
@@ -126,7 +127,7 @@ class BaseContext:
     def cache(self) -> RunCache:
         if self._cache is None:
             cp = self.cache_path or (self.resource_path / constants.CACHE_PATH)
-            self._cache = RunCache(cache_dir=cp, file_ignore=self.file_ignores)
+            self._cache = RunCache(cache_dir=cp)
         return self._cache
 
     def _open_config(self) -> Dict[str, Any]:

@@ -2,6 +2,13 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.8.1](https://pypi.org/project/bento-cli/0.8.1/) - 2020-01-30
+
+### Fixed
+
+- Perfomance improvements when running in large projects
+- Additional human readable check_ids for bandit
+
 ## [0.8.0](https://pypi.org/project/bento-cli/0.8.0/) - 2020-01-24
 
 This release represents a major shift in Bento's default behavior: It emphasizes an incremental

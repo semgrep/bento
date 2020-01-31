@@ -1,6 +1,5 @@
 import json
 import logging
-import os
 import subprocess
 from abc import ABC, abstractmethod
 from fnmatch import fnmatch
@@ -185,19 +184,12 @@ class Tool(ABC, Generic[R]):
         Returns:
             A set of valid paths
         """
-        abspaths = [os.path.abspath(p) for p in paths]
+        abspaths = [p.resolve() for p in paths]
         to_run = {
-            e.path
-            for e in self.context.file_ignores.entries()
-            if e.survives
-            and any(str(e.path).startswith(p) for p in abspaths)
-            and e.dir_entry.is_file()
-            and (
-                self.file_name_filter.match(e.path.name)
-                or (
-                    self.shebang_pattern and self._file_contains_shebang_pattern(e.path)
-                )
-            )
+            p
+            for p in abspaths
+            if self.file_name_filter.match(p.name)
+            or (self.shebang_pattern and self._file_contains_shebang_pattern(p))
         }
         return to_run
 
@@ -218,9 +210,7 @@ class Tool(ABC, Generic[R]):
         logging.debug(f"{self.tool_id()}: Command completed in {after - before:2f} s")
         return res
 
-    def results(
-        self, paths: Optional[Iterable[Path]] = None, use_cache: bool = True
-    ) -> List[Violation]:
+    def results(self, paths: List[Path], use_cache: bool = True) -> List[Violation]:
         """
         Runs this tool, returning all identified violations
 
@@ -236,9 +226,6 @@ class Tool(ABC, Generic[R]):
         Raises:
             CalledProcessError: If execution fails
         """
-        if paths is None:
-            paths = [self.base_path]
-
         if paths:
             logging.debug(f"Checking for local cache for {self.tool_id()}")
             cache_repr = self.context.cache.get(self.tool_id(), paths)

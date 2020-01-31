@@ -25,6 +25,8 @@ def test_tool_from_config_missing() -> None:
 
 
 def test_loads_ignores(monkeypatch: MonkeyPatch) -> None:
-    context = bento.context.Context(base_path=(Path(BASE_PATH) / "bento" / "configs"))
+    context = bento.context.Context(
+        base_path=(Path(BASE_PATH) / "bento" / "configs"), is_init=True
+    )
     expected = {".bento/", ".git/", ".gitignore"}
     assert context.file_ignores.patterns == expected

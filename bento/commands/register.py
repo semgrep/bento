@@ -198,6 +198,7 @@ class Registrar(object):
                 with gitignore_path.open("r") as fd:
                     has_ignore = next(filter(lambda l: ".bento" in l, fd), None)
             if has_ignore is None:
+                self.context.start_user_timer()
                 if content.UpdateGitignore.confirm.echo(gitignore_path):
                     gitignore_path.parent.resolve().mkdir(exist_ok=True, parents=True)
                     content.UpdateGitignore.confirm_yes.echo()
@@ -207,6 +208,7 @@ class Registrar(object):
 
                     persist_global_config(self.global_config)
                     content.UpdateGitignore.confirm_no.echo()
+                self.context.stop_user_timer()
         return gitignore_path, False
 
     def _update_gitignore_if_necessary(self, ignore_path: Path, update: bool) -> None:
@@ -233,7 +235,9 @@ class Registrar(object):
         self._validate_interactivity()
         shell_cmd = shell.split("/")[-1]
         if shell_cmd in autocomplete.SUPPORTED:
+            self.context.start_user_timer()
             should_add = content.SuggestAutocomplete.confirm.echo()
+            self.context.stop_user_timer()
             if should_add:
                 on_done = content.SuggestAutocomplete.install.echo(
                     autocomplete.SUPPORTED[shell_cmd][0]

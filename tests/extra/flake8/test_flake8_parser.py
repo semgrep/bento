@@ -7,6 +7,14 @@ from tests.test_tool import context_for
 
 THIS_PATH = Path(os.path.dirname(__file__))
 BASE_PATH = THIS_PATH / ".." / ".." / ".."
+SIMPLE_INTEGRATION_PATH = BASE_PATH / "tests/integration/simple"
+SIMPLE_TARGETS = [
+    SIMPLE_INTEGRATION_PATH / "bar.py",
+    SIMPLE_INTEGRATION_PATH / "foo.py",
+    SIMPLE_INTEGRATION_PATH / "init.js",
+    SIMPLE_INTEGRATION_PATH / "package-lock.json",
+    SIMPLE_INTEGRATION_PATH / "package.json",
+]
 
 
 def test_parse() -> None:
@@ -32,10 +40,11 @@ def test_parse() -> None:
 
 
 def test_run(tmp_path: Path) -> None:
-    base_path = BASE_PATH / "tests/integration/simple"
-    tool = Flake8Tool(context_for(tmp_path, Flake8Tool.TOOL_ID, base_path))
+    tool = Flake8Tool(
+        context_for(tmp_path, Flake8Tool.TOOL_ID, SIMPLE_INTEGRATION_PATH)
+    )
     tool.setup()
-    violations = tool.results()
+    violations = tool.results(SIMPLE_TARGETS)
 
     expectation = [
         Violation(

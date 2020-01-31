@@ -15,7 +15,7 @@ def test_run(tmp_path: Path) -> None:
         context_for(tmp_path, CheckedReturnTool.tool_id(), base_path)
     )
     tool.setup()
-    violations = tool.results()
+    violations = tool.results([base_path / "checkedreturn.js"])
     expectation = [
         Violation(
             tool_id="r2c.checked_return",

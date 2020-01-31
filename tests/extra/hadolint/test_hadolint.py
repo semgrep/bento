@@ -13,7 +13,7 @@ def test_run(tmp_path: Path) -> None:
     base_path = BASE_PATH / "tests" / "integration" / "docker"
     tool = HadolintTool(context_for(tmp_path, HadolintTool.tool_id(), base_path))
     tool.setup()
-    violations = tool.results()
+    violations = tool.results([base_path / "foo.Dockerfile"])
     assert violations == [
         Violation(
             tool_id="hadolint",

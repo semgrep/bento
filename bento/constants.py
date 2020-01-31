@@ -10,6 +10,8 @@ GLOBAL_CONFIG_PATH = GLOBAL_RESOURCE_PATH / "config.yml"
 DEFAULT_LOG_PATH = GLOBAL_RESOURCE_PATH / "last.log"
 VENV_PATH = GLOBAL_RESOURCE_PATH / "venv"
 DEFAULT_GLOBAL_GIT_IGNORE_PATH = Path(os.path.expanduser("~/.config/git/ignore"))
+GLOBAL_VERSION_CACHE_PATH = GLOBAL_RESOURCE_PATH / "version"
+
 
 RESOURCE_PATH = Path(".bento")
 CACHE_PATH = Path("cache")

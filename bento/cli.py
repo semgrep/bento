@@ -1,16 +1,18 @@
 import logging
 import os
 import sys
+import time
 from distutils.util import strtobool
+from pathlib import Path
 from typing import Optional
 
 import click
-from packaging.version import Version
+from packaging.version import InvalidVersion, Version
 
 import bento.constants as constants
+import bento.network
 from bento.commands import archive, check, disable, enable, init, register
 from bento.context import Context
-from bento.network import fetch_latest_version
 from bento.util import echo_error
 
 
@@ -35,13 +37,86 @@ def _is_test() -> bool:
         return False
 
 
+def _get_version_from_cache(version_cache_path: Path) -> Optional[Version]:
+    """
+        Reads version cache file and returns Version stored in it
+        if time cache was written was within the last day.
+
+        Returns None if version cache is invalid for any reason
+        or file does not exist
+    """
+    now = time.time()
+    if version_cache_path.is_file():
+        with version_cache_path.open() as f:
+            timestamp_str = f.readline().strip()
+            latest_version_str = f.readline().strip()
+            try:
+                latest_version = Version(latest_version_str)
+            except InvalidVersion:
+                logging.debug(
+                    f"Version Cache invalid version string: {latest_version_str}"
+                )
+                return None
+
+            try:
+                # Treat time as integer seconds so no need to deal with str float conversion
+                timestamp = int(timestamp_str)
+            except ValueError:
+                logging.debug(f"Version Cache invalid timestamp: {timestamp_str}")
+                return None
+
+            if now - timestamp > 86400:
+                logging.debug(f"Version Cache expired {timestamp}:{now}")
+                return None
+
+            logging.debug(f"Version Cache returning {latest_version}")
+            return latest_version
+    logging.debug("Version Cache does not exist")
+    return None
+
+
+def _get_latest_version(version_cache_path: Path) -> Optional[Version]:
+    """
+        Return latest Version of bento-cli available.
+
+        Checks local version cache to save from making network call
+        but if cache is invalid makes network call and writes to cache.
+
+        Returns None if cache is invalid and network call fails for
+        any reason
+    """
+    latest_version = _get_version_from_cache(version_cache_path)
+    if latest_version is None:
+        latest_version_str, _ = bento.network.fetch_latest_version()
+        if latest_version_str is None:
+            # Request timed out or invalid
+            return None
+
+        try:
+            latest_version = Version(latest_version_str)
+        except InvalidVersion:
+            # latest version str from server incorrect
+            return None
+
+        # Write to version cache
+        with version_cache_path.open("w") as f:
+            # Integer time so no need to deal with str float conversions
+            f.write(f"{int(time.time())}\n")
+            f.write(latest_version_str)
+
+    return latest_version
+
+
 def _is_running_latest() -> bool:
-    latest_version, _ = fetch_latest_version()
-    current_version = _get_version()
+    """
+        Returns True if current version of bento is latest version available
+    """
+    latest_version = _get_latest_version(constants.GLOBAL_VERSION_CACHE_PATH)
+    current_version = Version(_get_version())
     logging.info(
         f"Current bento version is {current_version}, latest is {latest_version}"
     )
-    if latest_version and Version(current_version) < Version(latest_version):
+    if latest_version and current_version < latest_version:
         return False
     return True
 
