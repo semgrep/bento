@@ -18,7 +18,7 @@ from tqdm import tqdm
 
 import bento.result
 import bento.util
-from bento.constants import CONFIG_FILE_NAME, SUPPORT_EMAIL_ADDRESS
+from bento.error import NoToolsConfiguredException
 from bento.result import Baseline, Violation
 from bento.tool import Tool
 
@@ -286,9 +286,7 @@ class Runner:
         n_tools = len(indices_and_tools)
 
         if n_tools == 0:
-            raise Exception(
-                f"No tools are configured in this project's {CONFIG_FILE_NAME}.\nPlease contact {SUPPORT_EMAIL_ADDRESS} if this is incorrect."
-            )
+            raise NoToolsConfiguredException()
 
         if self.show_bars:
             self._setup_bars(indices_and_tools)

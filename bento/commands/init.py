@@ -16,7 +16,7 @@ import bento.tool_runner
 from bento.commands.autorun import install_autorun
 from bento.context import Context
 from bento.decorators import with_metrics
-from bento.util import echo_error
+from bento.error import NotAGitRepoException
 
 
 def _dim_filename(path: Union[Path, str]) -> str:
@@ -126,10 +126,7 @@ class InitCommand(object):
     def _identify_git(self) -> None:
         repo = bento.git.repo(self.context.base_path)
         if repo is None:
-            echo_error(
-                "Current directory is not part of a Git project. Bento only works for Git projects."
-            )
-            sys.exit(3)
+            raise NotAGitRepoException()
 
     def _identify_project(self) -> None:
         """Identifies this project"""

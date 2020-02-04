@@ -13,7 +13,7 @@ import bento.constants as constants
 import bento.network
 from bento.commands import archive, check, disable, enable, init, register
 from bento.context import Context
-from bento.util import echo_error
+from bento.error import InvalidRegistrationException, OutdatedPythonException
 
 
 def _setup_logging() -> None:
@@ -171,15 +171,12 @@ def cli(
     else:
         ctx.obj = Context(base_path=base_path, is_init=is_init, email=email)
     if not _is_running_supported_python3():
-        echo_error(
-            "Bento requires Python 3.6+. Please ensure you have Python 3.6+ and installed Bento via `pip3 install bento-cli`."
-        )
-        sys.exit(3)
+        raise OutdatedPythonException()
 
     registrar = register.Registrar(ctx, agree, email=email)
     if not registrar.verify():
-        logging.error("Could not verify the user's registration.")
-        sys.exit(3)
+        raise InvalidRegistrationException()
+
     if not _is_running_latest() and not _is_test():
         logging.warning("Bento client is outdated")
         click.echo(constants.UPGRADE_WARNING_OUTPUT)

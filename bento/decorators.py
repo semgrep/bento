@@ -1,15 +1,15 @@
 import logging
 import subprocess
-import sys
 import time
 from datetime import datetime
 from functools import update_wrapper
-from typing import Any, Callable, List
+from typing import Any, Callable, List, Optional
 
 import click
 
 import bento.metrics
 import bento.network
+from bento.error import BentoException
 from bento.util import echo_error, echo_warning
 
 _AnyCallable = Callable[..., Any]
@@ -54,20 +54,25 @@ def with_metrics(f: _AnyCallable) -> _AnyCallable:
         )
         logging.info(f"Executing {command_str}")
 
-        exc_name = None
+        exception: Optional[BaseException] = None
         try:
             res = f(*args, **kwargs)
         except KeyboardInterrupt as e:
             # KeyboardInterrupt is a BaseException and has no exit code. Use 130 to mimic bash behavior.
             exit_code = 130
-            exc_name = e.__class__.__name__
+            exception = e
+        except BentoException as e:
+            exit_code = e.code
+            exception = e
         except SystemExit as e:
             exit_code = e.code
-            exc_name = e.__class__.__name__
+            exception = e
         except Exception as e:
             exit_code = 3
             __log_exception(e)
-            exc_name = e.__class__.__name__
+            exception = e
+
+        exc_name = exception.__class__.__name__ if exception else None
 
         elapsed = time.time() - before
         user_duration = cli_context.user_duration() if cli_context else None
@@ -85,6 +90,10 @@ def with_metrics(f: _AnyCallable) -> _AnyCallable:
             else bento.metrics.read_user_email()
         )
 
+        logging.info(
+            f"______________exit code: {exit_code}, exception name: {exc_name}_______________"
+        )
+
         bento.network.post_metrics(
             bento.metrics.command_metric(
                 command_str,
@@ -97,8 +106,8 @@ def with_metrics(f: _AnyCallable) -> _AnyCallable:
                 user_duration,
             )
         )
-        if exit_code != 0:
-            sys.exit(exit_code)
+        if exception:
+            raise exception
         return res
 
     return update_wrapper(new_func, f)

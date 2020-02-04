@@ -17,7 +17,7 @@ import bento.tool_runner
 from bento.config import get_valid_tools, update_tool_run
 from bento.context import Context
 from bento.decorators import with_metrics
-from bento.error import NodeError
+from bento.error import NoConfigurationException, NodeError, ToolRunException
 from bento.paths import list_paths
 from bento.target_file_manager import TargetFileManager
 from bento.tool import Tool
@@ -111,6 +111,9 @@ def check(
         context._configured_tools = None
 
     # Handle specified formatters
+    if not context.config_path.exists():
+        raise NoConfigurationException()
+
     if formatter:
         context.config["formatter"] = [{f: {}} for f in formatter]
 
@@ -208,6 +211,6 @@ You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PA
     if not all_ and not context.autorun_is_blocking:
         return
     elif is_error:
-        sys.exit(3)
+        raise ToolRunException()
     elif n_all_filtered > 0:
         sys.exit(2)

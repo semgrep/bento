@@ -1,4 +1,3 @@
-import sys
 from pathlib import Path
 from typing import Any, Dict, Set, Tuple
 
@@ -8,10 +7,11 @@ import bento.orchestrator
 import bento.result
 from bento.context import Context
 from bento.decorators import with_metrics
+from bento.error import NoConfigurationException
 from bento.paths import list_paths
 from bento.result import VIOLATIONS_KEY
 from bento.target_file_manager import TargetFileManager
-from bento.util import echo_error, echo_newline, echo_next_step
+from bento.util import echo_newline, echo_next_step
 
 
 @click.command()
@@ -57,8 +57,7 @@ def archive(context: Context, all_: bool, paths: Tuple[Path, ...]) -> None:
             click.echo(f"Running Bento archive on staged files...\n", err=True)
 
     if not context.config_path.exists():
-        echo_error("No Bento configuration found. Please run `bento init`.")
-        sys.exit(3)
+        raise NoConfigurationException()
 
     if context.baseline_file_path.exists():
         with context.baseline_file_path.open() as json_file:

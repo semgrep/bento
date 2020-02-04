@@ -15,6 +15,7 @@ from bento.commands.init import init
 from bento.commands.register import Registrar
 from bento.constants import QA_TEST_EMAIL_ADDRESS, TERMS_OF_SERVICE_VERSION
 from bento.context import Context
+from bento.error import NonInteractiveTerminalException
 from bento.util import persist_global_config, read_global_config
 
 INTEGRATION = Path(__file__).parent.parent / "integration"
@@ -88,7 +89,7 @@ Please either:
     with tmp_config(tmp_path) as ctx:
         registrar = Registrar(click_context=ctx, agree=False, email=None)
 
-        with pytest.raises(SystemExit) as ex:
+        with pytest.raises(NonInteractiveTerminalException) as ex:
             registrar.verify()
 
         assert ex.value.code == 3

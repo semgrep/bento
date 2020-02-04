@@ -1,6 +1,5 @@
 import logging
 import os
-import sys
 from collections import namedtuple
 from contextlib import contextmanager
 from pathlib import Path
@@ -12,6 +11,7 @@ from pre_commit.util import CalledProcessError, cmd_output, noop_context
 
 import bento.git
 from bento.context import Context
+from bento.error import UnsupportedGitStateException
 from bento.tool_runner import Runner, RunStep
 from bento.util import AutocompleteSuggestions, Colors, echo_error, echo_newline
 
@@ -104,7 +104,7 @@ def _abort_if_untracked_and_removed(removed: List[str]) -> None:
             fg=Colors.ERROR,
         )
         echo_cmd(f"git stash pop")
-        sys.exit(3)
+        raise UnsupportedGitStateException()
 
 
 @contextmanager
@@ -130,7 +130,7 @@ def head_context() -> Iterator[None]:
             )
             for f in unmerged:
                 click.secho(f, err=True)
-            sys.exit(3)
+            raise UnsupportedGitStateException()
 
         with staged_files_only(PATCH_CACHE):
             tree = cmd_output("git", "write-tree")[1].strip()
