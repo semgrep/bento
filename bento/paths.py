@@ -194,17 +194,18 @@ def run_context(
     :return: A Python with-expression, which is passed a Runner object
     :raises Exception: If comparison is not HEAD and run_step is not CHECK
     """
-    use_cache = False
-    skip_setup = True
     if staged and run_step == RunStep.BASELINE:
         stash_context = head_context()
         use_cache = True
+        skip_setup = True
     elif staged:
-        # run_step = RunStep.CHECK
         stash_context = staged_files_only(PATCH_CACHE)
+        use_cache = False
+        skip_setup = True
     else:
         # staged is False
         stash_context = noop_context()
+        use_cache = True
         skip_setup = False
 
     with stash_context:
