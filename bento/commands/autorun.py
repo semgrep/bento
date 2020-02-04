@@ -91,6 +91,11 @@ def install_autorun(context: Context, block: bool) -> None:
                 # Check that
                 shutil.move(hook_path, legacy_hook_path)
 
+        # Ensure .git/hooks directory exists
+        # note that we can (and should) assume .git dir exists since
+        # project must be a git project at this point in the code
+        hook_path.parent.mkdir(exist_ok=True)
+
         # Copy pre-commit script template to hook_path
         template_location = os.path.join(
             os.path.dirname(__file__), "../resources/pre-commit.template"
