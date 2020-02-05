@@ -9,7 +9,7 @@ from bento.context import Context
 from bento.decorators import with_metrics
 from bento.error import NoConfigurationException
 from bento.paths import list_paths
-from bento.result import VIOLATIONS_KEY
+from bento.result import VIOLATIONS_KEY, Baseline
 from bento.target_file_manager import TargetFileManager
 from bento.util import echo_newline, echo_next_step
 
@@ -77,9 +77,15 @@ def archive(context: Context, all_: bool, paths: Tuple[Path, ...]) -> None:
     target_file_manager = TargetFileManager(
         context.base_path, path_list, not all_, context.ignore_file_path
     )
-    target_paths = target_file_manager.get_target_files()
+
+    baseline: Baseline = {}
+    if context.baseline_file_path.exists():
+        with context.baseline_file_path.open() as json_file:
+            # TODO there's some deconflicting needed with old_baseline, old_hashes, baseline
+            baseline = bento.result.json_to_violation_hashes(json_file)
+
     all_findings, elapsed = bento.orchestrator.orchestrate(
-        context, target_paths, not all_, tools
+        baseline, target_file_manager, not all_, tools
     )
 
     n_found = 0
