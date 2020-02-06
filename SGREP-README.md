@@ -4,7 +4,7 @@ The goal of `sgrep` is to allow programmers to express complex code _patterns_ w
 
 
 
-## Please go to the [sgrep repository](https://sgrep.dev) for updated documentation on sgrep##
+## Please go to the [sgrep repository](https://sgrep.dev) for updated documentation on sgrep
 
 
 
