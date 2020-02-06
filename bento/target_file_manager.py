@@ -30,6 +30,15 @@ class StatusCode:
     Ignored = "!"
 
 
+class NoGitHeadException(Exception):
+    """
+    Raised by TargetFileManager when trying to get a head context
+    and no git head commit is found
+    """
+
+    pass
+
+
 @attr.s
 class TargetFileManager:
     """
@@ -170,7 +179,7 @@ class TargetFileManager:
             the git index but also appears in the filesystem.
 
             :param removed (list): Removed paths
-            :raises SystemExit: If any removed paths are present on Filesystem
+            :raises UnsupportedGitStateException: If any removed paths are present on Filesystem
         """
         untracked_removed = [r.replace(" ", r"\ ") for r in removed if Path(r).exists()]
         if untracked_removed:
@@ -200,12 +209,17 @@ class TargetFileManager:
         Runs a block of code on files from the current branch HEAD.
 
         :raises subprocess.CalledProcessError: If git encounters an exception
-        :raises SystemExit: If unmerged files are detected
+        :raises NoGitHeadException: If git cannot detect a HEAD commit
+        :raises UnsupportedGitStateException: If unmerged files are detected
         """
         repo = bento.git.repo()
 
         if not repo:
             yield
+
+        commit = bento.git.commit()
+        if commit is None:
+            raise NoGitHeadException()
 
         else:
             added, removed, unmerged = self._git_status()
@@ -269,7 +283,9 @@ class TargetFileManager:
         :param staged: Whether to use remove file diffs
         :param run_step: Which run step is in use (baseline if tool is determining baseline, check if tool is finding new results)
         :return: A Python with-expression
-        :raises Exception: If comparison is not HEAD and run_step is not CHECK
+        :raises subprocess.CalledProcessError: If git encounters an exception
+        :raises NoGitHeadException: If git cannot detect a HEAD commit
+        :raises UnsupportedGitStateException: If unmerged files are detected
         """
         if staged and run_step == RunStep.BASELINE:
             stash_context = self._head_context()

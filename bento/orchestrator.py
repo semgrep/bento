@@ -1,3 +1,4 @@
+import logging
 import time
 from typing import Collection, Iterable, Tuple
 
@@ -5,7 +6,7 @@ import click
 
 from bento.constants import IGNORE_FILE_NAME
 from bento.result import Baseline
-from bento.target_file_manager import TargetFileManager
+from bento.target_file_manager import NoGitHeadException, TargetFileManager
 from bento.tool import Tool
 from bento.tool_runner import Runner, RunResults, RunStep
 from bento.util import echo_warning
@@ -61,22 +62,27 @@ def _calculate_head_comparison(
     """
     Calculates a baseline consisting of all findings from the branch head
 
+    If no HEAD branch exists return empty baseline
+
     :param paths: Which paths are being checked
     :param tools: Which tools to check
     :return: The branch head baseline
     """
-    with target_file_manager.run_context(True, RunStep.BASELINE) as target_paths:
-        runner = Runner(paths=target_paths, use_cache=True, skip_setup=True)
-
-        if len(runner.paths) > 0:
-            before = time.time()
-            comparison_results = runner.parallel_results(tools, {}, keep_bars=False)
-            baseline = {
-                tool_id: {f.syntactic_identifier_str() for f in findings}
-                for tool_id, findings in comparison_results
-                if isinstance(findings, list)
-            }
-            elapsed = time.time() - before
-            return baseline, elapsed
-        else:
-            return {}, 0.0
+    try:
+        with target_file_manager.run_context(True, RunStep.BASELINE) as target_paths:
+            runner = Runner(paths=target_paths, use_cache=True, skip_setup=True)
+            if len(runner.paths) > 0:
+                before = time.time()
+                comparison_results = runner.parallel_results(tools, {}, keep_bars=False)
+                baseline = {
+                    tool_id: {f.syntactic_identifier_str() for f in findings}
+                    for tool_id, findings in comparison_results
+                    if isinstance(findings, list)
+                }
+                elapsed = time.time() - before
+                return baseline, elapsed
+            else:
+                return {}, 0.0
+    except NoGitHeadException:
+        logging.debug("No git head found so defaulting to empty head baseline")
+        return {}, 0.0
