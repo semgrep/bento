@@ -17,8 +17,9 @@ import bento.tool_runner
 from bento.config import get_valid_tools, update_tool_run
 from bento.context import Context
 from bento.decorators import with_metrics
-from bento.error import NodeError
+from bento.error import NoConfigurationException, NodeError, ToolRunException
 from bento.paths import list_paths
+from bento.result import Baseline
 from bento.target_file_manager import TargetFileManager
 from bento.tool import Tool
 from bento.util import echo_error, echo_next_step, echo_success, echo_warning
@@ -111,6 +112,9 @@ def check(
         context._configured_tools = None
 
     # Handle specified formatters
+    if not context.config_path.exists():
+        raise NoConfigurationException()
+
     if formatter:
         context.config["formatter"] = [{f: {}} for f in formatter]
 
@@ -123,12 +127,17 @@ def check(
     if tool:
         tools = [context.configured_tools[tool]]
 
+    baseline: Baseline = {}
+    if context.baseline_file_path.exists():
+        with context.baseline_file_path.open() as json_file:
+            baseline = bento.result.json_to_violation_hashes(json_file)
+
     target_file_manager = TargetFileManager(
         context.base_path, path_list, not all_, context.ignore_file_path
     )
-    target_paths = target_file_manager.get_target_files()
+
     all_results, elapsed = bento.orchestrator.orchestrate(
-        context, target_paths, not all_, tools
+        baseline, target_file_manager, not all_, tools
     )
 
     fmts = context.formatters
@@ -208,6 +217,6 @@ You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PA
     if not all_ and not context.autorun_is_blocking:
         return
     elif is_error:
-        sys.exit(3)
+        raise ToolRunException()
     elif n_all_filtered > 0:
         sys.exit(2)

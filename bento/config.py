@@ -1,6 +1,5 @@
 import logging
 import os
-import sys
 from typing import Any, Callable, List, Set, cast
 
 import click
@@ -8,26 +7,26 @@ import yaml
 
 import bento.extra
 from bento.context import Context
+from bento.error import InvalidToolException
 from bento.extra.click import ClickTool
 from bento.extra.grep import GrepTool
 from bento.extra.pyre import PyreTool
 from bento.extra.python_taint import PythonTaintTool
 from bento.extra.sgrep import SGrepTool
-from bento.util import AutocompleteSuggestions, echo_error
+from bento.util import AutocompleteSuggestions
 
 
 def update_tool_run(context: Context, tool: str, run: bool) -> None:
     """Sets run field of tool to RUN. Default to no ignore if tool not in config
     """
-    # Check that TOOL is valid
-    if tool not in {t.tool_id() for t in bento.extra.TOOLS}:
-        echo_error(
-            f"No tool named '{tool}'. See help text for list of available tools."
-        )
-        sys.exit(3)
 
     config = context.config
     tool_config = config["tools"]
+    all_tools = ", ".join(f"'{k}'" for k in tool_config.keys())
+    # Check that TOOL is valid
+    if tool not in {t.tool_id() for t in bento.extra.TOOLS}:
+        raise InvalidToolException(tool, all_tools)
+
     if tool not in tool_config:
         # Read default ignore from default config file
         with (
@@ -52,8 +51,7 @@ def update_ignores(
     tool_config = config["tools"]
     if tool not in tool_config:
         all_tools = ", ".join(f"'{k}'" for k in tool_config.keys())
-        echo_error(f"No tool named '{tool}'. Configured tools are {all_tools}")
-        sys.exit(3)
+        raise InvalidToolException(tool, all_tools)
 
     ignores = set(tool_config[tool].get("ignore", []))
     update_func(ignores)

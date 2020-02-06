@@ -18,6 +18,7 @@ import bento.metrics
 import bento.tool_runner
 import bento.util
 from bento.context import Context
+from bento.error import InvalidVersionException, NonInteractiveTerminalException
 from bento.network import post_metrics
 from bento.util import echo_newline, persist_global_config, read_global_config
 
@@ -52,7 +53,7 @@ class Registrar(object):
         is_interactive = sys.stdin.isatty() and sys.stderr.isatty()
         if not is_interactive:
             content.not_registered.echo()
-            sys.exit(3)
+            raise NonInteractiveTerminalException()
 
     def _show_welcome_message(self) -> None:
         """
@@ -149,7 +150,7 @@ class Registrar(object):
                     return True
             except InvalidVersion:
                 content.ConfirmTos.invalid_version.echo()
-                sys.exit(3)
+                raise InvalidVersionException()
 
             content.ConfirmTos.upgrade.echo()
 

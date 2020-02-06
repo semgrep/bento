@@ -59,11 +59,25 @@ class FileIgnore(Mapping[Path, Entry]):
                 return False
             if fnmatch.fnmatch(str(path), p):
                 return False
+
             # Check any subpath of path satisfies a pattern
+            # i.e. a/b/c/d is ignored with rule a/b
             # This is a hack. TargetFileManager should be pruning while searching
             # instead of post filtering to avoid this
-            if p.endswith("/") and fnmatch.fnmatch(str(path), p + "*"):
+            # Note: Use relative to base to avoid ignore rules firing on parent directories
+            # i.e. /private/var/.../instabot should not be ignored with var/ rule
+            # in instabot dir as base_path
+            if p.endswith("/") and fnmatch.fnmatch(
+                str(path.relative_to(self.base_path)), p + "*"
+            ):
                 return False
+            if (
+                p.endswith("/")
+                and p.startswith(str(self.base_path))
+                and fnmatch.fnmatch(str(path), p + "*")
+            ):
+                return False
+
         return True
 
     def _walk(self, this_path: str, root_path: str) -> Iterator[Entry]:

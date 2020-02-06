@@ -158,7 +158,7 @@ def test_check_no_init() -> None:
     Context(INTEGRATION).cache.wipe()
     # No .bento.yml exists in this directory
     result = runner.invoke(check, obj=Context(base_path=INTEGRATION))
-    assert result.exit_code == 3
+    assert result.exception.code == 3
 
 
 def test_check_tool_error() -> None:
@@ -176,5 +176,5 @@ def test_check_tool_error() -> None:
             check, ["--all", str(SIMPLE)], obj=Context(base_path=SIMPLE)
         )
         print(result.stderr)
-        assert result.exit_code == 3
+        assert result.exception.code == 3
         assert expectation in result.stderr.splitlines()

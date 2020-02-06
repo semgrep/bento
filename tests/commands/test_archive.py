@@ -17,8 +17,10 @@ def test_archive_no_init() -> None:
 
     runner = CliRunner()
     # No .bento.yml exists in this directory
-    result = runner.invoke(archive, obj=Context(base_path=INTEGRATION))
-    assert result.exit_code == 3
+    result = runner.invoke(
+        archive, obj=Context(base_path=INTEGRATION), catch_exceptions=True
+    )
+    assert result.exception.code == 3
 
 
 def test_archive_updates_whitelist() -> None:

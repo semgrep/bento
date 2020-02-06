@@ -2,6 +2,14 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.8.2](https://pypi.org/project/bento-cli/0.8.2/) - 2020-02-05
+
+### Fixed
+
+- `bento check` works with repos with no previous commits
+- Verify a path is a file before checking if it contains a shell shebang (shellcheck tool)
+- Correctly install autorun even if git-hooks subdirectory is non-existent
+
 ## [0.8.1](https://pypi.org/project/bento-cli/0.8.1/) - 2020-01-30
 
 ### Fixed

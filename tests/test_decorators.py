@@ -65,8 +65,8 @@ def test_sends_metrics_exception(monkeypatch: MonkeyPatch) -> None:
     with _command("test"):
         try:
             with_metrics(say_hi)()
-        except SystemExit as ex:
-            assert ex.code == 3
+        except Exception as ex:
+            assert str(ex) == "hi"
     assert len(posted) == 1
     assert posted[0][0]["command"] == "test"
     assert posted[0][0]["exit_code"] == 3

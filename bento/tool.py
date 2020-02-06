@@ -154,9 +154,13 @@ class Tool(ABC, Generic[R]):
             Checks if the first line of file_path matches self.shebang_pattern.
 
             Returns False if a "first line" does not make sense for file_path
-            i.e. file_path is a binary or is an empty file
+            i.e. file_path is a binary or is an empty file or doesnt exist
         """
         assert self.shebang_pattern is not None
+
+        if not file_path.is_file():
+            # File doesnt exist or is a dir
+            return False
 
         with open(file_path) as file:
             try:
