@@ -27,6 +27,8 @@ def _setup_logging() -> None:
     logging.info(
         f"Environment: stdout.isatty={sys.stdout.isatty()} stderr.isatty={sys.stderr.isatty()} stdin.isatty={sys.stdin.isatty()}"
     )
+    # Very noisy logging from urllib3
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 
 def _is_test() -> bool:
