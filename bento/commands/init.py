@@ -1,7 +1,6 @@
 import logging
 import os
 import shutil
-import subprocess
 import sys
 from pathlib import Path
 
@@ -16,6 +15,7 @@ import bento.tool_runner
 from bento.commands.autorun import install_autorun
 from bento.context import Context
 from bento.decorators import with_metrics
+from bento.error import NotAGitRepoException
 
 
 @attr.s(auto_attribs=True)
@@ -113,10 +113,15 @@ class InitCommand:
         content.InstallTools.install.echo()
         if clean:
             content.Clean.tools.echo()
-            subprocess.run(["rm", "-r", constants.VENV_PATH], check=True)
+            shutil.rmtree(constants.VENV_PATH, ignore_errors=True)
         runner = bento.tool_runner.Runner(paths=[], install_only=True, use_cache=False)
         tools = self.context.tools.values()
         runner.parallel_results(tools, {})
+
+    def _identify_git(self) -> None:
+        repo = bento.git.repo(self.context.base_path)
+        if repo is None:
+            raise NotAGitRepoException()
 
     def _identify_project(self) -> None:
         """Identifies this project"""
@@ -133,19 +138,20 @@ class InitCommand:
         content.Identify.success.echo(projects)
 
     def _finish(self) -> None:
-        if sys.stdin.isatty() and sys.stderr.isatty():
-            content.Finish.prompt.echo()
-
         content.Finish.body.echo()
 
     def run(self, ctx: click.Context, clean: bool) -> None:
         content.Start.banner.echo()
 
         if sys.stdin.isatty() and sys.stderr.isatty():
+            ctx.obj.start_user_timer()
             content.Start.confirm.echo(default=True, show_default=False)
+            ctx.obj.stop_user_timer()
 
         self.context.resource_path.mkdir(exist_ok=True)
         is_first_init = not self.context.config_path.exists()
+        # Perform git identification
+        self._identify_git()
 
         # Perform configuration
         self._install_ignore_if_not_exists()

@@ -1,6 +1,5 @@
-import os
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Set, Tuple
+from typing import Any, Dict, Iterable, List, Set, Tuple
 
 import bento.cli
 import bento.context
@@ -10,8 +9,16 @@ import pytest
 from _pytest.monkeypatch import MonkeyPatch
 from bento.violation import Violation
 
-THIS_PATH = os.path.dirname(__file__)
-BASE_PATH = os.path.abspath(os.path.join(THIS_PATH, ".."))
+THIS_PATH = Path(__file__).parent
+BASE_PATH = THIS_PATH.parent
+SIMPLE_INTEGRATION_PATH = THIS_PATH / "integration/simple"
+SIMPLE_TARGETS = [
+    SIMPLE_INTEGRATION_PATH / "bar.py",
+    SIMPLE_INTEGRATION_PATH / "foo.py",
+    SIMPLE_INTEGRATION_PATH / "init.js",
+    SIMPLE_INTEGRATION_PATH / "package-lock.json",
+    SIMPLE_INTEGRATION_PATH / "package.json",
+]
 
 
 def __len(it: Iterable[Any]) -> int:
@@ -27,7 +34,7 @@ def __violation_counts(violations: Iterable[Violation]) -> Tuple[int, int]:
 
 def __count_simple_findings(
     archive: Dict[str, Set[str]],
-    files: Optional[List[str]],
+    files: List[Path],
     monkeypatch: MonkeyPatch,
     path: str = "tests/integration/simple",
 ) -> Dict[str, Tuple[int, int]]:
@@ -37,7 +44,7 @@ def __count_simple_findings(
     Returns:
         (dict): Counts of (unfiltered, filtered) findings for each tool
     """
-    monkeypatch.chdir(os.path.join(BASE_PATH, path))
+    monkeypatch.chdir(BASE_PATH / path)
     context = bento.context.Context()
     tools = context.tools.values()
     paths = [Path(f) for f in files] if files is not None else [context.base_path]
@@ -49,7 +56,7 @@ def __count_simple_findings(
 
 def test_tool_parallel_results_no_archive_no_files(monkeypatch: MonkeyPatch) -> None:
     """Validates that tools are run in parallel and return proper finding counts (no archive, no passed files)"""
-    counts = __count_simple_findings({}, None, monkeypatch)
+    counts = __count_simple_findings({}, SIMPLE_TARGETS, monkeypatch)
     expectation = {"bandit": (2, 0), "eslint": (1, 0), "flake8": (2, 0)}
 
     assert counts == expectation
@@ -57,11 +64,9 @@ def test_tool_parallel_results_no_archive_no_files(monkeypatch: MonkeyPatch) -> 
 
 def test_tool_parallel_results_with_archive_no_files(monkeypatch: MonkeyPatch) -> None:
     """Validates that tools are run in parallel and return proper finding counts (archive, no passed files)"""
-    with open(
-        os.path.join(BASE_PATH, "tests/integration/simple/.bento/archive.json")
-    ) as file:
+    with (BASE_PATH / "tests/integration/simple/.bento/archive.json").open() as file:
         archive = bento.result.json_to_violation_hashes(file)
-    counts = __count_simple_findings(archive, None, monkeypatch)
+    counts = __count_simple_findings(archive, SIMPLE_TARGETS, monkeypatch)
 
     expectation = {"bandit": (2, 0), "eslint": (1, 0), "flake8": (1, 1)}
 
@@ -70,7 +75,7 @@ def test_tool_parallel_results_with_archive_no_files(monkeypatch: MonkeyPatch) -
 
 def test_tool_parallel_results_no_archive_es_files(monkeypatch: MonkeyPatch) -> None:
     """Validates that tools are run in parallel and return proper finding counts (no archive, js files only)"""
-    counts = __count_simple_findings({}, ["init.js"], monkeypatch)
+    counts = __count_simple_findings({}, [Path("init.js")], monkeypatch)
     expectation = {"bandit": (0, 0), "eslint": (1, 0), "flake8": (0, 0)}
 
     assert counts == expectation
@@ -78,7 +83,7 @@ def test_tool_parallel_results_no_archive_es_files(monkeypatch: MonkeyPatch) -> 
 
 def test_tool_parallel_results_no_archive_py_files(monkeypatch: MonkeyPatch) -> None:
     """Validates that tools are run in parallel and return proper finding counts (no archive, single py file only)"""
-    counts = __count_simple_findings({}, ["foo.py"], monkeypatch)
+    counts = __count_simple_findings({}, [Path("foo.py")], monkeypatch)
     expectation = {"bandit": (1, 0), "eslint": (0, 0), "flake8": (2, 0)}
 
     assert counts == expectation
@@ -86,11 +91,9 @@ def test_tool_parallel_results_no_archive_py_files(monkeypatch: MonkeyPatch) -> 
 
 def test_tool_parallel_results_archive_py_files(monkeypatch: MonkeyPatch) -> None:
     """Validates that tools are run in parallel and return proper finding counts (archive, passed files)"""
-    with open(
-        os.path.join(BASE_PATH, "tests/integration/simple/.bento/archive.json")
-    ) as file:
+    with (BASE_PATH / "tests/integration/simple/.bento/archive.json").open() as file:
         archive = bento.result.json_to_violation_hashes(file)
-    counts = __count_simple_findings(archive, ["foo.py"], monkeypatch)
+    counts = __count_simple_findings(archive, [Path("foo.py")], monkeypatch)
     expectation = {"bandit": (1, 0), "eslint": (0, 0), "flake8": (1, 1)}
 
     assert counts == expectation

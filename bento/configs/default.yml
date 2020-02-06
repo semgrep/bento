@@ -274,6 +274,7 @@ tools:
       - bare-except-bugbear
       - no-getattr
       - no-setattr
+      - unused-loop-variable
       - unused-module
       - unused-variable
     run: true
@@ -292,11 +293,12 @@ tools:
     ignore: []
     run: true
   r2c.requests:
-    ignore: []
+    ignore:
+      - use-timeout
     run: true
   r2c.click:
     ignore:
-      - r2c-click-names-are-well-formed
+      - names-are-well-formed
     run: true
   shellcheck:
     ignore:

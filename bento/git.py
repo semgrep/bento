@@ -64,4 +64,8 @@ def commit(path: Optional[Path] = None) -> Optional[str]:
     r = repo()
     if r is None:
         return None
-    return str(r.head.commit)
+    try:
+        return str(r.head.commit)
+    except ValueError:
+        # catch case where local git repo without remote master
+        return None

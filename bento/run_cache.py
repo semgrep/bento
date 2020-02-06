@@ -6,9 +6,7 @@ from typing import Iterable, Optional
 import attr
 import pymmh3 as mmh3
 
-import bento.constants as constants
 from bento import __version__ as BENTO_VERSION
-from bento.fignore import FileIgnore
 
 
 @attr.s
@@ -20,7 +18,6 @@ class RunCache:
         is not threadsafe if multiple threads access the same tool.
     """
 
-    file_ignore = attr.ib(type=FileIgnore)
     cache_dir: Path = attr.ib(converter=Path)
 
     def __cache_metadata_path(self, tool_id: str) -> Path:
@@ -35,7 +32,7 @@ class RunCache:
         """
         return self.cache_dir / f"{tool_id}.data"
 
-    def _modified_hash(self) -> str:
+    def _modified_hash(self, paths: Iterable[Path]) -> str:
         """
         Returns a hash of the recursive mtime of a path.
 
@@ -44,18 +41,7 @@ class RunCache:
         """
 
         # No matter settings of .bentoignore, these are always excluded
-        exclude_files = {
-            ".bento",
-            constants.ARCHIVE_FILE_NAME,
-            constants.CONFIG_FILE_NAME,
-        }
-        files_and_times = (
-            (e.path, e.dir_entry.stat(follow_symlinks=False).st_mtime_ns)
-            for e in self.file_ignore.entries()
-            if e.survives
-            if e.path.name not in exclude_files
-        )
-
+        files_and_times = ((str(p), p.stat().st_mtime_ns) for p in paths if p.exists())
         h = 0
         for f, m in files_and_times:
             h ^= mmh3.hash128(f"{f}:{m}")
@@ -118,7 +104,7 @@ class RunCache:
         if (
             cache_paths != set(paths)
             or cache_bento_version != BENTO_VERSION
-            or cache_hash != self._modified_hash()
+            or cache_hash != self._modified_hash(paths)
         ):
             logging.warning(f"Invalidating cache for {tool_id}")
             self.__cleanup(tool_id)
@@ -141,7 +127,7 @@ class RunCache:
 
         # Data should be written before metadata
         cache_data_path.write_text(raw_results)
-        hsh = self._modified_hash()
+        hsh = self._modified_hash(paths)
 
         metadata = {
             "paths": [str(p) for p in paths],

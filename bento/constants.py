@@ -10,6 +10,8 @@ GLOBAL_CONFIG_PATH = GLOBAL_RESOURCE_PATH / "config.yml"
 DEFAULT_LOG_PATH = GLOBAL_RESOURCE_PATH / "last.log"
 VENV_PATH = GLOBAL_RESOURCE_PATH / "venv"
 DEFAULT_GLOBAL_GIT_IGNORE_PATH = Path(os.path.expanduser("~/.config/git/ignore"))
+GLOBAL_VERSION_CACHE_PATH = GLOBAL_RESOURCE_PATH / "version"
+
 
 RESOURCE_PATH = Path(".bento")
 CACHE_PATH = Path("cache")
@@ -24,6 +26,7 @@ GREP_CONFIG_FILE_NAME = "grep-config.yml"
 
 TERMS_OF_SERVICE_KEY = "terms_of_service"
 TERMS_OF_SERVICE_VERSION = "0.3.0"
+GLOBAL_GIT_IGNORE_OPT_OUT = "opt_out_global_git_ignore"
 
 # Identifiers
 

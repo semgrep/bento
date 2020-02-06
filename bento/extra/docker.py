@@ -2,6 +2,7 @@ import logging
 import shutil
 from typing import TYPE_CHECKING
 
+from bento.error import DockerFailureException
 from bento.util import Memo
 
 DOCKER_INSTALLED = Memo[bool](lambda: shutil.which("docker") is not None)
@@ -21,6 +22,4 @@ def get_docker_client() -> "docker.client.DockerClient":
         return client
     except Exception as e:
         logging.debug(e)
-        raise Exception(
-            "Failed to run docker. Please confirm docker is installed and its daemon is running in user mode."
-        )
+        raise DockerFailureException()
