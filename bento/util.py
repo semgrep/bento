@@ -21,6 +21,8 @@ from typing import (
     Collection,
     Dict,
     Generic,
+    Iterable,
+    Iterator,
     List,
     Optional,
     Pattern,
@@ -166,6 +168,22 @@ def package_subclasses(tpe: Type, pkg_path: str) -> List[Type]:
             import_module(f"{pkg_path}.{name}", __package__)
 
     return tpe.__subclasses__()
+
+
+_T = TypeVar("_T")
+
+
+def batched(it: Iterable[_T], max_len: int) -> Iterator[Iterator[_T]]:
+    """
+    Batches an iterator in iterators of a maximum length
+
+    :param it: The iterator to batch
+    :param max_len: The maximum length
+    """
+    return (
+        (y for _, y in x)
+        for _, x in itertools.groupby(enumerate(it), key=lambda x: int(x[0] / max_len))
+    )
 
 
 def less(

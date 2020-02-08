@@ -1,5 +1,5 @@
-import json
 import logging
+import resource
 import subprocess
 from abc import ABC, abstractmethod
 from fnmatch import fnmatch
@@ -22,13 +22,18 @@ import attr
 
 from bento.base_context import BaseContext
 from bento.parser import Parser
-from bento.result import Violation
+from bento.result import Violation, from_cache_repr, to_cache_repr
+from bento.util import batched
 
 R = TypeVar("R")
 """Generic return type"""
 
 JsonR = List[Dict[str, Any]]
 """Return type for tools with a JSON representation"""
+
+
+MIN_RESERVED_ARGS = 128
+"""Number of argument positions reserved for non-file command arguments (e.g. rule ignores)"""
 
 
 # Note: for now, every tool *HAS* to directly inherit from this, even if it
@@ -68,18 +73,6 @@ class Tool(ABC, Generic[R]):
     @abstractmethod
     def tool_desc(cls) -> str:
         """Returns a description of what this tool tests"""
-        pass
-
-    @classmethod
-    @abstractmethod
-    def serialize(cls, results: R) -> str:
-        """Converts a tool's output to its cache representation"""
-        pass
-
-    @classmethod
-    @abstractmethod
-    def deserialize(cls, rep: str) -> R:
-        """Converts a tool's cache representation to its parseable form"""
         pass
 
     @property
@@ -214,6 +207,37 @@ class Tool(ABC, Generic[R]):
         logging.debug(f"{self.tool_id()}: Command completed in {after - before:2f} s")
         return res
 
+    @staticmethod
+    def _max_batch_size() -> int:
+        """Returns the maximum number of files to run in a single batch"""
+        # On UNIX, max argc is stack size / 4
+        return int(resource.RLIMIT_STACK / 4) - MIN_RESERVED_ARGS
+
+    def _get_findings_from_run(self, paths: Iterable[Path]) -> List[Violation]:
+        """
+        Returns findings by calling tool "run" method
+
+        :param paths: Paths to run on
+        :return:
+        """
+        paths_to_run = self.filter_paths(paths)
+        if not paths_to_run:
+            return []
+
+        violations: List[Violation] = []
+
+        for batch in batched(paths_to_run, self._max_batch_size()):
+            path_list = [str(p) for p in batch]
+            raw = self.run(path_list)
+            try:
+                violations += self.parser().parse(raw)
+            except Exception as e:
+                raise Exception(
+                    f"Could not parse output of '{self.tool_id()}':\n{raw}", e
+                )
+
+        return violations
+
     def results(self, paths: List[Path], use_cache: bool = True) -> List[Violation]:
         """
         Runs this tool, returning all identified violations
@@ -230,50 +254,24 @@ class Tool(ABC, Generic[R]):
         Raises:
             CalledProcessError: If execution fails
         """
-        if paths:
-            logging.debug(f"Checking for local cache for {self.tool_id()}")
-            cache_repr = self.context.cache.get(self.tool_id(), paths)
-            if not use_cache or cache_repr is None:
-                logging.debug(
-                    f"Cache entry invalid for {self.tool_id()}. Running Tool."
-                )
-                paths_to_run = self.filter_paths(paths)
-                if not paths_to_run:
-                    return []
-                raw = self.run([str(p) for p in paths_to_run])
-                if use_cache:
-                    self.context.cache.put(self.tool_id(), paths, self.serialize(raw))
-            else:
-                raw = self.deserialize(cache_repr)
-
-            try:
-                violations = self.parser().parse(raw)
-            except Exception as e:
-                raise Exception(
-                    f"Could not parse output of '{self.tool_id()}':\n{raw}", e
-                )
-            ignore_set = set(self.config.get("ignore", []))
-            filtered = [v for v in violations if v.check_id not in ignore_set]
-            return filtered
-        else:
+        if not paths:
             return []
 
+        logging.debug(f"Checking for local cache for {self.tool_id()}")
+        cache_repr = self.context.cache.get(self.tool_id(), paths)
+        if not use_cache or cache_repr is None:
+            logging.debug(f"Cache entry invalid for {self.tool_id()}. Running Tool.")
+            violations = self._get_findings_from_run(paths)
+            if use_cache:
+                self.context.cache.put(self.tool_id(), paths, to_cache_repr(violations))
+        else:
+            violations = from_cache_repr(cache_repr)
 
-class StrTool(Tool[str]):
-    @classmethod
-    def serialize(cls, results: str) -> str:
-        return results
-
-    @classmethod
-    def deserialize(cls, rep: str) -> str:
-        return rep
+        ignore_set = set(self.config.get("ignore", []))
+        filtered = [v for v in violations if v.check_id not in ignore_set]
+        return filtered
 
 
-class JsonTool(Tool[JsonR]):
-    @classmethod
-    def serialize(cls, results: JsonR) -> str:
-        return json.dumps(results)
+StrTool = Tool[str]
 
-    @classmethod
-    def deserialize(cls, rep: str) -> JsonR:
-        return json.loads(rep)
+JsonTool = Tool[JsonR]
