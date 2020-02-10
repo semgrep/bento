@@ -1,4 +1,4 @@
-bandit B307 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b307-eval
+bandit eval-used https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b307-eval
      > src/flask/cli.py:892
      ╷
   892│   eval(compile(f.read(), startup, "exec"), ctx)

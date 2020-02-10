@@ -2,7 +2,22 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
-## [0.8.0](https://pypi.org/project/bento-cli/0.8.0/) - 2020-01-14
+## [0.8.2](https://pypi.org/project/bento-cli/0.8.2/) - 2020-02-05
+
+### Fixed
+
+- `bento check` works with repos with no previous commits
+- Verify a path is a file before checking if it contains a shell shebang (shellcheck tool)
+- Correctly install autorun even if git-hooks subdirectory is non-existent
+
+## [0.8.1](https://pypi.org/project/bento-cli/0.8.1/) - 2020-01-30
+
+### Fixed
+
+- Perfomance improvements when running in large projects
+- Additional human readable check_ids for bandit
+
+## [0.8.0](https://pypi.org/project/bento-cli/0.8.0/) - 2020-01-24
 
 This release represents a major shift in Bento's default behavior: It emphasizes an incremental
 and personal, rather than team-wide, workflow that makes Bento a smaller commitment to use:
@@ -14,7 +29,7 @@ and personal, rather than team-wide, workflow that makes Bento a smaller commitm
    run
 
    ```bash
-   bento check --comparison root .
+   bento check --all
    ```
 
 ### Migration
@@ -37,17 +52,11 @@ How you use Bento has changed significantly in 0.8.
 
 #### Usage changes
 
-- `bento check` with no paths will now only check project diffs.
-  - Use `bento check --comparison archive .` to check the entire project.
-  - Use `bento check --staged` to check only staged diffs.
-- `bento check`, by default, only reports findings introduced since your last commit. To view
-  earlier issues:
-  - Use `bento check --comparison archive .` to view findings since the last `bento archive`.
-  - Use `bento check --comparison root .` to view all findings.
-- `bento archive` with no paths will only archive findings in project diffs:
+- `bento check` will now only check staged changes.
+  - Use `bento check --all` to check the entire project.
+- `bento archive` will archive findings due to staged diff:
 
-  - Use `bento archive .` to archive all findings in a project.
-  - Use `bento archive --staged` to archive only findings in staged diffs.
+  - Use `bento archive --all` to archive all findings in a project.
 
 #### Other changes
 
@@ -61,6 +70,7 @@ How you use Bento has changed significantly in 0.8.
 - `eslint` is now installed in your project’s `.bento` directory, and will not modify your project’s
   `package.json`.
 - Tool and check names have been modified to improve readability.
+- `eslint` is disabled by default. To enable it run `bento enable tool eslint`.
 
 ### Added
 
@@ -73,7 +83,7 @@ How you use Bento has changed significantly in 0.8.
 
 ### Removed
 
-- `bento check --show-all` has been removed. Use `bento check --comparison root` instead.
+- `bento check --show-all` has been removed. Use `bento check --all` instead. Archived findings can be found at `~/.bento/archive.json`.
 - `bento install-hook` has been removed. Use `bento enable autorun` to run Bento on every commit.
 - The histogram formatter is no longer used by default. To show findings with a histogram, run
   `bento check -f histo`.

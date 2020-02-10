@@ -18,7 +18,7 @@ ALL_TESTS = [
 ]
 
 BENTO_REPO_ROOT = str(Path(__file__).parent.parent.parent.resolve())
-DYNAMIC_SECONDS = re.compile(r"([\s\S]* \d+ finding.?s.? in )\d+\.\d+( s[\s\S]*)")
+DYNAMIC_SECONDS = re.compile(r"([\s\S]* \d+ finding.?s.? [^\d]*in )\d+\.\d+( s[\s\S]*)")
 BRANCH_COMMIT = re.compile(r"^\[(\w+) ([0-9a-f]+)\]")
 
 PIPE_OUTPUT: Mapping[str, Callable[[subprocess.CompletedProcess], str]] = {
@@ -58,8 +58,7 @@ def match_expected(output: str, expected: str) -> bool:
     output = remove_trailing_space(output)
 
     # Handle dynamic characters (for now just timing info)
-    if "finding(s) in" in expected or "findings in" in expected:
-        output = remove_timing_seconds(output)
+    output = remove_timing_seconds(output)
 
     if "detached HEAD" or "master" in expected:
         output = remove_commit_hash(output)

@@ -15,7 +15,7 @@ SIMPLE = INTEGRATION / "simple"
 
 def test_install_config() -> None:
     """Validates that bento installs a config file if none exists"""
-    context = Context(base_path=SIMPLE)
+    context = Context(base_path=SIMPLE, is_init=True)
     command = InitCommand(context)
     with mod_file(context.config_path):
         context.config_path.unlink()
@@ -28,7 +28,7 @@ def test_install_config() -> None:
 
 def test_no_install_empty_project() -> None:
     """Validates that bento does installs a config on an empty project"""
-    context = Context(base_path=INTEGRATION / "none")
+    context = Context(base_path=INTEGRATION / "none", is_init=True)
     command = InitCommand(context)
     with mod_file(context.config_path):
         context.config_path.unlink()
@@ -62,7 +62,7 @@ def test_install_ignore_no_repo(tmp_path: Path, monkeypatch: MonkeyPatch) -> Non
 
 
 def test_init_already_setup() -> None:
-    context = Context(base_path=SIMPLE)
+    context = Context(base_path=SIMPLE, is_init=True)
     result = CliRunner(mix_stderr=False).invoke(init, obj=context)
 
     expectation = """
@@ -108,7 +108,7 @@ Go forth and write great code! To use Bento:
 
 
 def test_init_js_only() -> None:
-    context = Context(base_path=INTEGRATION / "js-and-ts")
+    context = Context(base_path=INTEGRATION / "js-and-ts", is_init=True)
     with mod_file(context.config_path):
         context.config_path.unlink()
         CliRunner(mix_stderr=False).invoke(init, obj=context)
@@ -121,7 +121,7 @@ def test_init_js_only() -> None:
 
 
 def test_init_py_only() -> None:
-    context = Context(base_path=INTEGRATION / "py-only")
+    context = Context(base_path=INTEGRATION / "py-only", is_init=True)
     with mod_file(context.config_path):
         context.config_path.unlink()
         CliRunner(mix_stderr=False).invoke(init, obj=context)
@@ -134,21 +134,21 @@ def test_init_py_only() -> None:
 
 def test_init_clean(tmp_path: Path) -> None:
     """Validates that `init --clean` deletes tool virtual environments"""
-    context = Context(base_path=INTEGRATION / "py-only")
+    context = Context(base_path=INTEGRATION / "py-only", is_init=True)
 
     with patch("bento.constants.VENV_PATH", new=tmp_path):
         venv_file = tmp_path / "flake8" / "bin" / "activate"
 
         # Ensure venv is created
         CliRunner(mix_stderr=False).invoke(
-            check, obj=context, args=["--comparison", "root", str(context.base_path)]
+            check, obj=context, args=["--all", str(context.base_path)]
         )
         assert venv_file.exists()
 
         # Ensure venv is corrupted, and not fixed with standard check
         venv_file.unlink()
         CliRunner(mix_stderr=False).invoke(
-            check, obj=context, args=["--comparison", "root", str(context.base_path)]
+            check, obj=context, args=["--all", str(context.base_path)]
         )
         assert not venv_file.exists()
 

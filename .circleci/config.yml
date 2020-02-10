@@ -103,7 +103,7 @@ jobs:
       - setup_remote_docker
       - checkout
       - run:
-          name: "Configure pipenv"
+          name: "Configure poetry"
           command: pip install --user poetry==1.0.0 && poetry install
       - run:
           name: "Make bento"
@@ -113,7 +113,7 @@ jobs:
           command: (cd tests/integration/react && npm install)
       - run:
           name: "Running bento check"
-          command: poetry run bento --agree --email=test@returntocorp.com check --comparison=archive . 2>&1 | cat
+          command: poetry run bento --agree --email test@returntocorp.com check --no-pager --all 2>&1 | cat
       - store_artifacts:
           path: "/home/circleci/.bento/last.log"
 

@@ -13,7 +13,7 @@ WALK_PATH = (BASE_PATH / "tests/integration/simple").relative_to(Path(os.getcwd(
 
 
 def __kept(ignores: Set[str]) -> Collection[Path]:
-    fi = FileIgnore(WALK_PATH, ignores)
+    fi = FileIgnore(WALK_PATH, ignores, [WALK_PATH])
     return {e.path for e in fi.entries() if e.survives}
 
 

@@ -31,7 +31,7 @@ def test_disable_tool_not_found() -> None:
     context = Context(base_path=PY_ONLY)
 
     result = runner.invoke(disable, ["check", "eslint", "foo"], obj=context)
-    assert result.exit_code == 3
+    assert result.exception.code == 3
 
 
 def test_enable_tool_found() -> None:
@@ -53,7 +53,7 @@ def test_enable_tool_not_found() -> None:
     context = Context(base_path=PY_ONLY)
 
     result = runner.invoke(enable, ["check", "eslint", "foo"], obj=context)
-    assert result.exit_code == 3
+    assert result.exception.code == 3
 
 
 def test_disable_tool() -> None:
@@ -100,7 +100,7 @@ def test_enable_invalid_tool() -> None:
         assert "run" not in config["tools"]["eslint"]
 
         result = runner.invoke(enable, ["tool", "nonexistent"], obj=context)
-        assert result.exit_code == 3
+        assert result.exception.code == 3
 
 
 def test_disable_then_enable_tool() -> None:

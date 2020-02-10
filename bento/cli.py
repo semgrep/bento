@@ -1,17 +1,19 @@
 import logging
 import os
 import sys
+import time
 from distutils.util import strtobool
+from pathlib import Path
 from typing import Optional
 
 import click
-from packaging.version import Version
+from packaging.version import InvalidVersion, Version
 
 import bento.constants as constants
+import bento.network
 from bento.commands import archive, check, disable, enable, init, register
 from bento.context import Context
-from bento.network import fetch_latest_version
-from bento.util import echo_error
+from bento.error import InvalidRegistrationException, OutdatedPythonException
 
 
 def _setup_logging() -> None:
@@ -25,6 +27,8 @@ def _setup_logging() -> None:
     logging.info(
         f"Environment: stdout.isatty={sys.stdout.isatty()} stderr.isatty={sys.stderr.isatty()} stdin.isatty={sys.stdin.isatty()}"
     )
+    # Very noisy logging from urllib3
+    logging.getLogger("urllib3").setLevel(logging.WARNING)
 
 
 def _is_test() -> bool:
@@ -35,13 +39,86 @@ def _is_test() -> bool:
         return False
 
 
+def _get_version_from_cache(version_cache_path: Path) -> Optional[Version]:
+    """
+        Reads version cache file and returns Version stored in it
+        if time cache was written was within the last day.
+
+        Returns None if version cache is invalid for any reason
+        or file does not exist
+    """
+    now = time.time()
+    if version_cache_path.is_file():
+        with version_cache_path.open() as f:
+            timestamp_str = f.readline().strip()
+            latest_version_str = f.readline().strip()
+            try:
+                latest_version = Version(latest_version_str)
+            except InvalidVersion:
+                logging.debug(
+                    f"Version Cache invalid version string: {latest_version_str}"
+                )
+                return None
+
+            try:
+                # Treat time as integer seconds so no need to deal with str float conversion
+                timestamp = int(timestamp_str)
+            except ValueError:
+                logging.debug(f"Version Cache invalid timestamp: {timestamp_str}")
+                return None
+
+            if now - timestamp > 86400:
+                logging.debug(f"Version Cache expired {timestamp}:{now}")
+                return None
+
+            logging.debug(f"Version Cache returning {latest_version}")
+            return latest_version
+    logging.debug("Version Cache does not exist")
+    return None
+
+
+def _get_latest_version(version_cache_path: Path) -> Optional[Version]:
+    """
+        Return latest Version of bento-cli available.
+
+        Checks local version cache to save from making network call
+        but if cache is invalid makes network call and writes to cache.
+
+        Returns None if cache is invalid and network call fails for
+        any reason
+    """
+    latest_version = _get_version_from_cache(version_cache_path)
+    if latest_version is None:
+        latest_version_str, _ = bento.network.fetch_latest_version()
+        if latest_version_str is None:
+            # Request timed out or invalid
+            return None
+
+        try:
+            latest_version = Version(latest_version_str)
+        except InvalidVersion:
+            # latest version str from server incorrect
+            return None
+
+        # Write to version cache
+        with version_cache_path.open("w") as f:
+            # Integer time so no need to deal with str float conversions
+            f.write(f"{int(time.time())}\n")
+            f.write(latest_version_str)
+
+    return latest_version
+
+
 def _is_running_latest() -> bool:
-    latest_version, _ = fetch_latest_version()
-    current_version = _get_version()
+    """
+        Returns True if current version of bento is latest version available
+    """
+    latest_version = _get_latest_version(constants.GLOBAL_VERSION_CACHE_PATH)
+    current_version = Version(_get_version())
     logging.info(
         f"Current bento version is {current_version}, latest is {latest_version}"
     )
-    if latest_version and Version(current_version) < Version(latest_version):
+    if latest_version and current_version < latest_version:
         return False
     return True
 
@@ -67,9 +144,10 @@ def _is_running_supported_python3() -> bool:
 )
 @click.option(
     "--base-path",
-    help=f"Path to the directory containing the code, as well as the {constants.CONFIG_FILE_NAME} file.",
+    help=f"Path to the project to run bento in.",
     type=click.Path(exists=True, file_okay=False),
     default=None,
+    hidden=True,
 )
 @click.option(
     "--agree",
@@ -95,15 +173,12 @@ def cli(
     else:
         ctx.obj = Context(base_path=base_path, is_init=is_init, email=email)
     if not _is_running_supported_python3():
-        echo_error(
-            "Bento requires Python 3.6+. Please ensure you have Python 3.6+ and installed Bento via `pip3 install bento-cli`."
-        )
-        sys.exit(3)
+        raise OutdatedPythonException()
 
     registrar = register.Registrar(ctx, agree, email=email)
     if not registrar.verify():
-        logging.error("Could not verify the user's registration.")
-        sys.exit(3)
+        raise InvalidRegistrationException()
+
     if not _is_running_latest() and not _is_test():
         logging.warning("Bento client is outdated")
         click.echo(constants.UPGRADE_WARNING_OUTPUT)

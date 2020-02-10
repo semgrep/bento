@@ -8,7 +8,6 @@ from bento.renderer import (
     Newline,
     Processors,
     Progress,
-    Prompt,
     Steps,
     Sub,
     Text,
@@ -108,11 +107,6 @@ class Identify:
 
 
 class Finish:
-    prompt = Prompt(
-        "Press ENTER to finish initialization",
-        options={"default": "", "hide_input": True, "show_default": False},
-    )
-
     body = Steps(
         Box("Thank You"),
         Echo(

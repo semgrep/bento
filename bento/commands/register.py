@@ -18,6 +18,7 @@ import bento.metrics
 import bento.tool_runner
 import bento.util
 from bento.context import Context
+from bento.error import InvalidVersionException, NonInteractiveTerminalException
 from bento.network import post_metrics
 from bento.util import echo_newline, persist_global_config, read_global_config
 
@@ -52,7 +53,7 @@ class Registrar:
         is_interactive = sys.stdin.isatty() and sys.stderr.isatty()
         if not is_interactive:
             content.not_registered.echo()
-            sys.exit(3)
+            raise NonInteractiveTerminalException()
 
     def _show_welcome_message(self) -> None:
         """
@@ -149,7 +150,7 @@ class Registrar:
                     return True
             except InvalidVersion:
                 content.ConfirmTos.invalid_version.echo()
-                sys.exit(3)
+                raise InvalidVersionException()
 
             content.ConfirmTos.upgrade.echo()
 
@@ -177,6 +178,7 @@ class Registrar:
         Requirements:
         - Interactive terminal
         - bento/ not in ignore file
+        - User hasn't previously opted out
         - User agrees
 
         :return: A tuple of (the path to the global git ignore, whether to update the file)
@@ -188,17 +190,26 @@ class Registrar:
         )
 
         if sys.stderr.isatty() and sys.stdin.isatty():
+            opt_out_value = self.global_config.get(constants.GLOBAL_GIT_IGNORE_OPT_OUT)
+            user_opted_out = opt_out_value is not None and opt_out_value is True
+            if user_opted_out:
+                return gitignore_path, False
             has_ignore = None
             if gitignore_path.exists():
                 with gitignore_path.open("r") as fd:
                     has_ignore = next(filter(lambda l: ".bento" in l, fd), None)
             if has_ignore is None:
+                self.context.start_user_timer()
                 if content.UpdateGitignore.confirm.echo(gitignore_path):
                     gitignore_path.parent.resolve().mkdir(exist_ok=True, parents=True)
                     content.UpdateGitignore.confirm_yes.echo()
                     return gitignore_path, True
                 else:
+                    self.global_config[constants.GLOBAL_GIT_IGNORE_OPT_OUT] = True
+
+                    persist_global_config(self.global_config)
                     content.UpdateGitignore.confirm_no.echo()
+                self.context.stop_user_timer()
         return gitignore_path, False
 
     def _update_gitignore_if_necessary(self, ignore_path: Path, update: bool) -> None:
@@ -225,7 +236,9 @@ class Registrar:
         self._validate_interactivity()
         shell_cmd = shell.split("/")[-1]
         if shell_cmd in autocomplete.SUPPORTED:
+            self.context.start_user_timer()
             should_add = content.SuggestAutocomplete.confirm.echo()
+            self.context.stop_user_timer()
             if should_add:
                 on_done = content.SuggestAutocomplete.install.echo(
                     autocomplete.SUPPORTED[shell_cmd][0]
@@ -256,7 +269,8 @@ class Registrar:
         if not self.agree and not self._confirm_tos_update():
             return False
 
-        if not self.agree:
+        # only ask about updating gitignore in init
+        if not self.agree and self.click_context.command.name == "init":
             ignore_path, update_ignore = self._query_gitignore_update()
             self._update_gitignore_if_necessary(ignore_path, update_ignore)
 

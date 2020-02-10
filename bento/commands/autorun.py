@@ -11,7 +11,8 @@ import bento.git
 import bento.tool_runner
 from bento.context import Context
 from bento.decorators import with_metrics
-from bento.util import echo_error, echo_next_step, echo_success, echo_warning
+from bento.error import ExistingGitHookException, NotAGitRepoException
+from bento.util import echo_next_step, echo_success, echo_warning
 
 
 def _is_bento_precommit(filename: Path) -> bool:
@@ -71,8 +72,7 @@ def install_autorun(context: Context, block: bool) -> None:
     # Get hook path
     repo = bento.git.repo(context.base_path)
     if repo is None:
-        echo_error("Not a git project")
-        sys.exit(3)
+        raise NotAGitRepoException()
 
     _configure_block(context, block)
 
@@ -86,12 +86,15 @@ def install_autorun(context: Context, block: bool) -> None:
         if hook_path.exists():
             # If pre-commit hook already exists move it over
             if legacy_hook_path.exists():
-                raise Exception(
-                    f"Autorun could not be configured: A legacy pre-commit hook exists. Please remove {hook_path}.pre-bento to continue."
-                )
+                raise ExistingGitHookException(str(hook_path))
             else:
                 # Check that
                 shutil.move(hook_path, legacy_hook_path)
+
+        # Ensure .git/hooks directory exists
+        # note that we can (and should) assume .git dir exists since
+        # project must be a git project at this point in the code
+        hook_path.parent.mkdir(exist_ok=True)
 
         # Copy pre-commit script template to hook_path
         template_location = os.path.join(
@@ -121,8 +124,7 @@ def uninstall_autorun(context: Context) -> None:
     # Get hook path
     repo = bento.git.repo(context.base_path)
     if repo is None:
-        echo_error("Not a git project")
-        sys.exit(3)
+        raise NotAGitRepoException()
 
     hook_path = Path(git.index.fun.hook_path("pre-commit", repo.git_dir))
 

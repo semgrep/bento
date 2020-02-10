@@ -39,7 +39,8 @@ tools:
     ignore: []
     run: true
   r2c.requests:
-    ignore: []
+    ignore:
+      - use-timeout
   shellcheck:
     ignore:
       - SC1091

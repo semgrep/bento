@@ -21,7 +21,6 @@ COMMENT_START_REGEX = re.compile(r"(?P<ignore_pattern>.*?)(?:\s+|^)#.*")
 @attr.s
 class Entry:
     path = attr.ib(type=Path)
-    dir_entry = attr.ib(type=os.DirEntry)
     survives = attr.ib(type=bool)
 
 
@@ -43,6 +42,7 @@ class WalkEntries(Collection[Entry]):
 class FileIgnore(Mapping[Path, Entry]):
     base_path = attr.ib(type=Path)
     patterns = attr.ib(type=Set[str])
+    target_paths = attr.ib(type=List[Path])
     _processed_patterns = attr.ib(type=Set[str], init=False)
     _walk_cache: Dict[Path, Entry] = attr.ib(default=None, init=False)
 
@@ -50,24 +50,37 @@ class FileIgnore(Mapping[Path, Entry]):
         self._processed_patterns = Processor(self.base_path).process(self.patterns)
         self._init_cache()
 
-    def _survives(self, base_path: str, entry: os.DirEntry) -> bool:
+    def _survives(self, path: Path) -> bool:
         """
-        Determines if a single file entry survives the ignore filter.
+        Determines if a single Path survives the ignore filter.
         """
         for p in self._processed_patterns:
-            if (
-                entry.is_dir()
-                and p.endswith("/")
-                and fnmatch.fnmatch(entry.path, p[:-1])
+            if path.is_dir() and p.endswith("/") and fnmatch.fnmatch(str(path), p[:-1]):
+                return False
+            if fnmatch.fnmatch(str(path), p):
+                return False
+
+            # Check any subpath of path satisfies a pattern
+            # i.e. a/b/c/d is ignored with rule a/b
+            # This is a hack. TargetFileManager should be pruning while searching
+            # instead of post filtering to avoid this
+            # Note: Use relative to base to avoid ignore rules firing on parent directories
+            # i.e. /private/var/.../instabot should not be ignored with var/ rule
+            # in instabot dir as base_path
+            if p.endswith("/") and fnmatch.fnmatch(
+                str(path.relative_to(self.base_path)), p + "*"
             ):
                 return False
-            if fnmatch.fnmatch(entry.path, p):
+            if (
+                p.endswith("/")
+                and p.startswith(str(self.base_path))
+                and fnmatch.fnmatch(str(path), p + "*")
+            ):
                 return False
+
         return True
 
-    def _walk(
-        self, this_path: str, root_path: str, directories_only: bool = True
-    ) -> Iterator[Entry]:
+    def _walk(self, this_path: str, root_path: str) -> Iterator[Entry]:
         """
         Walks path, returning an Entry iterator for each item.
 
@@ -76,29 +89,35 @@ class FileIgnore(Mapping[Path, Entry]):
 
         Recalculates on every call.
         """
-        for e in os.scandir(this_path):
-            if e.is_symlink():
-                continue
-            elif (not directories_only or e.is_dir()) and self._survives(root_path, e):
-                filename = Path(this_path) / e.name
-                yield Entry(Path(filename), e, True)
-                if e.is_dir():
+        # Handle non existent paths passed to cli.
+        # TODO handle further up
+        if not Path(this_path).exists():
+            return
+
+        if Path(this_path).is_file():
+            yield Entry(Path(this_path), self._survives(Path(this_path)))
+        else:
+            for e in os.scandir(this_path):
+                if e.is_symlink():
+                    continue
+                elif self._survives(Path(e.path)):
                     before = time.time()
-                    for ee in self._walk(e.path, root_path, directories_only):
+                    for ee in self._walk(e.path, root_path):
                         yield ee
+                    filename = Path(this_path) / e.name
                     logging.debug(f"Scanned {filename} in {time.time() - before} s")
-            else:
-                filename = Path(this_path) / e.name
-                yield Entry(filename, e, False)
+                else:
+                    # TODO I think we can remove the false ones and have existence be survival
+                    yield Entry(Path(e.path), False)
 
     def _init_cache(self) -> None:
         pretty_patterns = "\n".join(self.patterns)
         logging.info(f"Ignored patterns are:\n{pretty_patterns}")
         before = time.time()
-        entries = self._walk(
-            str(self.base_path), str(self.base_path), directories_only=False
-        )
-        self._walk_cache = dict((e.path, e) for e in entries)
+        self._walk_cache = {}
+        for target in self.target_paths:
+            entries = self._walk(str(target), str(self.base_path))
+            self._walk_cache.update(dict((e.path, e) for e in entries))
         logging.info(f"Loaded file ignore cache in {time.time() - before} s.")
 
     def entries(self) -> Collection[Entry]:
@@ -166,6 +185,7 @@ class Parser:
     # steps, whether the step is a transformation, a filter, an expansion, or any combination thereof.
 
     base_path: Path
+    # TODO remove this
     ignore_path: Path
 
     @staticmethod
@@ -297,4 +317,6 @@ Please run 'bento init' to configure a {constants.IGNORE_FILE_NAME} for your pro
 
     with ignore_path.open() as ignore_lines:
         patterns = Parser(base_path, ignore_path).parse(ignore_lines)
-        return FileIgnore(base_path=base_path, patterns=patterns)
+        return FileIgnore(
+            base_path=base_path, patterns=patterns, target_paths=[base_path]
+        )

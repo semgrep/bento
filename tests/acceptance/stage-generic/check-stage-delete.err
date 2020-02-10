@@ -1,6 +1,6 @@
-Running Bento checks...
+Running Bento checks on staged files...
 
-⚠ Nothing to check. By default, Bento only analyzes tracked files with diffs.
-◦ To check a specific path, run $ bento check PATH.
+⚠ Nothing to check or archive. Please confirm that changes are staged and not
+excluded by `.bentoignore`. To check all Git tracked files, use `--all`.
 
-✔ 0 findings in  s
+✔ 0 findings due to staged changes in  s

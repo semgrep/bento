@@ -1,15 +1,15 @@
 import logging
 import subprocess
-import sys
 import time
 from datetime import datetime
 from functools import update_wrapper
-from typing import Any, Callable
+from typing import Any, Callable, List, Optional
 
 import click
 
 import bento.metrics
 import bento.network
+from bento.error import BentoException
 from bento.util import echo_error, echo_warning
 
 _AnyCallable = Callable[..., Any]
@@ -20,7 +20,7 @@ def __log_exception(e: Exception) -> None:
     if isinstance(e, subprocess.CalledProcessError):
         cmd = e.cmd
         if isinstance(e.cmd, list):
-            cmd = " ".join(e.cmd)
+            cmd = " ".join([str(part) for part in e.cmd])
         echo_warning(f'Could not execute "{cmd}":\n{e.stderr}')
         logging.error(e.stdout)
         logging.error(e.stderr)
@@ -35,41 +35,53 @@ def with_metrics(f: _AnyCallable) -> _AnyCallable:
 
         context = click.get_current_context()
 
-        if context.parent and context.parent.parent:
-            # this is a command with a subcommand e.g. `bento disable check <tool> <check>`
-            command = context.parent.command.name
-        else:
-            command = context.command.name
+        commands: List[str] = [context.command.name]
+        current_context = context
+        while current_context.parent:
+            current_context = current_context.parent
+
+            # Don't include "cli" in the command string. This is a quirk in click command nesting
+            if current_context.command.name != "cli":
+                commands.insert(0, current_context.command.name)
+
+        command_str: str = " ".join(commands)
+
+        logging.info(f"command: {command_str}")
 
         cli_context = context.obj
         timestamp = (
             cli_context.timestamp if cli_context else datetime.utcnow().isoformat("T")
         )
-        logging.info(f"Executing {command}")
+        logging.info(f"Executing {command_str}")
 
-        exc_name = None
+        exception: Optional[BaseException] = None
         try:
             res = f(*args, **kwargs)
         except KeyboardInterrupt as e:
             # KeyboardInterrupt is a BaseException and has no exit code. Use 130 to mimic bash behavior.
             exit_code = 130
-            exc_name = e.__class__.__name__
+            exception = e
+        except BentoException as e:
+            exit_code = e.code
+            exception = e
         except SystemExit as e:
             exit_code = e.code
-            exc_name = e.__class__.__name__
+            exception = e
         except Exception as e:
             exit_code = 3
             __log_exception(e)
-            exc_name = e.__class__.__name__
+            exception = e
+
+        exc_name = exception.__class__.__name__ if exception else None
 
         elapsed = time.time() - before
         user_duration = cli_context.user_duration() if cli_context else None
 
         if exc_name == "KeyboardInterrupt":
-            logging.info(f"{command} interrupted after running for {elapsed}s")
+            logging.info(f"{command_str} interrupted after running for {elapsed}s")
         else:
             logging.info(
-                f"{command} completed in {elapsed}s with exit code {exit_code}"
+                f"{command_str} completed in {elapsed}s with exit code {exit_code}"
             )
 
         email = (
@@ -78,9 +90,13 @@ def with_metrics(f: _AnyCallable) -> _AnyCallable:
             else bento.metrics.read_user_email()
         )
 
+        logging.info(
+            f"______________exit code: {exit_code}, exception name: {exc_name}_______________"
+        )
+
         bento.network.post_metrics(
             bento.metrics.command_metric(
-                command,
+                command_str,
                 email,
                 timestamp,
                 kwargs,
@@ -90,8 +106,8 @@ def with_metrics(f: _AnyCallable) -> _AnyCallable:
                 user_duration,
             )
         )
-        if exit_code != 0:
-            sys.exit(exit_code)
+        if exception:
+            raise exception
         return res
 
     return update_wrapper(new_func, f)
