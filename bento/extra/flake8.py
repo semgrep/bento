@@ -1,6 +1,5 @@
 import json
-import re
-from typing import Any, Dict, Iterable, List, Mapping, Pattern, Type
+from typing import Any, Dict, Iterable, List, Mapping, Type
 
 from semantic_version import SimpleSpec
 
@@ -155,7 +154,6 @@ class Flake8Tool(PythonTool[str], StrTool):
         "flake8-debugger": SimpleSpec("~=3.2.0"),
         "flake8-executable": SimpleSpec("~=2.0.3"),
     }
-    PYTHON_EXT_REGEX = re.compile(r".*\.py\b")
 
     @property
     def parser_type(self) -> Type[Parser]:
@@ -172,10 +170,6 @@ class Flake8Tool(PythonTool[str], StrTool):
     @property
     def project_name(self) -> str:
         return self.PROJECT_NAME
-
-    @property
-    def file_name_filter(self) -> Pattern:
-        return self.PYTHON_EXT_REGEX
 
     @classmethod
     def venv_subdir_name(self) -> str:

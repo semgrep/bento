@@ -1,13 +1,14 @@
 import json
 import logging
 import os
+import re
 import subprocess
 import sys
 import venv
 from abc import abstractmethod
 from pathlib import Path
 from time import time
-from typing import Dict, Generic, List
+from typing import Dict, Generic, List, Pattern
 
 from semantic_version import SimpleSpec, Version
 
@@ -22,10 +23,15 @@ class PythonTool(Generic[R], Tool[R]):
     # we hard code to python3
     PIP_CMD = ["python3", "-m", "pip"]
     PACKAGES: Dict[str, SimpleSpec] = {}
+    PYTHON_FILE_PATTERN = re.compile(r".*\.py$")
 
     @classmethod
     def matches_project(cls, context: BaseContext) -> bool:
         return cls.project_has_extensions(context, "*.py")
+
+    @property
+    def file_name_filter(self) -> Pattern:
+        return self.PYTHON_FILE_PATTERN
 
     @classmethod
     @abstractmethod

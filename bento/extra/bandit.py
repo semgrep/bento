@@ -1,6 +1,5 @@
 import json
-import re
-from typing import Any, Dict, Iterable, List, Pattern, Type
+from typing import Any, Dict, Iterable, List, Type
 
 from semantic_version import SimpleSpec
 
@@ -228,7 +227,6 @@ class BanditTool(PythonTool[str], StrTool):
     TOOL_ID = "bandit"  # to-do: versioning?
     VENV_DIR = "bandit"
     PROJECT_NAME = "Python"
-    FILE_NAME_FILTER = re.compile(r".*\.py\b")
     PACKAGES = {"bandit": SimpleSpec("~=1.6.2")}
 
     @property
@@ -250,10 +248,6 @@ class BanditTool(PythonTool[str], StrTool):
     @property
     def project_name(self) -> str:
         return BanditTool.PROJECT_NAME
-
-    @property
-    def file_name_filter(self) -> Pattern:
-        return BanditTool.FILE_NAME_FILTER
 
     def run(self, paths: Iterable[str]) -> str:
         cmd = [
