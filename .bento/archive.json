@@ -1,38 +1,6 @@
 {
   "bandit": {
     "violations": {
-      "05d0103dac608249b0239f3a66e3a08b": {
-        "tool_id": "bandit",
-        "check_id": "subprocess-popen-with-shell-equals-true",
-        "path": "tests/extra/test_python_tool.py",
-        "message": "subprocess call with shell=True identified, security issue.",
-        "severity": 2,
-        "syntactic_context": "env=env,\nshell=True,\nstdout=subprocess.PIPE,\nstderr=subprocess.PIPE,\nencoding=\"utf8\","
-      },
-      "1fb52d1337672bf82014f8d2f480bb65": {
-        "tool_id": "bandit",
-        "check_id": "subprocess-popen-with-shell-equals-true",
-        "path": "tests/extra/test_python_tool.py",
-        "message": "subprocess call with shell=True identified, security issue.",
-        "severity": 2,
-        "syntactic_context": "proc = subprocess.Popen(\n    cmd, env=env, shell=True, stdout=subprocess.PIPE, encoding=\"utf8\""
-      },
-      "956a879783c76a2ca909ccdbbf3c740d": {
-        "tool_id": "bandit",
-        "check_id": "subprocess-popen-with-shell-equals-true",
-        "path": "tests/extra/test_python_tool.py",
-        "message": "subprocess call with shell=True identified, security issue.",
-        "severity": 2,
-        "syntactic_context": "proc = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, encoding=\"utf8\")"
-      },
-      "99a46d0936522fedc8d935f833c1586d": {
-        "tool_id": "bandit",
-        "check_id": "subprocess-popen-with-shell-equals-true",
-        "path": "tests/extra/test_python_tool.py",
-        "message": "subprocess call with shell=True identified, security issue.",
-        "severity": 2,
-        "syntactic_context": "proc = subprocess.Popen(\n    cmd, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE, encoding=\"utf8\""
-      },
       "b8427b15130db96581ea81495e28e658": {
         "tool_id": "bandit",
         "check_id": "subprocess-popen-with-shell-equals-true",
@@ -40,19 +8,20 @@
         "message": "subprocess call with shell=True identified, security issue.",
         "severity": 2,
         "syntactic_context": "f\"docker run --network none --rm -i {self.DOCKER_IMAGE} hadolint --format json - < {file}\",\nshell=True,\ncwd=self.base_path,\nencoding=\"utf8\",\nstdout=subprocess.PIPE,\nstderr=subprocess.PIPE,"
-      },
-      "f5a7b2b73b54d1bc196e70d232caaec8": {
-        "tool_id": "bandit",
-        "check_id": "subprocess-popen-with-shell-equals-true",
-        "path": "bento/extra/python_tool.py",
-        "message": "subprocess call with shell=True identified, security issue.",
-        "severity": 2,
-        "syntactic_context": "wrapped,\nshell=True,\ncwd=str(self.base_path),\nencoding=\"utf8\",\nexecutable=\"/bin/bash\",\nenv=env,\nstdout=subprocess.PIPE,\nstderr=subprocess.PIPE,"
       }
     }
   },
   "flake8": {
-    "violations": {}
+    "violations": {
+      "5a980cb5fe262a61dd03e8088a9cacc2": {
+        "tool_id": "flake8",
+        "check_id": "not-executable",
+        "path": "bento/resources/pre-commit.template",
+        "message": "Shebang is present but the file is not executable.",
+        "severity": 2,
+        "syntactic_context": "#!/usr/bin/env python3"
+      }
+    }
   },
   "hadolint": {
     "violations": {

@@ -8,7 +8,7 @@ import venv
 from abc import abstractmethod
 from pathlib import Path
 from time import time
-from typing import Dict, Generic, List, Pattern
+from typing import Dict, Generic, List, Optional, Pattern
 
 from semantic_version import SimpleSpec, Version
 
@@ -24,6 +24,11 @@ class PythonTool(Generic[R], Tool[R]):
     PIP_CMD = ["python3", "-m", "pip"]
     PACKAGES: Dict[str, SimpleSpec] = {}
     PYTHON_FILE_PATTERN = re.compile(r".*\.py$")
+    SHEBANG_PATTERN = re.compile(r"^#!.*python")
+
+    @property
+    def shebang_pattern(self) -> Optional[Pattern]:
+        return self.SHEBANG_PATTERN
 
     @classmethod
     def matches_project(cls, context: BaseContext) -> bool:
