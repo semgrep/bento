@@ -29,6 +29,9 @@ tools:
       - try-except-continue
       - urllib-urlopen
     run: true
+  dlint:
+    ignore: []
+    run: true
   eslint:
     ignore:
       - "@typescript-eslint/camelcase"
