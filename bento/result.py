@@ -50,3 +50,13 @@ def json_to_violation_hashes(text: Union[str, TextIO]) -> Baseline:
         hashes = set(violations.keys()) if violations else set()
         out[tool_id] = hashes
     return out
+
+
+def to_cache_repr(findings: List[Violation]) -> str:
+    as_dict = [attr.asdict(f) for f in findings]
+    return json.dumps(as_dict)
+
+
+def from_cache_repr(text: str) -> List[Violation]:
+    parsed = json.loads(text)
+    return [Violation(**kwargs) for kwargs in parsed]
