@@ -94,7 +94,7 @@ class DlintTool(PythonTool[str], StrTool):
             str(self.venv_dir() / "bin" / "flake8"),
             self.select_clause(),
             "--format=json",
-            "--exclude=.svn,CVS,.bzr,.hg,.git,__pycache__,.tox,.eggs,*.egg",
+            "--isolated",
             *paths,
         ]
         return self.venv_exec(cmd, check_output=False)

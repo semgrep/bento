@@ -1,3 +1,33 @@
+flake8 no-iter-methods https://github.com/PyCQA/flake8-bugbear/blob/master/README.rst#list-of-warnings
+     > src/flask/_compat.py:44
+     ╷
+   44│   iterkeys = lambda d: d.iterkeys()
+     ╵
+     = Python 3 does not include `.iter*` methods on dictionaries. Remove the
+       `iter` prefix from the method name. For Python 2 compatibility, prefer
+       the Python 3 equivalent unless you expect the size of the container to be
+       large or unbounded. Then use `six.iter*` or `future.utils.iter*`.
+
+flake8 no-iter-methods https://github.com/PyCQA/flake8-bugbear/blob/master/README.rst#list-of-warnings
+     > src/flask/_compat.py:45
+     ╷
+   45│   itervalues = lambda d: d.itervalues()
+     ╵
+     = Python 3 does not include `.iter*` methods on dictionaries. Remove the
+       `iter` prefix from the method name. For Python 2 compatibility, prefer
+       the Python 3 equivalent unless you expect the size of the container to be
+       large or unbounded. Then use `six.iter*` or `future.utils.iter*`.
+
+flake8 no-iter-methods https://github.com/PyCQA/flake8-bugbear/blob/master/README.rst#list-of-warnings
+     > src/flask/_compat.py:46
+     ╷
+   46│   iteritems = lambda d: d.iteritems()
+     ╵
+     = Python 3 does not include `.iter*` methods on dictionaries. Remove the
+       `iter` prefix from the method name. For Python 2 compatibility, prefer
+       the Python 3 equivalent unless you expect the size of the container to be
+       large or unbounded. Then use `six.iter*` or `future.utils.iter*`.
+
 bandit exec-used https://bandit.readthedocs.io/en/latest/plugins/b102_exec_used.html
      > src/flask/_compat.py:52
      ╷
