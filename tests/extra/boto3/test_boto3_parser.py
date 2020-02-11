@@ -36,7 +36,7 @@ def test_parse() -> None:
             severity=2,
             syntactic_context="Session(aws_access_key_id='AKIA1235678901234567',",
             filtered=None,
-            link="https://checks.bento.dev/en/latest/flake8-boto3/hardcoded-access-token",
+            link="https://bento.dev/checks/en/latest/flake8-boto3/hardcoded-access-token",
         )
     ]
 
@@ -67,7 +67,7 @@ def test_run_flask_violations(tmp_path: Path) -> None:
             severity=2,
             syntactic_context="session = Session(aws_access_key_id='AKIA1235678901234567',",
             filtered=None,
-            link="https://checks.bento.dev/en/latest/flake8-boto3/hardcoded-access-token",
+            link="https://bento.dev/checks/en/latest/flake8-boto3/hardcoded-access-token",
         )
     ]
 

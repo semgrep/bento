@@ -44,7 +44,7 @@ def test_run_flask_violations(tmp_path: Path) -> None:
             severity=2,
             syntactic_context="r = requests.get('http://MYURL.com', auth=('user', 'pass'))",
             filtered=None,
-            link="https://checks.bento.dev/en/latest/flake8-requests/use-timeout",
+            link="https://bento.dev/checks/en/latest/flake8-requests/use-timeout",
         ),
         Violation(
             tool_id="r2c.requests",
@@ -56,7 +56,7 @@ def test_run_flask_violations(tmp_path: Path) -> None:
             severity=2,
             syntactic_context="r = requests.get('http://MYURL.com', auth=('user', 'pass'))",
             filtered=None,
-            link="https://checks.bento.dev/en/latest/flake8-requests/no-auth-over-http",
+            link="https://bento.dev/checks/en/latest/flake8-requests/no-auth-over-http",
         ),
     ]
 
