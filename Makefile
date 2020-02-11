@@ -10,6 +10,10 @@ test:
 qa-test: build
 	poetry run pytest -s tests/acceptance/qa.py
 
+.PHONY: regenerate-tests
+regenerate-tests:
+	poetry run python tests/acceptance/qa.py
+
 .PHONY: env-test
 env-test:
 	docker build -f tests/acceptance/environments/python36.Dockerfile -t bento-env-36 .

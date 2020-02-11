@@ -46,9 +46,15 @@ git config commit.template .gitmessage
 
 To run all tests:
 
-```
-poetry run pytest
-```
+`make test` or `poetry run pytest`
+
+To run acceptance tests:
+
+`make qa-test` or `poetry run pytest tests/acceptance/qa.py`
+
+To regenerate acceptance test output to reflect current behavior of bento:
+
+`make regenerate-tests` or `poetry run python tests/acceptance/qa.py`
 
 To build and run bento:
 
