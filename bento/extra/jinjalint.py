@@ -1,6 +1,6 @@
 import json
 import re
-from typing import Iterable, List, Pattern, Type
+from typing import Iterable, List, Optional, Pattern, Type
 
 from semantic_version import SimpleSpec
 
@@ -69,7 +69,11 @@ class JinjalintTool(PythonTool[str], StrTool):
     FILE_NAME_FILTER = re.compile(
         r".*\.(html|jinja|twig)$"
     )  # Jinjalint's default extensions
-    PACKAGES = {"r2c-jinjalint": SimpleSpec("==0.6.0")}
+    PACKAGES = {"r2c-jinjalint": SimpleSpec("==0.6.2")}
+
+    @property
+    def shebang_pattern(self) -> Optional[Pattern]:
+        return None
 
     @property
     def parser_type(self) -> Type[Parser]:

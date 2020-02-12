@@ -303,6 +303,9 @@ tools:
     ignore:
       - names-are-well-formed
     run: true
+  jinjalint:
+    ignore: []
+    run: true
   shellcheck:
     ignore:
       - SC1004

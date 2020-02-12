@@ -1,3 +1,14 @@
+jinjalint jinjalint-parse-error
+     > examples/javascript/js_example/templates/base.html:21
+     = Parse error: expected 'li' at 21:2
+
+jinjalint jinjalint-parse-error
+     > examples/tutorial/flaskr/templates/base.html:9
+     = Parse error: expected one of 'autoescape', 'block', 'blocktrans',
+       'comment', 'filter', 'for', 'if', 'ifchanged', 'ifequal', 'ifnotequal',
+       'not an intermediate Jinja tag name', 'spaceless', 'verbatim', 'with' at
+       9:7
+
 flake8 no-iter-methods https://github.com/PyCQA/flake8-bugbear/blob/master/README.rst#list-of-warnings
      > src/flask/_compat.py:44
      ╷
@@ -35,6 +46,11 @@ bandit eval-used https://bandit.readthedocs.io/en/latest/blacklists/blacklist_ca
      ╵
      = Use of possibly insecure function - consider using safer
        ast.literal_eval.
+
+jinjalint jinjalint-parse-error
+     > tests/templates/context_template.html:1
+     = Parse error: expected one of '<!--', '<![^>]*>', '<', '</', '[^{<]+',
+       'any character', '{#', '{%', '{{' at 1:0
 
 bandit try-except-pass https://bandit.readthedocs.io/en/latest/plugins/b110_try_except_pass.html
      > tests/test_appctx.py:74
