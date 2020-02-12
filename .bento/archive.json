@@ -13,10 +13,10 @@
   },
   "flake8": {
     "violations": {
-      "5a980cb5fe262a61dd03e8088a9cacc2": {
+      "adda5bc97e75d6b054b20c6179438d78": {
         "tool_id": "flake8",
         "check_id": "not-executable",
-        "path": "bento/resources/pre-commit.template",
+        "path": "bento/configs/pre-commit.template",
         "message": "Shebang is present but the file is not executable.",
         "severity": 2,
         "syntactic_context": "#!/usr/bin/env python3"
