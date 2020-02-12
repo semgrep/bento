@@ -11,6 +11,9 @@
       }
     }
   },
+  "dlint": {
+    "violations": {}
+  },
   "flake8": {
     "violations": {
       "adda5bc97e75d6b054b20c6179438d78": {
@@ -43,10 +46,13 @@
       }
     }
   },
-  "r2c.requests": {
+  "r2c.click": {
     "violations": {}
   },
-  "shellcheck": {
+  "r2c.flask": {
+    "violations": {}
+  },
+  "r2c.requests": {
     "violations": {}
   }
 }
