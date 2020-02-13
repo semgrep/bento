@@ -1,8 +1,8 @@
-r2c.jinja jinjalint-parse-error
+jinjalint jinjalint-parse-error
      > examples/javascript/js_example/templates/base.html:21
      = Parse error: expected 'li' at 21:2
 
-r2c.jinja jinjalint-parse-error
+jinjalint jinjalint-parse-error
      > examples/tutorial/flaskr/templates/base.html:9
      = Parse error: expected one of 'autoescape', 'block', 'blocktrans',
        'comment', 'filter', 'for', 'if', 'ifchanged', 'ifequal', 'ifnotequal',
@@ -47,7 +47,7 @@ bandit eval-used https://bandit.readthedocs.io/en/latest/blacklists/blacklist_ca
      = Use of possibly insecure function - consider using safer
        ast.literal_eval.
 
-r2c.jinja jinjalint-parse-error
+jinjalint jinjalint-parse-error
      > tests/templates/context_template.html:1
      = Parse error: expected one of '<!--', '<![^>]*>', '<', '</', '[^{<]+',
        'any character', '{#', '{%', '{{' at 1:0
@@ -88,7 +88,7 @@ bandit flask-debug-true https://bandit.readthedocs.io/en/latest/plugins/b201_fla
      = A Flask app appears to be run with debug=True, which exposes the Werkzeug
        debugger and allows the execution of arbitrary code.
 
-r2c.flask secure-set-cookie https://bento.dev/checks/flask/secure-set-cookie/
+r2c.flask secure-set-cookie https://bento.dev/checks/flask/secure-set-cookie
      > tests/test_basic.py:1956
      ╷
  1956│   r.set_cookie("foo", "bar" * 100)
@@ -114,7 +114,7 @@ bandit try-except-pass https://bandit.readthedocs.io/en/latest/plugins/b110_try_
      ╵
      = Try, Except, Pass detected.
 
-r2c.flask unescaped-file-extension https://bento.dev/checks/flask/unescaped-file-extension/
+r2c.flask unescaped-file-extension https://bento.dev/checks/flask/unescaped-file-extension
      > tests/test_templating.py:96
      ╷
    96│   return flask.render_template(
@@ -122,7 +122,7 @@ r2c.flask unescaped-file-extension https://bento.dev/checks/flask/unescaped-file
      = Flask does not automatically escape Jinja templates unless they have
        .html, .htm, .xml, or .xhtml extensions. This could lead to XSS attacks.
 
-r2c.flask unescaped-file-extension https://bento.dev/checks/flask/unescaped-file-extension/
+r2c.flask unescaped-file-extension https://bento.dev/checks/flask/unescaped-file-extension
      > tests/test_templating.py:115
      ╷
   115│   assert flask.render_template("mail.txt", foo="<test>") == "<test> Mail"

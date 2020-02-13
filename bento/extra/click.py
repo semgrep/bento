@@ -13,7 +13,7 @@ class ClickParser(Flake8Parser):
     @staticmethod
     def id_to_link(check_id: str) -> str:
         page = ClickParser.id_to_name(check_id)
-        return f"https://bento.dev/checks/click/{page}/"
+        return f"https://bento.dev/checks/click/{page}"
 
     @classmethod
     def id_to_name(cls, check_id: str) -> str:

@@ -12,7 +12,7 @@ class RequestsParser(Flake8Parser):
 
     @staticmethod
     def id_to_link(check_id: str) -> str:
-        return f"https://bento.dev/checks/requests/{check_id}/"
+        return f"https://bento.dev/checks/requests/{check_id}"
 
     @classmethod
     def id_to_name(cls, check_id: str) -> str:

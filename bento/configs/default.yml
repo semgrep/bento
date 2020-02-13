@@ -31,7 +31,7 @@ tools:
     run: true
   dlint:
     ignore: []
-    run: false
+    run: true
   eslint:
     ignore:
       - "@typescript-eslint/camelcase"
@@ -303,7 +303,7 @@ tools:
     ignore:
       - names-are-well-formed
     run: true
-  r2c.jinja:
+  jinjalint:
     ignore: []
     run: true
   shellcheck:

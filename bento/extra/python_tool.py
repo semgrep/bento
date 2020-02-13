@@ -78,7 +78,7 @@ class PythonTool(Generic[R], Tool[R]):
         before = time()
         env = dict(os.environ)
         env["VIRTUAL_ENV"] = str(self.venv_dir())
-        env["PATH"] = f"{self.venv_dir()}:{self.venv_dir()}/bin:" + env["PATH"]
+        env["PATH"] = f"{self.venv_dir()}/bin:" + env["PATH"]
         if "PYTHONHOME" in env:
             del env["PYTHONHOME"]
         v = subprocess.Popen(

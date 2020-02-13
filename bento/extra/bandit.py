@@ -93,7 +93,6 @@ BANDIT_TO_BENTO = {
     "B110": "try-except-pass",
     "B112": "try-except-continue",
     "B201": "flask-debug-true",
-    "B301": "pickle-used",
     "B303": "md5",
     "B307": "eval-used",
     "B308": "django-mark-safe-used",
