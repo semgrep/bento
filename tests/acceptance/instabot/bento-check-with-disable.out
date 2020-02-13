@@ -124,7 +124,7 @@ flake8 no-mutable-default-args https://github.com/PyCQA/flake8-bugbear/blob/mast
        this one instance of that data structure, persisting changes between
        them.
 
-bandit B301 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b301-pickle
+bandit pickle-used https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b301-pickle
      > instabot/bot/bot_checkpoint.py:66
      ╷
    66│   checkpoint = pickle.load(f)

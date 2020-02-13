@@ -119,7 +119,7 @@ def test_init_js_only() -> None:
     assert "flake8" not in config["tools"]
     assert "bandit" not in config["tools"]
     assert "dlint" not in config["tools"]
-    assert "jinjalint" not in config["tools"]
+    assert "r2c.jinja" not in config["tools"]
 
 
 def test_init_py_only() -> None:

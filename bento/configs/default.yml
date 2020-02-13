@@ -303,7 +303,7 @@ tools:
     ignore:
       - names-are-well-formed
     run: true
-  jinjalint:
+  r2c.jinja:
     ignore: []
     run: true
   shellcheck:
