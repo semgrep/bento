@@ -6,6 +6,7 @@ from semantic_version import SimpleSpec
 from bento.extra.python_tool import PythonTool
 from bento.parser import Parser
 from bento.tool import StrTool
+from bento.util import fetch_line_in_file
 from bento.violation import Violation
 
 """
@@ -49,7 +50,10 @@ class DlintParser(Parser[str]):
                 line=result["line_number"],
                 column=result["column_number"],
                 message=result["text"],
-                syntactic_context="",
+                syntactic_context=fetch_line_in_file(
+                    self.base_path / filename, result["line_number"]
+                )
+                or "<no source found>",
                 link=self._get_link(result["code"]),
             )
             for filename, file_results in results.items()
