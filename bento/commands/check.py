@@ -97,8 +97,7 @@ def check(
 
     # Fail out if not configured
     if not context.config_path.exists():
-        echo_error("No Bento configuration found. Please run `bento init`.")
-        sys.exit(3)
+        raise NoConfigurationException()
 
     # Default to no path filter
     if len(paths) < 1:
@@ -117,9 +116,6 @@ def check(
         context._configured_tools = None
 
     # Handle specified formatters
-    if not context.config_path.exists():
-        raise NoConfigurationException()
-
     if formatter:
         context.config["formatter"] = [{f: {}} for f in formatter]
 
