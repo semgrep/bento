@@ -1,8 +1,8 @@
-jinjalint jinjalint-parse-error
+r2c.jinja jinjalint-parse-error
      > examples/javascript/js_example/templates/base.html:21
      = Parse error: expected 'li' at 21:2
 
-jinjalint jinjalint-parse-error
+r2c.jinja jinjalint-parse-error
      > examples/tutorial/flaskr/templates/base.html:9
      = Parse error: expected one of 'autoescape', 'block', 'blocktrans',
        'comment', 'filter', 'for', 'if', 'ifchanged', 'ifequal', 'ifnotequal',
@@ -61,7 +61,7 @@ bandit exec-used https://bandit.readthedocs.io/en/latest/plugins/b102_exec_used.
      ╵
      = Use of exec detected.
 
-jinjalint jinjalint-parse-error
+r2c.jinja jinjalint-parse-error
      > tests/templates/context_template.html:1
      = Parse error: expected one of '<!--', '<![^>]*>', '<', '</', '[^{<]+',
        'any character', '{#', '{%', '{{' at 1:0
