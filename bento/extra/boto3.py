@@ -13,7 +13,7 @@ class Boto3Parser(Flake8Parser):
     @staticmethod
     def id_to_link(check_id: str) -> str:
         page = Boto3Parser.id_to_name(check_id)
-        return f"https://bento.dev/checks/boto3/{page}"
+        return f"https://bento.dev/checks/boto3/{page}/"
 
     @classmethod
     def id_to_name(cls, check_id: str) -> str:
