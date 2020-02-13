@@ -6,13 +6,6 @@ r2c.jinja jinjalint-missing-meta-content-type
        http-equiv="Content-Type" content="text/html; charset=UTF-8">' to avoid
        misinterpretation.
 
-flake8 not-executable https://github.com/xuhdev/flake8-executable/blob/master/README.md#flake8-executable
-     > manage.py:1
-     ╷
-    1│   #!/usr/bin/env python
-     ╵
-     = Shebang is present but the file is not executable.
-
 r2c.jinja jinjalint-recursion-error
      > readme.html:0
      = Parse error: maximum recursion depth exceeded
