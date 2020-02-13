@@ -31,7 +31,7 @@ tools:
     run: true
   dlint:
     ignore: []
-    run: true
+    run: false
   eslint:
     ignore:
       - "@typescript-eslint/camelcase"
