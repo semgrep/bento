@@ -36,10 +36,10 @@
   </a>
 </p>
 
-Inspired by tools like the ESLint plugin for React, Bento was created for Flask and Django. With Bento you'll:
+Inspired by tools like the ESLint plugin for React, Bento was created for Flask and Django. With Bento you’ll:
 
 - **Find bugs that matter.** Checks find security and reliability bugs in your code. They’re vetted across thousands of open source projects and never nit your style.
-- **Keep moving forward.** You don’t have to fix existing bugs to adopt Bento. It’s diff-centric, finding new bugs introduced by your changes.
+- **Upgrade your tooling.** You don’t have to fix existing bugs to adopt Bento. It’s diff-centric, finding new bugs introduced by your changes. And there’s zero config.
 - **Go delightfully fast.** Run Bento automatically locally or in CI. Either way, it runs offline and never sends your code anywhere.
 
 <p align="center">
@@ -64,11 +64,11 @@ Go forth and write great code!
 
 Bento is part of a quest to make world-class security and bugfinding available to all developers, for free. We’ve learned that most developers have never heard of—let alone tried—tools that find deep flaws in code: like Codenomicon, which found [Heartbleed](http://heartbleed.com/), or Zoncolan at Facebook, which finds more [top-severity security issues](https://cacm.acm.org/magazines/2019/8/238344-scaling-static-analyses-at-facebook/fulltext) than any human effort. These tools find severe issues and also save tons of time, identifying [hundreds of thousands of issues](https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/43322.pdf) before humans can. Bento is a step towards universal access to tools like these.
 
-We’re also big proponents of opinionated tools like [Black](https://github.com/psf/black) and [Prettier](https://github.com/prettier/prettier). This has two implications: Bento ignores style-related issues and the bikeshedding that comes with them, and it ships with a curated set of checks that we believe are high signal and bug-worthy. See [Three things your linter shouldn’t tell you](https://bento.dev/blog/2019/three-things-your-linter-shouldnt-tell-you/) for more details on our decision making process.
+We’re also big proponents of opinionated tools like [Black](https://github.com/psf/black) and [Prettier](https://github.com/prettier/prettier). This has two implications: Bento ignores style-related issues and the bikeshedding that comes with them, and it ships with a curated set of checks that we believe are high signal and bug-worthy. See [Three things your linter shouldn’t tell you](https://bento.dev/blog/2019/three-things-your-linter-shouldnt-tell-you/) for more about our decision making process.
 
 ## Code Checks
 
-Bento's check focus on security and reliability bugs in Flask and Django projects.
+Bento’s check focus on security and reliability bugs in Flask and Django projects.
 
 |                              |                                      |                                                      |
 | ---------------------------- | ------------------------------------ | ---------------------------------------------------- |
@@ -90,7 +90,7 @@ See the full list of [Bento’s specialty checks](https://bento.dev/checks/).
 
 ## Usage
 
-Out-of-the-box Bento is configured for your personal use. See [Team Use](#team-use) to setup Bento for all contributors.
+Out-of-the-box, Bento is configured for your personal use. See [Team Use](#team-use) to setup Bento for all contributors.
 
 ### Upgrading
 
@@ -133,7 +133,7 @@ Commands:
 
 ### Individual Use
 
-Bento understands the importance of getting out of the way so you can write your code. It runs at commit-time on your diffs and only affects you; it won’t change anything for other project contributors or modify Git state
+Bento understands the importance of getting out of the way so you can write your code. It runs at commit-time on your diffs and only affects you; it won’t change anything for other project contributors or modify Git state.
 
 Initialization enables `autorun` behind the scenes. By default `autorun` blocks the commit if Bento returns findings. To make it non-blocking:
 
