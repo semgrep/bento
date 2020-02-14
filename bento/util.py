@@ -4,7 +4,6 @@ import itertools
 import logging
 import os
 import os.path
-import pkgutil
 import re
 import shutil
 import signal
@@ -21,6 +20,8 @@ from typing import (
     Collection,
     Dict,
     Generic,
+    Iterable,
+    Iterator,
     List,
     Optional,
     Pattern,
@@ -147,25 +148,20 @@ class Memo(Generic[M]):
 DO_PRINT_LINKS = is_child_process_of(LINK_PRINTER_PATTERN)
 
 
-def package_subclasses(tpe: Type, pkg_path: str) -> List[Type]:
-    """
-    Finds all subtypes of a type within a module path, relative to this module
+_T = TypeVar("_T")
 
-    Parameters:
-        tpe: The parent type
-        pkg_path: The path to search, written as a python identifier (e.g. bento.extra)
 
-    Returns:
-        A list of all subtypes
+def batched(it: Iterable[_T], max_len: int) -> Iterator[Iterator[_T]]:
     """
-    walk_path = os.path.join(
-        os.path.dirname(__file__), os.path.pardir, *pkg_path.split(".")
+    Batches an iterator in iterators of a maximum length
+
+    :param it: The iterator to batch
+    :param max_len: The maximum length
+    """
+    return (
+        (y for _, y in x)
+        for _, x in itertools.groupby(enumerate(it), key=lambda x: int(x[0] / max_len))
     )
-    for (_, name, ispkg) in pkgutil.walk_packages([walk_path]):
-        if name != "setup" and not ispkg:
-            import_module(f"{pkg_path}.{name}", __package__)
-
-    return tpe.__subclasses__()
 
 
 def less(
@@ -292,11 +288,6 @@ def echo_next_step(desc: str, cmd: str) -> None:
     echo_styles("◦ ", style(f"{desc}, run $ ", dim=True), cmd)
 
 
-def echo_wrap(text: str, **kwargs: Any) -> None:
-    """Prints a wrapped paragraph"""
-    secho(wrap(text), err=True, **kwargs)
-
-
 def echo_progress(text: str, extra: int = 0, skip: bool = False) -> Callable[[], None]:
     """
     Prints a binary in-progress / done bar
@@ -374,27 +365,8 @@ def append_text_to_file(file: Path, text: str) -> None:
         fd.write(f"\n{text}\n")
 
 
-# Taken from http://www.madhur.co.in/blog/2015/11/02/countdownlatch-python.html
-class CountDownLatch(object):
-    def __init__(self, count: int = 1):
-        self.count = count
-        self.lock = threading.Condition()
-
-    def count_down(self) -> None:
-        with self.lock:
-            self.count -= 1
-            if self.count <= 0:
-                self.lock.notifyAll()
-
-    def wait_for(self) -> None:
-        with self.lock:
-            while self.count > 0:
-                self.lock.wait()
-
-
 class Colors:
     LINK = "bright_blue"
-    STATUS = "bright_blue"  # Deprecated in favor of bold / dim
     ERROR = "red"
     WARNING = "yellow"
     SUCCESS = "green"

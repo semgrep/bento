@@ -15,7 +15,7 @@ Processor = Callable[[str], str]
 
 
 @attr.s(auto_attribs=True)
-class Link(object):
+class Link:
     """
     Represents a link definition
 
@@ -378,7 +378,7 @@ class Progress(Renderer[Callable[[], None]]):
         return bento.util.echo_progress(text, self.extra, **kwargs)
 
 
-class Steps(object):
+class Steps:
     """
     Successively renders multiple Renderer objects
     """

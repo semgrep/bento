@@ -34,3 +34,5 @@
 
 # Ignore integration tests
 tests/integration/
+tests/acceptance/bad.js
+

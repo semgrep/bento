@@ -60,8 +60,7 @@ def match_expected(output: str, expected: str) -> bool:
     # Handle dynamic characters (for now just timing info)
     output = remove_timing_seconds(output)
 
-    if "detached HEAD" or "master" in expected:
-        output = remove_commit_hash(output)
+    output = remove_commit_hash(output)
 
     if output.strip() != expected.strip():
         print("==== EXPECTED ====")

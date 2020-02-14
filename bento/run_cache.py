@@ -10,7 +10,7 @@ from bento import __version__ as BENTO_VERSION
 
 
 @attr.s
-class RunCache(object):
+class RunCache:
     """
         Acts as a local cache for tool run output
 

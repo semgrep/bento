@@ -62,7 +62,7 @@ def check(context: Context, tool: str, check: str) -> None:
     """
     Turn ON a check.
 
-    Visit checks.bento.dev to learn about Bento's specialty checks.
+    Visit bento.dev/checks to learn about Bento's specialty checks.
     """
 
     def remove(ignores: Set[str]) -> None:

@@ -24,16 +24,16 @@ brew install pre-commit
 pre-commit install -f
 ```
 
-Install pipenv:
+Install poetry:
 
 ```
-pip3 install pipenv
+curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | python
 ```
 
 Install bento dev dependencies:
 
 ```
-pipenv install --dev
+poetry install
 ```
 
 Setup git commit message template:
@@ -46,15 +46,21 @@ git config commit.template .gitmessage
 
 To run all tests:
 
-```
-pipenv run pytest
-```
+`make test` or `poetry run pytest`
+
+To run acceptance tests:
+
+`make qa-test` or `poetry run pytest tests/acceptance/qa.py`
+
+To regenerate acceptance test output to reflect current behavior of bento:
+
+`make regenerate-tests` or `poetry run python tests/acceptance/qa.py`
 
 To build and run bento:
 
 ```
 make
-bento check
+poetry run bento check
 ```
 
 See [bento-core usage](https://returntocorp.quip.com/3K3gAxDYZIy6/Using-the-bento-core-repo) for more developer workflow details.

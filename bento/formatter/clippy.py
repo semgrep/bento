@@ -7,7 +7,7 @@ from typing import Collection, List
 import click
 
 from bento.formatter.base import FindingsMap, Formatter
-from bento.util import PRINT_WIDTH, Colors, render_link
+from bento.util import PRINT_WIDTH, render_link
 from bento.violation import Violation
 
 
@@ -15,12 +15,6 @@ class Clippy(Formatter):
     """
     Mimics the clippy formatter
     """
-
-    SEVERITY_STR = {
-        0: click.style("advice", fg=Colors.SUCCESS),
-        1: click.style("warning", fg=Colors.WARNING),
-        2: click.style("error", fg=Colors.ERROR),
-    }
 
     PIPE = click.style("│", dim=True)
     CONTEXT_HEADER = f"     {click.style('╷', dim=True)}"

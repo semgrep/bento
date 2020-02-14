@@ -5,9 +5,8 @@ WORKDIR /
 COPY . bento/
 
 WORKDIR /bento
-RUN pip install requests~=2.22.0
-RUN pip install pipenv==2018.11.26
-RUN pipenv install --dev
+RUN pip install poetry==1.0.0
+RUN poetry install
 RUN make package
 
 #######################################

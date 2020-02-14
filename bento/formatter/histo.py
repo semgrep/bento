@@ -79,7 +79,7 @@ class Histo(Formatter):
 
         # Add remaining hits as "Other" if more hits than max_bars_per_tool
         if len(counts) > len(top):
-            top.append(Hit("Other", None, len(violations) - n_top))
+            top.append(Hit(Histo.OTHER, None, len(violations) - n_top))
 
         return ToolHits(tool_id, top)
 

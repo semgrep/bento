@@ -17,7 +17,12 @@ import bento.tool_runner
 from bento.config import get_valid_tools, update_tool_run
 from bento.context import Context
 from bento.decorators import with_metrics
-from bento.error import NoConfigurationException, NodeError, ToolRunException
+from bento.error import (
+    BentoException,
+    NoConfigurationException,
+    NodeError,
+    ToolRunException,
+)
 from bento.paths import list_paths
 from bento.result import Baseline
 from bento.target_file_manager import TargetFileManager
@@ -92,8 +97,7 @@ def check(
 
     # Fail out if not configured
     if not context.config_path.exists():
-        echo_error("No Bento configuration found. Please run `bento init`.")
-        sys.exit(3)
+        raise NoConfigurationException()
 
     # Default to no path filter
     if len(paths) < 1:
@@ -112,9 +116,6 @@ def check(
         context._configured_tools = None
 
     # Handle specified formatters
-    if not context.config_path.exists():
-        raise NoConfigurationException()
-
     if formatter:
         context.config["formatter"] = [{f: {}} for f in formatter]
 
@@ -150,25 +151,27 @@ def check(
         if isinstance(findings, Exception):
             logging.error(findings)
             echo_error(f"Error while running {tool_id}: {findings}")
-            if isinstance(findings, subprocess.CalledProcessError):
-                click.secho(findings.stderr, err=True)
-                click.secho(findings.stdout, err=True)
-            if isinstance(findings, NodeError):
-                echo_warning(
-                    f"Node.js not found or version is not compatible with ESLint v6."
+            if isinstance(findings, BentoException):
+                click.secho(findings.msg, err=True)
+            else:
+                if isinstance(findings, subprocess.CalledProcessError):
+                    click.secho(findings.stderr, err=True)
+                    click.secho(findings.stdout, err=True)
+                if isinstance(findings, NodeError):
+                    echo_warning(
+                        f"Node.js not found or version is not compatible with ESLint v6."
+                    )
+                click.secho(
+                    f"""-------------------------------------------------------------------------------------------------
+    This may be due to a corrupted tool installation. You might be able to fix this issue by running:
+
+    bento init --clean
+
+    You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PATH}`.
+    -------------------------------------------------------------------------------------------------
+    """,
+                    err=True,
                 )
-
-            click.secho(
-                f"""-------------------------------------------------------------------------------------------------
-This may be due to a corrupted tool installation. You might be able to fix this issue by running:
-
-  bento init --clean
-
-You can also view full details of this error in `{bento.constants.DEFAULT_LOG_PATH}`.
--------------------------------------------------------------------------------------------------
-""",
-                err=True,
-            )
             is_error = True
         elif isinstance(findings, list) and findings:
             findings_to_log += bento.metrics.violations_to_metrics(

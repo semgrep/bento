@@ -197,10 +197,6 @@ class EslintTool(JsTool, JsonTool):
     def __uses_react(self, deps: NpmDeps) -> bool:
         return "react" in deps.main  # react dependency must be in main deps
 
-    def __load_default_rc(self) -> Dict[str, Any]:
-        with self.eslintrc_path.open() as stream:
-            return yaml.safe_load(stream)
-
     def __copy_eslintrc(self, identifier: str) -> None:
         logging.info(f"Using {identifier} .eslintrc configuration")
         shutil.copy(

@@ -15,12 +15,6 @@ class Stylish(Formatter):
     Mimics the eslint "stylish" formatter
     """
 
-    SEVERITY_STR = {
-        0: click.style("advice ", fg="green"),
-        1: click.style("warning", fg="yellow"),
-        2: click.style("error  ", fg="red"),
-    }
-
     TERM_WIDTH, _ = shutil.get_terminal_size((PRINT_WIDTH, 0))
 
     @staticmethod

@@ -7,7 +7,7 @@ import pymmh3 as mmh3
 
 
 @attr.s(frozen=True, hash=False)
-class Violation(object):
+class Violation:
     """
     N.B.: line and column are 1-based, not 0-based
     """

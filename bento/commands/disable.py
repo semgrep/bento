@@ -54,7 +54,7 @@ def check(context: Context, tool: str, check: str) -> None:
     """
     Turn OFF a check.
 
-    Visit checks.bento.dev to learn about Bento's specialty checks.
+    Visit bento.dev/checks to learn about Bento's specialty checks.
     """
 
     def add(ignores: Set[str]) -> None:

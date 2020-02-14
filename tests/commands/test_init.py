@@ -24,6 +24,7 @@ def test_install_config() -> None:
         assert "eslint" in cfg["tools"]
         assert "flake8" in cfg["tools"]
         assert "bandit" in cfg["tools"]
+        assert "dlint" in cfg["tools"]
 
 
 def test_no_install_empty_project() -> None:
@@ -117,6 +118,8 @@ def test_init_js_only() -> None:
     assert "eslint" in config["tools"]
     assert "flake8" not in config["tools"]
     assert "bandit" not in config["tools"]
+    assert "dlint" not in config["tools"]
+    assert "r2c.jinja" not in config["tools"]
 
 
 def test_init_py_only() -> None:
@@ -129,6 +132,7 @@ def test_init_py_only() -> None:
     assert "eslint" not in config["tools"]
     assert "flake8" in config["tools"]
     assert "bandit" in config["tools"]
+    assert "dlint" in config["tools"]
 
 
 def test_init_clean(tmp_path: Path) -> None:

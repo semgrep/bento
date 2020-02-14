@@ -1,0 +1,58 @@
+{
+  "bandit": {
+    "violations": {
+      "b8427b15130db96581ea81495e28e658": {
+        "tool_id": "bandit",
+        "check_id": "subprocess-popen-with-shell-equals-true",
+        "path": "bento/extra/hadolint.py",
+        "message": "subprocess call with shell=True identified, security issue.",
+        "severity": 2,
+        "syntactic_context": "f\"docker run --network none --rm -i {self.DOCKER_IMAGE} hadolint --format json - < {file}\",\nshell=True,\ncwd=self.base_path,\nencoding=\"utf8\",\nstdout=subprocess.PIPE,\nstderr=subprocess.PIPE,"
+      }
+    }
+  },
+  "dlint": {
+    "violations": {}
+  },
+  "flake8": {
+    "violations": {
+      "adda5bc97e75d6b054b20c6179438d78": {
+        "tool_id": "flake8",
+        "check_id": "not-executable",
+        "path": "bento/configs/pre-commit.template",
+        "message": "Shebang is present but the file is not executable.",
+        "severity": 2,
+        "syntactic_context": "#!/usr/bin/env python3"
+      }
+    }
+  },
+  "hadolint": {
+    "violations": {
+      "31880ca843ddb065cb8e7fa8c0174fa6": {
+        "tool_id": "hadolint",
+        "check_id": "DL3002",
+        "path": "tests/acceptance/environments/python36.Dockerfile",
+        "message": "Last USER should not be root",
+        "severity": 1,
+        "syntactic_context": "USER root\n"
+      },
+      "8228d6515361106e8f40a51d558d6545": {
+        "tool_id": "hadolint",
+        "check_id": "DL3013",
+        "path": "tests/acceptance/environments/python36.Dockerfile",
+        "message": "Pin versions in pip. Instead of `pip install <package>` use `pip install <package>==<version>`",
+        "severity": 1,
+        "syntactic_context": "RUN pip install ./*.whl\n"
+      }
+    }
+  },
+  "r2c.click": {
+    "violations": {}
+  },
+  "r2c.flask": {
+    "violations": {}
+  },
+  "r2c.requests": {
+    "violations": {}
+  }
+}

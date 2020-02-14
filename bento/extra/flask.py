@@ -13,7 +13,7 @@ class FlaskParser(Flake8Parser):
     @staticmethod
     def id_to_link(check_id: str) -> str:
         page = FlaskParser.id_to_name(check_id)
-        return f"https://checks.bento.dev/en/latest/flake8-flask/{page}"
+        return f"https://bento.dev/checks/flask/{page}/"
 
     @classmethod
     def id_to_name(cls, check_id: str) -> str:

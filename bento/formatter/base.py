@@ -34,9 +34,3 @@ class Formatter(ABC):
     def by_path(findings: FindingsMap) -> List[Violation]:
         collapsed = (v for violations in findings.values() for v in violations)
         return sorted(collapsed, key=(lambda v: v.path))
-
-    @staticmethod
-    def ellipsis_trim(untrimmed: str, max_length: int) -> str:
-        if len(untrimmed) > max_length:
-            return untrimmed[0 : max_length - 3] + "..."
-        return untrimmed

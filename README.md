@@ -10,13 +10,13 @@
   <span> · </span>
   <a href="#motivations">Motivations</a>
   <span> · </span>
+  <a href="#code-checks">Code Checks</a>
+  <span> · </span>
   <a href="#usage">Usage</a>
-  <span> · </span>
-  <a href="#workflows">Workflows</a>
   <br/>
-  <a href="#running-in-cicd">Integrations</a>
+  <a href="#workflows">Workflows</a>
   <span> · </span>
-  <a href="#bento-checks">Bento Checks</a>
+  <a href="#running-in-cicd">Integrations</a>
   <span> · </span>
   <a href="#help-and-community">Help & Community</a>
 </p>
@@ -36,11 +36,11 @@
   </a>
 </p>
 
-Bento is a free bug-finding tool that runs locally when you commit code. It has specialty checks for common Python 3 web frameworks and OSS checks for Python, Docker, and shell files.
+Inspired by tools like the ESLint plugin for React, Bento was created for Flask and Django. With Bento you’ll:
 
-- **Find bugs that matter.** Bento runs its [own checks](#bento-checks) and OSS tools to catch actual bugs. Checks are fine-tuned based on their behavior across thousands of PyPI projects, and Bento never reports style-related issues.
-- **Keep your workflow.** Unlike other tools, you won’t have to fix existing bugs to adopt Bento. Other project contributors won’t see Bento files or have their workflows changed. It’s just for you.
-- **Go delightfully fast.** Bento checks for issues introduced by your new code, as you commit it. Tools run on your machine in parallel, not sequentially.
+- **Find bugs that matter.** Checks find security and reliability bugs in your code. They’re vetted across thousands of open source projects and never nit your style.
+- **Upgrade your tooling.** You don’t have to fix existing bugs to adopt Bento. It’s diff-centric, finding new bugs introduced by your changes. And there’s zero config.
+- **Go delightfully fast.** Run Bento automatically locally or in CI. Either way, it runs offline and never sends your code anywhere.
 
 <p align="center">
     <img src="https://web-assets.r2c.dev/bento-demo.gif" width="100%" alt="Demonstrating Bento running in a terminal"/>
@@ -48,49 +48,55 @@ Bento is a free bug-finding tool that runs locally when you commit code. It has 
 
 ## Installation
 
+Bento is free and requires [Python 3.6+](https://www.python.org/downloads/) and [Docker 19.03+](https://docs.docker.com/get-docker/). It runs on macOS and Linux.
+
+In a Git project directory:
+
 ```bash
-$ pip3 install bento-cli
+$ pip3 install bento-cli && bento init
 ```
 
-Bento requires [Python 3.6+](https://www.python.org/downloads/) and [Docker 19.03+](https://docs.docker.com/get-docker/). It runs on macOS and Linux.
+Go forth and write great code!
 
 ## Motivations
 
 > See our [Bento introductory blog post](https://bento.dev/blog/2019/our-quest-to-make-world-class-security-and-bugfinding-available-to-all-developers/) to learn the full story.
 
-r2c is on a quest to make world-class security and bugfinding available to all developers, for free. We’ve learned that most developers have never heard of—let alone tried—tools that find deep flaws in code: like Codenomicon, which found [Heartbleed](http://heartbleed.com/), or Zoncolan at Facebook, which finds more [top-severity security issues](https://cacm.acm.org/magazines/2019/8/238344-scaling-static-analyses-at-facebook/fulltext) than any human effort. These tools find severe issues and also save tons of time, identifying [hundreds of thousands of issues](https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/43322.pdf) before humans can. Bento is a step towards universal access to tools like these.
+Bento is part of a quest to make world-class security and bugfinding available to all developers, for free. We’ve learned that most developers have never heard of—let alone tried—tools that find deep flaws in code: like Codenomicon, which found [Heartbleed](http://heartbleed.com/), or Zoncolan at Facebook, which finds more [top-severity security issues](https://cacm.acm.org/magazines/2019/8/238344-scaling-static-analyses-at-facebook/fulltext) than any human effort. These tools find severe issues and also save tons of time, identifying [hundreds of thousands of issues](https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/43322.pdf) before humans can. Bento is a step towards universal access to tools like these.
 
-We’re also big proponents of opinionated tools like Black and Prettier. This has two implications: Bento ignores style-related issues and the bikeshedding that comes with them, and it ships with a curated set of checks that we believe are high signal and bug-worthy. See [Three things your linter shouldn’t tell you](https://bento.dev/blog/2019/three-things-your-linter-shouldnt-tell-you/) for more details on our decision making process.
+We’re also big proponents of opinionated tools like [Black](https://github.com/psf/black) and [Prettier](https://github.com/prettier/prettier). This has two implications: Bento ignores style-related issues and the bikeshedding that comes with them, and it ships with a curated set of checks that we believe are high signal and bug-worthy. See [Three things your linter shouldn’t tell you](https://bento.dev/blog/2019/three-things-your-linter-shouldnt-tell-you/) for more about our decision making process.
+
+## Code Checks
+
+Bento’s check focus on security and reliability bugs in Flask and Django projects.
+
+|                              |                                      |                                                      |
+| ---------------------------- | ------------------------------------ | ---------------------------------------------------- |
+| **Flask**                    | **Jinja**                            | **Django**                                           |
+| missing JWT token            | href template variable               | _coming soon_                                        |
+| secure set cookie            | missing noopener                     |                                                      |
+| send file open               | missing noreferrer                   | **Docker**                                           |
+| unescaped file extension     | missing csrf protection              | [Hadolint](https://github.com/hadolint/hadolint)     |
+| use blueprint for modularity | missing doctype                      |                                                      |
+| use jsonify                  | meta charset                         | **Shell**                                            |
+| avoid hardcoded config       | meta content-type                    | [ShellCheck](https://github.com/koalaman/shellcheck) |
+|                              | unquoted attribute template variable |
+| **Requests**                 |                                      |
+| no auth over http            | **SQLAlchemy**                       |                                                      |
+| use scheme                   | _coming soon_                        |                                                      |
+| use timeout                  |                                      |
+
+See the full list of [Bento’s specialty checks](https://bento.dev/checks/).
 
 ## Usage
 
-### Getting Started
-
-From the root directory of a project:
-
-```bash
-$ bento init
-```
-
-This configures Bento for you only. See [Team Use](#team-use) to setup Bento for all contributors.
+Out-of-the-box, Bento is configured for your personal use. See [Team Use](#team-use) to setup Bento for all contributors.
 
 ### Upgrading
 
-> Docker is a requirement for Bento 0.8+.
-
-Run the following commands to upgrade Bento:
-
 ```bash
 $ pip3 install --upgrade bento-cli
-$ cd <PROJECT DIRECTORY>
-# Use `git rm` and `git commit` if you previously added Bento files to source control:
-$ rm -r .bento*
-$ bento init
 ```
-
-The last line removes all Bento artifacts as their formats have not yet stabalized between releases, including the Bento archive.
-
-For Bento 0.8+ no Bento files need to be tracked with Git unless you’re using Bento in CI. See [Running in CI/CD](#running-in-cicd) for details.
 
 ### Command Line Options
 
@@ -99,13 +105,11 @@ $ bento --help
 Usage: bento [OPTIONS] COMMAND [ARGS]...
 
 Options:
-  -h, --help             Show this message and exit.
-  --version              Show the version and exit.
-  --base-path DIRECTORY  Path to the directory containing the code, as well as
-                         the config.yml file.
-  --agree                Automatically agree to terms of service.
-  --email TEXT           Email address to use while running this command
-                         without global configs e.g. in CI
+  -h, --help    Show this message and exit.
+  --version     Show the version and exit.
+  --agree       Automatically agree to terms of service.
+  --email TEXT  Email address to use while running this command without global
+                configs e.g. in CI
 
 Commands:
   archive  Suppress current findings.
@@ -129,10 +133,7 @@ Commands:
 
 ### Individual Use
 
-Bento configures itself for personal use by default. This means that it:
-
-1. Automatically checks for issues introduced by your code, as you commit it
-2. Only affects you; it won’t change anything for other project contributors or modify Git state
+Bento understands the importance of getting out of the way so you can write your code. It runs at commit-time on your diffs and only affects you; it won’t change anything for other project contributors or modify Git state.
 
 Initialization enables `autorun` behind the scenes. By default `autorun` blocks the commit if Bento returns findings. To make it non-blocking:
 
@@ -166,6 +167,9 @@ To setup Bento for all project contributors, add Bento’s configuration to Git 
 
 ```bash
 $ cd <PROJECT DIRECTORY>
+# Add Bento's cache to the project's .gitignore
+$ echo ".bento/cache" >> .gitignore
+# Commit Bento's config to your project
 $ git add --force .bento .bentoignore
 ```
 
@@ -189,6 +193,9 @@ $ bento archive .
 Commit Bento’s configuration to the project:
 
 ```bash
+# Add Bento's cache to the project's .gitignore
+$ echo ".bento/cache" >> .gitignore
+# Commit Bento's config to your project
 $ git add --force .bento .bentoignore
 ```
 
@@ -222,10 +229,6 @@ jobs:
 `bento check` will exit with a non-zero exit code if it finds issues in your code (see [Exit Codes](#exit-codes)).
 
 If you need help setting up Bento with another CI provider please [open an issue](https://github.com/returntocorp/bento/issues/new?template=feature_request.md). Documentation PRs welcome if you set up Bento with a CI provider that isn’t documented here!
-
-## Bento Checks
-
-Bento finds common security, correctness, and performance mistakes in projects containing Flask, Requests, and Boto 3. We’re inspired by tools that help ensure correct and safe framework use, like [eslint-plugin-react](https://github.com/yannickcr/eslint-plugin-react). Learn more about Bento’s specialty checks at [checks.bento.dev](https://checks.bento.dev/).
 
 ## Help and Community
 

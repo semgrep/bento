@@ -2,5 +2,12 @@
 
 __name__ = "bento-cli"
 __author__ = "Return To Corporation"
-__version__ = "0.8.2"
+__version__ = "0.9.1"
 R2C_SUPPORT_EMAIL = "bento@r2c.dev"
+
+try:
+    import pkg_resources
+
+    __version__ = pkg_resources.get_distribution("bento-cli").version
+except:  # noqa: E722
+    __version__ = "0.0.0+unknown"

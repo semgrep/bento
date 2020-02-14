@@ -98,7 +98,7 @@ def install_autorun(context: Context, block: bool) -> None:
 
         # Copy pre-commit script template to hook_path
         template_location = os.path.join(
-            os.path.dirname(__file__), "../resources/pre-commit.template"
+            os.path.dirname(__file__), "../configs/pre-commit.template"
         )
         shutil.copyfile(template_location, hook_path)
 

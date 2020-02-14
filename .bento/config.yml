@@ -1,5 +1,5 @@
 autorun:
-  block: false
+  block: true
 formatter:
   - clippy: {}
 tools:
@@ -31,7 +31,7 @@ tools:
     run: true
   dlint:
     ignore: []
-    run: false
+    run: true
   eslint:
     ignore:
       - "@typescript-eslint/camelcase"
@@ -292,53 +292,14 @@ tools:
       - DL3027
       - DL4001
     run: true
+  r2c.click:
+    ignore:
+      - names-are-well-formed
+    run: true
   r2c.flask:
     ignore: []
     run: true
   r2c.requests:
     ignore:
       - use-timeout
-    run: true
-  r2c.click:
-    ignore:
-      - names-are-well-formed
-    run: true
-  r2c.jinja:
-    ignore: []
-    run: true
-  shellcheck:
-    ignore:
-      - SC1004
-      - SC1008
-      - SC1009
-      - SC1047
-      - SC1050
-      - SC1062
-      - SC1071
-      - SC1072
-      - SC1090
-      - SC1091
-      - SC1105
-      - SC1107
-      - SC1123
-      - SC1124
-      - SC1126
-      - SC2001
-      - SC2002
-      - SC2003
-      - SC2004
-      - SC2005
-      - SC2006
-      - SC2007
-      - SC2009
-      - SC2034
-      - SC2035
-      - SC2039
-      - SC2155
-      - SC2164
-      - SC2181
-      - SC2186
-      - SC2196
-      - SC2197
-      - SC2230
     run: true

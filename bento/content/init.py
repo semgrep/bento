@@ -106,20 +106,6 @@ class Identify:
     )
 
 
-class Check:
-    unnecessary = Steps(
-        Echo("Bento archive is already configured on this project."), Newline()
-    )
-
-    prompt = Confirm(
-        "Analyze this project for the first time?", options={"default": True}
-    )
-
-    header = Box("Bento Check")
-
-    noninteractive = Warn("Skipping project analysis due to noninteractive terminal.")
-
-
 class Finish:
     body = Steps(
         Box("Thank You"),
@@ -185,11 +171,6 @@ class Finish:
             )
         ),
     )
-
-
-class RunArchive:
-    pre = Newline()
-    post = Newline()
 
 
 class Start:

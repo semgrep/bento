@@ -34,7 +34,7 @@ def test_parse() -> None:
             severity=2,
             syntactic_context='flask.send_file(open("file.txt"))',
             filtered=None,
-            link="https://checks.bento.dev/en/latest/flake8-flask/send-file-open",
+            link="https://bento.dev/checks/en/latest/flake8-flask/send-file-open",
         )
     ]
 
@@ -66,7 +66,7 @@ def test_run_flask_violations(tmp_path: Path) -> None:
             severity=2,
             syntactic_context='flask.send_file(open("file.txt"))',
             filtered=None,
-            link="https://checks.bento.dev/en/latest/flake8-flask/send-file-open",
+            link="https://bento.dev/checks/en/latest/flake8-flask/send-file-open",
         )
     ]
 
