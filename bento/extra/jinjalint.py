@@ -107,5 +107,5 @@ class JinjalintTool(PythonTool[str], StrTool):
             "--exclude",
             "jinjalint-misaligned-indentation",
         ]
-        cmd = [launchpoint, "--json"] + exclude_rules + list(paths)
+        cmd = ["python", launchpoint, "--json"] + exclude_rules + list(paths)
         return self.venv_exec(cmd, check_output=False)
