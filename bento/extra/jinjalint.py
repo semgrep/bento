@@ -69,7 +69,7 @@ class JinjalintTool(PythonTool[str], StrTool):
     FILE_NAME_FILTER = re.compile(
         r".*\.(html|jinja|twig)$"
     )  # Jinjalint's default extensions
-    PACKAGES = {"r2c-jinjalint": SimpleSpec("==0.6.2")}
+    PACKAGES = {"r2c-jinjalint": SimpleSpec("==0.6.3")}
 
     @property
     def shebang_pattern(self) -> Optional[Pattern]:
