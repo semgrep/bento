@@ -2,6 +2,12 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.9.1](https://pypi.org/project/bento-cli/0.9.1/) - 2020-02-14
+
+### Fixed
+
+- ShellCheck detect shell files robustly
+
 ## [0.9.0](https://pypi.org/project/bento-cli/0.9.0/) - 2020-02-13
 
 ### Added
