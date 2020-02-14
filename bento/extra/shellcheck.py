@@ -80,7 +80,7 @@ class ShellcheckParser(Parser[JsonR]):
 class ShellcheckTool(JsonTool):
     ANALYZER_NAME = "koalaman/shellcheck"
     ANALYZER_VERSION = Version("0.7.0")
-    FILE_NAME_FILTER = re.compile(r".*\.(sh|bash|ksh|dash)")
+    FILE_NAME_FILTER = re.compile(r".*\.(sh|bash|ksh|dash)$")
     CONTAINER_NAME = "bento-shell-check-daemon"
     TOOL_ID = "shellcheck"
     SHEBANG_PATTERN = re.compile(r"^#!(.*/|.*env +)(sh|bash|ksh)")
