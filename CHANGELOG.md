@@ -2,6 +2,20 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.9.0](https://pypi.org/project/bento-cli/0.9.0/) - 2020-02-13
+
+### Added
+
+- Python tools now scan files that don't end in `.py` but have python shebang
+- Added ReDoS check via Dlint. The check is off by default. Enable the Dlint tool to run this check: `bento enable tool dlint`.
+- Jinja checks added and turned on by default
+
+See [https://bento.dev/checks](https://bento.dev/checks) for more information on new checks
+
+### Fixed
+
+- Bento iterates over files in batches if number of files to check exceeds OS argmax limit
+
 ## [0.8.2](https://pypi.org/project/bento-cli/0.8.2/) - 2020-02-05
 
 ### Fixed
