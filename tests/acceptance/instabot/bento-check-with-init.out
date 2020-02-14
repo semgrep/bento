@@ -455,17 +455,6 @@ flake8 no-mutable-default-args https://github.com/PyCQA/flake8-bugbear/blob/mast
        this one instance of that data structure, persisting changes between
        them.
 
-flake8 not-executable https://github.com/xuhdev/flake8-executable/blob/master/README.md#flake8-executable
-     > instabot/api/prepare.py:1
-     ╷
-    1│   #!/usr/bin/env python
-     ╵
-     = Shebang is present but the file is not executable.
-
-flake8 missing-shebang https://github.com/xuhdev/flake8-executable/blob/master/README.md#flake8-executable
-     > instabot/bot/bot.py:0
-     = The file is executable but no shebang is present.
-
 flake8 no-mutable-default-args https://github.com/PyCQA/flake8-bugbear/blob/master/README.rst#list-of-warnings
      > instabot/bot/bot.py:170
      ╷
@@ -496,7 +485,7 @@ flake8 no-mutable-default-args https://github.com/PyCQA/flake8-bugbear/blob/mast
        this one instance of that data structure, persisting changes between
        them.
 
-bandit B301 https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b301-pickle
+bandit pickle-used https://bandit.readthedocs.io/en/latest/blacklists/blacklist_calls.html#b301-pickle
      > instabot/bot/bot_checkpoint.py:66
      ╷
    66│   checkpoint = pickle.load(f)
@@ -510,18 +499,6 @@ bandit try-except-pass https://bandit.readthedocs.io/en/latest/plugins/b110_try_
    71│   except Exception:
      ╵
      = Try, Except, Pass detected.
-
-flake8 missing-shebang https://github.com/xuhdev/flake8-executable/blob/master/README.md#flake8-executable
-     > instabot/bot/bot_filter.py:0
-     = The file is executable but no shebang is present.
-
-flake8 missing-shebang https://github.com/xuhdev/flake8-executable/blob/master/README.md#flake8-executable
-     > instabot/bot/bot_follow.py:0
-     = The file is executable but no shebang is present.
-
-flake8 missing-shebang https://github.com/xuhdev/flake8-executable/blob/master/README.md#flake8-executable
-     > instabot/bot/bot_like.py:0
-     = The file is executable but no shebang is present.
 
 flake8 no-mutable-default-args https://github.com/PyCQA/flake8-bugbear/blob/master/README.rst#list-of-warnings
      > instabot/bot/bot_photo.py:13

@@ -75,6 +75,13 @@ FLAKE8_TO_BENTO = {
     "F404": "future-import-order",
     "F405": "undefined-module-name",
     "F406": "bad-wildcard-import",
+    "F601": "dict-key-repeated",
+    "F602": "dict-key-variable-repeated",
+    "F621": "too-many-expressions-with-star",
+    "F622": "more-than-one-star-in-assignment",
+    "F631": "assert-tuple-always-true",
+    "F632": "use-eqeq-for-literals",
+    "F633": "invalid-arrows-with-print",
     "F811": "redefined-unused-name",
     "F812": "redefined-name",
     "F821": "undefined-name",
@@ -88,6 +95,7 @@ FLAKE8_TO_BENTO = {
     "W603": "deprecated-inequality",
     "W604": "deprecated-backticks",
     "W605": "invalid-escape",
+    "W606": "bad-async-or-await",
 }
 
 
@@ -106,7 +114,9 @@ class Flake8Parser(Parser[str]):
             link = "https://github.com/JBKahn/flake8-debugger/blob/master/README.md"
         elif check_id.startswith("EXE"):
             link = "https://github.com/xuhdev/flake8-executable/blob/master/README.md#flake8-executable"
-        elif check_id in ("E722", "E306", "E117", "E113"):
+        elif check_id.startswith("F6"):
+            link = "https://flake8.pycqa.org/en/latest/user/error-codes.html"
+        elif check_id in ("E722", "E306", "E117", "E113", "W606"):
             link = "https://pycodestyle.readthedocs.io/en/latest/intro.html#error-codes"
         else:
             link = f"https://lintlyci.github.io/Flake8Rules/rules/{check_id}.html"
@@ -150,9 +160,8 @@ class Flake8Tool(PythonTool[str], StrTool):
     PACKAGES = {
         "flake8": SimpleSpec("~=3.7.0"),
         "flake8-json": SimpleSpec("~=19.8.0"),
-        "flake8-bugbear": SimpleSpec("~=19.8.0"),
+        "flake8-bugbear": SimpleSpec("~=20.1.4"),
         "flake8-debugger": SimpleSpec("~=3.2.0"),
-        "flake8-executable": SimpleSpec("~=2.0.3"),
     }
 
     @property

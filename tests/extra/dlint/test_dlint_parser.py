@@ -32,9 +32,8 @@ def test_run(tmp_path: Path) -> None:
             column=0,
             message='catastrophic "re" usage - denial-of-service possible',
             severity=2,
-            syntactic_context="",
+            syntactic_context="re.search(r'(a+)+b', 'TEST')\n",
             link="https://github.com/dlint-py/dlint/blob/master/docs/linters/DUO138.md",
         )
     ]
-
     assert violations == expectation

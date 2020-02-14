@@ -63,13 +63,13 @@ class JinjalintParser(Parser[str]):
 
 
 class JinjalintTool(PythonTool[str], StrTool):
-    TOOL_ID = "jinjalint"
+    TOOL_ID = "r2c.jinja"
     VENV_DIR = "jinjalint"
     PROJECT_NAME = "Python"
     FILE_NAME_FILTER = re.compile(
         r".*\.(html|jinja|twig)$"
     )  # Jinjalint's default extensions
-    PACKAGES = {"r2c-jinjalint": SimpleSpec("==0.6.2")}
+    PACKAGES = {"r2c-jinjalint": SimpleSpec("==0.6.3")}
 
     @property
     def shebang_pattern(self) -> Optional[Pattern]:
@@ -100,11 +100,12 @@ class JinjalintTool(PythonTool[str], StrTool):
         return JinjalintTool.FILE_NAME_FILTER
 
     def run(self, paths: Iterable[str]) -> str:
+        launchpoint: str = str(self.venv_dir() / "bin" / "jinjalint")
         exclude_rules = [
             "--exclude",
             "jinjalint-space-only-indent",
             "--exclude",
             "jinjalint-misaligned-indentation",
         ]
-        cmd = ["jinjalint", "--json"] + exclude_rules + list(paths)
+        cmd = ["python", launchpoint, "--json"] + exclude_rules + list(paths)
         return self.venv_exec(cmd, check_output=False)
