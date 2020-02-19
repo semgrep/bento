@@ -67,7 +67,7 @@ class DlintTool(PythonTool[str], StrTool):
     TOOL_ID = "dlint"
     VENV_DIR = "dlint"
     PROJECT_NAME = "Python"
-    PACKAGES = {"dlint": SimpleSpec("~=0.10.1"), "flake8-json": SimpleSpec("~=19.8.0")}
+    PACKAGES = {"dlint": SimpleSpec("~=0.10.2"), "flake8-json": SimpleSpec("~=19.8.0")}
 
     @property
     def parser_type(self) -> Type[Parser]:
