@@ -7,7 +7,6 @@ from typing import Any, Dict, Iterable, List, Optional, Pattern, Type
 
 from semantic_version import Version
 
-from bento.base_context import BaseContext
 from bento.extra.docker import DOCKER_INSTALLED, get_docker_client
 from bento.parser import Parser
 from bento.tool import JsonR, JsonTool
@@ -164,6 +163,5 @@ class ShellcheckTool(JsonTool):
                 results.extend(converted_findings)
         return results
 
-    @classmethod
-    def matches_project(cls, context: BaseContext) -> bool:
-        return DOCKER_INSTALLED.value and cls.project_has_extensions(context, "*.sh")
+    def matches_project(self) -> bool:
+        return DOCKER_INSTALLED.value and self.project_has_file_paths()

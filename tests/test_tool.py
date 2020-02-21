@@ -71,8 +71,7 @@ class ToolFixture(StrTool):
     def file_name_filter(self) -> Pattern:
         return re.compile(r"test_tool\.py")
 
-    @classmethod
-    def matches_project(cls, context: BaseContext) -> bool:
+    def matches_project(self) -> bool:
         return True
 
     def setup(self) -> None:

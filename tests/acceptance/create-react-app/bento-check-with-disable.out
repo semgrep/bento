@@ -1194,6 +1194,14 @@ eslint global-require https://eslint.org/docs/rules/global-require
      ╵
      = Unexpected require().
 
+r2c.jinja jinjalint-missing-meta-content-type
+     > packages/react-scripts/template-typescript/public/index.html:1
+     = HTML missing a meta content-type declaration may result in content
+       misinterpretation in certain browsers, especially when using the
+       'file://' protocol, and thus XSS. Include a meta content-type like '<meta
+       http-equiv="Content-Type" content="text/html; charset=UTF-8">' to avoid
+       misinterpretation.
+
 eslint import/no-extraneous-dependencies https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
      > packages/react-scripts/template-typescript/src/App.test.tsx:1
      ╷

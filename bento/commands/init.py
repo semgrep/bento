@@ -37,7 +37,7 @@ class InitCommand:
             ) as template:
                 yml = yaml.safe_load(template)
             for tid, tool in self.context.tool_inventory.items():
-                if not tool.matches_project(self.context) and tid in yml["tools"]:
+                if not tool(self.context).matches_project() and tid in yml["tools"]:
                     del yml["tools"][tid]
             logging.debug(
                 f"Matching tools for this project: {', '.join(yml['tools'].keys())}"
