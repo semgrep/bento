@@ -117,6 +117,15 @@ jobs:
       - store_artifacts:
           path: "/home/circleci/.bento/last.log"
 
+  validateMessage:
+    working_directory: ~/circleci
+    executor: python-build
+    steps:
+      - checkout
+      - run:
+          name: "Validating commit message presence"
+          command: bash validate-message.sh
+
 workflows:
   build-and-deploy:
     jobs:
@@ -126,6 +135,7 @@ workflows:
       - runAcceptance
       - envAcceptance
       - bentoRun
+      - validateMessage
 
 executors:
   python-build:
