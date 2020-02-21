@@ -3,7 +3,6 @@ from typing import Any, Dict, Iterable, Iterator, List, Pattern, Type
 
 import yaml
 
-from bento.base_context import BaseContext
 from bento.constants import GREP_CONFIG_FILE_NAME
 from bento.parser import Parser
 from bento.result import Violation
@@ -59,8 +58,7 @@ class GrepTool(JsonTool):
     def file_name_filter(self) -> Pattern:
         return re.compile(r".*\b")
 
-    @classmethod
-    def matches_project(cls, context: BaseContext) -> bool:
+    def matches_project(self) -> bool:
         # disabled by default for now
         return False
 

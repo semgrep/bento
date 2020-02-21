@@ -2,7 +2,6 @@ import logging
 import resource
 import subprocess
 from abc import ABC, abstractmethod
-from fnmatch import fnmatch
 from pathlib import Path
 from time import time
 from typing import (
@@ -121,26 +120,19 @@ class Tool(ABC, Generic[R]):
         """
         pass
 
-    @classmethod
     @abstractmethod
-    def matches_project(cls, context: BaseContext) -> bool:
+    def matches_project(self) -> bool:
         """
         Returns true if and only if this project should use this tool
         """
         pass
 
-    @classmethod
-    def project_has_extensions(cls, context: BaseContext, *extensions: str) -> bool:
+    def project_has_file_paths(self) -> bool:
         """
         Returns true iff any unignored files matches at least one extension
         """
-        file_matches = (
-            fnmatch(str(e.path), ext)
-            for e in context.file_ignores.entries()
-            if e.survives
-            for ext in extensions
-        )
-        return any(file_matches)
+        file_paths = (e.path for e in self.context.file_ignores.entries() if e.survives)
+        return any(self.filter_paths(file_paths))
 
     def _file_contains_shebang_pattern(self, file_path: Path) -> bool:
         """

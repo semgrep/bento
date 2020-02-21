@@ -3,7 +3,6 @@ import os
 import re
 from typing import Any, Dict, Iterable, List, Pattern, Type
 
-from bento.base_context import BaseContext
 from bento.parser import Parser
 from bento.result import Violation
 from bento.tool import StrTool
@@ -74,8 +73,7 @@ class PyreTool(StrTool):
     def file_name_filter(self) -> Pattern:
         return re.compile(r".*\.py\b")
 
-    @classmethod
-    def matches_project(cls, context: BaseContext) -> bool:
+    def matches_project(self) -> bool:
         # disabled by default for now
         return False
 
