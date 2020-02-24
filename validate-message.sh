@@ -5,12 +5,16 @@ set -eo pipefail
 BASE="origin/master"
 MAGIC="Changes were validated by"
 
-LOG_OUTPUT=$(git log '--format=format:%b' "$BASE"..HEAD)
+LOG_OUTPUT=$(git log '--format=format:%B' "$BASE"..HEAD)
+
+echo "$LOG_OUTPUT"
 
 if [[ -z "$LOG_OUTPUT" ]]
 then
+  echo "No commits found"
   exit 0
 else
+  echo "Searching for commit message..."
   if (echo "$LOG_OUTPUT" | grep "$MAGIC")
   then
     exit 0
