@@ -90,6 +90,16 @@ class NoToolsConfiguredException(BentoException):
         self.msg = f"No tools are configured in this project's {CONFIG_FILE_NAME}.\nPlease contact {SUPPORT_EMAIL_ADDRESS} if this is incorrect."
 
 
+class UnsupportedCIProviderException(BentoException):
+    def __init__(self) -> None:
+        super().__init__()
+        self.msg = (
+            "Automated CI installation is avaiable only for GitHub Actions currently, "
+            "but your project does not seem to be using GitHub.\n"
+            f"Please contact {SUPPORT_EMAIL_ADDRESS} if this is incorrect."
+        )
+
+
 class NodeError(Exception):
     """
     Node not found or node version not supported by ESLint 6

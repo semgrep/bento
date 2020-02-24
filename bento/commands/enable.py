@@ -4,6 +4,7 @@ import click
 
 from bento.commands.autocomplete import install_autocomplete
 from bento.commands.autorun import install_autorun
+from bento.commands.ci import install_ci
 from bento.config import (
     ToolCommand,
     get_disabled_checks,
@@ -75,3 +76,4 @@ def check(context: Context, tool: str, check: str) -> None:
 
 enable.add_command(install_autorun)
 enable.add_command(install_autocomplete)
+enable.add_command(install_ci)

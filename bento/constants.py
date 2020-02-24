@@ -12,15 +12,14 @@ VENV_PATH = GLOBAL_RESOURCE_PATH / "venv"
 DEFAULT_GLOBAL_GIT_IGNORE_PATH = Path(os.path.expanduser("~/.config/git/ignore"))
 GLOBAL_VERSION_CACHE_PATH = GLOBAL_RESOURCE_PATH / "version"
 
-
 RESOURCE_PATH = Path(".bento")
 CACHE_PATH = Path("cache")
 
 ARCHIVE_FILE_NAME = "archive.json"
 CONFIG_FILE_NAME = "config.yml"
 IGNORE_FILE_NAME = ".bentoignore"
-
 GREP_CONFIG_FILE_NAME = "grep-config.yml"
+GH_ACTIONS_FILE_NAME = ".github/workflows/bento.yml"
 
 # Registration data
 

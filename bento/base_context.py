@@ -82,6 +82,10 @@ class BaseContext:
     def ignore_file_path(self) -> Path:
         return self.base_path / constants.IGNORE_FILE_NAME
 
+    @property
+    def gh_actions_file_path(self) -> Path:
+        return self.base_path / constants.GH_ACTIONS_FILE_NAME
+
     def pretty_path(self, path: Path) -> Path:
         try:
             return path.relative_to(self.base_path)

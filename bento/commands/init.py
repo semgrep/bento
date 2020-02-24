@@ -2,7 +2,9 @@ import logging
 import os
 import shutil
 import sys
+from contextlib import contextmanager
 from pathlib import Path
+from typing import Iterator
 
 import attr
 import click
@@ -13,9 +15,17 @@ import bento.content.init as content
 import bento.git
 import bento.tool_runner
 from bento.commands.autorun import install_autorun
+from bento.commands.ci import install_ci, is_ci_configured, is_ci_provider_supported
 from bento.context import Context
 from bento.decorators import with_metrics
 from bento.error import NotAGitRepoException
+
+
+@contextmanager
+def interaction(context: click.Context) -> Iterator[None]:
+    context.obj.start_user_timer()
+    yield
+    context.obj.stop_user_timer()
 
 
 @attr.s(auto_attribs=True)
@@ -104,6 +114,49 @@ class InitCommand:
         else:
             content.InstallAutorun.install.echo(skip=True)
 
+    def _should_we_install_ci(self, ctx: click.Context) -> bool:
+        """
+        Returns boolean indicating whether CI should be installed.
+
+        The answer is no if CI isn't supported,
+        or if the user asks not to configure it.
+        """
+        if not is_ci_provider_supported(self.context.base_path):
+            return False
+
+        if is_ci_configured(self.context):
+            return False
+
+        if not sys.stdin.isatty() or not sys.stderr.isatty():
+            return False
+
+        content.InstallCI.pitch.echo()
+
+        with interaction(ctx):
+            is_confirmed = content.InstallCI.confirm.echo()
+
+        content.InstallCI.after_confirm.echo()
+        return is_confirmed
+
+    def _configure_ci(self, ctx: click.Context, is_ci_requested: bool) -> bool:
+        """
+        Sets up CI integration if the user asked for it.
+
+        Returns whether CI has been newly installed.
+        """
+        config_path = self.context.pretty_path(self.context.gh_actions_file_path)
+        config_directory = config_path.parts[0]
+
+        if not is_ci_requested or is_ci_configured(self.context):
+            content.InstallCI.progress.echo(config_directory, skip=True)
+            return False
+
+        on_done = content.InstallCI.progress.echo(config_directory)
+        ctx.invoke(install_ci)
+        on_done()
+
+        return True
+
     def _install_tools(self, clean: bool) -> None:
         """
         Ensures tools are installed
@@ -137,16 +190,19 @@ class InitCommand:
             return
         content.Identify.success.echo(projects)
 
-    def _finish(self) -> None:
+    def _finish(self, *, is_ci_newly_installed: bool) -> None:
         content.Finish.body.echo()
+        if is_ci_newly_installed:
+            content.InstallCI.finalize_ci.echo()
 
     def run(self, ctx: click.Context, clean: bool) -> None:
         content.Start.banner.echo()
 
+        is_ci_requested = self._should_we_install_ci(ctx)
+
         if sys.stdin.isatty() and sys.stderr.isatty():
-            ctx.obj.start_user_timer()
-            content.Start.confirm.echo(default=True, show_default=False)
-            ctx.obj.stop_user_timer()
+            with interaction(ctx):
+                content.Start.confirm.echo(default=True, show_default=False)
 
         self.context.resource_path.mkdir(exist_ok=True)
         is_first_init = not self.context.config_path.exists()
@@ -157,6 +213,7 @@ class InitCommand:
         self._install_ignore_if_not_exists()
         self._install_config_if_not_exists()
         self._configure_autorun(ctx, is_first_init)
+        is_ci_newly_installed = self._configure_ci(ctx, is_ci_requested)
 
         # Perform project identification
         self._identify_project()
@@ -165,7 +222,7 @@ class InitCommand:
         self._install_tools(clean)
 
         # Message next steps
-        self._finish()
+        self._finish(is_ci_newly_installed=is_ci_newly_installed)
 
 
 @click.command()
