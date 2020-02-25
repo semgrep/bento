@@ -19,7 +19,7 @@ steps:
     expected_err: check-diff-add.err
   - name: commit diff add
     description: attempt to commit nothing
-    command: git commit -m foo
+    command: git commit -m foo -uno
     returncode: 1
     expected_out: commit-diff-add.out
     expected_err: commit-diff-add.err
@@ -48,7 +48,7 @@ steps:
     expected_err: check-diff-modify.err
   - name: commit diff modify
     description: attempt to commit nothing
-    command: git commit -m foo
+    command: git commit -m foo -uno
     returncode: 1
     expected_out: commit-diff-modify.out
     expected_err: commit-diff-modify.err
@@ -79,7 +79,7 @@ steps:
     expected_out: status-diff-delete.out
   - name: commit diff delete
     description: attempt to commit a deletion with findings
-    command: git commit -m foo
+    command: git commit -m foo -uno
     returncode: 1
     expected_out: commit-diff-delete.out
     expected_err: commit-diff-delete.err
