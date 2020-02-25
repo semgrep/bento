@@ -11,6 +11,7 @@ from bento.extra.grep import GrepTool
 from bento.extra.hadolint import HadolintTool
 from bento.extra.jinjalint import JinjalintTool
 from bento.extra.python_taint import PythonTaintTool
+from bento.extra.r2c_check_registry import SgrepR2cCheckRegistryTool
 from bento.extra.requests import RequestsTool
 from bento.extra.sgrep import SGrepTool
 from bento.extra.shellcheck import ShellcheckTool
@@ -32,4 +33,5 @@ TOOLS: Iterable[Type[Tool]] = [
     SGrepTool,
     ShellcheckTool,
     PythonTaintTool,
+    SgrepR2cCheckRegistryTool,
 ]
