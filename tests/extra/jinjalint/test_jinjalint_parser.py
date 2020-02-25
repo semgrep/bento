@@ -35,7 +35,7 @@ def test_run(tmp_path: Path) -> None:
             message="Pages opened with 'target=\"_blank\"' allow the new page to access the original's referrer. This can have privacy implications. Include 'rel=\"noreferrer\"' to prevent this.",
             severity=2,
             syntactic_context="",
-            link=None,
+            link="https://bento.dev/checks/jinja/anchor-missing-noreferrer/",
         ),
         Violation(
             check_id="jinjalint-anchor-missing-noopener",
@@ -46,7 +46,7 @@ def test_run(tmp_path: Path) -> None:
             message="Pages opened with 'target=\"_blank\"' allow the new page to access the original's 'window.opener'. This can have security and performance implications. Include 'rel=\"noopener\"' to prevent this.",
             severity=2,
             syntactic_context="",
-            link=None,
+            link="https://bento.dev/checks/jinja/anchor-missing-noopener/",
         ),
         Violation(
             check_id="jinjalint-form-missing-csrf-protection",
@@ -57,7 +57,7 @@ def test_run(tmp_path: Path) -> None:
             message="Flask apps using 'flask-wtf' require including a CSRF token in the HTML form. This check detects missing CSRF protection in HTML forms in Jinja templates.",
             severity=2,
             syntactic_context="",
-            link=None,
+            link="https://bento.dev/checks/jinja/form-missing-csrf-protection/",
         ),
     ]
 

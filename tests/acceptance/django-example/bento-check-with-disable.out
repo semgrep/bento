@@ -1,4 +1,4 @@
-r2c.jinja jinjalint-missing-meta-content-type
+r2c.jinja jinjalint-missing-meta-content-type https://bento.dev/checks/jinja/missing-meta-content-type/
      > app/templates/app/layout.html:1
      = HTML missing a meta content-type declaration may result in content
        misinterpretation in certain browsers, especially when using the

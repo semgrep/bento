@@ -40,7 +40,17 @@ Input example:
 
 
 class JinjalintParser(Parser[str]):
+    CHECK_PREFIX_LEN = len("jinjalint-")
     SEVERITY = {"LOW": 0, "MEDIUM": 1, "HIGH": 2}
+
+    @staticmethod
+    def _get_link(code: str) -> Optional[str]:
+        if "recursion-error" in code or "parse-error" in code:
+            # These errors do not have documentation
+            return None
+
+        code_suffix = code[JinjalintParser.CHECK_PREFIX_LEN :]
+        return f"https://bento.dev/checks/jinja/{code_suffix}/"
 
     def parse(self, tool_output: str) -> List[Violation]:
         results = json.loads(tool_output)
@@ -55,6 +65,7 @@ class JinjalintParser(Parser[str]):
                 column=r["column"],
                 message=r["message"],
                 syntactic_context="",
+                link=self._get_link(r["code"]),
             )
             for r in results
         ]
