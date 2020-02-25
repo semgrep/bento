@@ -4,7 +4,6 @@ import re
 from pathlib import PurePath
 from typing import Iterable, List, Pattern, Type
 
-from bento.base_context import BaseContext
 from bento.extra.docker import DOCKER_INSTALLED, get_docker_client
 from bento.parser import Parser
 from bento.tool import JsonR, JsonTool
@@ -89,8 +88,7 @@ class SgrepR2cCheckRegistryTool(JsonTool):
         output = json.loads(output_str)
         return output.get("results", [])
 
-    @classmethod
-    def matches_project(cls, context: BaseContext) -> bool:
+    def matches_project(self) -> bool:
         return DOCKER_INSTALLED.value
 
     @property

@@ -43,10 +43,10 @@ def paths() -> Iterator[Paths]:
         yield Paths(repo)
 
 
-@pytest.mark.parametrize(
+@pytest.mark.parametrize(  # type: ignore
     ["workflow_filename", "expected"],
     [["bento.yml", True], ["cant_believe_its_not_bento.yml", False]],
-)  # type: ignore
+)
 def test_is_ci_configured(paths: Paths, workflow_filename: str, expected: bool) -> None:
     paths.workflows_path.mkdir(parents=True)
     (paths.workflows_path / workflow_filename).touch()
@@ -57,7 +57,7 @@ def test_is_ci_configured__no_github_dir(paths: Paths) -> None:
     assert uut.is_ci_configured(Context(base_path=paths.repo_path)) is False
 
 
-@pytest.mark.parametrize(
+@pytest.mark.parametrize(  # type: ignore
     ["origin_url", "expected"],
     [
         ["git@github.com:returntocorp/bento", True],
@@ -66,7 +66,7 @@ def test_is_ci_configured__no_github_dir(paths: Paths) -> None:
         ["git@gitlab.com:returntocorp/bento", False],
         ["https://bitbucket.org/returntocorp/bento", False],
     ],
-)  # type: ignore
+)
 def test_is_ci_provider_supported(
     paths: Paths, origin_url: str, expected: bool
 ) -> None:

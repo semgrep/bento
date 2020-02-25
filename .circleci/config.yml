@@ -37,15 +37,6 @@ jobs:
     steps:
       - checkout
       - run:
-          name: "Install pre-commit"
-          command: pip install pre-commit --user
-      - run: pre-commit run -a -c .pre-commit-config.ci.yaml
-
-  mypy:
-    executor: python-build
-    steps:
-      - checkout
-      - run:
           name: "Generate cache seeds"
           command: find . -name poetry.lock | sort | xargs md5sum > /tmp/checksums
       - restore_cache:
@@ -57,14 +48,8 @@ jobs:
           key: deps-3-{{ checksum "/tmp/checksums" }}
           paths:
             - "/root/.local/share/virtualenvs"
-      - run:
-          name: "mypy"
-          command: poetry run mypy bento
-      - store_test_results:
-          path: test-reports
-          prefix: tests
-      - store_artifacts:
-          path: test-reports
+      - run: poetry run pre-commit install --overwrite
+      - run: poetry run pre-commit run --all-files
 
   runAcceptance:
     executor: python-build
@@ -131,7 +116,6 @@ workflows:
     jobs:
       - pythonTests
       - runHooks
-      - mypy
       - runAcceptance
       - envAcceptance
       - bentoRun
