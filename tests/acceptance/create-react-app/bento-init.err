@@ -14,7 +14,7 @@ Creating default configuration at .bento/config.yml․․․․․․․․․�
 Enabling autorun (see $ bento enable autorun --help)․․․․․․․․․․․․․ 🍜 Setting up🍱 Done
 Creating GitHub Action configuration at .github/․․․․․․․․․․․․․․․․․ 👋 Skipped
 
-Bento initialized for Python and Shell
+Bento initialized for Shell
 
 Installing tools:
 
