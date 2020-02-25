@@ -66,10 +66,10 @@ class JinjalintTool(PythonTool[str], StrTool):
     TOOL_ID = "r2c.jinja"
     VENV_DIR = "jinjalint"
     PROJECT_NAME = "Python"
-    FILE_NAME_FILTER = re.compile(
-        r".*\.(html|jinja|twig)$"
+    JINJA_FILE_NAME_FILTER = re.compile(
+        r".*\.(html|jinja|jinja2|j2|twig)$"
     )  # Jinjalint's default extensions
-    PACKAGES = {"r2c-jinjalint": SimpleSpec("==0.6.3")}
+    PACKAGES = {"r2c-jinjalint": SimpleSpec("~=0.6.3")}
 
     @property
     def shebang_pattern(self) -> Optional[Pattern]:
@@ -97,7 +97,14 @@ class JinjalintTool(PythonTool[str], StrTool):
 
     @property
     def file_name_filter(self) -> Pattern:
-        return JinjalintTool.FILE_NAME_FILTER
+        return JinjalintTool.JINJA_FILE_NAME_FILTER
+
+    def matches_project(self) -> bool:
+        file_paths = (e.path for e in self.context.file_ignores.entries() if e.survives)
+        abspaths = [p.resolve() for p in file_paths]
+        has_jinja = any([self.JINJA_FILE_NAME_FILTER.match(p.name) for p in abspaths])
+        has_python = any([self.PYTHON_FILE_PATTERN.match(p.name) for p in abspaths])
+        return has_jinja and has_python
 
     def run(self, paths: Iterable[str]) -> str:
         launchpoint: str = str(self.venv_dir() / "bin" / "jinjalint")
