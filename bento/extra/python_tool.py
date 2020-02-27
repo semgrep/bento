@@ -13,7 +13,6 @@ from typing import Dict, Generic, List, Optional, Pattern
 from semantic_version import SimpleSpec, Version
 
 import bento.constants as constants
-from bento.base_context import BaseContext
 from bento.tool import R, Tool
 
 
@@ -30,9 +29,8 @@ class PythonTool(Generic[R], Tool[R]):
     def shebang_pattern(self) -> Optional[Pattern]:
         return self.SHEBANG_PATTERN
 
-    @classmethod
-    def matches_project(cls, context: BaseContext) -> bool:
-        return cls.project_has_extensions(context, "*.py")
+    def matches_project(self) -> bool:
+        return self.project_has_file_paths()
 
     @property
     def file_name_filter(self) -> Pattern:

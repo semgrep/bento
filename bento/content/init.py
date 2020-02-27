@@ -14,6 +14,8 @@ from bento.renderer import (
     Warn,
 )
 
+from . import ci as ci_content
+
 
 def _step_item(desc: str, cmd: str, nl: bool = True) -> Content:
     """
@@ -69,6 +71,27 @@ class InstallAutorun:
         ),
         extra=20,
     )
+
+
+class InstallCI:
+    pitch = Steps(
+        Echo(
+            Multi(
+                [
+                    "Bento can configure a GitHub Action to automatically check your team's pull requests. ",
+                    ci_content.Install.learn_more,
+                ],
+                processor=Processors.wrap(),
+            )
+        ),
+        Newline(),
+    )
+
+    confirm = Confirm("Do you want to configure Bento's GitHub Action now?")
+    after_confirm = Newline()
+
+    progress = ci_content.Install.progress
+    finalize_ci = ci_content.Install.finalize_ci
 
 
 class InstallTools:

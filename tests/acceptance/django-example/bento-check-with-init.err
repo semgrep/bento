@@ -1,8 +1,3 @@
 Running Bento checks on all tracked files...
 
-⚠ 2 finding(s) in this project in  s
-
-Please fix these issues, or:
-
-◦ To archive findings as tech debt, run $ bento archive
-◦ To disable a specific check, run $ bento disable check TOOL CHECK
+✔ 0 findings in this project in  s

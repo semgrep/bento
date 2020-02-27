@@ -11,6 +11,7 @@ import subprocess
 import sys
 import threading
 import types
+from functools import partial
 from importlib import import_module
 from pathlib import Path
 from textwrap import wrap as py_wrap
@@ -58,6 +59,13 @@ LINK_PRINTER_PATTERN = re.compile("(iterm2|gnome-terminal)", re.IGNORECASE)
 LINK_WIDTH = 2 * len(OSC_8) + 2 * len(BEL)
 
 AutocompleteSuggestions = List[Union[str, Tuple[str, str]]]
+
+
+class Colors:
+    LINK = "bright_blue"
+    ERROR = "red"
+    WARNING = "yellow"
+    SUCCESS = "green"
 
 
 def _calculate_print_width() -> int:
@@ -221,19 +229,37 @@ def wrap(text: str, extra: int = 0) -> str:
     return "\n".join(py_wrap(text, PRINT_WIDTH - 1 + extra))
 
 
-def echo_error(text: str, indent: str = "") -> None:
-    logging.error(text)
-    secho(wrap(f"{indent}✘ {text}"), fg=Colors.ERROR, err=True)
+def echo_styled(
+    text: str, icon: str, log_fn: Callable, fg: str, indent: str = ""
+) -> None:
+    """
+    Print operational messages to stderr with styling.
+    Comes with preconfigured functions for common styles:
+    `echo_error`, `echo_warning`, and `echo_success`
 
 
-def echo_warning(text: str, indent: str = "") -> None:
-    logging.warning(text)
-    secho(wrap(f"{indent}⚠ {text}"), fg=Colors.WARNING, err=True)
+    :param text: Text to print, will be wrapped line-by-line.
+    :param icon: An icon, emoji or otherwise, to prefix the first line with.
+    :param log_fn: A function to call with the raw text.
+                   Meant to write to log files in the appropriate format.
+    :param fg: A click-compatible color name to use as text color.
+    :param indent: A string to prepend to every line, such as "  " or "... "
+
+    >>> echo_error("ERROR\nTask failed successfully.", indent="  ")
+      ✘ ERROR
+      Task failed successfully.
+    """
+    log_fn(text)
+    prefix = f"{icon} "
+    lines = text.splitlines()
+    for line in lines:
+        secho(wrap(f"{indent}{prefix}{line}"), fg=fg, err=True)
+        prefix = ""
 
 
-def echo_success(text: str, indent: str = "") -> None:
-    logging.info(text)
-    secho(wrap(f"{indent}✔ {text}"), fg=Colors.SUCCESS, err=True)
+echo_error = partial(echo_styled, icon="✘", log_fn=logging.error, fg=Colors.ERROR)
+echo_warning = partial(echo_styled, icon="⚠", log_fn=logging.warning, fg=Colors.WARNING)
+echo_success = partial(echo_styled, icon="✔", log_fn=logging.info, fg=Colors.SUCCESS)
 
 
 def echo_box(text: str) -> None:
@@ -363,10 +389,3 @@ def append_text_to_file(file: Path, text: str) -> None:
     """
     with file.open("a") as fd:
         fd.write(f"\n{text}\n")
-
-
-class Colors:
-    LINK = "bright_blue"
-    ERROR = "red"
-    WARNING = "yellow"
-    SUCCESS = "green"

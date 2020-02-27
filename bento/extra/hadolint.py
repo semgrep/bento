@@ -4,7 +4,6 @@ import re
 import subprocess
 from typing import Any, Dict, Iterable, List, Pattern, Type
 
-from bento.base_context import BaseContext
 from bento.extra.docker import DOCKER_INSTALLED, get_docker_client
 from bento.parser import Parser
 from bento.tool import StrTool
@@ -117,8 +116,5 @@ class HadolintTool(StrTool):
 
         return json.dumps(outputs)
 
-    @classmethod
-    def matches_project(cls, context: BaseContext) -> bool:
-        return DOCKER_INSTALLED.value and cls.project_has_extensions(
-            context, "*.Dockerfile", "*.dockerfile", "*/Dockerfile", "*/dockerfile"
-        )
+    def matches_project(self) -> bool:
+        return DOCKER_INSTALLED.value and self.project_has_file_paths()

@@ -12,6 +12,7 @@ Learn more about personal and team use at bento.dev/workflows.
 Creating default ignore file at .bentoignore․․․․․․․․․․․․․․․․․․․․․ 🍜 Setting up🍱 Done
 Creating default configuration at .bento/config.yml․․․․․․․․․․․․․․ 🍜 Setting up🍱 Done
 Enabling autorun (see $ bento enable autorun --help)․․․․․․․․․․․․․ 🍜 Setting up🍱 Done
+Creating GitHub Action configuration at .github/․․․․․․․․․․․․․․․․․ 👋 Skipped
 
 Bento initialized for Shell
 

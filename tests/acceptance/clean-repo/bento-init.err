@@ -12,6 +12,7 @@ Learn more about personal and team use at bento.dev/workflows.
 Creating default ignore file at .bentoignore․․․․․․․․․․․․․․․․․․․․․ 🍜 Setting up🍱 Done
 Creating default configuration at .bento/config.yml․․․․․․․․․․․․․․ 🍜 Setting up🍱 Done
 Enabling autorun (see $ bento enable autorun --help)․․․․․․․․․․․․․ 🍜 Setting up🍱 Done
+Creating GitHub Action configuration at .github/․․․․․․․․․․․․․․․․․ 👋 Skipped
 
 ⚠ Bento can't automatically identify this project. Please manually configure
 this project:
@@ -20,5 +21,5 @@ this project:
 
 Installing tools:
 
-✘ No tools are configured in this project's config.yml. Please contact
-support@r2c.dev if this is incorrect.
+✘ No tools are configured in this project's config.yml.
+Please contact support@r2c.dev if this is incorrect.

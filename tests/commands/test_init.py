@@ -80,6 +80,7 @@ Learn more about personal and team use at bento.dev/workflows.
 Creating default ignore file at .bentoignore․․․․․․․․․․․․․․․․․․․․․ 👋 Skipped   
 Creating default configuration at .bento/config.yml․․․․․․․․․․․․․․ 👋 Skipped   
 Enabling autorun (see $ bento enable autorun --help)․․․․․․․․․․․․․ 👋 Skipped   
+Creating GitHub Action configuration at .github/․․․․․․․․․․․․․․․․․ 👋 Skipped   
 
 Bento initialized for Python and node-js (with react)
 

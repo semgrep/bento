@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import List, Optional
 
 from bento.constants import CONFIG_FILE_NAME, SUPPORT_EMAIL_ADDRESS
 
@@ -72,6 +72,16 @@ class InvalidToolException(BentoException):
         self.msg = f"No tool named '{tool}'. Configured tools are {all_tools}"
 
 
+class EnabledToolNotFoundException(BentoException):
+    def __init__(self, tool: str) -> None:
+        super().__init__()
+        self.msg = (
+            f"Bento didn't recognize the tool named '{tool}', "
+            "even though it's enabled in your project configuration.\n"
+            "Try updating Bento with `pip install --upgrade bento-cli`."
+        )
+
+
 class UnsupportedGitStateException(BentoException):
     def __init__(self) -> None:
         super().__init__()
@@ -90,7 +100,26 @@ class NoToolsConfiguredException(BentoException):
         self.msg = f"No tools are configured in this project's {CONFIG_FILE_NAME}.\nPlease contact {SUPPORT_EMAIL_ADDRESS} if this is incorrect."
 
 
+class UnsupportedCIProviderException(BentoException):
+    def __init__(self) -> None:
+        super().__init__()
+        self.msg = (
+            "Automated CI installation is avaiable only for GitHub Actions currently, "
+            "but your project does not seem to be using GitHub.\n"
+            f"Please contact {SUPPORT_EMAIL_ADDRESS} if this is incorrect."
+        )
+
+
 class NodeError(Exception):
     """
     Node not found or node version not supported by ESLint 6
     """
+
+
+class MultipleErrorsException(BentoException):
+    def __init__(self, errors: List[BentoException]) -> None:
+        super().__init__()
+        messages = "\n\n".join(
+            error.msg if error.msg else str(error) for error in errors
+        )
+        self.msg = f"The following errors occurred during execution:\n\n{messages}"

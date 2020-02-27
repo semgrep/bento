@@ -181,7 +181,18 @@ $ bento init
 
 #### Running in CI/CD
 
-Bento in CI analyzes your entire project, not just the latest commit. So that you don’t have to fix all existing issues before making Bento blocking, its `archive` feature allows historical issues to be tracked and ignored during CI.
+Bento has first-class support for checking pull requests with GitHub Actions.
+Such checks will report only on the bugs introduced by the changes in the pull request.
+
+To get started, just run `bento enable ci` in your project directory.
+This will add a CI configuration file to your repository.
+
+#### Advanced CI/CD configuration
+
+You can also configure Bento in CI to analyze your entire project,
+instead of only the changes from a pull request.
+So that you don’t have to fix all existing issues before making Bento blocking,
+its `archive` feature allows historical issues to be tracked and ignored during CI.
 
 To use the `archive` feature so Bento returns a non-zero exit code only for new issues, rather than all existing issues, first create the archive:
 

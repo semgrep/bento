@@ -42,7 +42,7 @@ steps:
       - .
     expected_err: bento-check-with-init.err
     expected_out: bento-check-with-init.out
-    returncode: 2
+    returncode: 0
   - name: disable-finding
     description: try disabling a finding
     command:
@@ -65,7 +65,7 @@ steps:
       - .
     expected_err: bento-check-with-disable.err
     expected_out: bento-check-with-disable.out
-    returncode: 2
+    returncode: 0
   - name: bento-archive
     description: should archive all existing findings
     command:
