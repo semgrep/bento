@@ -125,3 +125,6 @@ def archive(context: Context, all_: bool, paths: Tuple[Path, ...]) -> None:
     if not context.is_init:
         echo_newline()
         echo_next_step("To view archived results", "cat .bento/archive.json")
+
+    if context.on_exit_exception:
+        raise context.on_exit_exception

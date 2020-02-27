@@ -1,16 +1,19 @@
 import logging
 import time
 from datetime import datetime
-from typing import Any, Dict, Iterator, List, Optional, Tuple, Type
+from typing import TYPE_CHECKING, Any, Dict, Iterator, List, Optional, Tuple, Type
 
 import attr
 
 import bento.extra
 import bento.formatter
 from bento.base_context import BaseContext
+from bento.error import EnabledToolNotFoundException, MultipleErrorsException
 from bento.formatter import Formatter
 from bento.tool import Tool
-from bento.util import echo_error
+
+if TYPE_CHECKING:
+    from bento.error import BentoException
 
 
 @attr.s(repr=False)
@@ -27,6 +30,7 @@ class Context(BaseContext):
     _configured_tools = attr.ib(
         type=Optional[Dict[str, Tool]], init=False, default=None
     )
+    _errors_on_exit = attr.ib(type=List["BentoException"], init=False, factory=list)
 
     def __repr__(self) -> str:
         return f"Context({self.base_path})"
@@ -94,6 +98,28 @@ class Context(BaseContext):
             return
         self._user_duration += time.perf_counter() - self._user_start
 
+    def error_on_exit(self, exc: "BentoException") -> None:
+        """
+        Queue up an exception to cause Bento to fail at the end of invocation.
+        """
+        self._errors_on_exit.append(exc)
+
+    @property
+    def on_exit_exception(self) -> Optional["BentoException"]:
+        """
+        The exception to raise at the end of Bento's invocation.
+
+        :return: `None` if no errors were queued,
+                 a `BentoException` if one error was queued,
+                 or a `MultipleErrorsException` if several errors were queued.
+        """
+        if not self._errors_on_exit:
+            return None
+        elif len(self._errors_on_exit) == 1:
+            return self._errors_on_exit[0]
+        else:
+            return MultipleErrorsException(self._errors_on_exit)
+
     def _load_tool_inventory(self) -> Dict[str, Type[Tool]]:
         """
         Loads all tools in the module into a dictionary indexed by tool_id
@@ -119,8 +145,7 @@ class Context(BaseContext):
 
             ti = inventory.get(tn, None)
             if not ti:
-                # TODO: Move to display layer
-                echo_error(f"No tool named '{tn}' could be found")
+                self.error_on_exit(EnabledToolNotFoundException(tool=tn))
                 continue
 
             tools[tn] = ti(self)
@@ -136,8 +161,7 @@ class Context(BaseContext):
         for tn in self.config["tools"].keys():
             ti = inventory.get(tn, None)
             if not ti:
-                # TODO: Move to display layer
-                echo_error(f"No tool named '{tn}' could be found")
+                # skip, we will only error if the tool is enabled
                 continue
 
             tools[tn] = ti(self)

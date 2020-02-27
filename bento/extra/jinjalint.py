@@ -14,33 +14,37 @@ from bento.violation import Violation
 Input example:
 
 [
-    {
-        "code": "jinjalint-anchor-missing-noreferrer",
-        "column": 8,
-        "file_path": "test.html",
-        "line": 13,
-        "message": "Pages opened with 'target=\"_blank\"' allow the new page to access the original's referrer. This can have privacy implications. Include 'rel=\"noreferrer\"' to prevent this."
-    },
-    {
-        "code": "jinjalint-missing-meta-charset",
-        "column": 0,
-        "file_path": "test.html",
-        "line": 1,
-        "message": "HTML missing a meta charset declaration may result in content misinterpretation in certain browsers, and thus XSS. Include a meta charset like '<meta charset=\"UTF-8\">' to avoid misinterpretation."
-    },
-    {
-        "code": "jinjalint-missing-doctype",
-        "column": 0,
-        "file_path": "test.html",
-        "line": 1,
-        "message": "HTML missing a DOCTYPE declaration may result in content misinterpretation in certain browsers, and thus XSS. Include a DOCTYPE like '<!DOCTYPE html>' to avoid misinterpretation."
-    }
+  {
+    "message": "flask apps using 'flask-wtf' require including a csrf token in the html form. this check detects missing csrf protection in html forms in jinja templates.",
+    "physical_line": "        <form method=\"post\">",
+    "code": "jinjalint-form-missing-csrf-protection",
+    "file_path": "jinja-template.html",
+    "line": 7,
+    "column": 8
+  },
+  {
+    "message": "pages opened with 'target=\"_blank\"' allow the new page to access the original's 'window.opener'. this can have security and performance implications. include 'rel=\"noopener\"' to prevent this.",
+    "physical_line": "        <a href=\"https://example.com\" target=\"_blank\">test anchor</a>",
+    "code": "jinjalint-anchor-missing-noopener",
+    "file_path": "jinja-template.html",
+    "line": 11,
+    "column": 8
+  },
+  {
+    "message": "pages opened with 'target=\"_blank\"' allow the new page to access the original's referrer. this can have privacy implications. include 'rel=\"noreferrer\"' to prevent this.",
+    "physical_line": "        <a href=\"https://example.com\" target=\"_blank\">test anchor</a>",
+    "code": "jinjalint-anchor-missing-noreferrer",
+    "file_path": "jinja-template.html",
+    "line": 11,
+    "column": 8
+  }
 ]
 """
 
 
 class JinjalintParser(Parser[str]):
-    CHECK_PREFIX_LEN = len("jinjalint-")
+    CHECK_PREFIX = "jinjalint-"
+    CHECK_PREFIX_LEN = len(CHECK_PREFIX)
     SEVERITY = {"LOW": 0, "MEDIUM": 1, "HIGH": 2}
 
     @staticmethod
@@ -49,7 +53,7 @@ class JinjalintParser(Parser[str]):
             # These errors do not have documentation
             return None
 
-        code_suffix = code[JinjalintParser.CHECK_PREFIX_LEN :]
+        code_suffix = code.replace(JinjalintParser.CHECK_PREFIX, "")
         return f"https://bento.dev/checks/jinja/{code_suffix}/"
 
     def parse(self, tool_output: str) -> List[Violation]:
@@ -57,14 +61,14 @@ class JinjalintParser(Parser[str]):
 
         violations = [
             Violation(
-                check_id=r["code"],
+                check_id=r["code"].replace(self.CHECK_PREFIX, ""),
                 tool_id=JinjalintTool.TOOL_ID,
                 path=self.trim_base(r["file_path"]),
                 severity=JinjalintParser.SEVERITY["MEDIUM"],
                 line=r["line"],
                 column=r["column"],
                 message=r["message"],
-                syntactic_context="",
+                syntactic_context=r.get("physical_line", ""),
                 link=self._get_link(r["code"]),
             )
             for r in results
@@ -80,7 +84,7 @@ class JinjalintTool(PythonTool[str], StrTool):
     JINJA_FILE_NAME_FILTER = re.compile(
         r".*\.(html|jinja|jinja2|j2|twig)$"
     )  # Jinjalint's default extensions
-    PACKAGES = {"r2c-jinjalint": SimpleSpec("~=0.6.3")}
+    PACKAGES = {"r2c-jinjalint": SimpleSpec("~=0.7.1")}
 
     @property
     def shebang_pattern(self) -> Optional[Pattern]:

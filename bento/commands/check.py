@@ -143,7 +143,6 @@ def check(
 
     fmts = context.formatters
     findings_to_log: List[Any] = []
-    is_error = False
     n_all = 0
     n_all_filtered = 0
     filtered_findings: Dict[str, List[Violation]] = {}
@@ -172,7 +171,7 @@ def check(
     """,
                     err=True,
                 )
-            is_error = True
+            context.error_on_exit(ToolRunException())
         elif isinstance(findings, list) and findings:
             findings_to_log += bento.metrics.violations_to_metrics(
                 tool_id,
@@ -219,7 +218,7 @@ def check(
 
     if not all_ and not context.autorun_is_blocking:
         return
-    elif is_error:
-        raise ToolRunException()
+    elif context.on_exit_exception:
+        raise context.on_exit_exception
     elif n_all_filtered > 0:
         sys.exit(2)
