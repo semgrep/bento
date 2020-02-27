@@ -6,7 +6,6 @@ from semantic_version import SimpleSpec
 from bento.extra.python_tool import PythonTool
 from bento.parser import Parser
 from bento.tool import StrTool
-from bento.util import fetch_line_in_file
 from bento.violation import Violation
 
 """
@@ -50,10 +49,7 @@ class DlintParser(Parser[str]):
                 line=result["line_number"],
                 column=result["column_number"],
                 message=result["text"],
-                syntactic_context=fetch_line_in_file(
-                    self.base_path / filename, result["line_number"]
-                )
-                or "<no source found>",
+                syntactic_context=(result["physical_line"] or "").rstrip(),
                 link=self._get_link(result["code"]),
             )
             for filename, file_results in results.items()
@@ -67,7 +63,7 @@ class DlintTool(PythonTool[str], StrTool):
     TOOL_ID = "dlint"
     VENV_DIR = "dlint"
     PROJECT_NAME = "Python"
-    PACKAGES = {"dlint": SimpleSpec("~=0.10.1"), "flake8-json": SimpleSpec("~=19.8.0")}
+    PACKAGES = {"dlint": SimpleSpec("~=0.10.2"), "flake8-json": SimpleSpec("~=19.8.0")}
 
     @property
     def parser_type(self) -> Type[Parser]:

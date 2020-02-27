@@ -4,7 +4,6 @@ from typing import Iterable, List, Pattern, Type
 
 from semantic_version import Version
 
-from bento.base_context import BaseContext
 from bento.extra.r2c_analyzer import prepull_analyzers, run_analyzer_on_local_code
 from bento.parser import Parser
 from bento.tool import JsonR, JsonTool
@@ -71,8 +70,7 @@ class CheckedReturnTool(JsonTool):
             targets,
         )
 
-    @classmethod
-    def matches_project(cls, context: BaseContext) -> bool:
+    def matches_project(self) -> bool:
         return True
 
     @property

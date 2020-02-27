@@ -11,7 +11,6 @@ import yaml
 from semantic_version import Version
 
 import bento.constants as constants
-from bento.base_context import BaseContext
 from bento.extra.js_tool import JsTool, NpmDeps
 from bento.parser import Parser
 from bento.result import Violation
@@ -186,9 +185,8 @@ class EslintTool(JsTool, JsonTool):
     def eslintrc_path(self) -> Path:
         return self.install_location / EslintTool.CONFIG_FILE_NAME
 
-    @classmethod
-    def matches_project(cls, context: BaseContext) -> bool:
-        return (context.base_path / "package.json").exists()
+    def matches_project(self) -> bool:
+        return (self.context.base_path / "package.json").exists()
 
     def __uses_typescript(self, deps: NpmDeps) -> bool:
         # ts dependency shouldn't be in main deps, but, if it is, ok

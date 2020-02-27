@@ -1,4 +1,3 @@
 Running Bento checks on all tracked files...
 
 ✔ 0 findings in this project in  s
-◦ Not showing 2 archived finding(s). To view, run $ cat .bento/archive.json

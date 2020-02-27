@@ -2,6 +2,22 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.10.0](https://pypi.org/project/bento-cli/0.10.0/) - 2020-02-26
+
+### Added
+
+- Added `r2c.registry.latest`, an experimental feature that pulls the latest checks from r2c's check registry
+- `bento enable ci` to setup the [Bento GitHub Action](https://github.com/marketplace/actions/bento-check) for applicable projects
+- `bento init` now prompts to setup the GitHub Action (when applicable)
+- Dlint is enabled by default
+
+### Fixed
+
+- Use shebang detection for shell and python files during `bento init`
+- jinja tool only installs if it detects python and html/jinja files
+- Fix jinja tool hyperlinks
+- Exit when a configured tool cannot be found instead of failing silently
+
 ## [0.9.1](https://pypi.org/project/bento-cli/0.9.1/) - 2020-02-14
 
 ### Fixed

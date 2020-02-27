@@ -4,7 +4,6 @@ from typing import Iterable, List, Pattern, Type
 
 from semantic_version import Version
 
-from bento.base_context import BaseContext
 from bento.parser import Parser
 from bento.tool import JsonR, JsonTool
 from bento.violation import Violation
@@ -79,8 +78,7 @@ class SGrepTool(JsonTool):
             targets,
         )
 
-    @classmethod
-    def matches_project(cls, context: BaseContext) -> bool:
+    def matches_project(self) -> bool:
         return True
 
     @property
