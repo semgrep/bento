@@ -47,6 +47,34 @@ def __get_aggregate_violations(violations: List[Violation]) -> List[Dict[str, An
     return out
 
 
+def _infer_ci_provider() -> str:
+    """Returns used CI provider based on environment."""
+    if os.getenv("BENTO_ACTION") == "true":
+        return "github-actions/bento-action"
+
+    # https://help.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables
+    elif os.getenv("GITHUB_ACTIONS") == "true":
+        return "github-actions"
+
+    # https://circleci.com/docs/2.0/env-vars/#built-in-environment-variables
+    elif os.getenv("CIRCLECI") == "true":
+        return "circleci"
+
+    # https://docs.travis-ci.com/user/environment-variables/#default-environment-variables
+    elif os.getenv("TRAVIS") == "true":
+        return "travis"
+
+    # https://docs.gitlab.com/ee/ci/variables/predefined_variables.html
+    elif os.getenv("GITLAB_CI") == "true":
+        return "gitlab-ci"
+
+    elif os.getenv("CI"):
+        return "unknown"
+
+    else:
+        return "none"
+
+
 def violations_to_metrics(
     tool_id: str, timestamp: str, violations: List[Violation], ignores: List[str]
 ) -> List[Dict[str, Any]]:
@@ -104,6 +132,7 @@ def command_metric(
         "command": command,
         "command_kwargs": command_kwargs,
         "is_ci": bool(os.environ.get("CI", False)),
+        "ci_provider": _infer_ci_provider(),
         "exception_name": exception_name,
     }
     return [d]
