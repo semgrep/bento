@@ -1,6 +1,14 @@
 {
   "bandit": {
     "violations": {
+      "b2a5a60fcdcfcf87b385a73ae2a48a83": {
+        "tool_id": "bandit",
+        "check_id": "python2-input",
+        "path": "scripts/post_to_slack.py",
+        "message": "The input method in Python 2 will read from standard input, evaluate and run the resulting string as python source code. This is similar, though in many ways worse, then using eval. On Python 2, use raw_input instead, input is safe in Python 3.",
+        "severity": 2,
+        "syntactic_context": "webhook: URL = input()"
+      },
       "b8427b15130db96581ea81495e28e658": {
         "tool_id": "bandit",
         "check_id": "subprocess-popen-with-shell-equals-true",
@@ -53,6 +61,9 @@
     "violations": {}
   },
   "r2c.requests": {
+    "violations": {}
+  },
+  "shellcheck": {
     "violations": {}
   }
 }

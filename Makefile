@@ -30,5 +30,9 @@ package:
 
 .PHONY: release
 release: package
+	@echo "Validating release is merged"
+	poetry run python scripts/validate-commit-is-merged.py
 	@echo "Releasing Bento"
 	poetry publish
+	@echo "Post to slack"
+	poetry run python scripts/post_to_slack.py
