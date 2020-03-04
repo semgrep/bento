@@ -270,7 +270,7 @@ class Registrar:
             return False
 
         # only ask about updating gitignore in init
-        if not self.agree and self.click_context.command.name == "init":
+        if not self.agree and self.context.is_init:
             ignore_path, update_ignore = self._query_gitignore_update()
             self._update_gitignore_if_necessary(ignore_path, update_ignore)
 

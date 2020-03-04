@@ -40,7 +40,8 @@ def global_ignore_path(path: Optional[Path] = None) -> Optional[Path]:
         return None
 
     try:
-        return Path(r.config_reader("global").get_value("core", "excludesfile").strip())
+        config_value = r.config_reader("global").get_value("core", "excludesfile")
+        return Path(config_value.strip()).expanduser()
     except configparser.NoSectionError:
         return None
     except configparser.NoOptionError:
