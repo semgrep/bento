@@ -67,8 +67,9 @@ class FileIgnore(Mapping[Path, Entry]):
             # Note: Use relative to base to avoid ignore rules firing on parent directories
             # i.e. /private/var/.../instabot should not be ignored with var/ rule
             # in instabot dir as base_path
+            # Note: Append "/" to path before running fnmatch so **/pattern matches with pattern/stuff
             if p.endswith("/") and fnmatch.fnmatch(
-                str(path.relative_to(self.base_path)), p + "*"
+                "/" + str(path.relative_to(self.base_path)), p + "*"
             ):
                 return False
             if (
