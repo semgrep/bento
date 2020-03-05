@@ -11,7 +11,7 @@ import click
 import pytest
 from _pytest.capture import CaptureFixture
 from _pytest.monkeypatch import MonkeyPatch
-from bento.commands.init import init
+from bento.cli import cli
 from bento.commands.register import Registrar
 from bento.constants import QA_TEST_EMAIL_ADDRESS, TERMS_OF_SERVICE_VERSION
 from bento.context import Context
@@ -23,9 +23,11 @@ INTEGRATION = Path(__file__).parent.parent / "integration"
 
 @contextmanager
 def tmp_config(tmp_path: Path) -> Iterator[click.Context]:
-    click_context = click.Context(init)
+    click_context = click.Context(cli)
     context = Context(base_path=INTEGRATION / "simple")
+    context.is_init = True
     click_context.obj = context
+
     memo = os.environ.get("SHELL")
     with patch("bento.constants.GLOBAL_CONFIG_PATH", tmp_path / "config.yml"):
         try:
@@ -59,9 +61,11 @@ def setup_global_gitignore(tmp_path: Path) -> Iterator[None]:
 def test_register_email_from_env(monkeypatch: MonkeyPatch, tmp_path: Path) -> None:
     monkeypatch.setenv("BENTO_EMAIL", "heresjohnny@r2c.dev")
 
+    ctx = click.Context(cli)
     context = Context(base_path=INTEGRATION / "simple")
-    ctx = click.Context(init)
+    context.is_init = True
     ctx.obj = context
+
     registrar = Registrar(click_context=ctx, agree=False)
 
     assert registrar.email == "heresjohnny@r2c.dev"

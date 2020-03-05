@@ -75,7 +75,8 @@ This is a sample blob of usage data collected by Bento and sent to r2c:
   "email": "test@returntocorp.com",
   "exit_code": 2,
   "hash_of_commit": "641c9d42ecc5a442009d241f6528ab982f3d47ab2c61f2dc330ded3da4538aa6",
-  "is_ci": false,
+  "is_ci": true,
+  "ci_provider": "gitlab-ci",
   "repository": "4a74fa9309d6f79a91442d95f35e68fc8838796448b4398527faabad7aa21a24",
   "timestamp": "2019-11-08T17:55:16.432Z",
   "ua": "python-requests/2.22.0"
@@ -121,6 +122,7 @@ The following is a sample of the results data we collect:
 | X-R2C-Bento-User-Shell    | shell description                                                                     | Reproduce and debug issues with specific shells                                                                             |
 | duration                  | How long the command took to run                                                      | Understanding performance issues                                                                                            |
 | is_ci                     | A boolean determining whether Bento was running in CI                                 | Understanding if Bento is adopted in CI pipeline or is used locally                                                         |
+| ci_provider               | Name of the CI provider running Bento                                                 | Understanding CI adoption patterns                                                                                          |
 | ua                        | user agent                                                                            | Reserved for future Bento variants                                                                                          |
 | client_ip                 | IP address                                                                            | Provide timely support based on timezones and understand geographic difference in use                                       |
 | tool                      | The underlying tool whose results a telemetry event contains [r2c.eslint, r2c.flake8] | Improving underlying OSS tools and excluding unwanted checks                                                                |

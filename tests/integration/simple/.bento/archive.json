@@ -1,0 +1,14 @@
+{
+  "flake8": {
+    "violations": {
+      "b849b45f8a969cc5eb46e6ea76d7e809": {
+        "tool_id": "flake8",
+        "check_id": "parse-error",
+        "path": "foo.py",
+        "message": "SyntaxError: invalid syntax",
+        "severity": 2,
+        "syntactic_context": "def broken(x)"
+      }
+    }
+  }
+}

@@ -33,6 +33,7 @@ class Registrar:
     context: Context = attr.ib(init=False)
     global_config: Dict[str, Any] = attr.ib(factory=read_global_config, init=False)
     email: Optional[str] = attr.ib()
+    _displays_progress_bars: bool = attr.ib(init=False, default=False)
 
     @email.default
     def _get_email_from_environ(self) -> Optional[str]:
@@ -217,6 +218,7 @@ class Registrar:
         Adds bento patterns to global git ignore if _query_gitignore_update returned a path
         """
         if update:
+            self._displays_progress_bars = True
             on_done = content.UpdateGitignore.update.echo(ignore_path)
             bento.util.append_text_to_file(
                 ignore_path,
@@ -240,12 +242,13 @@ class Registrar:
             should_add = content.SuggestAutocomplete.confirm.echo()
             self.context.stop_user_timer()
             if should_add:
+                content.SuggestAutocomplete.confirm_yes.echo()
+                self._displays_progress_bars = True
                 on_done = content.SuggestAutocomplete.install.echo(
                     autocomplete.SUPPORTED[shell_cmd][0]
                 )
                 self.click_context.invoke(autocomplete.install_autocomplete, [False])
                 on_done()
-                content.SuggestAutocomplete.confirm_yes.echo()
             else:
                 content.SuggestAutocomplete.confirm_no.echo()
 
@@ -270,11 +273,18 @@ class Registrar:
             return False
 
         # only ask about updating gitignore in init
-        if not self.agree and self.click_context.command.name == "init":
+        ignore_path: Optional[Path] = None
+        update_ignore: Optional[bool] = None
+        if not self.agree and self.context.is_init:
             ignore_path, update_ignore = self._query_gitignore_update()
-            self._update_gitignore_if_necessary(ignore_path, update_ignore)
 
         if self.is_first_run and not self.agree:
             self._suggest_autocomplete()
+
+        if ignore_path is not None and update_ignore is not None:
+            self._update_gitignore_if_necessary(ignore_path, update_ignore)
+
+        if self._displays_progress_bars:
+            content.finalize.echo()
 
         return True

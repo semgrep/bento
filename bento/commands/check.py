@@ -21,6 +21,7 @@ from bento.error import (
     BentoException,
     NoConfigurationException,
     NodeError,
+    NoIgnoreFileException,
     ToolRunException,
 )
 from bento.paths import list_paths
@@ -98,6 +99,10 @@ def check(
     # Fail out if not configured
     if not context.config_path.exists():
         raise NoConfigurationException()
+
+    # Fail out if no .bentoignore
+    if not context.ignore_file_path.exists():
+        raise NoIgnoreFileException(context)
 
     # Default to no path filter
     if len(paths) < 1:

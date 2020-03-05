@@ -4,11 +4,11 @@ from pathlib import Path
 from typing import Any, Dict, Iterator
 
 import yaml
+from git import Repo
 
 import pytest
 from bento.commands import ci as uut
 from bento.context import Context
-from git import Repo
 
 
 @dataclass

@@ -1,0 +1,137 @@
+version: 2.1
+
+jobs:
+  pythonTests:
+    executor: python-build
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: "Generate cache seeds"
+          command: find . -name poetry.lock | sort | xargs md5sum > /tmp/checksums
+      - restore_cache:
+          key: deps-3-{{ checksum "/tmp/checksums" }}
+      - run:
+          name: "Install deps"
+          command: pip install --user poetry==1.0.0 && poetry install
+      - save_cache:
+          key: deps-3-{{ checksum "/tmp/checksums" }}
+          paths:
+            - "/root/.cache/pypoetry/virtualenvs"
+      - run:
+          name: "Pytest"
+          command: |
+            poetry run coverage run --source . -m pytest -vv
+            poetry run coverage report
+            poetry run coverage html
+      - store_test_results:
+          path: test-reports
+          prefix: tests
+      - store_artifacts:
+          path: htmlcov
+
+  runHooks:
+    executor: python-build
+    steps:
+      - checkout
+      - run:
+          name: "Generate cache seeds"
+          command: find . -name poetry.lock | sort | xargs md5sum > /tmp/checksums
+      - restore_cache:
+          key: deps-3-{{ checksum "/tmp/checksums" }}
+      - run:
+          name: "Install deps"
+          command: pip install --user poetry==1.0.0 && poetry install
+      - save_cache:
+          key: deps-3-{{ checksum "/tmp/checksums" }}
+          paths:
+            - "/root/.cache/pypoetry/virtualenvs"
+      - run:
+          name: "Pre-commit install"
+          command: poetry run pre-commit install --overwrite
+      - run:
+          name: "Pre-commit run"
+          command: poetry run pre-commit run --all-files
+
+  runAcceptance:
+    executor: python-build
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: "Generate cache seeds"
+          command: find . -name poetry.lock | sort | xargs md5sum > /tmp/checksums
+      - restore_cache:
+          key: deps-3-{{ checksum "/tmp/checksums" }}
+      - run:
+          name: "Install deps"
+          command: pip install --user poetry==1.0.0 && poetry install
+      - save_cache:
+          key: deps-3-{{ checksum "/tmp/checksums" }}
+          paths:
+            - "/root/.cache/pypoetry/virtualenvs"
+      - run:
+          name: "QA tests"
+          command: make qa-test
+
+  envAcceptance:
+    executor: python-build
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: "Python 3.6 tests"
+          command: make env-test
+
+  bentoRun:
+    executor: python-build
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: "Generate cache seeds"
+          command: find . -name poetry.lock | sort | xargs md5sum > /tmp/checksums
+      - restore_cache:
+          key: deps-3-{{ checksum "/tmp/checksums" }}
+      - run:
+          name: "Install deps"
+          command: pip install --user poetry==1.0.0 && poetry install
+      - save_cache:
+          key: deps-3-{{ checksum "/tmp/checksums" }}
+          paths:
+            - "/root/.cache/pypoetry/virtualenvs"
+      - run:
+          name: "Make bento"
+          command: poetry run make -B build && poetry run bento --version --agree
+      - run:
+          name: "Install react"
+          command: (cd tests/integration/react && npm install)
+      - run:
+          name: "Running bento check"
+          command: poetry run bento --agree --email test@returntocorp.com check --no-pager --all 2>&1 | cat
+      - store_artifacts:
+          path: "/home/circleci/.bento/last.log"
+
+  validateMessage:
+    executor: python-build
+    steps:
+      - checkout
+      - run:
+          name: "Validating commit message presence"
+          command: bash validate-message.sh
+
+workflows:
+  build-and-deploy:
+    jobs:
+      - pythonTests
+      - runHooks
+      - runAcceptance
+      - envAcceptance
+      - bentoRun
+      - validateMessage
+
+executors:
+  python-build:
+    working_directory: ~/circleci
+    docker:
+      - image: circleci/python:3.7.4-stretch-node

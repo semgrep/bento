@@ -38,6 +38,9 @@ welcome = Steps(
 )
 
 
+finalize = Newline()
+
+
 class UpdateEmail:
     leader = Steps(
         Echo(

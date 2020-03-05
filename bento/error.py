@@ -1,5 +1,6 @@
 from typing import List, Optional
 
+from bento.base_context import BaseContext
 from bento.constants import CONFIG_FILE_NAME, SUPPORT_EMAIL_ADDRESS
 
 
@@ -32,6 +33,12 @@ class NoConfigurationException(BentoException):
     def __init__(self) -> None:
         super().__init__()
         self.msg = "No Bento configuration found. Please run `bento init`."
+
+
+class NoIgnoreFileException(BentoException):
+    def __init__(self, context: BaseContext) -> None:
+        super().__init__()
+        self.msg = f"No ignore file found (looked in {context.ignore_file_path}). Please run `bento init`."
 
 
 class NotAGitRepoException(BentoException):

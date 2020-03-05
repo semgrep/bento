@@ -1,6 +1,0 @@
-from pathlib import Path
-
-class tmp_path_factory:
-    def mktemp(self, prefix: str = "") -> Path:
-        ...
-    ...
