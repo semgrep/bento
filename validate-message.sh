@@ -3,7 +3,7 @@
 set -eo pipefail
 
 BASE="origin/master"
-MAGIC="(Changes were validated by|RELEASE.\d+\.\d+\.\d+b?\d+)"
+MAGIC="(Changes were validated by|RELEASE.\d+\.\d+\.\d+b?\d+|Changelog for [\d\.]+)"
 
 LOG_OUTPUT=$(git log '--format=format:%B' "$BASE"..HEAD)
 

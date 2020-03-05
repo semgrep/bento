@@ -2,6 +2,20 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.10.1](https://pypi.org/project/bento-cli/0.10.1/) - 2020-03-04
+
+### Added
+
+- Add `ci_provider` field to telemetry and update
+  [PRIVACY.md](https://github.com/returntocorp/bento/blob/master/PRIVACY.md) accordingly
+
+### Fixed
+
+- Fix a regression (since 0.8.0) where root paths were not properly ignored
+- Fix a regression (since 0.10.0) where `init` failed to offer to update the user's
+  global git ignore file
+- If .bentoignore is missing, render a clear error message to the user
+
 ## [0.10.0](https://pypi.org/project/bento-cli/0.10.0/) - 2020-02-26
 
 ### Added
