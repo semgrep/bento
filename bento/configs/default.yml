@@ -292,6 +292,9 @@ tools:
       - DL3027
       - DL4001
     run: true
+  r2c.boto3:
+    ignore: []
+    run: true
   r2c.flask:
     ignore: []
     run: true
