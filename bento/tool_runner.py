@@ -172,6 +172,7 @@ class Runner:
                         f"check [PATH]`",
                         extra=-4,
                     ),
+                    err=True,
                     fg=bento.util.Colors.WARNING,
                     bold=False,
                 )
