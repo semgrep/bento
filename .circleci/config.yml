@@ -1,7 +1,7 @@
 version: 2.1
 
 jobs:
-  pythonTests:
+  runPytest:
     executor: python-build
     steps:
       - checkout
@@ -30,7 +30,7 @@ jobs:
       - store_artifacts:
           path: htmlcov
 
-  runHooks:
+  runPrecommit:
     executor: python-build
     steps:
       - checkout
@@ -53,7 +53,7 @@ jobs:
           name: "Pre-commit run"
           command: poetry run pre-commit run --all-files
 
-  runAcceptance:
+  runQATest:
     executor: python-build
     steps:
       - checkout
@@ -71,19 +71,19 @@ jobs:
           paths:
             - "/root/.cache/pypoetry/virtualenvs"
       - run:
-          name: "QA tests"
+          name: "QA test"
           command: make qa-test
 
-  envAcceptance:
+  runEnvTest:
     executor: python-build
     steps:
       - checkout
       - setup_remote_docker
       - run:
-          name: "Python 3.6 tests"
+          name: "Env test"
           command: make env-test
 
-  bentoRun:
+  runBento:
     executor: python-build
     steps:
       - checkout
@@ -120,15 +120,66 @@ jobs:
           name: "Validating commit message presence"
           command: bash validate-message.sh
 
+  deploy:
+    executor: python-build
+    steps:
+      - checkout
+      - run:
+          name: "Generate cache seeds"
+          command: find . -name poetry.lock | sort | xargs md5sum > /tmp/checksums
+      - restore_cache:
+          key: deps-3-{{ checksum "/tmp/checksums" }}
+      - run:
+          name: "Install deps"
+          command: pip install --user poetry==1.0.0 && poetry install
+      - save_cache:
+          key: deps-3-{{ checksum "/tmp/checksums" }}
+          paths:
+            - "/root/.cache/pypoetry/virtualenvs"
+      - run:
+          name: "Deploying to PyPI"
+          command: make release
+
 workflows:
   build-and-deploy:
     jobs:
-      - pythonTests
-      - runHooks
-      - runAcceptance
-      - envAcceptance
-      - bentoRun
-      - validateMessage
+      - runPytest:
+          filters:
+            tags:
+              only: /.*/
+      - runPrecommit:
+          filters:
+            tags:
+              only: /.*/
+      - runQATest:
+          filters:
+            tags:
+              only: /.*/
+      - runEnvTest:
+          filters:
+            tags:
+              only: /.*/
+      - runBento:
+          filters:
+            tags:
+              only: /.*/
+      - validateMessage:
+          filters:
+            tags:
+              only: /.*/
+      - deploy:
+          requires:
+            - runPytest
+            - runPrecommit
+            - runQATest
+            - runEnvTest
+            - runBento
+            - validateMessage
+          filters:
+            tags:
+              only: /^RELEASE-\d+.\d+.\d+(b\d+)?/
+            branches:
+              ignore: /.*/
 
 executors:
   python-build:
