@@ -21,6 +21,11 @@ include = [
     "bento/resources/*.template",
     "bento/resources/*.yml"
 ]
+[tool.poetry.urls]
+"Source Code" = "https://github.com/returntocorp/bento"
+"Bug Tracker" = "https://github.com/returntocorp/bento/issues"
+"Code Checks" = "https://bento.dev/checks/"
+"Blog" = "https://bento.dev/blog/"
 
 [tool.poetry.dependencies]
 python = "^3.6"
