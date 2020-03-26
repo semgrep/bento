@@ -1,6 +1,7 @@
 import json
 import os
 import re
+from pathlib import Path
 from typing import Any, Dict, Iterable, List, Pattern, Type
 
 from bento.parser import Parser
@@ -73,7 +74,7 @@ class PyreTool(StrTool):
     def file_name_filter(self) -> Pattern:
         return re.compile(r".*\.py\b")
 
-    def matches_project(self) -> bool:
+    def matches_project(self, files: Iterable[Path]) -> bool:
         # disabled by default for now
         return False
 

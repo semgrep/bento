@@ -83,7 +83,9 @@ def test_check_compare_to_head_no_diffs() -> None:
 
 
 def test_check_compare_to_head_diffs(monkeypatch: MonkeyPatch) -> None:
-    """Validates that check shows issues in staged changes"""
+    """ Validates that check shows issues in staged changes
+        Note that this check fails if there are any locally staged changes
+    """
     monkeypatch.chdir(SIMPLE)
     runner = CliRunner(mix_stderr=False)
     Context(SIMPLE).cache.wipe()

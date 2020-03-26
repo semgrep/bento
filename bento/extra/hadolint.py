@@ -2,6 +2,7 @@ import json
 import logging
 import re
 import subprocess
+from pathlib import Path
 from typing import Any, Dict, Iterable, List, Pattern, Type
 
 from bento.extra.docker import DOCKER_INSTALLED, get_docker_client
@@ -116,5 +117,5 @@ class HadolintTool(StrTool):
 
         return json.dumps(outputs)
 
-    def matches_project(self) -> bool:
-        return DOCKER_INSTALLED.value and self.project_has_file_paths()
+    def matches_project(self, files: Iterable[Path]) -> bool:
+        return DOCKER_INSTALLED.value and self.project_has_file_paths(files)

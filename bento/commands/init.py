@@ -19,6 +19,7 @@ from bento.commands.ci import install_ci, is_ci_configured, is_ci_provider_suppo
 from bento.context import Context
 from bento.decorators import with_metrics
 from bento.error import NotAGitRepoException
+from bento.target_file_manager import TargetFileManager
 
 
 @contextmanager
@@ -46,8 +47,21 @@ class InitCommand:
                 open(os.path.join(os.path.dirname(__file__), "../configs/default.yml"))
             ) as template:
                 yml = yaml.safe_load(template)
+
+            target_file_manager = TargetFileManager(
+                self.context.base_path,
+                [self.context.base_path],
+                staged=False,
+                ignore_rules_file_path=self.context.ignore_file_path,
+            )
+
             for tid, tool in self.context.tool_inventory.items():
-                if not tool(self.context).matches_project() and tid in yml["tools"]:
+                if (
+                    not tool(self.context).matches_project(
+                        target_file_manager._target_paths
+                    )
+                    and tid in yml["tools"]
+                ):
                     del yml["tools"][tid]
             logging.debug(
                 f"Matching tools for this project: {', '.join(yml['tools'].keys())}"

@@ -1,5 +1,5 @@
-import os
 import re
+from pathlib import Path
 from typing import Iterable, List, Pattern, Type
 
 from semantic_version import Version
@@ -70,20 +70,11 @@ class PythonTaintTool(JsonTool):
         # import inside def for performance
         from bento.extra.r2c_analyzer import run_analyzer_on_local_code
 
-        ignore_files = {
-            e.path for e in self.context.file_ignores.entries() if not e.survives
-        }
-        targets = [os.path.realpath(p) for p in files]
-
         return run_analyzer_on_local_code(
-            self.ANALYZER_NAME,
-            self.ANALYZER_VERSION,
-            self.base_path,
-            ignore_files,
-            targets,
+            self.ANALYZER_NAME, self.ANALYZER_VERSION, self.base_path, files
         )
 
-    def matches_project(self) -> bool:
+    def matches_project(self, files: Iterable[Path]) -> bool:
         return True
 
     @property

@@ -71,7 +71,7 @@ class ToolFixture(StrTool):
     def file_name_filter(self) -> Pattern:
         return re.compile(r"test_tool\.py")
 
-    def matches_project(self) -> bool:
+    def matches_project(self, files: Iterable[Path]) -> bool:
         return True
 
     def setup(self) -> None:

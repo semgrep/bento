@@ -1,4 +1,5 @@
 import re
+from pathlib import Path
 from typing import Any, Dict, Iterable, Iterator, List, Pattern, Type
 
 import yaml
@@ -58,7 +59,7 @@ class GrepTool(JsonTool):
     def file_name_filter(self) -> Pattern:
         return re.compile(r".*\b")
 
-    def matches_project(self) -> bool:
+    def matches_project(self, files: Iterable[Path]) -> bool:
         # disabled by default for now
         return False
 

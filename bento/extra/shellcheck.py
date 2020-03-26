@@ -3,6 +3,7 @@ import logging
 import os
 import re
 import subprocess
+from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Pattern, Type
 
 from semantic_version import Version
@@ -163,5 +164,5 @@ class ShellcheckTool(JsonTool):
                 results.extend(converted_findings)
         return results
 
-    def matches_project(self) -> bool:
-        return DOCKER_INSTALLED.value and self.project_has_file_paths()
+    def matches_project(self, files: Iterable[Path]) -> bool:
+        return DOCKER_INSTALLED.value and self.project_has_file_paths(files)

@@ -46,8 +46,7 @@ def test_install_ignore_in_repo() -> None:
         context.ignore_file_path.unlink()
         command._install_ignore_if_not_exists()
         context = Context(base_path=SIMPLE, is_init=True)
-        ig = context.file_ignores
-        assert "node_modules/" in ig.patterns
+        assert context.ignore_file_path.exists()
 
 
 def test_install_ignore_no_repo(tmp_path: Path, monkeypatch: MonkeyPatch) -> None:
@@ -55,11 +54,14 @@ def test_install_ignore_no_repo(tmp_path: Path, monkeypatch: MonkeyPatch) -> Non
     monkeypatch.chdir(tmp_path)
 
     context = Context(base_path=tmp_path, is_init=True)
+    assert not context.ignore_file_path.exists()
     command = InitCommand(context)
     command._install_ignore_if_not_exists()
-    context = Context(base_path=tmp_path, is_init=True)
-    ig = context.file_ignores
-    assert "node_modules/" in ig.patterns
+    assert context.ignore_file_path.exists()
+    with context.ignore_file_path.open() as file:
+        patterns = file.read()
+
+    assert "node_modules/" in patterns
 
 
 def test_init_already_setup() -> None:

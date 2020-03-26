@@ -121,18 +121,17 @@ class Tool(ABC, Generic[R]):
         pass
 
     @abstractmethod
-    def matches_project(self) -> bool:
+    def matches_project(self, files: Iterable[Path]) -> bool:
         """
         Returns true if and only if this project should use this tool
         """
         pass
 
-    def project_has_file_paths(self) -> bool:
+    def project_has_file_paths(self, files: Iterable[Path]) -> bool:
         """
         Returns true iff any unignored files matches at least one extension
         """
-        file_paths = (e.path for e in self.context.file_ignores.entries() if e.survives)
-        return any(self.filter_paths(file_paths))
+        return any(self.filter_paths(files))
 
     def _file_contains_shebang_pattern(self, file_path: Path) -> bool:
         """

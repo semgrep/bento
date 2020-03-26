@@ -8,7 +8,7 @@ import venv
 from abc import abstractmethod
 from pathlib import Path
 from time import time
-from typing import Dict, Generic, List, Optional, Pattern
+from typing import Dict, Generic, Iterable, List, Optional, Pattern
 
 from semantic_version import SimpleSpec, Version
 
@@ -29,8 +29,8 @@ class PythonTool(Generic[R], Tool[R]):
     def shebang_pattern(self) -> Optional[Pattern]:
         return self.SHEBANG_PATTERN
 
-    def matches_project(self) -> bool:
-        return self.project_has_file_paths()
+    def matches_project(self, files: Iterable[Path]) -> bool:
+        return self.project_has_file_paths(files)
 
     @property
     def file_name_filter(self) -> Pattern:

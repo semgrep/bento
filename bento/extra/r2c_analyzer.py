@@ -235,48 +235,16 @@ def prepull_analyzers(analyzer_name: str, version: Version) -> None:
 
 
 def _ignore_files_factory(
-    ignore_files: Set[Path], target_files: Set[str]
+    target_files: Set[str]
 ) -> Callable[[str, List[str]], List[str]]:
     """
-        Takes list of absolute paths of files to ignore and returns
+        Takes list of absolute paths of files to not ignore and returns
         a function compatible with what shutil.copytree's ignore_file expects.
 
-        Assumes all elements of IGNORE_FILES and TARGET_FILES are absolute paths
+        Assumes all elements of TARGET_FILES are absolute paths of files.
+        (i.e. directories will not work)
 
-        Said function used with copytree will copy all files under TARGET_FILES
-        (i.e. if elem in target file is a file will include that file, if subdir
-        then will include all dirs/files in said subdir) that are not in IGNORE_FILES
-
-        Given the following directory tree:
-        - root
-            - unignore_dir
-                - file.txt
-            - ignored_dir
-                - file.txt
-            - ignored_file.txt
-            - unignored_file.txt
-
-        ----------------------------------------------------------------
-
-        shutil.copytree called with
-        ignore_files = set("root/ingored_dir", "root/ignored_file.txt")
-        target_files = set("root/unignored_dir")
-
-        will result in the following directory tree:
-        - root
-            - unignored_dir
-                - file.txt
-
-        ----------------------------------------------------------------
-
-        shutil.copytree called with
-        ignore_files = set("root/ingored_dir", "root/ignored_file.txt")
-        target_files = set("root")
-        will result in the following directory tree:
-        - root
-            - unignored_dir
-                - file.txt
-            - unignored_file.txt
+        Said function used with copytree will copy all files in TARGET_FILES
     """
 
     def ignore_files_function(root: str, members: List[str]) -> List[str]:
@@ -286,16 +254,13 @@ def _ignore_files_factory(
             of files/dirs in the directory and returns a list of files/dirs
             to ignore (a subset of the second argument).
         """
-        rp = Path(root)
         return [
             path
             for path in members
-            if rp / path in ignore_files
-            or not any(
+            if not any(
                 # Suppose there is a file in a/b/c/d.py
                 # LHS: If the target path is a/b/c/d.py we still want a/b to not be ignored to we keep traversing the tree.
-                # RHS: If the target path is a we want a/b to be analyzed (so not ignored)
-                r.startswith(f"{root}/{path}") or f"{root}/{path}".startswith(r)
+                r.startswith(f"{root}/{path}")
                 for r in target_files
             )
         ]
@@ -307,7 +272,6 @@ def _copy_local_input(
     analyzer: Analyzer,
     va: VersionedAnalyzer,
     analyzer_input: LocalCode,
-    ignore_files: Set[Path],
     target_files: Set[str],
 ) -> None:
     """'Uploads' the local input as the output of the given analyzer.
@@ -328,7 +292,7 @@ def _copy_local_input(
             output_fs_path,
             symlinks=True,
             ignore_dangling_symlinks=True,
-            ignore=_ignore_files_factory(ignore_files, target_files),
+            ignore=_ignore_files_factory(target_files),
         )
 
         # "upload" output using our LocalDir infra (actually just a copy)
@@ -336,11 +300,7 @@ def _copy_local_input(
 
 
 def run_analyzer_on_local_code(
-    analyzer_name: str,
-    version: Version,
-    base: Path,
-    ignore_files: Set[Path],
-    target_files: Iterable[str],
+    analyzer_name: str, version: Version, base: Path, target_files: Iterable[str]
 ) -> JsonR:
     """Run an analyzer on a local folder.
     """
@@ -386,11 +346,7 @@ def run_analyzer_on_local_code(
     analyzer_input = LocalCode(str(base))
     for fetcher in fetchers:
         _copy_local_input(
-            analyzer,
-            fetcher.versioned_analyzer,
-            analyzer_input,
-            ignore_files,
-            set(target_files),
+            analyzer, fetcher.versioned_analyzer, analyzer_input, set(target_files)
         )
 
     analyzer.full_analyze_request(

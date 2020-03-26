@@ -2,7 +2,6 @@ from pathlib import Path
 from typing import Any, Dict
 
 import bento.context
-from _pytest.monkeypatch import MonkeyPatch
 
 THIS_PATH = Path(__file__).parent
 BASE_PATH = THIS_PATH / ".."
@@ -22,11 +21,3 @@ def test_tool_from_config_missing() -> None:
     config: Dict[str, Any] = {"tools": {"r2c.not_a_thing": {"ignore": []}}}
     context = bento.context.Context(config=config)
     assert len(context.tools) == 0
-
-
-def test_loads_ignores(monkeypatch: MonkeyPatch) -> None:
-    context = bento.context.Context(
-        base_path=(Path(BASE_PATH) / "bento" / "configs"), is_init=True
-    )
-    expected = {".bento/", ".git/", ".gitignore"}
-    assert context.file_ignores.patterns == expected

@@ -185,7 +185,7 @@ class EslintTool(JsTool, JsonTool):
     def eslintrc_path(self) -> Path:
         return self.install_location / EslintTool.CONFIG_FILE_NAME
 
-    def matches_project(self) -> bool:
+    def matches_project(self, files: Iterable[Path]) -> bool:
         return (self.context.base_path / "package.json").exists()
 
     def __uses_typescript(self, deps: NpmDeps) -> bool:

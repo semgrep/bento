@@ -79,11 +79,7 @@ def test_run_analyzer_on_local_code(tmp_path: Path) -> None:
 
     file.write_text(json.dumps(input_json))
     output_json = run_analyzer_on_local_code(
-        "r2c/testonly-cat-output-json",
-        Version("1.0.2"),
-        tmp_path,
-        set(),
-        {str(tmp_path)},
+        "r2c/testonly-cat-output-json", Version("1.0.2"), tmp_path, {str(file)}
     )
     assert input_json["results"] == output_json
 
@@ -125,16 +121,14 @@ def test_ignore_files_factory(tmp_path: Path) -> None:
 
     destination = tmp_path / "destination"
     # Copy tree using ignores
+    expect_copy = {unignored_file, file_in_unignored_dir}
     shutil.copytree(
-        source,
-        destination,
-        ignore=_ignore_files_factory({ignored_dir, ignored_file}, {str(source)}),
+        source, destination, ignore=_ignore_files_factory({str(e) for e in expect_copy})
     )
 
     # Delete source and move back destination for easy comparion
     shutil.rmtree(source)
     shutil.copytree(destination, source)
-    expect_copy = {unignored_file, file_in_unignored_dir}
 
     copied = set()
     for root, _, files in os.walk(source):
@@ -180,16 +174,14 @@ def test_ignore_files_factory_path(tmp_path: Path) -> None:
 
     destination = tmp_path / "destination"
     # Copy tree using ignores
+    expect_copy = {file_in_unignored_dir}
     shutil.copytree(
-        source,
-        destination,
-        ignore=_ignore_files_factory({ignored_dir, ignored_file}, {str(unignored_dir)}),
+        source, destination, ignore=_ignore_files_factory({str(e) for e in expect_copy})
     )
 
     # Delete source and move back destination for easy comparion
     shutil.rmtree(source)
     shutil.copytree(destination, source)
-    expect_copy = {file_in_unignored_dir}
 
     copied = set()
     for root, _, files in os.walk(source):

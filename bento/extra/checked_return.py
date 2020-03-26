@@ -1,5 +1,5 @@
-import os
 import re
+from pathlib import Path
 from typing import Iterable, List, Pattern, Type
 
 from semantic_version import Version
@@ -37,10 +37,11 @@ class CheckedReturnParser(Parser[JsonR]):
 class CheckedReturnTool(JsonTool):
     ANALYZER_NAME = "r2c/checked-return"
     ANALYZER_VERSION = Version("0.1.11")
+    FILE_NAME_FILTER = re.compile(r".*")
 
     @property
     def file_name_filter(self) -> Pattern:
-        return re.compile(r".*")
+        return self.FILE_NAME_FILTER
 
     @property
     def project_name(self) -> str:
@@ -58,19 +59,11 @@ class CheckedReturnTool(JsonTool):
         prepull_analyzers(self.ANALYZER_NAME, self.ANALYZER_VERSION)
 
     def run(self, files: Iterable[str]) -> JsonR:
-        ignore_files = {
-            e.path for e in self.context.file_ignores.entries() if not e.survives
-        }
-        targets = [os.path.realpath(p) for p in files]
         return run_analyzer_on_local_code(
-            self.ANALYZER_NAME,
-            self.ANALYZER_VERSION,
-            self.base_path,
-            ignore_files,
-            targets,
+            self.ANALYZER_NAME, self.ANALYZER_VERSION, self.base_path, files
         )
 
-    def matches_project(self) -> bool:
+    def matches_project(self, files: Iterable[Path]) -> bool:
         return True
 
     @property
