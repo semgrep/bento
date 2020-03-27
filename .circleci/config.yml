@@ -1,23 +1,29 @@
 version: 2.1
 
 jobs:
+  installDependencies:
+    executor: python-build
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - deps-v1-{{ checksum "poetry.lock" }}
+      - run:
+          name: "Install dependencies"
+          command: poetry install --no-interaction
+      - save_cache:
+          key: deps-v1-{{ checksum "poetry.lock" }}
+          paths:
+            - /home/circleci/.cache/pypoetry/virtualenvs
+
   runPytest:
     executor: python-build
     steps:
       - checkout
       - setup_remote_docker
-      - run:
-          name: "Generate cache seeds"
-          command: find . -name poetry.lock | sort | xargs md5sum > /tmp/checksums
       - restore_cache:
-          key: deps-3-{{ checksum "/tmp/checksums" }}
-      - run:
-          name: "Install deps"
-          command: pip install --user poetry==1.0.0 && poetry install
-      - save_cache:
-          key: deps-3-{{ checksum "/tmp/checksums" }}
-          paths:
-            - "/root/.cache/pypoetry/virtualenvs"
+          keys:
+            - deps-v1-{{ checksum "poetry.lock" }}
       - run:
           name: "Pytest"
           command: |
@@ -34,18 +40,9 @@ jobs:
     executor: python-build
     steps:
       - checkout
-      - run:
-          name: "Generate cache seeds"
-          command: find . -name poetry.lock | sort | xargs md5sum > /tmp/checksums
       - restore_cache:
-          key: deps-3-{{ checksum "/tmp/checksums" }}
-      - run:
-          name: "Install deps"
-          command: pip install --user poetry==1.0.0 && poetry install
-      - save_cache:
-          key: deps-3-{{ checksum "/tmp/checksums" }}
-          paths:
-            - "/root/.cache/pypoetry/virtualenvs"
+          keys:
+            - deps-v1-{{ checksum "poetry.lock" }}
       - run:
           name: "Pre-commit install"
           command: poetry run pre-commit install --overwrite
@@ -58,18 +55,9 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run:
-          name: "Generate cache seeds"
-          command: find . -name poetry.lock | sort | xargs md5sum > /tmp/checksums
       - restore_cache:
-          key: deps-3-{{ checksum "/tmp/checksums" }}
-      - run:
-          name: "Install deps"
-          command: pip install --user poetry==1.0.0 && poetry install
-      - save_cache:
-          key: deps-3-{{ checksum "/tmp/checksums" }}
-          paths:
-            - "/root/.cache/pypoetry/virtualenvs"
+          keys:
+            - deps-v1-{{ checksum "poetry.lock" }}
       - run:
           name: "QA test"
           command: make qa-test
@@ -88,21 +76,12 @@ jobs:
     steps:
       - checkout
       - setup_remote_docker
-      - run:
-          name: "Generate cache seeds"
-          command: find . -name poetry.lock | sort | xargs md5sum > /tmp/checksums
       - restore_cache:
-          key: deps-3-{{ checksum "/tmp/checksums" }}
-      - run:
-          name: "Install deps"
-          command: pip install --user poetry==1.0.0 && poetry install
-      - save_cache:
-          key: deps-3-{{ checksum "/tmp/checksums" }}
-          paths:
-            - "/root/.cache/pypoetry/virtualenvs"
+          keys:
+            - deps-v1-{{ checksum "poetry.lock" }}
       - run:
           name: "Make bento"
-          command: poetry run make -B build && poetry run bento --version --agree
+          command: poetry run bento --agree --version
       - run:
           name: "Install react"
           command: (cd tests/integration/react && npm install)
@@ -124,34 +103,32 @@ jobs:
     executor: python-build
     steps:
       - checkout
-      - run:
-          name: "Generate cache seeds"
-          command: find . -name poetry.lock | sort | xargs md5sum > /tmp/checksums
       - restore_cache:
-          key: deps-3-{{ checksum "/tmp/checksums" }}
-      - run:
-          name: "Install deps"
-          command: pip install --user poetry==1.0.0 && poetry install
-      - save_cache:
-          key: deps-3-{{ checksum "/tmp/checksums" }}
-          paths:
-            - "/root/.cache/pypoetry/virtualenvs"
+          keys:
+            - deps-v1-{{ checksum "poetry.lock" }}
       - run:
           name: "Deploying to PyPI"
           command: make release
 
 workflows:
-  build-and-deploy:
+  install-test-deploy:
     jobs:
+      - installDependencies
       - runPytest:
+          requires:
+            - installDependencies
           filters:
             tags:
               only: /.*/
       - runPrecommit:
+          requires:
+            - installDependencies
           filters:
             tags:
               only: /.*/
       - runQATest:
+          requires:
+            - installDependencies
           filters:
             tags:
               only: /.*/
@@ -160,6 +137,8 @@ workflows:
             tags:
               only: /.*/
       - runBento:
+          requires:
+            - installDependencies
           filters:
             tags:
               only: /.*/
@@ -169,6 +148,7 @@ workflows:
               only: /.*/
       - deploy:
           requires:
+            - installDependencies
             - runPytest
             - runPrecommit
             - runQATest
