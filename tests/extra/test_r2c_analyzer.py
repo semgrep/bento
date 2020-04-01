@@ -6,7 +6,6 @@ from unittest.mock import patch
 
 from semantic_version import Version
 
-import docker
 from bento.extra.r2c_analyzer import (
     REGISTRY,
     _ignore_files_factory,
@@ -14,6 +13,7 @@ from bento.extra.r2c_analyzer import (
     prepull_analyzers,
     run_analyzer_on_local_code,
 )
+from docker.models import images as docker_images
 
 # These should be imported after r2c_analyzer because of monkeypatching
 from r2c.lib.registry import RegistryData  # isort:skip
@@ -36,7 +36,7 @@ def test_should_pull() -> None:
 
 
 def test_pull_analyzer() -> None:
-    with patch.object(docker.client.ImageCollection, "pull", return_value=None) as spy:
+    with patch.object(docker_images.ImageCollection, "pull", return_value=None) as spy:
         with patch(
             "bento.extra.r2c_analyzer._should_pull_analyzer", return_value=False
         ):

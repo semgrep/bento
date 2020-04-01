@@ -4,7 +4,7 @@ import os
 import re
 import subprocess
 from pathlib import Path
-from typing import Any, Dict, Iterable, List, Optional, Pattern, Type
+from typing import TYPE_CHECKING, Any, Dict, Iterable, List, Optional, Pattern, Type
 
 from semantic_version import Version
 
@@ -13,6 +13,9 @@ from bento.parser import Parser
 from bento.tool import JsonR, JsonTool
 from bento.util import fetch_line_in_file
 from bento.violation import Violation
+
+if TYPE_CHECKING:
+    from docker.models.containers import Container
 
 
 def convert(obj: Dict[str, Any], target: str) -> Dict[str, Any]:
@@ -119,7 +122,7 @@ class ShellcheckTool(JsonTool):
             filters={"name": self.CONTAINER_NAME, "status": "running"}
         )
         if not running_containers:
-            container = client.containers.run(
+            container: "Container" = client.containers.run(  # type: ignore
                 image_id,
                 command="/dev/fd/0",
                 tty=True,
