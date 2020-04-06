@@ -2,6 +2,14 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.10.2](https://pypi.org/project/bento-cli/0.10.2/) - 2020-04-06
+
+### Fixed
+
+- Fixed an issue where the `r2c.registry.latest` tool would fail to run
+  in a GitHub Action or other environment with a remote Docker daemon,
+  as indicated with the `R2C_USE_REMOTE_DOCKER` environment variable.
+
 ## [0.10.1](https://pypi.org/project/bento-cli/0.10.1/) - 2020-03-04
 
 ### Added
