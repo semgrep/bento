@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "bento-cli"
-version = "0.10.2b1"
+version = "0.10.2"
 description = "Free program analysis focused on bugs that matter to you."
-authors = ["Return To Corporation <bento@r2c.dev>"]
+authors = ["Return To Corporation <hello@r2c.dev>"]
 license = "Proprietary"
 homepage = "http://bento.dev"
 readme = "README.md"
