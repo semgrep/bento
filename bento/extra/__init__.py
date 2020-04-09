@@ -10,10 +10,11 @@ from bento.extra.flask import FlaskTool
 from bento.extra.grep import GrepTool
 from bento.extra.hadolint import HadolintTool
 from bento.extra.jinjalint import JinjalintTool
+from bento.extra.pyre import PyreTool
 from bento.extra.python_taint import PythonTaintTool
-from bento.extra.r2c_check_registry import SgrepR2cCheckRegistryTool
+from bento.extra.r2c_check_registry import R2cCheckRegistryTool
 from bento.extra.requests import RequestsTool
-from bento.extra.sgrep import SGrepTool
+from bento.extra.sgrep import SgrepTool
 from bento.extra.shellcheck import ShellcheckTool
 from bento.tool import Tool
 
@@ -30,8 +31,10 @@ TOOLS: Iterable[Type[Tool]] = [
     JinjalintTool,
     # PyreTool,  # Pyre does not work with explicit paths
     RequestsTool,
-    SGrepTool,
+    SgrepTool,
     ShellcheckTool,
     PythonTaintTool,
-    SgrepR2cCheckRegistryTool,
+    R2cCheckRegistryTool,
 ]
+
+EXPERIMENTAL_TOOLS = {PythonTaintTool, PyreTool, ClickTool, SgrepTool, GrepTool}

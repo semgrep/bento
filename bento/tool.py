@@ -127,6 +127,15 @@ class Tool(ABC, Generic[R]):
         """
         pass
 
+    def can_use_cache(self) -> bool:
+        """
+        Returns true if this tool can use cached results
+
+        This should return false if any datum changes that affects caching, other than the file set or the
+        Bento version.
+        """
+        return True
+
     def project_has_file_paths(self) -> bool:
         """
         Returns true iff any unignored files matches at least one extension
@@ -248,6 +257,8 @@ class Tool(ABC, Generic[R]):
         """
         if not paths:
             return []
+
+        use_cache = use_cache and self.can_use_cache()
 
         logging.debug(f"Checking for local cache for {self.tool_id()}")
         cache_repr = self.context.cache.get(self.tool_id(), paths)

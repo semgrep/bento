@@ -45,9 +45,9 @@ $ bento check -t sgrep --comparison=archive .
 
 ## Writing Bento Checks
 
-Custom checks in Bento are defined in `.bento-sgrep.yml`. Note that the order of the rules in this file is important! The first rule that matches a code pattern will trigger. This allows you to define patterns with greater specificity first, and fallback to more general patterns later in the file.
+Custom checks in Bento are defined in `.bento/sgrep.yml`. Note that the order of the rules in this file is important! The first rule that matches a code pattern will trigger. This allows you to define patterns with greater specificity first, and fallback to more general patterns later in the file.
 
-`.bento-sgrep.yml` contains a list of `rules` similar to the following:
+`.bento/sgrep.yml` contains a list of `rules` similar to the following:
 
 ```
 rules:

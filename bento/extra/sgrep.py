@@ -1,86 +1,59 @@
 import os
-import re
-from typing import Iterable, List, Pattern, Type
+import shutil
+from pathlib import Path, PurePath
+from typing import Optional, Type
 
-from semantic_version import Version
-
+import bento.constants as constants
+from bento.extra.base_sgrep import BaseSgrepParser, BaseSgrepTool
 from bento.parser import Parser
-from bento.tool import JsonR, JsonTool
-from bento.violation import Violation
 
 
-class SGrepParser(Parser[JsonR]):
-    def parse(self, results: JsonR) -> List[Violation]:
-        violations: List[Violation] = []
-        for check in results:
-            path = self.trim_base(check["path"])
-            start_line = check["start"]["line"]
-            start_col = check["start"]["col"]
-            # Custom way to get check_name for sgrep-lint:0.1.10
-            message = check.get("extra", {}).get("message")
-            check_name, message = message.split(":")
-            violation = Violation(
-                tool_id=SGrepTool.tool_id(),
-                check_id=check_name,
-                path=path,
-                line=start_line,
-                column=start_col,
-                message=message,
-                severity=2,
-                syntactic_context=check.get("extra", {}).get("line"),
-            )
-
-            violations.append(violation)
-        return violations
+class SgrepParser(BaseSgrepParser):
+    @classmethod
+    def tool_id(cls) -> str:
+        return SgrepTool.TOOL_ID
 
 
-class SGrepTool(JsonTool):
-    ANALYZER_NAME = "r2c/sgrep"
-    ANALYZER_VERSION = Version("0.1.14")
-    FILE_NAME_FILTER = re.compile(r".*")
-
-    @property
-    def file_name_filter(self) -> Pattern:
-        return self.FILE_NAME_FILTER
-
-    @property
-    def project_name(self) -> str:
-        return "Python/JS"
+class SgrepTool(BaseSgrepTool):
+    CONFIG_PATH = PurePath("sgrep.yml")
+    CONFIG_ENV: str = "BENTO_REGISTRY"
+    REGISTRY_ROOT: str = "https://sgrep.live/c/"
+    PARSER = SgrepParser
+    TOOL_ID = "sgrep"
 
     @classmethod
     def tool_id(cls) -> str:
-        return "sgrep"
+        return cls.TOOL_ID
 
-    @classmethod
-    def tool_desc(cls) -> str:
-        return "Matches user-provided AST patterns (experimental; requires Docker)"
+    def can_use_cache(self) -> bool:
+        return self.CONFIG_ENV not in os.environ
 
-    def setup(self) -> None:
-        # import inside def for performance
-        from bento.extra.r2c_analyzer import prepull_analyzers
+    def get_config_path(self) -> Optional[Path]:
+        if self.CONFIG_ENV not in os.environ:
+            return self.context.resource_path / self.CONFIG_PATH
+        else:
+            return None
 
-        prepull_analyzers(self.ANALYZER_NAME, self.ANALYZER_VERSION)
+    def get_config_str(self) -> str:
+        """
+        Returns the configuration argument and optional path to pass to sgrep
 
-    def run(self, files: Iterable[str]) -> JsonR:
-        # import inside def for performance
-        from bento.extra.r2c_analyzer import run_analyzer_on_local_code
+        If the config environment variable is set, uses that value verbatim.
 
-        targets = [os.path.realpath(p) for p in files]
+        Otherwise, ensures that the default config file exists and uses that location.
+        """
+        config_path = self.get_config_path()
+        if config_path is None:
+            return self.REGISTRY_ROOT + os.environ[self.CONFIG_ENV]
 
-        ignore_files = {
-            e.path for e in self.context.file_ignores.entries() if not e.survives
-        }
-        return run_analyzer_on_local_code(
-            self.ANALYZER_NAME,
-            self.ANALYZER_VERSION,
-            self.base_path,
-            ignore_files,
-            targets,
-        )
-
-    def matches_project(self) -> bool:
-        return True
+        if not config_path.exists():
+            os.makedirs(self.base_path / constants.RESOURCE_PATH, exist_ok=True)
+            template = (
+                Path(os.path.dirname(__file__)).parent / "configs" / self.CONFIG_PATH
+            )
+            shutil.copy(template, config_path)
+        return str(constants.RESOURCE_PATH / self.CONFIG_PATH)
 
     @property
     def parser_type(self) -> Type[Parser]:
-        return SGrepParser
+        return self.PARSER

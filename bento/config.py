@@ -8,11 +8,6 @@ import yaml
 import bento.extra
 from bento.context import Context
 from bento.error import InvalidToolException
-from bento.extra.click import ClickTool
-from bento.extra.grep import GrepTool
-from bento.extra.pyre import PyreTool
-from bento.extra.python_taint import PythonTaintTool
-from bento.extra.sgrep import SGrepTool
 from bento.util import AutocompleteSuggestions
 
 
@@ -71,12 +66,11 @@ def get_valid_tools(
     """
     # context is not yet initialized, so just do it now
     try:
-        exclude = {PythonTaintTool, PyreTool, ClickTool, SGrepTool, GrepTool}
         tool_list = sorted(
             [
                 (t.tool_id(), t.tool_desc())
                 for t in bento.extra.TOOLS
-                if t not in exclude
+                if t not in bento.extra.EXPERIMENTAL_TOOLS
             ],
             key=(lambda td: td[0]),
         )
