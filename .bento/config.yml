@@ -293,6 +293,9 @@ tools:
   r2c.flask:
     ignore: []
     run: true
+  r2c.registry.latest:
+    ignore: []
+    run: true
   r2c.requests:
     ignore:
       - use-timeout

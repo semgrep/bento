@@ -88,6 +88,8 @@ jobs:
       - run:
           name: "Running bento check"
           command: poetry run bento --agree --email test@returntocorp.com check --no-pager --all 2>&1 | cat
+          environment:
+            R2C_USE_REMOTE_DOCKER: "1"
       - store_artifacts:
           path: "/home/circleci/.bento/last.log"
 

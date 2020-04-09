@@ -23,16 +23,7 @@
     "violations": {}
   },
   "flake8": {
-    "violations": {
-      "adda5bc97e75d6b054b20c6179438d78": {
-        "tool_id": "flake8",
-        "check_id": "not-executable",
-        "path": "bento/configs/pre-commit.template",
-        "message": "Shebang is present but the file is not executable.",
-        "severity": 2,
-        "syntactic_context": "#!/usr/bin/env python3"
-      }
-    }
+    "violations": {}
   },
   "hadolint": {
     "violations": {
@@ -59,6 +50,26 @@
   },
   "r2c.flask": {
     "violations": {}
+  },
+  "r2c.registry.latest": {
+    "violations": {
+      "2205885a33ae02a639b17a5bc561262e": {
+        "tool_id": "r2c.registry.latest",
+        "check_id": "https:.r2c.dev.useless-if-body",
+        "path": "bento/extra/hadolint.py",
+        "message": "useless if statment; both blocks have the same body",
+        "severity": 2,
+        "syntactic_context": "elif level == \"info\":\n"
+      },
+      "718623f6a3ef5a4ff0ef80cbd18602eb": {
+        "tool_id": "r2c.registry.latest",
+        "check_id": "https:.r2c.dev.useless-if-body",
+        "path": "bento/extra/shellcheck.py",
+        "message": "useless if statment; both blocks have the same body",
+        "severity": 2,
+        "syntactic_context": "elif level == \"info\":\n"
+      }
+    }
   },
   "r2c.requests": {
     "violations": {}
