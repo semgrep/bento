@@ -5,8 +5,8 @@ from semantic_version import SimpleSpec
 
 from bento.extra.python_tool import PythonTool
 from bento.parser import Parser
-from bento.result import Violation
 from bento.tool import StrTool
+from bento.violation import Violation
 
 # Input example:
 # {

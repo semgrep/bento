@@ -5,9 +5,9 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Pattern, Type
 
 from bento.parser import Parser
-from bento.result import Violation
 from bento.tool import StrTool
 from bento.util import fetch_line_in_file
+from bento.violation import Violation
 
 # Input example:
 # { "line": 49,

@@ -6,8 +6,8 @@ import yaml
 
 from bento.constants import GREP_CONFIG_FILE_NAME
 from bento.parser import Parser
-from bento.result import Violation
 from bento.tool import JsonR, JsonTool
+from bento.violation import Violation
 
 
 class GrepParser(Parser[JsonR]):

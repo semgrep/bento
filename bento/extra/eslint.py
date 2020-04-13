@@ -13,8 +13,8 @@ from semantic_version import Version
 import bento.constants as constants
 from bento.extra.js_tool import JsTool, NpmDeps
 from bento.parser import Parser
-from bento.result import Violation
 from bento.tool import JsonR, JsonTool
+from bento.violation import Violation
 
 # Input example:
 # [

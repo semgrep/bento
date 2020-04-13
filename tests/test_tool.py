@@ -4,7 +4,8 @@ from pathlib import Path
 from typing import Any, Dict, Iterable, List, Optional, Pattern, Type, Union
 
 from bento.base_context import BaseContext
-from bento.tool import Parser, StrTool
+from bento.parser import Parser
+from bento.tool import StrTool
 from bento.violation import Violation
 
 THIS_PATH = Path(os.path.dirname(__file__))

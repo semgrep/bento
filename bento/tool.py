@@ -21,8 +21,9 @@ import attr
 
 from bento.base_context import BaseContext
 from bento.parser import Parser
-from bento.result import Violation, from_cache_repr, to_cache_repr
+from bento.result import from_cache_repr, to_cache_repr
 from bento.util import batched
+from bento.violation import Violation
 
 R = TypeVar("R")
 """Generic return type"""
