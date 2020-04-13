@@ -47,14 +47,11 @@ class ShellcheckParser(Parser[JsonR]):
         check_id = result["check_id"]
 
         level = result.get("extra", {}).get("level")
+        severity = 0
         if level == "error":
             severity = 2
         elif level == "warning":
             severity = 1
-        elif level == "info":
-            severity = 0
-        elif level == "style":
-            severity = 0
 
         link = f"https://github.com/koalaman/shellcheck/wiki/{check_id}"
         line_of_code = (

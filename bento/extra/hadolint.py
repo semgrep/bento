@@ -23,14 +23,11 @@ class HadolintParser(Parser[str]):
         path = self.trim_base(path)
 
         level = result["level"]
+        severity = 0
         if level == "error":
             severity = 2
         elif level == "warning":
             severity = 1
-        elif level == "info":
-            severity = 0
-        elif level == "style":
-            severity = 0
 
         if "DL" in check_id or check_id in ["SC2046", "SC2086"]:
             link = f"https://github.com/hadolint/hadolint/wiki/{check_id}"
