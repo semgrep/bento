@@ -2,7 +2,8 @@ import logging
 import shutil
 import tarfile
 from io import BytesIO
-from typing import TYPE_CHECKING, Iterable
+from pathlib import Path, PurePath
+from typing import TYPE_CHECKING, Mapping
 
 from bento.error import DockerFailureException
 from bento.util import Memo
@@ -29,7 +30,7 @@ def get_docker_client() -> "docker.client.DockerClient":
 
 
 def copy_into_container(
-    paths: Iterable[str], container: "Container", destination_path: str
+    paths: Mapping[Path, str], container: "Container", destination_path: PurePath
 ) -> None:
     """Copy local ``paths`` to ``destination_path`` within ``container``.
 
@@ -38,11 +39,11 @@ def copy_into_container(
     """
     tar_buffer = BytesIO()
     with tarfile.open(mode="w", fileobj=tar_buffer) as archive:
-        for path in paths:
-            archive.add(path)
+        for p, loc in paths.items():
+            archive.add(str(p), arcname=loc)
     tar_buffer.seek(0)
     tar_bytes = tar_buffer.read()
 
-    container.exec_run(["mkdir", "-p", destination_path])
+    container.exec_run(["mkdir", "-p", str(destination_path)])
     logging.info(f"sending {len(tar_bytes)} bytes to {container}")
     container.put_archive("/home/repo/", tar_bytes)

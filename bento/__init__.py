@@ -2,8 +2,8 @@
 
 __name__ = "bento-cli"
 __author__ = "Return To Corporation"
-__version__ = "0.10.1"
-R2C_SUPPORT_EMAIL = "bento@r2c.dev"
+__version__ = "0.10.2"
+R2C_SUPPORT_EMAIL = "support@r2c.dev"
 
 try:
     import pkg_resources
