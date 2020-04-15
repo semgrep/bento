@@ -16,7 +16,7 @@ from pathlib import Path
 from semantic_version import Version
 import r2c.lib.versioned_analyzer
 
-from bento.extra.docker import get_docker_client
+from bento.tool.runner.docker import get_docker_client
 from bento.tool import JsonR
 
 

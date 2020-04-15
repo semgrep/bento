@@ -11,9 +11,9 @@ import yaml
 from semantic_version import Version
 
 import bento.constants as constants
-from bento.extra.js_tool import JsTool, NpmDeps
 from bento.parser import Parser
-from bento.tool import JsonR, JsonTool
+from bento.tool import JsonR, output, runner
+from bento.tool.runner.js_tool import NpmDeps
 from bento.violation import Violation
 
 # Input example:
@@ -98,7 +98,7 @@ class EslintParser(Parser[JsonR]):
         return violations
 
 
-class EslintTool(JsTool, JsonTool):
+class EslintTool(runner.Node, output.Json):
     ESLINT_TOOL_ID = "eslint"  # to-do: versioning?
     CONFIG_FILE_NAME = ".eslintrc.yml"
     PROJECT_NAME = "node-js"

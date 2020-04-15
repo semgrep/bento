@@ -3,9 +3,8 @@ from typing import Iterable, List, Type
 
 from semantic_version import SimpleSpec
 
-from bento.extra.python_tool import PythonTool
 from bento.parser import Parser
-from bento.tool import StrTool
+from bento.tool import output, runner
 from bento.violation import Violation
 
 """
@@ -59,7 +58,7 @@ class DlintParser(Parser[str]):
         return violations
 
 
-class DlintTool(PythonTool[str], StrTool):
+class DlintTool(runner.Python, output.Str):
     TOOL_ID = "dlint"
     VENV_DIR = "dlint"
     PROJECT_NAME = "Python"

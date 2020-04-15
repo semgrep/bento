@@ -5,7 +5,7 @@ from typing import Any, Dict, Iterable, List, Optional, Pattern, Type, Union
 
 from bento.base_context import BaseContext
 from bento.parser import Parser
-from bento.tool import StrTool
+from bento.tool import output
 from bento.violation import Violation
 
 THIS_PATH = Path(os.path.dirname(__file__))
@@ -43,7 +43,7 @@ class ParserFixture(Parser):
         return [result_for(Path(f)) for f in tool_output.split(",")]
 
 
-class ToolFixture(StrTool):
+class ToolFixture(output.Str):
     def __init__(
         self,
         tmp_path: Path,

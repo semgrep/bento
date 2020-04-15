@@ -2,9 +2,8 @@ import json
 import re
 from typing import Any, Dict, Iterable, List, Optional, Pattern, Type
 
-from bento.extra.docker import DockerTool
 from bento.parser import Parser
-from bento.tool import JsonR, JsonTool
+from bento.tool import JsonR, output, runner
 from bento.util import fetch_line_in_file
 from bento.violation import Violation
 
@@ -49,7 +48,7 @@ class ShellcheckParser(Parser[JsonR]):
         return violations
 
 
-class ShellcheckTool(DockerTool, JsonTool):
+class ShellcheckTool(runner.Docker, output.Json):
     DOCKER_IMAGE = "koalaman/shellcheck:v0.7.0"
     FILE_NAME_FILTER = re.compile(r".*\.(sh|bash|ksh|dash)$")
     CONTAINER_NAME = "bento-shell-check-daemon"

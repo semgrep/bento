@@ -9,7 +9,7 @@ import attr
 from semantic_version import NpmSpec, Version
 
 from bento.error import NodeError
-from bento.tool import Tool
+from bento.tool.tool import Tool
 
 NODE_VERSION_RANGE = NpmSpec("^8.10.0 || ^10.13.0 || >=11.10.1")
 

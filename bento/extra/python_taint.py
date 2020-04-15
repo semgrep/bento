@@ -5,7 +5,7 @@ from typing import Iterable, List, Pattern, Type
 from semantic_version import Version
 
 from bento.parser import Parser
-from bento.tool import JsonR, JsonTool
+from bento.tool import JsonR, output
 from bento.util import fetch_line_in_file
 from bento.violation import Violation
 
@@ -39,7 +39,7 @@ class PythonTaintParser(Parser[JsonR]):
         return violations
 
 
-class PythonTaintTool(JsonTool):
+class PythonTaintTool(output.Json):
     ANALYZER_NAME = "r2c/pyre-taint"
     ANALYZER_VERSION = Version("0.0.9")
     FILENAME_PATTERN = re.compile(".*py")

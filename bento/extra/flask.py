@@ -4,7 +4,7 @@ from semantic_version import SimpleSpec
 
 from bento.extra.flake8 import Flake8Parser, Flake8Tool
 from bento.parser import Parser
-from bento.tool import StrTool
+from bento.tool import output
 
 PREFIX = "r2c-flask-"
 
@@ -20,7 +20,7 @@ class FlaskParser(Flake8Parser):
         return check_id.replace(PREFIX, "")
 
     @staticmethod
-    def tool() -> Type[StrTool]:
+    def tool() -> Type[output.Str]:
         return FlaskTool
 
 

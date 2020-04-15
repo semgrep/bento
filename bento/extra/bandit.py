@@ -3,9 +3,8 @@ from typing import Any, Dict, Iterable, List, Type
 
 from semantic_version import SimpleSpec
 
-from bento.extra.python_tool import PythonTool
 from bento.parser import Parser
-from bento.tool import StrTool
+from bento.tool import output, runner
 from bento.util import fetch_line_in_file
 from bento.violation import Violation
 
@@ -224,7 +223,7 @@ class BanditParser(Parser[str]):
         return errors + violations
 
 
-class BanditTool(PythonTool[str], StrTool):
+class BanditTool(runner.Python, output.Str):
     TOOL_ID = "bandit"  # to-do: versioning?
     VENV_DIR = "bandit"
     PROJECT_NAME = "Python"

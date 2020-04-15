@@ -13,7 +13,7 @@ from typing import Dict, Generic, Iterable, List, Optional, Pattern
 from semantic_version import SimpleSpec, Version
 
 import bento.constants as constants
-from bento.tool import R, Tool
+from bento.tool.tool import R, Tool
 
 
 class PythonTool(Generic[R], Tool[R]):

@@ -3,9 +3,8 @@ from typing import Any, Dict, Iterable, List, Mapping, Type
 
 from semantic_version import SimpleSpec
 
-from bento.extra.python_tool import PythonTool
 from bento.parser import Parser
-from bento.tool import StrTool
+from bento.tool import output, runner
 from bento.violation import Violation
 
 # Input example:
@@ -127,7 +126,7 @@ class Flake8Parser(Parser[str]):
         return cls.to_bento().get(check_id, check_id)
 
     @staticmethod
-    def tool() -> Type[StrTool]:
+    def tool() -> Type[output.Str]:
         return Flake8Tool
 
     def to_violation(self, result: Dict[str, Any]) -> Violation:
@@ -153,7 +152,7 @@ class Flake8Parser(Parser[str]):
         return [self.to_violation(v) for r in results.values() for v in r]
 
 
-class Flake8Tool(PythonTool[str], StrTool):
+class Flake8Tool(runner.Python, output.Str):
     TOOL_ID = "flake8"  # to-do: versioning?
     VENV_DIR = "flake8"
     PROJECT_NAME = "Python"

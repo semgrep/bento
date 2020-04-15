@@ -1,7 +1,7 @@
 from typing import Type
 
 from bento.extra.base_sgrep import BaseSgrepParser, BaseSgrepTool
-from bento.tool import Parser
+from bento.parser import Parser
 
 
 class R2cCheckRegistryParser(BaseSgrepParser):

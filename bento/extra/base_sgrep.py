@@ -4,9 +4,8 @@ from abc import abstractmethod
 from pathlib import Path
 from typing import Iterable, List, Mapping, Optional, Pattern
 
-from bento.extra.docker import DockerTool
 from bento.parser import Parser
-from bento.tool import JsonR, JsonTool
+from bento.tool import JsonR, output, runner
 from bento.util import fetch_line_in_file
 from bento.violation import Violation
 
@@ -45,7 +44,7 @@ class BaseSgrepParser(Parser[JsonR]):
         return violations
 
 
-class BaseSgrepTool(DockerTool, JsonTool):
+class BaseSgrepTool(runner.Docker, output.Json):
     DOCKER_IMAGE = "returntocorp/sgrep:0.4.8"
     FILE_NAME_FILTER = re.compile(r".*")
 

@@ -2,9 +2,8 @@ import json
 import re
 from typing import Any, Dict, Iterable, List, Pattern, Type
 
-from bento.extra.docker import DockerTool
 from bento.parser import Parser
-from bento.tool import JsonR, JsonTool
+from bento.tool import JsonR, output, runner
 from bento.util import fetch_line_in_file
 from bento.violation import Violation
 
@@ -56,7 +55,7 @@ class HadolintParser(Parser[JsonR]):
         return [self.to_violation(r) for r in results]
 
 
-class HadolintTool(DockerTool, JsonTool):
+class HadolintTool(runner.Docker, output.Json):
     TOOL_ID = "hadolint"
     DOCKER_IMAGE = "hadolint/hadolint:v1.17.2-8-g65736cb"
     DOCKERFILE_FILTER = re.compile(".*Dockerfile.*", re.IGNORECASE)

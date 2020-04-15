@@ -10,7 +10,7 @@ from pathlib import Path, PurePath
 from typing import TYPE_CHECKING, Generic, Iterable, List, Mapping
 
 from bento.error import DockerFailureException
-from bento.tool import R, Tool
+from bento.tool.tool import R, Tool
 from bento.util import Memo
 
 DOCKER_INSTALLED = Memo[bool](lambda: shutil.which("docker") is not None)

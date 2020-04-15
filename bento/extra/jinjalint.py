@@ -5,9 +5,8 @@ from typing import Iterable, List, Optional, Pattern, Type
 
 from semantic_version import SimpleSpec
 
-from bento.extra.python_tool import PythonTool
 from bento.parser import Parser
-from bento.tool import StrTool
+from bento.tool import output, runner
 from bento.violation import Violation
 
 
@@ -78,7 +77,7 @@ class JinjalintParser(Parser[str]):
         return violations
 
 
-class JinjalintTool(PythonTool[str], StrTool):
+class JinjalintTool(runner.Python, output.Str):
     TOOL_ID = "r2c.jinja"
     VENV_DIR = "jinjalint"
     PROJECT_NAME = "Python"

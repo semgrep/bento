@@ -41,6 +41,8 @@ MIN_RESERVED_ARGS = 128
 # looking at subclasses of Tool.
 @attr.s
 class Tool(ABC, Generic[R]):
+    """The base class for all tool plugins"""
+
     context = attr.ib(type=BaseContext)
 
     @property
@@ -273,8 +275,3 @@ class Tool(ABC, Generic[R]):
         ignore_set = set(self.config.get("ignore", []))
         filtered = [v for v in violations if v.check_id not in ignore_set]
         return filtered
-
-
-StrTool = Tool[str]
-
-JsonTool = Tool[JsonR]

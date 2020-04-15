@@ -6,7 +6,7 @@ import yaml
 
 from bento.constants import GREP_CONFIG_FILE_NAME
 from bento.parser import Parser
-from bento.tool import JsonR, JsonTool
+from bento.tool import JsonR, output
 from bento.violation import Violation
 
 
@@ -35,7 +35,7 @@ class GrepParser(Parser[JsonR]):
         return [self.to_violation(r) for r in input_json]
 
 
-class GrepTool(JsonTool):
+class GrepTool(output.Json):
     TOOL_ID = "grep"  # to-do: versioning?
     PROJECT_NAME = "Grep"
 
