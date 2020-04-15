@@ -8,7 +8,7 @@ test:
 
 .PHONY: qa-test
 qa-test: build
-	poetry run pytest -s tests/acceptance/qa.py
+	BENTO_REMOTE_DOCKER=1 poetry run pytest -s tests/acceptance/qa.py
 
 .PHONY: regenerate-tests
 regenerate-tests:
@@ -17,7 +17,7 @@ regenerate-tests:
 .PHONY: env-test
 env-test:
 	docker build -f tests/acceptance/environments/python36.Dockerfile -t bento-env-36 .
-	docker run -v /var/run/docker.sock:/var/run/docker.sock bento-env-36 pytest tests/acceptance/qa.py
+	docker run -v /var/run/docker.sock:/var/run/docker.sock -e BENTO_REMOTE_DOCKER=1 bento-env-36 pytest tests/acceptance/qa.py
 
 .PHONY: clean
 clean:

@@ -1,6 +1,6 @@
 formatter:
-  - clippy:
-  - histo:
+  - clippy: {}
+  - histo: {}
 tools:
   hadolint:
     ignores: []

@@ -34,7 +34,8 @@ class SgrepTool(BaseSgrepTool):
         else:
             return None
 
-    def get_config_str(self) -> str:
+    @property
+    def config_str(self) -> str:
         """
         Returns the configuration argument and optional path to pass to sgrep
 

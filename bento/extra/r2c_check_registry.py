@@ -19,7 +19,8 @@ class R2cCheckRegistryTool(BaseSgrepTool):
     def tool_id(cls) -> str:
         return cls.TOOL_ID
 
-    def get_config_str(self) -> str:
+    @property
+    def config_str(self) -> str:
         return self.CONFIG
 
     @property
