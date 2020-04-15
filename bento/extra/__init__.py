@@ -7,6 +7,7 @@ from bento.extra.dlint import DlintTool
 from bento.extra.eslint import EslintTool
 from bento.extra.flake8 import Flake8Tool
 from bento.extra.flask import FlaskTool
+from bento.extra.gosec import GosecTool
 from bento.extra.grep import GrepTool
 from bento.extra.hadolint import HadolintTool
 from bento.extra.jinjalint import JinjalintTool
@@ -26,6 +27,7 @@ TOOLS: Iterable[Type[Tool]] = [
     EslintTool,
     FlaskTool,
     Flake8Tool,
+    GosecTool,
     GrepTool,
     HadolintTool,
     JinjalintTool,

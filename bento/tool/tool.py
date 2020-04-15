@@ -210,8 +210,8 @@ class Tool(ABC, Generic[R]):
         logging.debug(f"{self.tool_id()}: Command completed in {after - before:2f} s")
         return res
 
-    @staticmethod
-    def _max_batch_size() -> int:
+    @classmethod
+    def max_batch_size(cls) -> int:
         """Returns the maximum number of files to run in a single batch"""
         # On UNIX, max argc is stack size / 4
         return int(resource.RLIMIT_STACK / 4) - MIN_RESERVED_ARGS
@@ -229,7 +229,7 @@ class Tool(ABC, Generic[R]):
 
         violations: List[Violation] = []
 
-        for batch in batched(paths_to_run, self._max_batch_size()):
+        for batch in batched(paths_to_run, self.max_batch_size()):
             path_list = [str(p) for p in batch]
             raw = self.run(path_list)
             try:

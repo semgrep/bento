@@ -123,6 +123,10 @@ class DockerTool(Generic[R], Tool[R]):
         """Returns true iff the Docker container's return code indicates no error"""
         return returncode == 0
 
+    def assemble_full_command(self, targets: Iterable[str]) -> List[str]:
+        """Creates the full command to send to the docker container from file targets"""
+        return self.docker_command + list(targets)
+
     def _prepull_image(self) -> None:
         """
         Pulls the docker image from Docker hub
@@ -139,7 +143,6 @@ class DockerTool(Generic[R], Tool[R]):
         """
 
         client = get_docker_client()
-        command = self.docker_command
 
         our_containers = client.containers.list(
             filters={"name": self.container_name, "status": "running"}
@@ -149,7 +152,7 @@ class DockerTool(Generic[R], Tool[R]):
             return our_containers[0]
 
         vols = {} if self.use_remote_docker else self.local_volume_mapping
-        full_command = command + list(targets)
+        full_command = self.assemble_full_command(targets)
 
         logging.info(f"starting new {self.tool_id()} container")
 

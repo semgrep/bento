@@ -281,6 +281,9 @@ tools:
       - unused-module
       - unused-variable
     run: true
+  gosec:
+    ignore: []
+    run: false
   hadolint:
     ignore:
       - DL3008
