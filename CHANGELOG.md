@@ -2,6 +2,39 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.11.0](https://pypi.org/project/bento-cli/0.11.0/) - 2020-04-17
+
+### Added
+
+- Added `gosec`, an open-source tool to detect security vulnerabilities in
+  Go projects; to use, run `bento enable tool gosec`
+- Both r2c check registries and custom check definitions can now be used with
+  the `sgrep` tool; to use a r2c check registry, run
+  ```
+  BENTO_REGISTRY=r/<registry> bento check -t sgrep ...
+  ```
+  to use a custom sgrep.live share link, run
+  ```
+  BENTO_REGISTRY=<share code> bento check -t sgrep ...
+  ```
+  with your three-character share code (these are the last three characters
+  of your sgrep.live share link, e.g. `xQn` from `https://sgrep.live/xQn`)
+- Bento can now run all tools within an enclosing Docker container; when
+  running Bento within a Docker container, use
+  ```
+  BENTO_REMOTE_DOCKER=1 bento ...
+  ```
+
+### Removed
+
+- Removed the experimental `python-taint` tool
+- Removed dependency on `r2c-lib`
+
+### Changed
+
+- The `r2c.boto3` checks are now enabled by default; to disable them on
+  a project, run `bento disable tool r2c.boto3`
+
 ## [0.10.2](https://pypi.org/project/bento-cli/0.10.2/) - 2020-04-06
 
 ### Fixed
