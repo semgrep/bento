@@ -1,12 +1,13 @@
 import json
 import os
 import re
+from pathlib import Path
 from typing import Any, Dict, Iterable, List, Pattern, Type
 
 from bento.parser import Parser
-from bento.result import Violation
-from bento.tool import StrTool
+from bento.tool import output
 from bento.util import fetch_line_in_file
+from bento.violation import Violation
 
 # Input example:
 # { "line": 49,
@@ -49,7 +50,7 @@ class PyreParser(Parser):
         return [self.to_violation(r) for r in results]
 
 
-class PyreTool(StrTool):
+class PyreTool(output.Str):
     TOOL_ID = "pyre"  # to-do: versioning?
     PROJECT_NAME = "Python"
 
@@ -73,7 +74,7 @@ class PyreTool(StrTool):
     def file_name_filter(self) -> Pattern:
         return re.compile(r".*\.py\b")
 
-    def matches_project(self) -> bool:
+    def matches_project(self, files: Iterable[Path]) -> bool:
         # disabled by default for now
         return False
 

@@ -216,6 +216,7 @@ class TargetFileManager:
 
         if not repo:
             yield
+            return
 
         commit = bento.git.commit()
         if commit is None:
@@ -238,7 +239,7 @@ class TargetFileManager:
                 self._abort_if_untracked_and_removed(removed)
                 try:
                     for a in added:
-                        Path(a).unlink()
+                        (repo.working_tree_dir / Path(a)).unlink()
                     cmd_output("git", "checkout", "HEAD", "--", ".")
                     yield
                 finally:

@@ -1,56 +1,28 @@
 import json
-import logging
-import os
 import re
-import subprocess
 from typing import Any, Dict, Iterable, List, Optional, Pattern, Type
 
-from semantic_version import Version
-
-from bento.extra.docker import DOCKER_INSTALLED, get_docker_client
 from bento.parser import Parser
-from bento.tool import JsonR, JsonTool
+from bento.tool import JsonR, output, runner
 from bento.util import fetch_line_in_file
 from bento.violation import Violation
-
-
-def convert(obj: Dict[str, Any], target: str) -> Dict[str, Any]:
-    """
-        Return r2c object
-    """
-    converted: Dict[str, Any] = {}
-    converted["path"] = target
-    converted["start"] = {}
-    converted["start"]["line"] = obj.get("line")
-    converted["start"]["col"] = obj.get("column")
-    converted["end"] = {}
-    converted["end"]["line"] = obj.get("endLine")
-    converted["end"]["col"] = obj.get("endColumn")
-    converted["extra"] = {}
-    converted["extra"]["message"] = obj.get("message")
-    converted["extra"]["level"] = obj.get("level")
-    converted["check_id"] = f"SC{obj.get('code')}"
-    return converted
 
 
 class ShellcheckParser(Parser[JsonR]):
     def to_violation(self, result: Dict[str, Any]) -> Violation:
 
-        path = self.trim_base(result["path"])
-        start_line = result["start"]["line"]
-        start_col = result["start"]["col"]
-        message = result.get("extra", {}).get("message")
-        check_id = result["check_id"]
+        path = self.trim_base(result["file"])
+        start_line = result["line"]
+        start_col = result["column"]
+        message = result.get("message", "")
+        check_id = f"SC{result['code']}"
 
-        level = result.get("extra", {}).get("level")
+        level = result["level"]
+        severity = 0
         if level == "error":
             severity = 2
         elif level == "warning":
             severity = 1
-        elif level == "info":
-            severity = 0
-        elif level == "style":
-            severity = 0
 
         link = f"https://github.com/koalaman/shellcheck/wiki/{check_id}"
         line_of_code = (
@@ -76,9 +48,8 @@ class ShellcheckParser(Parser[JsonR]):
         return violations
 
 
-class ShellcheckTool(JsonTool):
-    ANALYZER_NAME = "koalaman/shellcheck"
-    ANALYZER_VERSION = Version("0.7.0")
+class ShellcheckTool(runner.Docker, output.Json):
+    DOCKER_IMAGE = "koalaman/shellcheck:v0.7.0"
     FILE_NAME_FILTER = re.compile(r".*\.(sh|bash|ksh|dash)$")
     CONTAINER_NAME = "bento-shell-check-daemon"
     TOOL_ID = "shellcheck"
@@ -108,60 +79,21 @@ class ShellcheckTool(JsonTool):
     def project_name(self) -> str:
         return "Shell"
 
-    def ensure_daemon_running(self) -> str:
-        client = get_docker_client()
+    @property
+    def docker_image(self) -> str:
+        return self.DOCKER_IMAGE
 
-        image_id = (
-            f"{self.ANALYZER_NAME}:v{self.ANALYZER_VERSION}"
-        )  # note the v in front of the version
-        running_containers = client.containers.list(
-            filters={"name": self.CONTAINER_NAME, "status": "running"}
-        )
-        if not running_containers:
-            container = client.containers.run(
-                image_id,
-                command="/dev/fd/0",
-                tty=True,
-                name=self.CONTAINER_NAME,
-                auto_remove=True,
-                detach=True,
-            )
-            logging.info(f"started container with id: {container.id}")
-            return container.id
-        else:
-            return running_containers[0].id
+    @property
+    def remote_code_path(self) -> str:
+        return "/mnt/"
 
-    def setup(self) -> None:
-        self.ensure_daemon_running()
+    @property
+    def docker_command(self) -> List[str]:
+        return ["--severity", "info", "-f", "json"]
+
+    def is_allowed_returncode(self, returncode: int) -> bool:
+        return returncode == 0 or returncode == 1
 
     def run(self, files: Iterable[str]) -> JsonR:
-        results = []
-        targets = {os.path.realpath(p) for p in files}
-        container_id = self.ensure_daemon_running()
-        for target in targets:
-            with open(target, "rb") as stdin_file:
-                r = subprocess.run(
-                    [
-                        "docker",
-                        "exec",
-                        "-i",
-                        container_id,
-                        "shellcheck",
-                        "--severity",
-                        "info",
-                        "-f",
-                        "json",
-                        "/dev/fd/0",
-                    ],
-                    stdout=subprocess.PIPE,
-                    stdin=stdin_file,
-                )
-                stdin_file.close()
-                converted_findings = [
-                    convert(finding, target) for finding in json.loads(r.stdout)
-                ]
-                results.extend(converted_findings)
-        return results
-
-    def matches_project(self) -> bool:
-        return DOCKER_INSTALLED.value and self.project_has_file_paths()
+        result = self.run_container(files)
+        return json.loads(result.stdout)

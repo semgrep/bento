@@ -1,12 +1,13 @@
 import re
+from pathlib import Path
 from typing import Any, Dict, Iterable, Iterator, List, Pattern, Type
 
 import yaml
 
 from bento.constants import GREP_CONFIG_FILE_NAME
 from bento.parser import Parser
-from bento.result import Violation
-from bento.tool import JsonR, JsonTool
+from bento.tool import JsonR, output
+from bento.violation import Violation
 
 
 class GrepParser(Parser[JsonR]):
@@ -34,7 +35,7 @@ class GrepParser(Parser[JsonR]):
         return [self.to_violation(r) for r in input_json]
 
 
-class GrepTool(JsonTool):
+class GrepTool(output.Json):
     TOOL_ID = "grep"  # to-do: versioning?
     PROJECT_NAME = "Grep"
 
@@ -58,7 +59,7 @@ class GrepTool(JsonTool):
     def file_name_filter(self) -> Pattern:
         return re.compile(r".*\b")
 
-    def matches_project(self) -> bool:
+    def matches_project(self, files: Iterable[Path]) -> bool:
         # disabled by default for now
         return False
 

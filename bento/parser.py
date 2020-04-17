@@ -4,7 +4,7 @@ from typing import Generic, List, TypeVar
 
 import attr
 
-from bento.result import Violation
+from bento.violation import Violation
 
 R = TypeVar("R", contravariant=True)
 

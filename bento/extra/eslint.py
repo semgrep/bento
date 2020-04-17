@@ -11,10 +11,10 @@ import yaml
 from semantic_version import Version
 
 import bento.constants as constants
-from bento.extra.js_tool import JsTool, NpmDeps
 from bento.parser import Parser
-from bento.result import Violation
-from bento.tool import JsonR, JsonTool
+from bento.tool import JsonR, output, runner
+from bento.tool.runner.js_tool import NpmDeps
+from bento.violation import Violation
 
 # Input example:
 # [
@@ -98,7 +98,7 @@ class EslintParser(Parser[JsonR]):
         return violations
 
 
-class EslintTool(JsTool, JsonTool):
+class EslintTool(runner.Node, output.Json):
     ESLINT_TOOL_ID = "eslint"  # to-do: versioning?
     CONFIG_FILE_NAME = ".eslintrc.yml"
     PROJECT_NAME = "node-js"
@@ -185,7 +185,7 @@ class EslintTool(JsTool, JsonTool):
     def eslintrc_path(self) -> Path:
         return self.install_location / EslintTool.CONFIG_FILE_NAME
 
-    def matches_project(self) -> bool:
+    def matches_project(self, files: Iterable[Path]) -> bool:
         return (self.context.base_path / "package.json").exists()
 
     def __uses_typescript(self, deps: NpmDeps) -> bool:

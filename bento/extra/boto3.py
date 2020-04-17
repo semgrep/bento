@@ -4,7 +4,7 @@ from semantic_version import SimpleSpec
 
 from bento.extra.flake8 import Flake8Parser, Flake8Tool
 from bento.parser import Parser
-from bento.tool import StrTool
+from bento.tool import output
 
 PREFIX = "r2c-boto3-"
 
@@ -20,7 +20,7 @@ class Boto3Parser(Flake8Parser):
         return check_id.replace(PREFIX, "")
 
     @staticmethod
-    def tool() -> Type[StrTool]:
+    def tool() -> Type[output.Str]:
         return Boto3Tool
 
 
@@ -30,7 +30,7 @@ class Boto3Tool(Flake8Tool):
     PACKAGES = {
         "flake8": SimpleSpec("~=3.7.0"),
         "flake8-json": SimpleSpec("~=19.8.0"),
-        "flake8-boto3": SimpleSpec("==0.2.4"),
+        "flake8-boto3": SimpleSpec("~=0.3.0"),
     }
 
     @property

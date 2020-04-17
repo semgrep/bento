@@ -1,12 +1,12 @@
 import json
 import re
+from pathlib import Path
 from typing import Iterable, List, Optional, Pattern, Type
 
 from semantic_version import SimpleSpec
 
-from bento.extra.python_tool import PythonTool
 from bento.parser import Parser
-from bento.tool import StrTool
+from bento.tool import output, runner
 from bento.violation import Violation
 
 
@@ -77,7 +77,7 @@ class JinjalintParser(Parser[str]):
         return violations
 
 
-class JinjalintTool(PythonTool[str], StrTool):
+class JinjalintTool(runner.Python, output.Str):
     TOOL_ID = "r2c.jinja"
     VENV_DIR = "jinjalint"
     PROJECT_NAME = "Python"
@@ -114,11 +114,9 @@ class JinjalintTool(PythonTool[str], StrTool):
     def file_name_filter(self) -> Pattern:
         return JinjalintTool.JINJA_FILE_NAME_FILTER
 
-    def matches_project(self) -> bool:
-        file_paths = (e.path for e in self.context.file_ignores.entries() if e.survives)
-        abspaths = [p.resolve() for p in file_paths]
-        has_jinja = any([self.JINJA_FILE_NAME_FILTER.match(p.name) for p in abspaths])
-        has_python = any([self.PYTHON_FILE_PATTERN.match(p.name) for p in abspaths])
+    def matches_project(self, files: Iterable[Path]) -> bool:
+        has_jinja = any((self.JINJA_FILE_NAME_FILTER.match(p.name) for p in files))
+        has_python = any((self.PYTHON_FILE_PATTERN.match(p.name) for p in files))
         return has_jinja and has_python
 
     def run(self, paths: Iterable[str]) -> str:

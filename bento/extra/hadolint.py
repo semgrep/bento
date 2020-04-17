@@ -1,17 +1,14 @@
 import json
-import logging
 import re
-import subprocess
 from typing import Any, Dict, Iterable, List, Pattern, Type
 
-from bento.extra.docker import DOCKER_INSTALLED, get_docker_client
 from bento.parser import Parser
-from bento.tool import StrTool
+from bento.tool import JsonR, output, runner
 from bento.util import fetch_line_in_file
 from bento.violation import Violation
 
 
-class HadolintParser(Parser[str]):
+class HadolintParser(Parser[JsonR]):
     def to_violation(self, result: Dict[str, Any]) -> Violation:
         start_line = result["line"]
         column = result["column"]
@@ -22,14 +19,11 @@ class HadolintParser(Parser[str]):
         path = self.trim_base(path)
 
         level = result["level"]
+        severity = 0
         if level == "error":
             severity = 2
         elif level == "warning":
             severity = 1
-        elif level == "info":
-            severity = 0
-        elif level == "style":
-            severity = 0
 
         if "DL" in check_id or check_id in ["SC2046", "SC2086"]:
             link = f"https://github.com/hadolint/hadolint/wiki/{check_id}"
@@ -57,14 +51,11 @@ class HadolintParser(Parser[str]):
             link=link,
         )
 
-    def parse(self, results: str) -> List[Violation]:
-        violations: List[Violation] = []
-        for r in json.loads(results):
-            violations.append(self.to_violation(r))
-        return violations
+    def parse(self, results: JsonR) -> List[Violation]:
+        return [self.to_violation(r) for r in results]
 
 
-class HadolintTool(StrTool):
+class HadolintTool(runner.Docker, output.Json):
     TOOL_ID = "hadolint"
     DOCKER_IMAGE = "hadolint/hadolint:v1.17.2-8-g65736cb"
     DOCKERFILE_FILTER = re.compile(".*Dockerfile.*", re.IGNORECASE)
@@ -89,32 +80,21 @@ class HadolintTool(StrTool):
     def project_name(self) -> str:
         return "Docker"
 
-    def setup(self) -> None:
-        client = get_docker_client()
+    @property
+    def docker_image(self) -> str:
+        return self.DOCKER_IMAGE
 
-        if not any(i for i in client.images.list() if self.DOCKER_IMAGE in i.tags):
-            client.images.pull(self.DOCKER_IMAGE)
-            logging.info(f"Retrieved {self.TOOL_ID} Container")
+    @property
+    def docker_command(self) -> List[str]:
+        return ["hadolint", "--format", "json"]
 
-    def run(self, files: Iterable[str]) -> str:
-        outputs: List[Dict[str, Any]] = []
-        for file in files:
-            # TODO wrap hadolint in r2c analyzer to avoid need for stdin
-            res = subprocess.run(
-                f"docker run --network none --rm -i {self.DOCKER_IMAGE} hadolint --format json - < {file}",
-                shell=True,
-                cwd=self.base_path,
-                encoding="utf8",
-                stdout=subprocess.PIPE,
-                stderr=subprocess.PIPE,
-            )
-            hadolint_output = res.stdout
-            hadolint_json = json.loads(hadolint_output)
-            for elem in hadolint_json:
-                elem["file"] = file
-            outputs += hadolint_json
+    @property
+    def remote_code_path(self) -> str:
+        return "/mnt"
 
-        return json.dumps(outputs)
+    def is_allowed_returncode(self, returncode: int) -> bool:
+        return returncode == 0 or returncode == 1
 
-    def matches_project(self) -> bool:
-        return DOCKER_INSTALLED.value and self.project_has_file_paths()
+    def run(self, files: Iterable[str]) -> JsonR:
+        result = self.run_container(files).stdout
+        return json.loads(result)

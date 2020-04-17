@@ -19,8 +19,9 @@ from tqdm import tqdm
 import bento.result
 import bento.util
 from bento.error import NoToolsConfiguredException
-from bento.result import Baseline, Violation
+from bento.result import Baseline
 from bento.tool import Tool
+from bento.violation import Violation
 
 DONE_BAR_VALUE = 30
 BAR_UPDATE_INTERVAL = 0.1
@@ -172,6 +173,7 @@ class Runner:
                         f"check [PATH]`",
                         extra=-4,
                     ),
+                    err=True,
                     fg=bento.util.Colors.WARNING,
                     bold=False,
                 )

@@ -8,7 +8,6 @@ import yaml
 
 import bento.constants as constants
 import bento.git
-from bento.fignore import FileIgnore, open_ignores
 from bento.run_cache import RunCache
 
 
@@ -29,7 +28,6 @@ class BaseContext:
     _config = attr.ib(type=Dict[str, Any], default=None)
     _resource_path = attr.ib(type=Path, default=None)
     _cache = attr.ib(type=RunCache, default=None, init=False)
-    _ignores = attr.ib(type=FileIgnore, default=None, init=False)
     _ignore_lock = attr.ib(type=Lock, factory=Lock, init=False)
 
     @base_path.default
@@ -114,18 +112,6 @@ class BaseContext:
         Returns whether `bento check --staged-only` should block commits
         """
         return self.config.get("autorun", {}).get("block", False)
-
-    @property
-    def file_ignores(self) -> FileIgnore:
-        # Deprecating use of this. For now it is only used in init, sgrep, checked_return
-        with self._ignore_lock:
-            # Only initialize the file ignores once. Since this uses system calls,
-            # multiple attempts at initialization do nothing but slow down the CLI.
-            if self._ignores is None:
-                self._ignores = open_ignores(
-                    self.base_path, self.ignore_file_path, self.is_init
-                )
-            return self._ignores
 
     @property
     def cache(self) -> RunCache:

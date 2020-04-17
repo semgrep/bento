@@ -119,7 +119,7 @@ class Registrar:
         r = requests.post(
             "https://waitlist.r2c.dev/subscribe", json={"email": email}, timeout=5
         )
-        status = r.status_code == requests.codes.ok
+        status: bool = r.status_code == requests.codes.ok
         data = [
             {
                 "message": "Tried adding user to Bento waitlist",

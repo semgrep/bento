@@ -281,6 +281,9 @@ tools:
       - unused-module
       - unused-variable
     run: true
+  gosec:
+    ignore: []
+    run: false
   hadolint:
     ignore:
       - DL3008
@@ -291,6 +294,9 @@ tools:
       - DL3022
       - DL3027
       - DL4001
+    run: true
+  r2c.boto3:
+    ignore: []
     run: true
   r2c.flask:
     ignore: []
