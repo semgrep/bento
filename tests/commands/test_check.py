@@ -41,7 +41,7 @@ def test_check_no_diff_noop() -> None:
     Context(SIMPLE).cache.wipe()
 
     result = runner.invoke(
-        check, ["--formatter", "json"], obj=Context(base_path=SIMPLE), mix_stderr=False
+        check, ["--formatter", "json"], obj=Context(base_path=SIMPLE)
     )
 
     parsed = json.loads(result.stdout)

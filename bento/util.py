@@ -16,6 +16,7 @@ from importlib import import_module
 from pathlib import Path
 from textwrap import wrap as py_wrap
 from typing import (
+    IO,
     Any,
     Callable,
     Collection,
@@ -31,6 +32,7 @@ from typing import (
     Type,
     TypeVar,
     Union,
+    cast,
 )
 
 import psutil
@@ -208,10 +210,11 @@ def less(
         signal.signal(signal.SIGPIPE, drop_sig)
         try:
             process = subprocess.Popen(["less", "-r"], stdin=subprocess.PIPE)
+            stdin = cast(IO[bytes], process.stdin)
             for ix, t in enumerate(text):
-                process.stdin.write(bytearray(t, "utf8"))
+                stdin.write(bytearray(t, "utf8"))
                 if ix != text_len - 1:
-                    process.stdin.write(bytearray("\n", "utf8"))
+                    stdin.write(bytearray("\n", "utf8"))
             process.communicate()
         except BrokenPipeError:
             pass

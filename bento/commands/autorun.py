@@ -89,7 +89,7 @@ def install_autorun(context: Context, block: bool) -> None:
                 raise ExistingGitHookException(str(hook_path))
             else:
                 # Check that
-                shutil.move(hook_path, legacy_hook_path)
+                shutil.move(str(hook_path), str(legacy_hook_path))
 
         # Ensure .git/hooks directory exists
         # note that we can (and should) assume .git dir exists since
@@ -137,7 +137,7 @@ def uninstall_autorun(context: Context) -> None:
         # Put back legacy hook if exits
         legacy_hook_path = Path(f"{hook_path}.pre-bento")
         if legacy_hook_path.exists():
-            shutil.move(legacy_hook_path, hook_path)
+            shutil.move(str(legacy_hook_path), str(hook_path))
         else:
             hook_path.unlink()
 

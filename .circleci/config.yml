@@ -167,4 +167,4 @@ executors:
   python-build:
     working_directory: ~/circleci
     docker:
-      - image: circleci/python:3.7.4-stretch-node
+      - image: circleci/python:3.7.7-stretch-node
