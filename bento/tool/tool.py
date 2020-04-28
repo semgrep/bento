@@ -139,6 +139,14 @@ class Tool(ABC, Generic[R]):
         """
         return True
 
+    def extra_cache_paths(self) -> List[Path]:
+        """
+        Returns extra paths beyond the checked paths whose change should invalidate the cache
+
+        For example, if the tool has a filesystem configuration file, it should be returned here.
+        """
+        return []
+
     def project_has_file_paths(self, files: Iterable[Path]) -> bool:
         """
         Returns true iff any unignored files matches at least one extension
@@ -263,12 +271,18 @@ class Tool(ABC, Generic[R]):
         use_cache = use_cache and self.can_use_cache()
 
         logging.debug(f"Checking for local cache for {self.tool_id()}")
-        cache_repr = self.context.cache.get(self.tool_id(), paths)
+        cache_repr = self.context.cache.get(
+            self.tool_id(), paths + self.extra_cache_paths()
+        )
         if not use_cache or cache_repr is None:
             logging.debug(f"Cache entry invalid for {self.tool_id()}. Running Tool.")
             violations = self._get_findings_from_run(paths)
             if use_cache:
-                self.context.cache.put(self.tool_id(), paths, to_cache_repr(violations))
+                self.context.cache.put(
+                    self.tool_id(),
+                    paths + self.extra_cache_paths(),
+                    to_cache_repr(violations),
+                )
         else:
             violations = from_cache_repr(cache_repr)
 

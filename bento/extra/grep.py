@@ -59,6 +59,9 @@ class GrepTool(output.Json):
     def file_name_filter(self) -> Pattern:
         return re.compile(r".*\b")
 
+    def extra_cache_paths(self) -> List[Path]:
+        return [(self.context.base_path / GREP_CONFIG_FILE_NAME).resolve()]
+
     def matches_project(self, files: Iterable[Path]) -> bool:
         # disabled by default for now
         return False
