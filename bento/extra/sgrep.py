@@ -1,7 +1,7 @@
 import os
 import shutil
 from pathlib import Path, PurePath
-from typing import Optional, Type
+from typing import List, Optional, Type
 
 import bento.constants as constants
 from bento.extra.base_sgrep import BaseSgrepParser, BaseSgrepTool
@@ -33,6 +33,10 @@ class SgrepTool(BaseSgrepTool):
             return self.context.resource_path / self.CONFIG_PATH
         else:
             return None
+
+    def extra_cache_paths(self) -> List[Path]:
+        cp = self.get_config_path()
+        return [cp.resolve()] if cp else []
 
     @property
     def config_str(self) -> str:
