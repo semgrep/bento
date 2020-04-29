@@ -181,7 +181,7 @@ def cli(
 
     if not _is_running_latest() and not _is_test():
         logging.warning("Bento client is outdated")
-        click.echo(constants.UPGRADE_WARNING_OUTPUT)
+        click.secho(constants.UPGRADE_WARNING_OUTPUT, err=True)
 
 
 cli.add_command(archive.archive)

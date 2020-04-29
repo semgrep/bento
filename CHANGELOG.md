@@ -2,6 +2,14 @@
 
 This project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.html).
 
+## [0.11.1](https://pypi.org/project/bento-cli/0.11.1/) - 2020-04-28
+
+### Fixed
+
+- Upgrade notice now prints to stderr, to avoid affecting JSON output
+- Tools with file-based configuration (e.g. `sgrep`) will now have
+  their caches invalidated when these configuration files change
+
 ## [0.11.0](https://pypi.org/project/bento-cli/0.11.0/) - 2020-04-17
 
 ### Added

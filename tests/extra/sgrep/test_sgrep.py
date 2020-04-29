@@ -1,6 +1,8 @@
 import os
 import shutil
+from contextlib import contextmanager
 from pathlib import Path
+from typing import Iterator, cast
 
 from bento.extra.sgrep import SgrepTool
 from bento.violation import Violation
@@ -8,30 +10,33 @@ from tests.test_tool import context_for
 
 THIS_PATH = Path(os.path.dirname(__file__))
 BASE_PATH = THIS_PATH / ".." / ".." / ".."
+SGREP_PATH = BASE_PATH / "tests/integration/sgrep"
 
 REMOTE_DOCKER_ENV = "R2C_USE_REMOTE_DOCKER"
 
 
-def test_run(tmp_path: Path) -> None:
-    base_path = BASE_PATH / "tests/integration/sgrep"
-
-    tool = SgrepTool(context_for(tmp_path, SgrepTool.tool_id(), base_path))
-
-    shutil.copy(
-        base_path / ".bento" / "sgrep.yml", tool.context.resource_path / "sgrep.yml"
-    )
-
-    tool.setup()
-
+@contextmanager
+def _remote_docker() -> Iterator[None]:
     previous = os.environ.get(REMOTE_DOCKER_ENV)
     try:
         os.environ[REMOTE_DOCKER_ENV] = "1"
-        violations = set(tool.results([base_path / "flask_configs.py"]))
+        yield
     finally:
         if previous is not None:
             os.environ[REMOTE_DOCKER_ENV] = previous
         else:
             os.unsetenv(REMOTE_DOCKER_ENV)
+
+
+def test_run(tmp_path: Path) -> None:
+    tool = SgrepTool(context_for(tmp_path, SgrepTool.tool_id(), SGREP_PATH))
+    shutil.copy(
+        SGREP_PATH / ".bento" / "sgrep.yml", tool.context.resource_path / "sgrep.yml"
+    )
+
+    with _remote_docker():
+        tool.setup()
+        violations = set(tool.results([SGREP_PATH / "flask_configs.py"]))
 
     print(violations)
     expectation = {
@@ -134,3 +139,22 @@ def test_run(tmp_path: Path) -> None:
     }
 
     assert violations == expectation
+
+
+def test_cache_invalidation(tmp_path: Path) -> None:
+    tool = SgrepTool(context_for(tmp_path, SgrepTool.tool_id(), SGREP_PATH))
+    template_path = SGREP_PATH / ".bento" / "sgrep.yml"
+    config_path = cast(Path, tool.get_config_path())
+
+    shutil.copy(template_path, config_path)
+
+    with _remote_docker():
+        tool.setup()
+
+        violations = set(tool.results([SGREP_PATH / "flask_configs.py"]))
+        assert len(violations) == 8
+
+        config_path.unlink()
+
+        violations = set(tool.results([SGREP_PATH / "flask_configs.py"]))
+        assert len(violations) == 0
