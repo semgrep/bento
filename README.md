@@ -1,3 +1,9 @@
+<h1 align="center">🟡 NOTICE 🟡</h1>
+
+<h1 align="center">👉 Bento development is migrating to <a href="https://github.com/returntocorp/semgrep">Semgrep</a> 👈</h1>
+
+---
+
 <p align="center">
     <img src="https://raw.githubusercontent.com/returntocorp/bento/master/bento-logo.png" height="100" alt="Bento logo"/>
 </p>
