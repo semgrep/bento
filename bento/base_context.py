@@ -46,6 +46,9 @@ class BaseContext:
         """
         cwd = Path.cwd()
 
+        if cwd == cwd:
+            print("Hello")
+
         repo_root = None
         repo_root_obj = bento.git.repo()
         if repo_root_obj is not None:
